@@ -1,0 +1,445 @@
+.App {
+  /*position: relative;*/
+  /*text-align: center;*/
+}
+
+.App-logo {
+  animation: App-logo-spin infinite 20s linear;
+  height: 40vmin;
+}
+
+.App-header {
+  background-color: #282c34;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  font-size: calc(10px + 2vmin);
+  color: white;
+}
+
+.App-link {
+  color: #61dafb;
+}
+
+@keyframes App-logo-spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+.description {
+  margin: 15px 10%;
+  text-align: left;
+}
+h3 {
+  /*padding: -20px;*/
+  display: inline-block;
+  text-align: left;
+  float: left;
+}
+.navbar {
+  display:flex;
+  padding : 0px 10px;
+  justify-content: space-between;
+  align-items: center;
+  /*overflow: hidden;*/
+  overflow: visible;
+  background-color: #f0f0f0;
+  position: fixed; /* Set the navbar to fixed position */
+  top: 0; /* Position the navbar at the top of the page */
+  width: 100%; /* Full width */
+  height: 50px;
+  box-shadow: 0px 3px 5px 0px rgba(0, 0, 0, 0.2);
+  z-index: 10;
+}
+.navbar-shadow {
+  position: relative;
+  top: 0; /* Position the navbar at the top of the page */
+  width: 100%;
+  height: 50px;
+}
+.block-0 {
+  display: flex;
+  align-items: center;
+  justify-content: left;
+  /*margin: 5px 10%;*/
+  border-radius: 5px;
+  height: 40px;
+  border : solid 1px #c4c4c4;
+}
+.block-0-0 {
+  /*border : solid 1px #c4c4c4;*/
+  padding: 0 10px;
+  width : 60%;
+}
+.block-0-1 {
+  width : 30%;
+  /*border : solid 1px #c4c4c4;*/
+}
+.block-0-2 {
+  width : 10%;
+  /*border : solid 1px #c4c4c4;*/
+}
+.additionalSection {
+  margin : 10px 10%;
+  border : solid 1px lightgrey;
+  padding: 10px;
+  position: relative;
+}
+.additionalSection > button {
+  margin-right : 20px;
+}
+.block-1, .block-2 {
+  opactity : 1;
+}
+.menuBlock {
+  /*display : inline-block;*/
+  position: relative;
+  /*display: flex;*/
+  /*justify-content: flex-start;*/
+  /*align-items: flex-start;*/
+  /*text-align: left;*/
+  /*float : left;*/
+  margin : 10px 10%;
+  /*padding-left: 0;*/
+  /*padding : 0 0 0 10px;*/
+}
+.logBtnsBlock {
+  display: flex;
+  justify-content: space-between;
+  margin : 10px 10%;
+  /*padding : 0 0 0 10px;*/
+}
+a {
+  color: black;
+  text-decoration: none;
+}
+/*div.menuBlock{*/
+  /*left : 0;*/
+/*}*/
+.menuBlock div {
+  margin-right : 10px;
+}
+.logBtnsBlock > div {
+  margin-left : 10px;
+}
+button.loginbtn, button.logoutbtn {
+  border-radius: 3px;
+  border : 1px solid lightblue;
+  padding: 5px;
+  height: 30px;
+  /*margin: 0 5px 0 0;*/
+  width: 100px;
+  font-weight: 600;
+}
+
+button.loginbtn:hover, button.logoutbtn:hover {
+  cursor: pointer;
+  background-color: lightblue;
+}
+
+.infoMsg {
+  color: #52aee6;
+}
+button.loggedbtn{
+    /*background-color: orangered;*/
+  background-color: #fff4c3;
+  color: #52aee6;
+  border : 1px solid #f2cb66;
+  width: 180px;
+  font-weight: 600;
+}
+button.loggedbtn:hover{
+  background-color: #f2cb66;
+  color : white;
+  border : 1px solid #f2cb66;
+}
+.myTitle {
+  /*float:left;*/
+  position: absolute;
+  text-decoration: underline;
+  left : 10%;
+  /*top : -1px;*/
+  /*font-size: 1.2em;*/
+  font-family: 'Poiret One', cursive;
+  font-weight: 900;
+  z-index: 20;
+  /*background-color: #666666;*/
+  /*-webkit-background-clip: text;*/
+  /*-moz-background-clip: text;*/
+  /*background-clip: text;*/
+  /*color: transparent;*/
+  /*text-shadow: rgba(255,255,255,0.5) 0px 3px 3px;*/
+  /*text-shadow: 2px 2px 0px #fff, 2px 2px 0px rgba(0, 0, 0, 0.57);*/
+  text-shadow: 1px 1px 0px #eee, 1px 1px 2px #707070;
+}
+/*.menuTop {*/
+  /*left : 20%;*/
+/*}*/
+.studentName {
+  color : #1890e6;
+  font-weight: 700;
+}
+
+/* Popup container */
+.popup {
+  position: absolute;
+  display: inline-block;
+  cursor: pointer;
+  /*margin: 20px 0;*/
+}
+
+/* The actual popup (appears on top) */
+.popup .popuptext {
+  /*visibility: hidden;*/
+
+  -webkit-animation: hide-animation 0.6s ease-in 1.5s;
+  animation: hide-animation 0.6s ease-in 1.5s;
+  animation-fill-mode: forwards;
+
+  width: 220px;
+  background-color: #f2b436;
+  color: #fff;
+  text-align: center;
+  border-radius: 6px;
+  padding: 8px 0;
+  position: absolute;
+  z-index: 1;
+  bottom: 125%;
+  left: 50%;
+  /*margin-left: -180px;*/
+  margin: 0 0 -63px -170px;
+  /*margin-top : 120px;*/
+}
+
+/* Popup arrow */
+.popup .popuptext::after {
+  content: "";
+  position: absolute;
+  top: -10px; /*100%;*/
+  left: 50%;
+  margin-left: -5px;
+  border-width: 5px;
+  border-style: solid;
+  border-color: transparent transparent #f2b436 transparent;
+  /*border-color: #f2c236 transparent transparent transparent;*/
+}
+.addRef {
+  display: inline-block;
+  padding: 8px 0;
+}
+/* Toggle this class when clicking on the popup container (hide and show the popup) */
+/*.popup .show {*/
+  /*!*visibility: visible;*!*/
+  /*!*-webkit-animation: fadeIn 1s;*!*/
+  /*!*animation: fadeIn 1s*!*/
+
+  /*-webkit-animation: hide-animation 0.6s ease-in 0s;*/
+  /*animation: hide-animation 0.6s ease-in 0s;*/
+/*}*/
+
+/* Add animation (fade in the popup) */
+@-webkit-keyframes fadeIn {
+  from {opacity: 0;}
+  to {opacity: 1;}
+}
+
+@keyframes fadeIn {
+  from {opacity: 0;}
+  to {opacity:1 ;}
+}
+
+@keyframes hide-animation {
+  0% {
+    opacity: 1;
+    visibility: visible;
+  }
+
+  100% {
+    opacity: 0;
+    visibility: hidden;
+  }
+}
+
+.homeWorkSectionMain {
+  /*display : flex;*/
+  /*justify-content: center;*/
+  /*align-items: center;*/
+  /*position : relative;*/
+  /*margin: 5px;*/
+  /*width : 79%;*/
+  /*padding : 5px;*/
+  /*border: 0.8px solid gray;*/
+}
+
+#buttonspnt{
+  position: relative;
+}
+
+@media only screen and (max-width: 400px) {
+  .description{
+    font-size: 0.7em;
+    margin: 5px 10%;
+  }
+  .addRef {
+    padding: 2px 0 2px;
+    font-size: 0.8em;
+  }
+  *{
+    /*font-size: 0.8em;*/
+  }
+  #markblank-1,#markblank-2,#markblank-3{
+    width: 130px;
+  }
+  .descrHeader > h4 {
+    font-size: 0.8em;
+    margin : 5px 0;
+  }
+}
+.moveButtons-enter {
+   right : 100px;
+}
+.moveButtons-enter-active {
+  right : 0px;
+  transition : .5s easy-in;
+}
+.title-enter {
+  opacity: 0.01
+}
+.title-enter-active {
+  opacity: 1;
+  transition : easy-in 1s;
+}
+.descrHeader{
+  display:flex;
+  justify-content: space-between;
+  margin : 5px 10%;
+}
+
+.lastRecords {
+  margin : 5px 0;
+  border-radius: 5px;
+  /*padding : 0 5px;*/
+  background-color: #fff4c3;
+  padding : 5px 10px;
+  box-shadow: 0px 3px 5px 0px rgba(0, 0, 0, 0.2);
+  /*font-size : 1em;*/
+  /*height: 30px;*/
+}
+.lastRecords > h4 {
+  padding : 5px 0;
+}
+@media only screen and (max-width: 400px) {
+  .lastRecords {
+    font-size : 0.8em;
+  }
+  .descrHeader{
+    display:flex;
+    justify-content: space-between;
+    margin : 3% 5% 0 5%;
+  }
+}
+.loadCursor {
+  /*position : absolute;*/
+  /*width : 5%;*/
+  /*height : 5%;*/
+  /*z-index : 200;*/
+  /*left : 50%;*/
+  /*top : 50%;*/
+  /*!*margin : 50%;*!*/
+  /*background-color: #7DA8E6;*/
+}
+.lds-ring {
+  display: inline-block;
+  position: absolute;
+  top : 50%;
+  left : 50%;
+  width: 5%;
+  height: 5%;
+  z-index : 20;
+}
+.lds-ring div {
+  box-sizing: border-box;
+  display: block;
+  position: absolute;
+  width: 51px;
+  height: 51px;
+  margin: 6px;
+  border: 6px solid #7DA8E6;
+  border-radius: 50%;
+  animation: lds-ring 1.2s cubic-bezier(0.5, 0, 0.5, 1) infinite;
+  border-color: #7DA8E6 transparent transparent transparent;
+}
+.lds-ring div:nth-child(1) {
+  animation-delay: -0.45s;
+}
+.lds-ring div:nth-child(2) {
+  animation-delay: -0.3s;
+}
+.lds-ring div:nth-child(3) {
+  animation-delay: -0.15s;
+}
+@keyframes lds-ring {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}
+.descrAndAnnounceMobile {
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  width : 40%;
+}
+.descrAndAnnounce {
+  text-align: center;
+}
+.descrHeaderNotMobile {
+  display: flex;
+  flex-direction: column;
+  width : 50%;
+}
+.descrAndAnnounceNotMobile {
+  text-align: center;
+  display:flex;
+  width : 90%;
+  margin : 0 10%;
+  justify-content: space-between;
+}
+
+.btn-chat{
+  position: fixed;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  left : 10%;
+  bottom : 20px;
+  width : 60px;
+  height: 60px;
+  border-radius: 30px;
+  z-index: 30;
+  box-shadow: 2px 2px 5px 2px rgba(0, 0, 0, 0.2);
+  background-color: #33ccff;
+}
+.btn-chat:hover{
+  cursor : pointer
+}
+@media only screen and (max-width: 400px) {
+  .app-homeWorkSection {
+    margin-left: 5%;
+  }
+}
+@media only screen and (min-width: 400px) {
+  .descrAndAnnounceMobile{
+    width : 100%;
+  }
+  .description {
+    margin : 15px 0;
+  }
+}

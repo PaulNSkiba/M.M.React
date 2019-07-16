@@ -1,0 +1,37 @@
+.subjFromSelector, .subjToSelector {
+    width : auto;
+    height : 400px;
+}
+.subBlocks {
+    display: flex;
+    justify-content: flex-start;
+    flex-direction: row;
+    align-items: flex-start;
+    margin: 10px 10%;
+    border : 1px lightgrey solid;
+    padding : 2px;
+}
+.subBlocks > div{
+    margin: 2px;
+}
+.h4 {
+    margin: 10px 10%;
+}
+.tableStats{
+    margin: 10px 10%;
+    /*width: 100%;*/
+}
+/*{name: "Дата", width : "80"} ,*/
+/*{name: "Час", width : "20"},*/
+/*{name: "Начало", width : "180"},*/
+/*{name: "Конец", width : "180"},*/
+/*{name: "Минут", width : "20"},*/
+/*{name: "Оценок", width : "20"},*/
+/*{name: "Оценок/в мин", width : "100%"},*/
+.colstat-0 {width: 10%;}
+.colstat-1 {width: 5%;}
+.colstat-2 {width: 15%;}
+.colstat-3 {width: 15%;}
+.colstat-4 {width: 5%;}
+.colstat-5 {width: 5%;}
+.colstat-6 {width: 5%;}

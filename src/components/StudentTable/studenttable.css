@@ -1,0 +1,161 @@
+th {
+    font-size: 0.7em;
+}
+table {
+    display: block;
+    overflow: auto;
+    max-width: 100%;
+}
+table, th, td{
+    border-collapse:collapse;
+    border:1px solid #b4b4b4;
+}
+td {
+    width: 20px;
+    height: 20px;
+    padding: 3px;
+}
+td:hover {
+    background-color: rgba(64, 155, 230, 0.16) /*#7DA8E6*/;
+}
+th.numbercol{
+    width : 30px;
+    text-align: center;
+    font-size: 1em;
+}
+th.namescol{
+    width : 180px;
+    text-align: left;
+    padding : -3px 0px;
+    font-size: 1.1em;
+}
+th.namescol.head{
+    text-align: center;
+}
+th.tablebody,td.tablebody,th.tablehead {
+    width: 35px;
+    height: 30px;
+    font-size: 1em;
+}
+td,th{
+    padding: 0;
+    /*text-align: center;*/
+}
+td.tableBody{
+    text-align : center;
+}
+.containertable{
+    margin: 10px 10%;
+}
+tr#row-1, tr#row-2{
+    background-color: lightgrey;
+}
+#simple-board {
+    width : 100%;
+    /*margin: 10px 10%;*/
+}
+.namescol.nameselected{
+    box-shadow: 0px 0px 4px 6px #feff77;
+}
+.tablehead.dateselected{
+    color : #feff77;
+}
+#daysback, #daysforward, #daysforwardone {
+    font-size: 1em;
+    font-weight: 500;
+    padding : 3px 10px;
+    /*padding-right: 10px;*/
+    align-items: center;
+    margin : 10px 10px;
+    border : 1px solid #c4c4c4;
+    border-radius: 5px;
+}
+#daysback:hover, #daysforward:hover, #daysforwardone:hover {
+    box-shadow: 0px 0px 2px 2px #c4c4c4;
+    border-radius: 5px;
+    background-color: #c4c4c4;
+    border : 1px solid #7DA8E6;
+    color : white;
+    cursor: pointer;
+}
+.periodName {
+    display : flex;
+    margin : 5px 0;
+    align-items: center;
+}
+.selectGroup {
+    display : flex;
+    position: relative;
+    align-items: center;
+    justify-content: space-between;
+}
+.tablehead{
+    /*color:#52aee6;*/
+}
+.subjButton {
+    /*padding-left: 10px;*/
+    padding: 3px 0 3px 10px;
+}
+.subjButton.active {
+    /*background-color: rgb(47,117,181);*/
+    background-color: lightgrey;
+    /*color : #ffe699;*/
+    padding: 3px 0 3px 10px;
+    /*color : white;*/
+}
+.subjButton:hover{
+    cursor: pointer;
+}
+.markType:hover .hoverText{
+    display: block;
+    overflow: visible;
+}
+.markType-selected:hover .hoverText{
+    display: block;
+    overflow: visible;
+}
+.topMarkLabel{
+    position: absolute;
+    right : 1px;
+    top : 0;
+    font-size: 0.6em;
+    color: #b52227;
+    font-weight: 700;
+}
+.topMarkLabelBefore{
+    position: absolute;
+    left : 1px;
+    top : 0;
+    font-size: 0.6em;
+    color: #3257e6;
+    font-weight: 700;
+}
+.mondayFlagStudent{
+    position : absolute;
+    font-size: 0.6em;
+    right :0;
+    top : -2px;
+    color: #3257e6;
+}
+.tableheadtd {
+    position : relative;
+
+}
+@media only screen and (max-width: 400px) {
+    .containertable {
+        margin: 5px 5%;
+        font-size: 0.8em;
+    }
+}
+.badmark{
+    background-color: rgb(255,133,148);
+    color:white;
+}
+.studcol{
+    font-size: 0.8em;
+}
+.periodTitle {
+    border : 1px solid  #c4c4c4;
+    border-radius: 5px;
+    padding : 8px 0;
+}

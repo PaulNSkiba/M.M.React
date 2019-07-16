@@ -1,0 +1,26 @@
+.home-banner-area {
+    /*background: url(../img/header-bg.png) top center;*/
+    /*background-size: cover;*/
+    /*background-image: linear-gradient(to bottom right,#c4c4c4,#c4c4c4);*/
+
+    /*background: linear-gradient(#c4c4c4, #c4c4c4, transparent), url("../img/header-bg.png") no-repeat center;*/
+    /*background: url(../img/header-bg.png);*/
+
+}
+/*.home-banner-area::after {*/
+    /*content: "";*/
+    /*background: url(../img/header-bg.png);*/
+    /*opacity: 0.3;*/
+    /*top: 0;*/
+    /*left: 0;*/
+    /*bottom: 0;*/
+    /*right: 0;*/
+    /*position: absolute;*/
+    /*z-index: -1;*/
+    /*!*background-repeat: repeat-y;*!*/
+    /*background-repeat: repeat repeat;*/
+/*}*/
+
+@media (max-width: 767.98px) {
+    .home-banner-area .fullscreen {
+        height: 900px !important; } }

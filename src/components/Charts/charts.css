@@ -1,0 +1,11 @@
+@media only screen and (max-width: 400px) {
+    #rangeStatus {
+        font-size : 0.6em;
+    }
+    .selectGroup {
+        margin: 0;
+    }
+    .mainChartSection{
+        margin: 0;
+    }
+}

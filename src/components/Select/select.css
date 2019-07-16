@@ -1,0 +1,21 @@
+.selSection {
+    display: flex;
+    align-items: center;
+    padding : 0 5px;
+    margin: 0 5px;
+}
+.selSectionV {
+    display: flex;
+    align-items: flex-start;
+    justify-content: center;
+    flex-direction: column;
+    padding : 0 2px;
+    margin: 0 5px;
+}
+.selSection select {
+    width : 120px;
+    height: 25px;
+}
+.selSectionV > pre{
+    height: 10px;
+}

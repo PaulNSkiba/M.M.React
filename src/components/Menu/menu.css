@@ -1,0 +1,22 @@
+/*.menuBlock {*/
+    /*display:flex;*/
+    /*padding-left: 20px;*/
+/*}*/
+.menuItem a {
+    color : #1890e6;
+    font-weight: 700;
+    font-size : 0.9em;
+}
+.menuItem a:hover{    color : #52aee6;}
+.menuItemHw a {
+    color : rgb(231, 173, 0);
+    font-weight: 700;
+    font-size : 0.9em;
+}
+.menuItemHw a:hover{    color : rgb(233, 190, 73);}
+.menuItems {
+    display:flex;
+    left : 0;
+    margin-left: 45%;
+    width : 300px;
+}

@@ -1,0 +1,266 @@
+.block-0 {
+    display: flex;
+    align-items: center;
+    justify-content: left;
+    margin: 5px 10%;
+    border-radius: 5px;
+    height: 50px;
+    border : solid 1px #c4c4c4;
+    z-index: 3;
+}
+
+.block-0-0 {
+    display: flex;
+    position: relative;
+    padding: 0 10px;
+    width : 70%;
+    z-index: 3;
+}
+.block-0-1 {
+    position : relative;
+    width : 30%;
+}
+.block-0-2 {
+    display: flex;
+    position: relative;
+    align-items: center;
+    justify-content: center;
+    /*padding: 10px 0;*/
+    width : 5%;
+    height: 100%;
+    border : 1px solid darkgray;
+    background-color: #f0f0f0;
+    border-top-right-radius: 5px;
+    border-bottom-right-radius: 5px;
+    margin-right : -1px;
+}
+.geoMain {
+    position: relative;
+}
+.geoLocation {
+    display: flex;
+    position: relative;
+    align-items: center;
+    justify-content: center;
+    /*margin-left: 10px;*/
+    color : rgb(68,114,196);
+    background-color: white;
+    border: 1px solid #c4c4c4;
+    border-radius : 10px;
+    padding : 0 20px;
+    margin : 15px;
+    height: 30px;
+    box-shadow: 2px 2px 5px 0px #c4c4c4;
+    /*right: 10px;*/
+    /*padding: 0 10px;*/
+}
+@media only screen and (max-width: 400px) {
+    .block-0 {
+        margin: 5px 5%;
+    }
+    .geoLocation{
+        padding : 0 20px 0 10px;
+        margin : 15px 5px 15px 10px;
+        font-size: 0.8em;
+    }
+}
+.geoCity {
+    position : relative;
+    padding-right: 5px;
+    padding-left: 5px;
+}
+.geoCountryCode {
+    position: absolute;
+    right : -16px;
+    top : 0;
+    /*border : 0.5px solid darkgrey;*/
+    background-color: #e2e2e2;
+    border-radius: 5px;
+    font-size: 0.6em;
+    font-weight: 700;
+    padding : 0 3px;
+    color: black;
+}
+.block-0-2 a span {
+    position:absolute;
+    width:100%;
+    height:100%;
+    top:0;
+    left: 0;
+    /* edit: added z-index */
+    z-index: 1;
+
+    /* edit: fixes overlap error in IE7/8,
+       make sure you have an empty gif */
+    /*background-image: url('empty.gif');*/
+}
+.block-0-2:hover {
+    cursor: pointer;
+    background-color: rgba(64, 155, 230, 0.16)
+}
+.done {
+    background-color: rgba(64, 155, 230, 0.16) /*rgb(226,239,218)*/;
+}
+.block-1 {
+    transition: 0.5s;
+}
+.block-0.activeblock {
+    border : solid 1.5px #4472C4;
+
+}
+.block-0.activeblock h3 {
+    color : rgb(68,114,196);
+}
+/*$ani-speed: 2s;*/
+/*$ani-delay: 1s;*/
+
+.arrow {
+    opacity: 0;
+    animation: arrow-movement 2s ease-in-out infinite;
+}
+.saveDiv {
+    background-color: rgb(255, 244, 205);
+    color: rgb(156, 101, 0);
+}
+
+@keyframes arrow-movement {
+    0% {
+        opacity: 0;
+        /*top: 45%;*/
+    }
+    70% {
+        opacity: 1;
+    }
+    100% {
+        opacity: 0;
+    }
+}
+
+.arrows {
+    /*position: relative;*/
+    /**/
+    position: absolute;
+    /*top:50%;*/
+    left:85%;
+    /*right:100%;*/
+    /*float : right;*/
+    /**/
+    width:10px;
+    height:10px;
+    transform:translate(-50%,-50%);
+
+}
+.arrows:after {
+     content: '';
+     position: absolute;
+     width:100%;
+     height:100%;
+     border-left:calc(10px/3) solid rgba(180, 180, 180, 0.7);
+     border-bottom:calc(10px/3) solid rgba(180, 180, 180,0.7);
+     transform:translate(calc(10px*2/3),0px)rotate(-45deg) ;
+     animation: arrows 2s linear infinite calc(2s/-2);
+ }
+.arrows:before {
+     content: '';
+     position: absolute;
+     width:100%;
+     height:100%;
+     border-left:calc(10px/3) solid rgba(180, 180, 180,0.7);
+     border-bottom:calc(10px/3) solid rgba(180, 180, 180,0.7);
+     transform:translate(calc(10px/3),calc(10px*4/3))rotate(-45deg);
+     animation: arrows 2s linear infinite;
+ }
+/*}*/
+
+@keyframes arrows {
+    0% {
+        border-left:calc(10px/3) solid rgba(0,0,0,0);
+        border-bottom:calc(10px/3) solid rgba(0,0,0,0);
+        transform:translate(calc(10px/-6),calc(10px*4/-6))rotate(-45deg) ;
+    }
+    10%, 90% {
+        border-left:calc(10px/3) solid rgba(0,0,0,0);
+        border-bottom:calc(10px/3) solid rgba(0,0,0,0);
+    }
+    50% {
+        border-left:calc(10px/3) solid rgba(180, 180, 180,0.7);
+        border-bottom:calc(10px/3) solid rgba(180, 180, 180,0.7);
+        transform:translate(calc(10px/-6),0px)rotate(-45deg) ;
+    }
+    100% {
+        border-left:calc(10px/3) solid rgba(0,0,0,0);
+        border-bottom:calc(10px/3) solid rgba(0,0,0,0);
+        transform:translate(calc(10px/-6),calc(10px*4/6))rotate(-45deg) ;
+    }
+}
+.titleBlock:hover{
+    cursor : pointer;
+}
+.titleBlock {
+    position: relative;
+    z-index:2;
+    transition-duration: 2s;
+}
+#buttons {
+    /*display: flex;*/
+    display : none;
+    margin: 0 10%;
+    position : absolute;
+    width : 100%;
+    height: 50px;
+    border-radius: 5px;
+}
+
+.btn{
+    display: inline-block;
+    visibility: hidden;
+    position: relative;
+    border : 1px solid #629de6;
+    padding: 10px;
+    height: 20px;
+    width: 20px;
+    top: -1px;
+    z-index: 0;
+    /*margin: 5px;*/
+    margin-right: 5px;
+    border-radius: 5px;
+}
+.btn2{
+    display: inline-block;
+    visibility: hidden;
+    position: relative;
+    border : 1px solid #629de6;
+    border-radius: 5px;
+    padding: 10px;
+    height: 20px;
+    width: 20px;
+    top: -1px;
+}
+.markDiv {
+    position:relative;
+    text-align: right;
+    padding-right: 20px;
+    margin-right: 10px;
+    height : 25px;
+}
+.markTopLabel{
+    position:absolute;
+    top:-5px;
+    right:0;
+    border: 1px solid rgb(255,235,156);
+    background-color: rgb(255,235,156);
+    border-radius: 5px;
+    color: #040a84;
+    font-size: 0.5em;
+    padding : 2px;
+}
+.markBottomLabel{
+    position:absolute;
+    bottom:-5px;
+    right:0;
+    font-size: 0.5em;
+}
+.disabledSave {
+    color : #686868;
+    background-color: lightgrey;
+}

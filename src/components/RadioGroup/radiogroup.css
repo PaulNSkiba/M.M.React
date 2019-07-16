@@ -1,0 +1,17 @@
+.radioMap {
+    display: flex;
+    border : solid 1px lightgrey;
+    justify-content: space-around;
+    /*margin: 10px 10%;*/
+    padding: 10px 20px;
+}
+.radioTitle {
+    display: flex;
+    align-items: center;
+    margin: 10px 0 0 0;
+    padding: 5px 5px;
+    text-align: left;
+}
+.customInput{
+    width : 60px;
+}

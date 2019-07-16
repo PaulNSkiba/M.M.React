@@ -1,0 +1,55 @@
+.loginBlockLight{
+    display: block;
+    position: absolute;
+    z-index: 11;
+    border: 2px solid #70c2e6;
+    background-color: #e8e8e8;
+    box-shadow: 0px 3px 5px 0px rgba(0, 0, 0, 0.2);
+    width: 150px;
+    height: 175px;
+    right: 12%;
+    top : 45px;
+    padding : 5px;
+    /*margin: 0 -50px 0;*/
+    /*overflow: visible;*/
+}
+
+.loginBlockLight input {
+    width: 95%;
+    /*margin : 0 5%;*/
+}
+.loginButtons > button {
+    margin: 10px 5px 5px 0;
+    height: 30px;
+    border : 1px solid #686868;
+    border-radius: 5px;
+    width : 45%;
+}
+.loginButtons {
+    display:flex;
+    justify-content: space-between;
+    flex-direction: row;
+}
+.my-google-button-class {
+    background-color: #DB4437;
+    border: solid 1px #DB4437;
+}
+.my-facebook-button-class {
+    background-color: #3b5998;
+    border: solid 1px #3b5998;
+}
+.my-facebook-button-class:hover,.my-google-button-class:hover {
+    opacity : 0.9;
+    cursor : pointer;
+}
+.socialBtns {
+    display: flex;
+    justify-content: space-between;
+    /*width : 100%;*/
+    /*padding : 0 5%;*/
+}
+.socialBtns > button {
+    width : 80%;
+    margin : 2px;
+    padding : -2px;
+}

@@ -1,0 +1,285 @@
+th {
+    font-size: 0.7em;
+}
+table {
+    display: block;
+    overflow: auto;
+    max-width: 100%;
+}
+table, th, td{
+    border-collapse:collapse;
+    border:1px solid #b4b4b4;
+}
+.badmark{
+    background-color: rgb(255,133,148);
+    color:white;
+}
+td {
+    width: 20px;
+    height: 20px;
+    padding: 3px;
+}
+td:hover {
+    background-color: rgba(64, 155, 230, 0.16) /*#7DA8E6*/;
+}
+th.numbercol{
+    width : 30px;
+    text-align: center;
+    font-size: 1em;
+}
+th.namescol{
+    width : 180px;
+    text-align: left;
+    /*padding : 0 5px;*/
+    font-size: 1.1em;
+}
+th.namescol.head{
+    text-align: center;
+}
+th.tablebody,td.tablebody,th.tablehead {
+    width: 35px;
+    height: 30px;
+    font-size: 1em;
+}
+.tablebody{
+    position: relative;
+}
+td,th{
+    padding: 0;
+    /*text-align: center;*/
+}
+td.tableBody{
+    text-align : center;
+}
+.containertable{
+    margin: 10px 10%;
+}
+tr#row-1, tr#row-2{
+    background-color: lightgrey;
+}
+#simple-board {
+    width : 100%;
+    /*margin: 10px 10%;*/
+}
+.namescol.nameselected{
+    box-shadow: 0px 0px 4px 6px #feff77;
+}
+.tablehead.dateselected{
+    color : #feff77;
+}
+#daysback, #daysforward, #daysforwardone {
+    font-size: 1em;
+    font-weight: 500;
+    padding : 3px 10px;
+    /*padding-right: 10px;*/
+    align-items: center;
+    margin : 10px 10px;
+    border : 1px solid #c4c4c4;
+    border-radius: 5px;
+}
+#daysback:hover, #daysforward:hover, #daysforwardone:hover {
+    box-shadow: 0px 0px 2px 2px #c4c4c4;
+    border-radius: 5px;
+    background-color: #c4c4c4;
+    border : 1px solid #7DA8E6;
+    color : white;
+    cursor: pointer;
+}
+.periodName {
+    display : flex;
+    margin : 5px 0;
+    align-items: center;
+    justify-content: space-between;
+}
+.selectGroup {
+    display : flex;
+    position : relative;
+    margin: 4px 0;
+    justify-content: space-between;
+}
+.selectGroup > label {
+    margin-left: 10px;
+}
+.tablehead{
+    /*color:#52aee6;*/
+    position: relative;
+}
+/*.marktable{*/
+    /*position: relative;*/
+/*}*/
+.selectGroup > button {
+    border : 1px solid rgb(68,114,196);
+    color : rgb(68,114,196);
+    background-color: rgb(244,244,244);
+    padding: 5px;
+    border-radius: 5px;
+}
+.selectGroup > button:hover {
+    color: #f2b436;
+    cursor: pointer;
+}
+
+/* Popup container */
+.popup2 {
+    position: relative;
+    display: inline-block;
+    cursor: pointer;
+}
+
+/* The actual popup (appears on top) */
+.popup2 .popuptext2 {
+    /*visibility: hidden;*/
+    -webkit-animation: hide-animation 0.6s ease-in 1.5s;
+    animation: hide-animation 0.6s ease-in 1.5s;
+    animation-fill-mode: forwards;
+
+    width: 200px;
+    background-color: #555;
+    color: #fff;
+    text-align: center;
+    border-radius: 6px;
+    padding: 8px 0;
+    position: absolute;
+    z-index: 1;
+    bottom: 125%;
+    right: 0;
+    margin: -20px 0 0 -80px;
+}
+
+/* Popup arrow */
+.popup2 .popuptext2::after {
+    content: "";
+    position: absolute;
+    top: 100%;
+    left: 50%;
+    margin-left: -5px;
+    border-width: 5px;
+    border-style: solid;
+    border-color: #555 transparent transparent transparent;
+}
+
+/* Toggle this class when clicking on the popup container (hide and show the popup) */
+/*.popup .show {*/
+    /*visibility: visible;*/
+    /*-webkit-animation: fadeIn 1s;*/
+    /*animation: fadeIn 1s*/
+/*}*/
+
+/* Add animation (fade in the popup) */
+@-webkit-keyframes fadeIn {
+    from {opacity: 0;}
+    to {opacity: 1;}
+}
+
+@keyframes fadeIn {
+    from {opacity: 0;}
+    to {opacity:1 ;}
+}
+
+@keyframes hide-animation {
+    0% {
+        opacity: 1;
+        visibility: visible;
+    }
+
+    100% {
+        opacity: 0;
+        visibility: hidden;
+    }
+}
+.addMarkTypes{
+    position: absolute;
+    display:flex;
+    opacity : 0.4;
+    width: 160px;
+    height: 25px;
+    top : 0;
+    overflow: visible;
+    z-index: 100;
+}
+.addMarkTypes-selected{
+    position: absolute;
+    display:flex;
+    opacity : 1;
+    width: 160px;
+    height: 25px;
+    top : 0;
+}
+.addMarkTypes:hover{
+    opacity: 1;
+    cursor: pointer;
+}
+.markType{
+    background-color: #7DA8E6;
+    position: relative;
+    color:white;
+    text-align: center;
+    font-weight: 800;
+    border: 1px solid #3892e6;
+    width : 33%;
+    z-index: 101;
+}
+.markType-selected{
+    background-color: #040a84;
+    position: relative;
+    color: #ffe699;
+    text-align: center;
+    font-weight: 800;
+    border: 1px solid #040a84;
+    width : 33%;
+    z-index: 101;
+}
+.hoverText{
+    position: absolute;
+    top: 20px;
+    left: 10px;
+    display: none;
+    padding: 2px 5px;
+    background-color: lightyellow;
+    color: #3892e6;
+    transition: height 1s;
+    -webkit-transition: height 1s;
+    z-index: 102;
+}
+.markType:hover .hoverText{
+    display: block;
+    overflow: visible;
+    z-index: 102;
+}
+.markType-selected:hover .hoverText{
+    display: block;
+    overflow: visible;
+    z-index: 102;
+}
+.topMarkLabel{
+    position: absolute;
+    right : 1px;
+    top : 0;
+    font-size: 0.6em;
+    color: #b52227;
+    font-weight: 700;
+}
+.topMarkLabelBefore{
+    position: absolute;
+    left : 0;
+    top : 0;
+    font-size: 0.6em;
+    color: #3257e6;
+    font-weight: 700;
+}
+.mondayFlag{
+    position : absolute;
+    font-size: 0.6em;
+    right :0;
+    top : -6px;
+    color: #3257e6;
+}
+.tableheadtd {
+    position : relative;
+
+}
+.periodTitle {
+    border : 1px solid  #c4c4c4;
+    border-radius: 5px;
+    padding : 8px 0;
+}
