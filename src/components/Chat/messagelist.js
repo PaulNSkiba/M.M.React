@@ -24,6 +24,13 @@ export class MessageList extends Component {
         });
         // console.log("addmsgs", this.props.addmsgs)
         // window.scrollTo(0, document.getElementById('messages').innerHeight)
+        let questionText = "Здравствуйте. Оставьте, пожалуйста, своё сообщение в этом чате. " +
+            "Оно автоматически будет доставлено в нашу службу поддержки и мы как можно скорее отправим Вам ответ на "
+
+        questionText = questionText.concat(this.props.classID?"Вашу электронную почту.":"указанную Вами электронной почте.")
+
+        console.log("this.props.classID", this.props.classID)
+
         return (
 
             <div className="msg-list">
@@ -52,8 +59,7 @@ export class MessageList extends Component {
                         <div key={1} className="message-block">
                             <div className={"msg-left-side"} key={1}>
                                 <div key={'id'+1} className={"msg-left-author"}>{"Команда My.Marks"}</div>
-                                <div key={'msg'+1} className="msg-text">{"Здравствуйте. Оставьте, пожалуйста, своё сообщение в этом чате. " +
-                                                                        "Оно автоматически будет доставлено в нашу службу поддержки и мы как можно скорее отправим Вам ответ по указанной Вами электронной почте."}</div>
+                                <div key={'msg'+1} className="msg-text">{questionText}</div>
                             </div>
                             {this.props.addmsgs.map((item,i)=>
                             <div className={"msg-right-side"} key={i+100}>

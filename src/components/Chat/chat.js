@@ -53,6 +53,7 @@ export default class Chat extends Component {
             subjUp : true,
             userUp : true,
             hwPlus : true,
+            servicePlus : true,
             addMsgs : [],
             isServiceChat : this.props.isservice,
             roomId : this.props.chatroomID,
@@ -144,6 +145,7 @@ export default class Chat extends Component {
     }
     _handleKeyDown = (e) => {
         if (e.key === 'Enter') {
+            e.preventDefault();
             let obj = {}
             obj.senderId = chatUserName
             obj.text = e.target.value
@@ -158,6 +160,8 @@ export default class Chat extends Component {
             }
             // this.addMsg(obj)
             e.target.value = ''
+            this.inputMessage.value = ''
+            console.log('e', e)
             this.setState({
                 selSubject : false,
                 selDate : false,
@@ -208,11 +212,17 @@ export default class Chat extends Component {
                 'Access-Control-Allow-Methods' : 'POST',
             }
         }
+
+        let author = !this.inputName===undefined?this.inputName.value:"",
+            mailAuthor = !this.inputEmail===undefined?this.inputEmail.value:""
+
         let json = `{   "session_id":"${this.props.session_id}",
                         "mailService":"${mail}",
-                        "author":"${this.inputName.value}",
-                        "mailAuthor":"${this.inputEmail.value}",
-                        "text":"${text}"}`
+                        "author":"${author}",
+                        "mailAuthor":"${mailAuthor}",
+                        "text":"${text}",
+                        "classID":${this.props.classID},
+                        "userID":${this.props.userID}}`
 
         console.log(json)
         let data = JSON.parse(json);
@@ -231,15 +241,17 @@ export default class Chat extends Component {
     sendMessage(text) {
         console.log("sendMessage", this.state.currentUser, text)
         let arr = this.state.addMsgs
-        if (this.state.isServiceChat) {
+        if (this.state.isServiceChat||!this.state.servicePlus) {
             console.log('Отправим электронку', this.state.addMsgs)
-            if (!this.inputName.value.toString().length) {
-                console.log("Введите имя")
-                return
-            }
-            if (!this.inputEmail.value.toString().length) {
-                console.log("Введите пожалуйста электронку")
-                return
+            if (!this.props.userID) {
+                if (!this.inputName.value.toString().length) {
+                    console.log("Введите имя")
+                    return
+                }
+                if (!this.inputEmail.value.toString().length) {
+                    console.log("Введите пожалуйста электронку")
+                    return
+                }
             }
             arr.push(JSON.parse(text).text)
             this.sendMail('paul.n.skiba@gmail.com', JSON.parse(text).text)
@@ -326,6 +338,7 @@ export default class Chat extends Component {
                     <div>{this.state.isServiceChat?"My.Marks CHAT: Вопрос разработчику":"My.Marks CHAT"}</div>
                     <div className="btn-close-chat" onClick={this.props.btnclose}>X</div>
                 </div>
+                {this.props.classID?<div className="service-plus" onClick={()=>{this.setState({servicePlus : !this.state.servicePlus})}}>{this.state.servicePlus?"+":"-"} Вопрос разработчику</div>:""}
                 {!this.state.roomId?
                     <div className="msg-title-userdata">
                         <label>Имя</label><input type="text" className="msg-title-userdata-name" ref={input => {
@@ -338,7 +351,8 @@ export default class Chat extends Component {
                     :""}
                 <MessageList hwdate={this.state.selDate?this.state.curDate:null}
                              messages={this.state.messages} username={chatUserName}
-                             isshortmsg={this.state.isServiceChat}
+                             isshortmsg={this.state.isServiceChat||!this.state.servicePlus}
+                             classID={this.props.classID}
                              addmsgs={this.state.addMsgs}/>
 
                 <div className={"add-msg-container"}>

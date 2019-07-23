@@ -224,6 +224,26 @@
 .homework-plus:hover{
     cursor: pointer;
 }
+
+.service-plus{
+    position : absolute;
+    right : 5px;
+    top : 37px;
+    font-weight: 800;
+    background-color: var(--msg-header-color);
+    color: #f7f7f7;
+    border: 2px solid #898989;
+    padding : 1px 5px 3px;
+    text-align: center;
+    border-radius: 12px;
+    font-size: .9em;
+    display: inline-block;
+    width : 180px;
+}
+.service-plus:hover{
+    cursor: pointer;
+}
+
 .add-msg-homework-title{
     margin-top : -20px;
     margin-left : 10px;
