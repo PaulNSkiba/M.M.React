@@ -1,7 +1,11 @@
 :root {
     --border-color : darkgrey;
     --msg-header-color : #33ccff;
+    --msg-header-color-new : #f2b436;
     --msg-hw-color : #b40530;
+    --msg-hw-color-light : #ecabb9;
+    --msg-left-side : #edf0f2;
+    --msg-right-side : rgba(163, 234, 247, 0.49);
 }
 
 @media only screen and (max-width: 400px) {
@@ -10,22 +14,32 @@
     }
 }
 
-.chat-container {
+.msg-list { margin-bottom : 0; margin-top : 5px }
+
+.chat-container, .chat-container-new {
     position: absolute;
-    float: left;
-    margin-left: 5%;
     border: 0.5px solid var(--border-color);
-    width : 50%;
-    max-width:370px;
+    width : 80%;
+    /*max-width:370px;*/
+    min-height: 70%;
     bottom : 20px;
     border-radius: 10px;
-    box-shadow: 0px 8px 16px 0px var(--border-color);
+    box-shadow: 0 8px 16px 0 var(--border-color);
     z-index : 40;
     background-color: white;
     opacity : 0;
     transition: opacity .3s ease-in-out;
 }
-
+.chat-container-new {
+    /*float: right;*/
+    margin-right: 5%;
+    right : 5%;
+}
+.chat-container {
+    /*float: left;*/
+    margin-left: 5%;
+    left : 5%;
+}
 .msg-left-side,.msg-right-side {
     position : relative;
     display: flex;
@@ -35,14 +49,12 @@
     margin-top : 5px;
     margin-bottom : 2px;
     border-radius: 10px;
-    /*width: max-content;*/
-    /*height: auto;*/
 }
 .msg-left-side{
-    background-color: #edf0f2;
+    background-color: var(--msg-left-side);
 }
 .msg-right-side{
-    background-color: rgba(163, 234, 247, 0.49);
+    background-color: var(--msg-right-side);
 }
 .msg-left-side > div.msg-author{
     margin : -15px -50px -15px 0;
@@ -69,8 +81,13 @@
     width: 100%;
     position: relative;
     font-size: 0.9em;
+    padding: 0;
+    /*border : 2px solid white;*/
 }
-
+.msg-text {
+    font-size : .95em;
+    font-weight : 500;
+}
 .msg-right-author, .msg-left-author {
     color : white;
     display: inline-block;
@@ -108,7 +125,7 @@
 .msg-left-ishw{
     right : 10px;
 }
-.msg-title {
+.msg-title, .msg-title-new {
     display:flex;
     justify-content: space-between;
     background-color: var(--msg-header-color);
@@ -119,11 +136,14 @@
     font-weight: 600;
     font-size: 1em;
 }
+.msg-title-new {     background-color: var(--msg-header-color-new); }
+.msg-title {     background-color: var(--msg-header-color); }
+
 .msg-title-userdata {
     display:flex;
     justify-content: space-between;
     background-color: var(--msg-header-color);
-    padding : 0px 10px 10px;
+    padding : 0 10px 10px;
     color: white;
     font-weight: 600;
     font-size: 1em;
@@ -143,8 +163,12 @@
     margin : 8px;
     width: 80%;
     height : 15px;
-    background-color: #e9e9e9;
+    padding : 5px;
+    /*background-color: #e9e9e9;*/
+    background-color: white;
     resize: none;
+    outline: none;
+    border-radius: 10px;
 }
 .btn-add-message{
     display: inline-block;
@@ -179,14 +203,17 @@
     justify-content: space-between;
     width : 100%;
 }
-.btn-add-time {
+.btn-add-time, .btn-add-time-done  {
     position : absolute;
+    /*top: -2px;*/
     right : 5px;
     bottom : 2px;
     float : right;
-    color : darkgrey;
     font-size : 0.7em;
 }
+.btn-add-time-done {    color : #526ef3; }
+.btn-add-time {    color : darkgrey; }
+
 .add-msg-container{
     display: flex;
     flex-direction: column;
@@ -239,6 +266,7 @@
     font-size: .9em;
     display: inline-block;
     width : 180px;
+    z-index : 20;
 }
 .service-plus:hover{
     cursor: pointer;
@@ -285,8 +313,9 @@
     cursor : pointer;
 }
 .active-msg-btn {
-    background-color: white;
-    color : var(--msg-header-color);
+    background-color: var(--msg-header-color);
+    color : white;
+    /*color : var(--msg-header-color);*/
     border : 1px solid var(--msg-header-color);
 }
 .msg-btn-up{
@@ -316,3 +345,139 @@
     transition: opacity .3s ease-in-out;
     padding-bottom: 5px;
 }
+.homework-border {
+    border : 2px solid var(--msg-hw-color-light);
+}
+.homework-no-border {
+    border : 2px solid white;
+}
+.rta {
+    flex-grow: 1;
+}
+
+.emoji-mart {
+    position: absolute;
+    bottom: 20px;
+    right: 10px;
+}
+
+.message-input:focus {
+    outline: none;
+}
+
+.toggle-emoji {
+    border: none;
+    width: 50px;
+    height: auto;
+    padding: 0;
+    margin-bottom: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: #e9e9e9;
+}
+
+.toggle-emoji svg {
+    width: 28px;
+    height: 28px;
+}
+
+.picker-background{
+    position: absolute;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    /*text-align: center;*/
+    /*box-sizing: border-box;*/
+    background-color: white;
+    z-index: 29;
+    height : 420px;
+    width : 360px;
+    left : 10px;
+    top : 2px;
+    border-radius: 5px;
+    border: 2px solid grey;
+    padding: 5px;
+    /*padding: 5px;*/
+}
+
+.message-form, .message-input {
+    width: 100%;
+    margin-bottom: 0;
+}
+
+.rta {
+    flex-grow: 1;
+}
+
+.emoji-mart {
+    position: absolute;
+    bottom: 20px;
+    right: 10px;
+}
+
+textarea.message-input {
+    /*height: 50px;*/
+    flex-grow: 1;
+    /*line-height: 35px;*/
+    padding-left: 5px;
+    border-radius: 0;
+    border-top-left-radius: 0;
+    border-top-right-radius: 0;
+    border-bottom-left-radius: 0;
+    border-bottom-right-radius: 0;
+    border: none;
+    font-size: 1.2em;
+    color: #333;
+    min-height: auto;
+    overflow-y: hidden;
+    resize: none;
+    /*border-left: 1px solid #ccc;*/
+}
+
+.message-input:focus {
+    outline: none;
+}
+.who-typing{
+    margin : 0 0 0 20px;
+    font-size : .9em;
+    color : darkgrey;
+    font-weight: 500;
+    height: 20px;
+    width : 100%;
+}
+/* RTA
+       ========================================================================== */
+
+.rta {
+    position: relative;
+    border-left: 1px solid #ccc;
+    display: flex;
+    flex-direction: column;
+}
+
+.rta__autocomplete {
+    position: absolute;
+    width: 150px;
+    background-color: white;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    font-size: 1em;
+}
+
+.rta__autocomplete ul {
+    list-style: none;
+    text-align: left;
+    margin-bottom: 0;
+}
+
+.rta__autocomplete li {
+    margin-bottom: 5px;
+    padding: 1px 10px;
+    cursor: pointer;
+}
+
+.rta__autocomplete li:hover {
+    background-color: skyblue;
+}
+

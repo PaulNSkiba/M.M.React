@@ -81,4 +81,9 @@
     top : 0;
     background: rgba(0, 0, 0, 0.18);
 }
+.mym-menu-title {
+    border: none;
+    font-weight : 700;
+    outline: none;
+}
 

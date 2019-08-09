@@ -38,13 +38,13 @@ export default class MobileMenu extends Component {
         // console.log("this.props.list", this.props.list)
         return(
             <MobMenu className="bm-menu-my" width={ '75%' } isOpen={this.state.menuOpen} onStateChange={(state) => this.handleStateChange(state)}>
-                {userID&&<a>{userName}</a>}
-                {!userID&&<a onClick={ () => {this.closeMenu(); this.props.userLogin()} } className="menu-item--small">Вход</a>}
+                {userID&&<span className={"mym-menu-title"}><u>{userName}</u></span>}
+                {!userID&&<div className="menu-item--small mym-menu-title" onClick={ () => {this.closeMenu(); this.props.userLogin()} } >Вход</div>}
                 {withtomain&&<Link to="/" id="home" className="menu-item">Головна</Link>}
                 {isadmin&&userID&&<Link to="/admin" id="admin" className="menu-item">Адмінка</Link>}
                 {isadmin&&userID&&<Link to="/adminteacher" id="adminteacher" className="menu-item">Адмінка класу</Link>}
                 {userID&&<Link to="/hw" id="homework" className="menu-item">Домашка</Link>}
-                {userID&&<a onClick={ () => {this.closeMenu(); this.props.userLogout()}  } className="menu-item--small">Выход</a>}
+                {userID&&<div className="menu-item--small mym-menu-title" onClick={ () => {this.closeMenu(); this.props.userLogout()}  }>Выход</div>}
             </MobMenu>
         )
     }

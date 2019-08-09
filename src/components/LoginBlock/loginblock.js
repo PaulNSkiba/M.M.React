@@ -9,7 +9,7 @@ import { FACEBOOK_URL, CREATEUSER_URL, UPDATESETUP_URL, SUBJECTS_GET_URL, UPDATE
 import emailPropType from 'email-prop-type';
 import { ChatManager, TokenProvider } from '@pusher/chatkit-client'
 import FacebookLogin from 'react-facebook-login';
-import {GoogleLogin, GoogleLogout} from 'react-google-login';
+import {GoogleLogin} from 'react-google-login';
 
 // import fbLogin from '../../img/login-with-facebook-button-transparent-background-www-171.png'
 // import fbBtn from '../../img/fb-btn.png'
@@ -198,8 +198,8 @@ class LoginBlock extends Component {
     setSetup = async (usersetup, userID, classID)=>{
 //        console.log("setSetup", usersetup);
 //         this.changeState("curClass",usersetup.curClass, userID);
-        let {classNumber, subjects_list, pupilCount, currentYear, selectedSubj, subjCount, selectedSubjects, markBlank, titlekind, currentPeriodDateCount, direction, withoutholidays} = this.props.userSetup;
-        let res = true;
+        let {classNumber, subjects_list, pupilCount, currentYear, selectedSubj, selectedSubjects, markBlank, titlekind, currentPeriodDateCount, direction, withoutholidays} = this.props.userSetup;
+        // let res = true;
         //
         let data = {}
         data.class_id = classID
@@ -220,15 +220,15 @@ class LoginBlock extends Component {
         // data = JSON.stringify(data)
         // res = await this.changeState("class_id",classID, userID,classID);
         // classID = usersetup.classID;
-        res = await this.changeState("groupUpdate",data, userID, classID);
-        res = await this.changeState("students",usersetup.pupilCount, userID, classID);
+        await this.changeState("groupUpdate",data, userID, classID)
+        await this.changeState("students",usersetup.pupilCount, userID, classID)
         this.props.onStopLoading()
     }
 
     changeState(name, value, userID, classID) {
         // let {curClass} = this.state
         let json, data, arr=[];
-        let {students : studs, curClass, subjects_list, selectedSubjects} = this.props.usersetup;
+        let {students : studs, subjects_list, selectedSubjects} = this.props.usersetup;
         console.log("changeState", name, value, userID)
         switch (name) {
             // case 'userId' : { this.setState({ userID : userID }); break;}

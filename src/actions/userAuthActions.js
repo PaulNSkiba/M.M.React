@@ -12,7 +12,11 @@ export const userLoggedIn = (email, pwd, provider, provider_id) => {
 
         let header = {
             headers: {
-                'Content-Type': "application/json",
+                // 'Content-Type': 'application/json',
+                'Access-Control-Allow-Origin': '*',
+                'Content-Type': 'text/plain',
+                'Access-Control-Allow-Methods' : 'POST',
+                'Access-Control-Max-Age' : 600,
             }
         }
 
@@ -26,19 +30,21 @@ export const userLoggedIn = (email, pwd, provider, provider_id) => {
         console.log('USER_LOGGIN', JSON.stringify(data))
 
         document.body.style.cursor = 'progress';
-        instanceAxios().post(LOGINUSER_URL, JSON.stringify(data), header)
+        // instanceAxios().post(LOGINUSER_URL, JSON.stringify(data), header)
+        axios.post(LOGINUSER_URL, JSON.stringify(data), header)
             .then(response => {
                 console.log('USER_LOGGEDIN', response.data);
                 // let token = response.data.token;
                 dispatch({type: 'USER_LOGGEDIN', payload: response.data});
                 // пробуем записать в LocalStorage имя пользователя, ID, имя и тип авторизации
                 let ls = {}
-                let {   name : userName, id : userID } = response.data.user;
-                let {   token} = response.data;
+                let { name : userName, id : userID, class_id : classID } = response.data.user;
+                let { token} = response.data;
                 ls.email = email;
                 ls.name = userName;
                 ls.id = userID;
                 ls.token = token;
+                ls.class_id = classID;
                 window.localStorage.setItem("myMarks.data", JSON.stringify(ls));
 
                 document.body.style.cursor = 'default';
@@ -61,7 +67,16 @@ export const userLoggedInByToken = (email, token, kind) => {
 
         let header = {
             headers: {
-                'Content-Type': "application/json",
+                // 'Content-Type': 'application/json',
+                // 'Content-Type': 'x-www-form-urlencoded',
+                // 'Content-Type': 'application/json',
+                'Access-Control-Allow-Origin' : '*',
+                // 'Accept' : 'application/json',
+                'Content-Type': 'text/plain',
+                'Access-Control-Max-Age' : 600,
+                'Access-Control-Allow-Methods' : 'POST',
+                // 'Access-Control-Allow-Headers' : 'Origin, X-Requested-With, Content-Type, Accept',
+                // 'Access-Control-Allow-Credentials' : true,
             }
         }
 
@@ -70,7 +85,7 @@ export const userLoggedInByToken = (email, token, kind) => {
             "token": token,
             "kind": kind,
         };
-        // console.log("TEST");
+        console.log("userLoggedInByToken", data);
         document.body.style.cursor = 'progress';
         axios.post(LOGINUSER_URL, data, header)
             .then(response => {
@@ -79,11 +94,12 @@ export const userLoggedInByToken = (email, token, kind) => {
                 dispatch({type: 'USER_LOGGEDIN', payload: response.data});
                 // пробуем записать в LocalStorage имя пользователя, ID, имя и тип авторизации
                 let ls = {}
-                let {   name : userName, id : userID } = response.data.user;
+                let {   name : userName, id : userID, class_id : classID } = response.data.user;
                 let {   token} = response.data;
                 ls.email = email;
                 ls.name = userName;
                 ls.id = userID;
+                ls.class_id = classID;
                 ls.token = token;
                 window.localStorage.setItem("myMarks.data", JSON.stringify(ls));
                 dispatch({type: 'APP_LOADED'})

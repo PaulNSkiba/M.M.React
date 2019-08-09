@@ -4,7 +4,7 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux'
 import { userLoggedOut } from '../../actions/userAuthActions'
-import Checkbox from '../CheckBox/checkbox'
+// import Checkbox from '../CheckBox/checkbox'
 
 import { STUDENTS_UPDATE_URL, instanceAxios } from '../../config/URLs'
 

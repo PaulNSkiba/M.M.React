@@ -6,9 +6,11 @@ import { store } from '../store/configureStore'
 import {ISDEBUG} from '../components/helpers'
 
 
- export const AUTH_URL = ISDEBUG?'https://sch-journal.dev':'https://mymarks.info'
- export const BASE_URL = ISDEBUG?'https://localhost:3000':'https://mymarks.info'
-
+export const AUTH_URL = ISDEBUG?'https://sch-journal.dev':'https://mymarks.info'
+export const BASE_URL = ISDEBUG?'https://localhost:3000':'https://mymarks.info'
+export const BASE_HOST = ISDEBUG?'sch-journal.dev':'mymarks.info'
+export const WEBSOCKETPORT = 6001
+export const LOCALPUSHERPWD = 123456
     // export const AUTH_URL = 'https://mymarks.info'
     // export const BASE_URL = 'https://mymarks.info'
 

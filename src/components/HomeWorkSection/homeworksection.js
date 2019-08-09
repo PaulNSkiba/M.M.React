@@ -6,7 +6,7 @@ import {AddDay, arrOfWeekDays, dateDiff, toYYYYMMDD} from '../helpers'
 import Menu from '../Menu/menu'
 import { connect } from 'react-redux'
 import {withRouter} from 'react-router-dom'
-import { userLoggedIn, userLoggedInByToken, userLoggedOut } from '../../actions/userAuthActions'
+import { userLoggedInByToken, userLoggedOut } from '../../actions/userAuthActions'
 import { Link } from 'react-router-dom';
 import MobileMenu from '../MobileMenu/mobilemenu'
 import LoginBlockLight from '../LoginBlockLight/loginblocklight'
@@ -14,7 +14,7 @@ import LoginBlockLight from '../LoginBlockLight/loginblocklight'
 import edit_icon from '../../img/Edit-512s.png'
 
 import './homeworksection.css'
-import { HOMEWORK_ADD_URL, HOMEWORK_GET_URL, instanceAxios } from '../../config/URLs'
+import { HOMEWORK_ADD_URL, instanceAxios } from '../../config/URLs'
 let btns = ['§','Стр.','-','№','Упр.','Зад.','Кнсп.']
 let btnsNumb = [1,2,3,4,5,6,7,8,9,0]
 
@@ -104,7 +104,7 @@ class HomeWorkSection extends Component {
                 return "на " + arrOfWeekDays[this.state.curDate.getDay()] + '  ' + (this.state.curDate.getWeek() - this.state.now.getWeek()) +'нед.'
             }
         }
-        return ""
+        // return ""
         // return "След. Вторник"
     }
     getDate=(prm)=>(
@@ -239,7 +239,10 @@ class HomeWorkSection extends Component {
                     let curHomeWork = this.getHomeWorkByID(Number(e.target.id.toString().replace('img','')))
                     this.setState({sideListLeft:false, editId:curHomeWork.id})
                     console.log("IMG", e.target.id.toString().replace('img',''), curHomeWork.id)
+                    break;
                     // this.homeWorkTxt.focus()
+                default:
+                    break
             }
             // console.log('hideInfo', this.state, e.target.id, e.target.nodeName)
         }

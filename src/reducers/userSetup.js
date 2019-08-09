@@ -38,6 +38,7 @@ const initialState = {
         stepsLeft : 6,
         chatSessionID : '',
         classObj : { chatroom_id : 0},
+        newMsgCount : 0,
 }
 
 export function userSetupReducer(state = initialState, action) {
@@ -204,6 +205,7 @@ export function userSetupReducer(state = initialState, action) {
                 stepsLeft : 6,
                 chatSessionID : '',
                 classObj : { chatroom_id : 0},
+                newMsgCount : 0,
                 };
         default :
             return state

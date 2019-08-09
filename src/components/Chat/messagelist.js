@@ -4,8 +4,16 @@
 import React, { Component } from 'react'
 import ScrollToBottom from 'react-scroll-to-bottom';
 import { css } from 'glamor';
-import addMsg from '../../img/addMsg.svg'
 import './chat.css'
+import MicrolinkCard from '@microlink/react';
+
+// import addMsg from '../../img/addMsg.svg'
+
+const insertTextAtIndices = (text, obj) => {
+    return text.replace(/./g, function(character, index) {
+        return obj[index] ? obj[index] + character : character;
+    });
+};
 
 export class MessageList extends Component {
     constructor(props) {
@@ -29,29 +37,64 @@ export class MessageList extends Component {
 
         questionText = questionText.concat(this.props.classID?"Вашу электронную почту.":"указанную Вами электронной почте.")
 
-        console.log("this.props.classID", this.props.classID)
-
         return (
 
             <div className="msg-list">
                 {!this.props.isshortmsg?
                     <ScrollToBottom className={ ROOT_CSS }>
                         {this.props.messages.map((message, i) =>{
-                                // console.log('MESSAGE', message)
+
                             let msg = JSON.parse(message)
+                            console.log('MESSAGE', message, msg.text)
+
+                            const urlMatches = msg.text.match(/\b(http|https)?:\/\/\S+/gi) || [];
+
+                            let { text } = msg;
+                            urlMatches.forEach(link => {
+                                const startIndex = text.indexOf(link);
+                                const endIndex = startIndex + link.length;
+                                text = insertTextAtIndices(text, {
+                                    [startIndex]: `<a href="${link}" target="_blank" rel="noopener noreferrer" class="embedded-link">`,
+                                    [endIndex]: '</a>',
+                                });
+                            });
+
+                            // add this line
+                            const LinkPreviews = urlMatches.map(link => <MicrolinkCard  key={"url"+i} url={link} />);
+
                             let username = msg.hasOwnProperty('userID')?msg.userName:msg.senderId
                             let hw = msg.hasOwnProperty('hwdate')?(new Date(msg.hwdate)).toLocaleDateString()+':'+msg.subjname:''
                             let ownMsg = (username===this.props.username)
                             // console.log(this.props.hwdate===msg.hwdate)
-                            if (this.props.hwdate===null||(!(this.props.hwdate===null)&&((new Date(this.props.hwdate)).toLocaleDateString()===(new Date(msg.hwdate)).toLocaleDateString())))
-                            return <div key={i} className="message-block">
-                                <div className={ownMsg?"msg-right-side":"msg-left-side"} key={msg.id}>
+                            return (this.props.hwdate===null||(!(this.props.hwdate===null)&&((new Date(this.props.hwdate)).toLocaleDateString()===(new Date(msg.hwdate)).toLocaleDateString())))?
+                            <div key={i} id={"msg-"+msg.id} className={"message-block"}>
+                                <div className={ownMsg?(hw.length?"msg-right-side homework-border":"msg-right-side  homework-no-border"):(hw.length?"msg-left-side homework-border":"msg-left-side homework-no-border")} key={msg.id}>
                                     <div key={'id'+i} className={ownMsg?"msg-right-author":"msg-left-author"}>{username}</div>
-                                    <div key={'msg'+i} className="msg-text">{msg.text}</div>
-                                    <div className={"btn-add-time"}>{msg.time}</div>
+
+
+                                        {/*{msg.text}*/}
+
+                                        {urlMatches.length > 0 ? (
+                                            <div key={'msg'+i} className="msg-text">
+                                                <span
+                                                    dangerouslySetInnerHTML={{
+                                                        __html: text,
+                                                    }}
+                                                />
+                                                {/*//eslint-disable-next-line*/}
+                                                {LinkPreviews}
+                                            </div>
+                                        ) : (
+                                            <div key={'msg'+i} className="msg-text">
+                                                {msg.text}
+                                            </div>
+                                        )}
+
+
+                                    <div className={msg.id?"btn-add-time-done":"btn-add-time"}>{msg.time}</div>
                                     {hw.length?<div key={'idhw'+i} className={ownMsg?"msg-right-ishw":"msg-left-ishw"}>{hw}</div>:""}
                                 </div>
-                            </div>}
+                            </div>:null}
                             )}
                     </ScrollToBottom>
                     :
@@ -73,57 +116,7 @@ export class MessageList extends Component {
                             </div>:""}
                         </div>
                     </ScrollToBottom>        }
-
             </div>
         )
     }
 }
-// export class MessageTitle extends Component {
-//     render() {
-//         return (
-//             <div className="msg-title" >{"My.Marks CHAT"}</div>
-//         )
-//     }
-// }
-// export class SendMessageForm extends Component {
-//     constructor(props) {
-//         super(props);
-//         this.state = {
-//             message : '',
-//             messages : this.props.messages,
-//             }
-//     }
-//     componentDidMount() {
-//         this.inputMessage.focus();
-//     }
-//     addMessage=()=>{
-//         console.log('addMessage', this.inputMessage)
-//     }
-//     txtOnChange=(e)=>{
-//         console.log('txtOnChange', e.target.value)
-//     }
-//     _handleKeyDown = (e) => {
-//         if (e.key === 'Enter') {
-//             let obj = {}, messages = this.state.messages
-//             obj.senderId = 'username'
-//             obj.text = e.target.value
-//             this.props.addMsg(obj)
-//             // messages.push(obj)
-//             // this.setState(messages)
-//             e.target.value = ''
-//             console.log('handleKeyDown', e.target.value);
-//         }
-//     }
-//     render() {
-//         console.log(this.state.messages)
-//         return (
-//             <div>
-//                 <form className="frm-add-msg">
-//                     <textarea onKeyDown={this._handleKeyDown} className="msg-add-textarea"
-//                               placeholder="Введите сообщение..."  type="text" ref={input=>{this.inputMessage=input}}/>
-//                     <div className={"btn-add-message"} type="submit" onClick={this.addMessage.bind(this)}><img height="25px" src={addMsg}/></div>
-//                 </form>
-//             </div>
-//         )
-//     }
-// }

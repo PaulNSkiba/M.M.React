@@ -1,8 +1,8 @@
 import React, { Component } from 'react';
 import {withRouter} from 'react-router-dom'
 import { connect } from 'react-redux'
-// import ReactCountryFlag from "react-country-flag";
 import axios from 'axios';
+// import ReactCountryFlag from "react-country-flag";
 // import ReactLoading from 'react-loading';
 // import { ClipLoader } from 'react-spinners';
 
@@ -24,13 +24,12 @@ import MobileMenu from '../components/MobileMenu/mobilemenu'
 import Charts from '../components/Charts/charts'
 import { initState } from '../actions/userSetupActions'
 import { userLoggedIn, userLoggedInByToken, userLoggedOut } from '../actions/userAuthActions'
-
+import Chat from '../components/Chat/chat'
+import 'react-chat-widget/lib/styles.css';
+import {Pusher} from 'pusher-js'
+// import { Input, Button } from 'react-chat-elements'
 // import { Widget, addResponseMessage } from 'react-chat-widget';
 // import { ThemeProvider } from '@livechat/ui-kit'
-import Chat from '../components/Chat/chat'
-
-import 'react-chat-widget/lib/styles.css';
-// import { Input, Button } from 'react-chat-elements'
 
 import { API_URL, AUTH_URL, EXCEL_URL, UPDATESETUP_URL, SUBJECTS_GET_URL, STUDENTS_GET_URL, MARKS_STATS_URL, instanceAxios } from '../config/URLs'
 import LoginBlock from '../components/LoginBlock/loginblock'
@@ -39,10 +38,9 @@ import LoginBlock from '../components/LoginBlock/loginblock'
 // import AddSubject from '../components/AddSubject/addsubject'
 import LoginBlockLight from '../components/LoginBlockLight/loginblocklight'
 import Menu from '../components/Menu/menu'
-
 import ChatBtn from "../img/chat-btn.svg"
 import './App.css';
-import { withCookies, Cookies } from 'react-cookie';
+import { withCookies } from 'react-cookie';
 // import Chart from "react-google-charts/dist/ReactGoogleCharts.d";
 
 
@@ -51,9 +49,6 @@ class App extends Component {
         super(props);
 
         this.state = {
-            // pupilCount: 0,
-            // currentYear: '',
-            // curYearDone: 0,
             shotsteplist : true,
             classNumber : 0,
             steps: {
@@ -67,74 +62,107 @@ class App extends Component {
             myCity : localStorage.getItem("myCity")===null?'':localStorage.getItem("myCity"),
             myCountry : localStorage.getItem("myCountry")===null?'':localStorage.getItem("myCountry"),
             myCountryCode : localStorage.getItem("myCountryCode")===null?'':localStorage.getItem("myCountryCode"),
-            isMobile : window.screen.width < 400,
+            isMobile : window.innerWidth < 400,
             stats : localStorage.getItem("markStats")===null?{}:JSON.parse(localStorage.getItem("markStats")),
             loading : true,
             isJournalClicked : false,
             stepsLeft : 7,
             displayChat : false,
-            chatSessionID : '',
-            //this.isSaveEnabled(),
-            // chartColumns : {},
-            // menuOpen : false,
+            displayNewChat : false,
+            chatMessages : [],
         }
+        this.getChatMessages = this.getChatMessages.bind(this)
+        this.updateMessages = this.updateMessages.bind(this)
     }
 
+    componentWillUnmount() {
+    }
 
     componentWillMount(){
-        // console.log('start', this.state.loading, new Date())
-
         (async()=>{
 
+            this.getSessionID();
             await this.getGeo();
             await this.getStats();
-            // this.getGeo()
-            // this.getStats()
-
         })();
 
+        if (!(window.localStorage.getItem("myMarks.data") === null)) {
+            // console.log("myMarks.data", JSON.parse(window.localStorage.getItem("myMarks.data")))
+            let localstorage = JSON.parse(window.localStorage.getItem("myMarks.data"))
+            let {email, token, class_id : classID} = localstorage
+            this.props.onUserLoggingByToken(email, token, null);
+            this.getChatMessages(classID);
+        }
         this.props.onChangeStepsQty(this.isSaveEnabled())
-        this.getSessionID();
-
     }
     componentDidMount(){
-        if (!(window.localStorage.getItem("myMarks.data") === null)) {
-            let ls = JSON.parse(window.localStorage.getItem("myMarks.data"))
-            this.props.onUserLoggingByToken(ls.email, ls.token, null);
+        // if (!(window.localStorage.getItem("myMarks.data") === null)) {
+        //     // console.log("myMarks.data", JSON.parse(window.localStorage.getItem("myMarks.data")))
+        //     let localstorage = JSON.parse(window.localStorage.getItem("myMarks.data"))
+        //     let {email, token, class_id : classID} = localstorage
+        //     this.props.onUserLoggingByToken(email, token, null);
+        //     this.getChatMessages(classID);
+        // }
+        this.props.onStopLoading()
+    }
+    shouldComponentUpdate(nextProps, nextState) {
+        // console.log("shouldComponentUpdate", this.props.userSetup.chatSessionID, nextProps.userSetup.chatSessionID)
+        // if ((this.props.userSetup.chatSessionID !== nextProps.userSetup.chatSessionID))
+            return this.props.userSetup.chatSessionID !== nextProps.userSetup.chatSessionID
+        // else
+        //     return true
+    }
+    /*
+* Обновляем перечень сообщений
+* */
+    updateMessages = (stateValue) => {
+        this.setState({chatMessages : [...this.state.chatMessages, stateValue]})
+    }
+
+    getChatMessages=(classID)=>{
+        let header = {
+            headers: {
+                'Content-Type': 'x-www-form-urlencoded',
+                'Access-Control-Allow-Origin' : '*',
+                'Access-Control-Allow-Methods' : 'GET',
+            }
         }
+        // console.log('getChatMessages', this.props.userSetup.classID, classID)
+        instanceAxios().get(API_URL +'chat/get/'+classID, [], header)
+            .then(resp => {
+                this.setState({chatMessages: resp.data.data})
+                // console.log('resp.data', resp, resp.data, resp.data.data)
+            })
+            .catch(response => {
+            })
     }
 
     getSessionID(){
+        let session_id = ''
         let header = {
             headers: {
-                'Content-Type': "application/json",
+                'Content-Type': 'x-www-form-urlencoded',
                 'Access-Control-Allow-Origin' : '*',
-                'Access-Control-Allow-Methods' : 'GET, POST, PUT, DELETE, OPTIONS',
+                'Access-Control-Allow-Methods' : 'GET',
             }
         }
-        // if (!(localStorage.getItem("statsDate") === (new Date().toLocaleDateString()))) {
-            instanceAxios().get(API_URL +'session', [], header)            .then(response=>{
-                // console.log("session", response.data);
-                    this.setState(
-                        {
-                            chatSessionID: response.data.session_id,
-                        }
-                    )
-                    this.props.onReduxUpdate('CHAT_SESSION_ID', response.data.session_id)
-                    localStorage.setItem('chatSessionID', response.data.session_id)
+        axios.get(API_URL +'session', [], header)
+                .then(response=>{
+                    session_id = response.data.session_id
+                    this.props.onReduxUpdate('CHAT_SESSION_ID', session_id)
+                    localStorage.setItem('chatSessionID', session_id)
+                    // console.log("session", session_id);
             })
-            .catch(response => {
-                // console.log("getGeoFailed", response.data);
+                .catch(response => {
             })
+            return session_id
     }
     isSaveEnabled=()=>{
         let donesteps = 0, planSteps = 7
         let {pupilCount, subjCount, currentPeriodDateCount, markBlank,
             classNumber, selectedSubj} = this.props.userSetup;
-        donesteps = (!(classNumber===0)?1:0) + (!(Number(pupilCount) === 0)?1:0) + (!(subjCount.slice(-2)==="/0")?1:0) +((selectedSubj.id>0)?1:0) +(!(markBlank.alias === "")?1:0)+(currentPeriodDateCount>0?1:0) + (this.state.isJournalClicked?1:0)
-        // console.log("donesteps", donesteps)
-        // console.log("isSaveEnabled", donesteps, classNumber, this.props.userSetup.classNumber)
-        // this.setState({stepsLeft:planSteps - donesteps})
+            donesteps = (!(classNumber===0)?1:0) + (!(Number(pupilCount) === 0)?1:0) + (!(subjCount.slice(-2)==="/0")?1:0) +((selectedSubj.id>0)?1:0) +(!(markBlank.alias === "")?1:0)+(currentPeriodDateCount>0?1:0) + (this.state.isJournalClicked?1:0)
+
         return planSteps - donesteps
     }
     orderTitles =(item)=>{
@@ -185,8 +213,6 @@ class App extends Component {
                   localStorage.setItem("myCountry", response.data.country_name)
                   localStorage.setItem("myCountryCode", response.data.country)
               }
-              // console.log("getGeo")
-            // })
           })
           .catch(response => {
           // console.log("getGeoFailed", response.data);
@@ -219,7 +245,6 @@ class App extends Component {
                 // Список ошибок в отклике...
             })
         }
-        this.props.onStopLoading()
     }
   buttonClick(event) {
       const classNumber = Number(event.target.id.toString().replace("btn-class-",""));
@@ -303,7 +328,7 @@ class App extends Component {
    }
 
    refreshSteps(steps, keyValue) {
-       for(var key in steps){
+       for(let key in steps){
            if (!(key===keyValue))
                steps[key] = true;
        }
@@ -311,8 +336,7 @@ class App extends Component {
        if (keyValue === (!this.isShortList()?'step8':'step7')) {
            this.setState({isJournalClicked : true})
        }
-       // this.isSaveEnabled()
-       // console.log('refreshSteps', this.isSaveEnabled())
+
        this.props.onChangeStepsQty(this.isSaveEnabled())
        return steps
    }
@@ -386,22 +410,11 @@ class App extends Component {
 
         map.set(key, name)
 
-        // console.log("this.props.onStudentChartSubject!!!", key, name)
         this.props.onStudentChartSubject(map)
     }
     sleep=(ms)=> {
         return new Promise(resolve => setTimeout(resolve, ms));
     }
-
-
-    // getAdditionalData=()=> {
-    //     return new Promise(resolve => {
-    //             this.getGeo()
-    //             this.getStats()
-    //         }
-    //
-    //     )
-    // }
 
 
     isShortList=()=>{
@@ -410,7 +423,7 @@ class App extends Component {
     getExcelFile(){
         document.body.style.cursor = 'progress';
 
-        instanceAxios().get(EXCEL_URL+'/'+this.props.userSetup.classID+'/'+'20190320', {})
+        instanceAxios().get(EXCEL_URL+'/'+this.props.userSetup.classID+'/20190320', {})
             .then(response => {
                 // console.log("CREATEUSER_URL", response.data, this.props.usersetup, response.data.user.id);
                 // this.setState({newUser : response.data.user.id, newEmail : this.inputEmail.value})
@@ -466,10 +479,7 @@ class App extends Component {
             retArr.push(arrRow)
         //    console.log(arrDates[i], arrDateMarks);
         }
-        // console.log("retArr", columns, retArr, arrSubjs, mpSubjs)
-        // retArr.push([datestr,   arrMyMarks.length?Number(arrMyMarks[0].mark):null,
-        //     arrBestMarks.length?Number(arrBestMarks[0].mark):null,
-        //     arrAvgMarks.length?Number(arrAvgMarks[0].mark):null])
+
         return [retArr, columns];
     }
     fireUserV3Login=url=>{
@@ -477,8 +487,8 @@ class App extends Component {
         // let arr = (url.toString().split('/r3/')(1))
         // console.log('arr', arr)
         let arr = url.toString().split('/r3/')[1].replace('/r3','').trim()
+        let namelen = Number(arr.substring(0, 6)) - 42
 
-        var namelen = Number(arr.substring(0, 6)) - 42
         console.log('URL', url, namelen, arr.slice(-namelen), arr.substring(6).replace(arr.slice(-namelen), ''))
 
         let name = arr.slice(-namelen)
@@ -502,6 +512,9 @@ class App extends Component {
 
         console.log("this.props.USERSETUP: ", userSetup);
 
+        // console.log('state', this.state)
+        // return <div>test</div>
+
         if (window.location.href.slice(-3)==="/hw")
             this.props.history.push('/hw');
 
@@ -513,7 +526,8 @@ class App extends Component {
 
 
 
-        const { cookies } = this.props;
+        // const { cookies } = this.props;
+
         // console.log('1P_JAR', this.props, cookies.get('Phpstorm-fff65093'))
         // console.log("LANGUAGE", navigator.language, navigator.systemLanguage, navigator.userLanguage)
 
@@ -537,7 +551,7 @@ class App extends Component {
         if (this.props.user.id > 0 && !this.props.user.verified)
         return (
           <div className="App">
-              {this.props.userSetup.loading?
+              {this.props.userSetup.loading.toString()==="true"?
                   <div className="lds-ring">
                       <div></div>
                       <div></div>
@@ -565,9 +579,6 @@ class App extends Component {
                         {this.state.showLoginLight?
                             <LoginBlockLight onLogin={this.props.onUserLogging} firehide={this.fireLoginLight.bind(this)}/>:''
                         }
-                        {/*<div className={this.props.user.loginmsg.length?"popup show":"popup"} onClick={this.props.onClearErrorMsg}>*/}
-                            {/*{this.props.user.loginmsg.length?<span className="popuptext" id="myPopup">{this.props.user.loginmsg}</span>:""}*/}
-                        {/*</div>*/}
                     </div>
                     <div>
                         {userID>0&&<button className="logoutbtn" onClick={this.userLogout.bind(this)}>Выйти</button>}
@@ -588,7 +599,7 @@ class App extends Component {
                 {/*<div className="loadCursor">*/}
                     {/*/!*<ReactLoading type={"spin"} color={"#52aee6"} height={'10%'} width={'10%'} />*!/*/}
                 {/*</div>*/}
-                {this.props.userSetup.loading?
+                {this.props.userSetup.loading.toString()==="true"?
                 <div className="lds-ring">
                     <div></div>
                     <div></div>
@@ -875,7 +886,7 @@ class App extends Component {
                 {!(!this.isShortList()?step9:step8)&&studentId === 0?
                     <div className="additionalSection">
                         <button>
-                            <a className="infoMsg" href={EXCEL_URL+"/"+this.props.userSetup.classID+'/'+'20190401'} target="_blank" rel="noopener noreferrer">
+                            <a className="infoMsg" href={EXCEL_URL+"/"+this.props.userSetup.classID+'/20190401'} target="_blank" rel="noopener noreferrer">
                             {"Получить файл для ввода оценок"}
                             </a>
                         </button>{/*onClick={this.getExcelFile.bind(this)}*/}
@@ -943,15 +954,23 @@ class App extends Component {
                 {/*</CSSTransitionGroup>*/}
                 {/*</TransitionGroup>>*/}
 
-                {/*<Widget/>*/}
-
                 {!this.state.displayChat?<div className={"btn-chat"} onClick={()=>{this.setState({displayChat:!this.state.displayChat})}}><img height={"40px"} src={ChatBtn} alt=""/></div>:""}
+                {!this.state.displayNewChat?<div className={"btn-chat-new"} onClick={()=>{this.setState({displayNewChat:!this.state.displayNewChat})}}><img height={"40px"} src={ChatBtn} alt=""/></div>:""}
 
                 {this.state.displayChat?
-                    <Chat userID={userID} classID={classID} studentId={studentId} isservice={!classID} userName={userName}
-                          session_id={this.props.userSetup.chatSessionID} homeworkarray={this.props.userSetup.homework} chatroomID={this.props.userSetup.classObj.chatroom_id}
+                    <Chat
+                          isnew = {false} updatemessage={this.updateMessages}
+                          session_id={this.props.userSetup.chatSessionID} homeworkarray={this.props.userSetup.homework}
+                          chatroomID={this.props.userSetup.classObj.chatroom_id} messages={this.state.chatMessages}
                           subjs={selectedSubjects} btnclose={()=>{this.setState({displayChat:!this.state.displayChat})}}/>
                  :""}
+                {this.state.displayNewChat?
+                    <Chat
+                          isnew = {true} updatemessage={this.updateMessages}
+                          session_id={this.props.userSetup.chatSessionID} homeworkarray={this.props.userSetup.homework}
+                          chatroomID={this.props.userSetup.classObj.chatroom_id} messages={this.state.chatMessages}
+                          subjs={selectedSubjects} btnclose={()=>{this.setState({displayNewChat:!this.state.displayNewChat})}}/>
+                    :""}
 
             </div>
 
@@ -985,7 +1004,7 @@ const mapDispatchToProps = dispatch => {
             // console.log("onSetSetup", data, userID)
             const asyncSetSetup = (data, userID, classNumber) =>{
                  return dispatch => {
-                    let responsedata = []
+                    // let responsedata = []
                     // console.log('UPDATE_SETUP_LOCALLY', data, Object.keys(data)[0], Object.values(data)[0])
                     dispatch({type: 'UPDATE_SETUP_LOCALLY', payload: data})
                     if (Object.keys(data)[0]==="class_number") {
@@ -994,10 +1013,9 @@ const mapDispatchToProps = dispatch => {
                         document.body.style.cursor = 'progress';
                         instanceAxios().get(SUBJECTS_GET_URL+'/'+Object.values(data)[0], postdata)
                             .then(response => {
-                                responsedata = response.data;
+                                // let responsedata = response.data;
                                 dispatch({type: 'UPDATE_SETUP_LOCALLY_SUBJLIST', payload: response.data})
                                 let arr = response.data.map(value=>value.subj_key);//`{"subj_id": ${value.subj_id}}`
-                                // console.log("RESPONSEDATA", responsedata, arr, Object.values(data)[0])
                                 let postdata = `{"subjects_list":"${arr}"}`;
                                 userID&&instanceAxios().post(UPDATESETUP_URL + '/' + userID, postdata)
                                     .then(response=>{

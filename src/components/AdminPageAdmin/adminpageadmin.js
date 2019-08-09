@@ -117,19 +117,9 @@ class AdminPageAdmin extends Component {
         console.log('query', MARKS_STATS_URL+'/'+this.props.userSetup.classID)
         instanceAxios().get(MARKS_STATS_URL+'/'+this.props.userSetup.classID, [], header)
             .then(response => {
-                // this.setState({ subjects: response.data });
-                // {60/item.cnt/item.diff}
-                // {item.min}
-                {/*<td>{item.hh}</td><td></td><td>{item.max}</td><td>{item.diff}</td><td>{item.cnt}</td><td></td>*/}
-                // for (let i=1;i<response.data.length;i++){
-                //     console.log(response.data[i].hh)
-                // }
                 this.setState({
                     stats :response.data.stats,
                 })
-                // rows = response.data.response.map((item)=>(
-                //     <tr><td>{item.dd}</td><td>{item.hh}</td><td></td><td>{item.max}</td><td>{item.diff}</td><td>{item.cnt}</td><td><td>{item.hh}</td><td></td><td>{item.max}</td><td>{item.diff}</td><td>{item.cnt}</td><td></td></td></tr>
-                // ))
                 console.log(response.data.stats, rows);
             })
             .catch(response => {
