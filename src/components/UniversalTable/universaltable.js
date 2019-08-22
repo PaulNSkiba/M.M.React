@@ -4,10 +4,8 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux'
 import { userLoggedOut } from '../../actions/userAuthActions'
-// import Checkbox from '../CheckBox/checkbox'
-
-import { STUDENTS_UPDATE_URL, instanceAxios } from '../../config/URLs'
-
+import { STUDENTS_UPDATE_URL } from '../../config/config'
+import { instanceAxios, mapStateToProps } from '../../js/helpers'
 import '../../containers/App.css'
 import './universaltable.css'
 
@@ -248,14 +246,7 @@ class UniversalTable extends Component {
         )
     }
 }
-// приклеиваем данные из store
-const mapStateToProps = store => {
-    // console.log(store) // посмотрим, что же у нас в store?
-    return {
-        user:       store.user,
-        userSetup:  store.userSetup,
-    }
-}
+
 const mapDispatchToProps = dispatch => {
     return ({
         onInitState: () => dispatch([]),

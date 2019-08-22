@@ -1,0 +1,165 @@
+/*html, body {*/
+    /*height: 100%;*/
+    /*margin: 0;*/
+/*}*/
+.mym-wf-main-title{
+    margin : 0 5%;
+}
+.mym-wf-main-block {
+    position: relative;
+    display : flex;
+    flex-direction: row;
+    margin : 0 5%;
+    border : .5px solid grey;
+    width : 90%;
+    height: 90vh;
+    min-height: 90vh;
+    max-height: 90vh;
+    overflow: auto;
+}
+.mym-wf-left-block {
+    width : 70%;
+    /*border : .5px solid #a3eaf7;*/
+    height: 100%;
+}
+.mym-wf-right-block {
+    display : flex;
+    position: relative;
+    flex-direction: column;
+    width: 30%;
+    /*border : .5px solid blue;*/
+}
+.mym-wf-workdescr {
+    position: relative;
+    height: 60%;
+    min-height: 200px;
+    /*border : solid .5px darkred;*/
+}
+.mym-wf-workdescr-content{
+    position: relative;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+}
+.mym-wf-workdescr-select{
+    position: absolute;
+    bottom : 0;
+    height: 50px;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+}
+.mym-wf-workdescr-select select{
+    margin-right: 20px
+}
+.mym-wf-filter {
+    height: 40%;
+    display: flex;
+    position: relative;
+    flex-direction: column;
+}
+.mym-wf-filter-type, .mym-wf-filter-status {
+    height: 50%;
+}
+.mym-wf-filter-header{
+    display: flex;
+    font-size: .9em;
+    justify-content: space-between;
+    margin-right: 5%;
+}
+.mym-wf-filter-header-bottom {
+    display: flex;
+    font-size: .9em;
+    justify-content: flex-end ;
+    margin-right: 5%;
+}
+.mym-wf-workflow-list{
+    display:flex;
+    flex-direction : column;
+    max-height: 100%;
+    overflow: auto;
+}
+.mym-wf-workflow-item{
+    background-color: white;
+    border-bottom: 1px solid lightgrey;
+    width : 100%;
+}
+.mym-wf-workflow-active{
+    background-color: var(--selected-item);
+    color : white;
+}
+.mym-wf-workflow-list:hover{
+    cursor: pointer;
+}
+.mym-wf-workflow-row{
+    position : relative;
+    display: flex;
+}
+.mym-wf-workflow-row.mym-wf-workflow-active {
+    border: 1px solid var(--selected-item-hard);
+}
+.mym-wf-workflow-rowno {
+    display: flex;
+    width : 50px;
+    /*text-align: center;*/
+    /*vertical-align: middle;*/
+    align-items: center;
+    justify-content: center;
+    font-weight: 900;
+    /*padding: 1%;*/
+    border-bottom: 1px solid whitesmoke;
+}
+.mym-wf-workflow-done {
+    position: relative;
+    background-color: var(--excel-mark);
+}
+.mym-wf-workflow-doing {
+    position: relative;
+    background-color: var(--good-mark);
+}
+.mym-wf-workflow-plan {
+    position: relative;
+    background-color: var(--norm-mark);
+    color : var(--mark-text);
+}
+.mym-wf-right-block-title{
+    display: flex;
+    justify-content: space-between;
+    margin: 5px;
+}
+.mym-wf-workdescr-edit{
+    position: absolute;
+    z-index: 2;
+    resize: none;
+    display:block;
+    font-size: 1.3em;
+    width: 98%;
+    height: 80%;
+    border : solid 1px var(--selected-item);
+    /*border: none;*/
+    outline: none;
+    border-radius: 3px;
+    /*margin-bottom: 10px;*/
+}
+.mym-wf-type {
+    position : absolute;
+    top : 2px;
+    right : 2px;
+    background-color: var(--selected-item-hard);
+    padding : 3px;
+    color : white;
+    font-size: 0.7em;
+    border-radius: 4px;
+    opacity: 1;
+    font-weight: 800;
+}
+.mym-wf-type.mym-wf-type-error {
+    color : var(--mark-text);
+}
+.mym-wf-type.mym-wf-type-future {
+    color : darkblue;
+}
+.mym-wf-type.mym-wf-type-nearest {
+    color : var(--msg-header-color-new);
+}

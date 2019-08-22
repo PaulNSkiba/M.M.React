@@ -7,12 +7,12 @@ import * as serviceWorker from './serviceWorker';
 import { store } from './store/configureStore'
 import { Provider } from 'react-redux'
 import { Route, BrowserRouter } from 'react-router-dom';
-// import {CSSTransitionGroup, CSSTransition, TransitionGroup } from 'react-transition-group/CSSTransitionGroup';
 import AdminPage from './components/AdminPage/adminpage'
 import AdminPageTeacher from './components/AdminPageTeacher/adminpageteacher'
 import HomeWorkSection from './components/HomeWorkSection/homeworksection'
+import AdminPageWorkFlow from './components/AdminPageWorkFlow/adminpageworkflow'
 import { CookiesProvider } from 'react-cookie';
-
+// import {CSSTransitionGroup, CSSTransition, TransitionGroup } from 'react-transition-group/CSSTransitionGroup';
 // const store = createStore(() => {}, {})
 
 ReactDOM.render(
@@ -28,6 +28,7 @@ ReactDOM.render(
                     <Route path="/admin" component={AdminPage}/>
                     <Route path="/adminteacher" component={AdminPageTeacher}/>
                     <Route path="/hw" component={HomeWorkSection}/>
+                    <Route path="/workflow" component={AdminPageWorkFlow}/>
                 </div>
             </BrowserRouter>
         </CookiesProvider>

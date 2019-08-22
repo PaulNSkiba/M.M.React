@@ -2,22 +2,23 @@
  * Created by Paul on 22.01.2019.
  */
 import React, { Component } from 'react';
+import '../../css/colors.css'
 import './loginblocklight.css'
 import FacebookLogin from 'react-facebook-login';
 import {GoogleLogin} from 'react-google-login';
 
-// import { userLoggedIn } from '../../actions/userAuthActions'
+
 
 export default class LoginBlockLight extends Component {
 
-    userLogin=(email, pwd, provider, provider_id)=> {
+    userLogin = async (email, pwd, provider, provider_id)=> {
         // console.log("LoginBlockLight.userLogin", this.inputEmail.value, this.inputPwd.value)
         if (provider===undefined) {
             email = this.inputEmail.value
             pwd = this.inputPwd.value
         }
-        this.props.onLogin(email, pwd, provider, provider_id)
-        this.props.firehide(true)
+        await this.props.onLogin(email, pwd, provider, provider_id, this.props.langLibrary)
+        await this.props.firehide(true)
         console.log("userLogin", email, pwd, provider, provider_id)
         // this.props.hidesteps();
     }

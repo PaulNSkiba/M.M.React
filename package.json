@@ -28,6 +28,7 @@
     "react-easy-chart": "^1.0.0",
     "react-facebook-login": "^4.1.1",
     "react-feather": "^2.0.3",
+    "react-flags-select": "^1.1.10",
     "react-google-charts": "^3.0.10",
     "react-google-login": "^5.0.4",
     "react-native": "^0.59.8",

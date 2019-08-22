@@ -13,3 +13,4 @@ del /q %targetdir%\asset-manifest.json
 xcopy C:\MyProjects\sch-journal\build\static C:\OpenServer\domains\sch-journal\public\static /E
 xcopy C:\MyProjects\sch-journal\build\*.js C:\OpenServer\domains\sch-journal\public 
 copy C:\MyProjects\sch-journal\build\asset-manifest.json C:\OpenServer\domains\sch-journal\public\asset-manifest.json
+copy C:\MyProjects\sch-journal\build\index.html C:\OpenServer\domains\sch-journal\resources\views\welcome.blade.php

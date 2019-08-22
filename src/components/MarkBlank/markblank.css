@@ -1,11 +1,27 @@
+@media only screen and (max-width: 400px) {
+    .markBlanks {
+        height: 150px;
+        margin : 5px 10%;
+    }
+    .ul12 {
+        width : 50px;
+    }
+    .withborder{
+        padding : 10px;
+    }
+    .dropdown-main-0{
+        margin : 5px 0 0 5px;
+    }
+}
+
 ul {
+
     display: inline-block;
     list-style-type: none;
     margin: 0;
     padding: 0;
     overflow: hidden;
-    /*background-color: #020A84!*#333*!;*/
-    box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.3);
+    box-shadow: 0px 8px 16px 0px var(--shadow);
 }
 .ul12 {
     width : 104px;
@@ -30,32 +46,28 @@ li.li-title {
 }
 /* Change the link color to #111 (black) on hover */
 li a:hover {
-    /*background-color: rgba(41, 245, 36, 0.24);*/
-    background-color: #7DA8E6 /*black*/ /*#255527*/;
-    /*color: white;*/
+    background-color: var(--selected-item);
 }
 .nohover{
     pointer-events: none;  /**<-----------*/
 }
 .active {
-    background-color: #7DA8E6; /*rgba(3,17,230,.5)*//*#4CAF50*/;
-    /*color : white;*/
+    background-color: var(--selected-item);
 }
-.active_selected {
-    background-color: #409be6; /*rgba(3,17,230,.5)*//*#4CAF50*/;
-    color : lightyellow;
-}
-.noactive {
-    background-color: #020A84; /*rgba(3,17,230,.5)*//*#4CAF50*/;
-    /*color : white;*/
-}
+/*.active_selected {*/
+    /*background-color: #409be6; */
+    /*color : lightyellow;*/
+/*}*/
+/*.noactive {*/
+    /*background-color: #020A84; !*rgba(3,17,230,.5)*!!*#4CAF50*!;*/
+    /*!*color : white;*!*/
+/*}*/
 @keyframes flash {
     0% {opacity: 0;}
     100% {opacity: 1;}
 }
 .dropdown-content3 {
     display: flex;
-    /*position: absolute;*/
     justify-content: space-around;
     color: white;
     font-size: 0.7em;
@@ -88,40 +100,30 @@ li a:hover {
 .dropdown-content0 ul li{
     width: 100%;
 }
+.marks12, .marks9,.marks6,.marks3,.marks0{
+    color : var(--mark-text)
+}
 .marks12{
-    background-color: rgb(135,221,151);
-    color : rgb(192,0,0)
+    background-color: var(--excel-mark);
 }
 .marks9{
-    background-color: rgb(198,239,206);
-    color : rgb(192,0,0)
+    background-color: var(--good-mark);
 }
 .marks6{
-    background-color: rgb(255,235,156);
-    color : rgb(192,0,0)
+    background-color: var(--norm-mark);
 }
 .marks3{
-    background-color: rgb(255,133,148);
-    color : rgb(192,0,0)
+    background-color: var(--bad-mark);
 }
 .marks0{
-    background-color: rgb(224, 224, 224);
-    color : rgb(192,0,0)
+    background-color: var(--erase-mark);
 }
 #markblank{
     /*display: none;*/
 }
 #markblank_five, #markblank_twelve, #markblank_letters {
-    /*border : 1px solid lightgrey;*/
-    /*padding: 10px 20px;*/
-    /*border-radius: 3px;*/
-    /*display: block;*/
-    /*width: 100%;*/
     z-index: 3;
 }
-/*#markblank_twelve {*/
-    /*width : 105px;*/
-/*}*/
 .withborder{
     border : 1px solid lightgrey;
     padding: 10px 20px;
@@ -129,13 +131,13 @@ li a:hover {
     z-index: 2;
 }
 #markblank_five.selected, #markblank_twelve.selected, #markblank_letters.selected {
-    border : 1px solid rgb(68,114,196);
+    border : 1px solid var(--selected-item-hard);
     border-radius: 3px;
-    background-color: rgba(64, 155, 230, 0.25);
+    background-color: var(--selected-item-background);
 }
 #markblank_five:hover, #markblank_twelve:hover, #markblank_letters:hover{
-    background-color: rgba(64, 155, 230, 0.16);
-    /*border : 1px solid darkgrey;*/
+    /*background-color: rgba(64, 155, 230, 0.16);*/
+    background-color: var(--selected-item-hover);
     cursor: pointer;
 }
 .dropdown-main-0 {
@@ -151,9 +153,9 @@ ul.marks12>li>a,ul.marks9>li>a,ul.marks6>li>a,ul.marks3>li>a,ul.marks0>li>a {
     font-size: 1.2em;
     font-weight: 600;
 }
-.dontshow{
-    /*display: none;*/
-}
+/*.dontshow{*/
+    /*!*display: none;*!*/
+/*}*/
 .show {
     display: block;
 }
@@ -163,7 +165,7 @@ ul.marks12>li>a,ul.marks9>li>a,ul.marks6>li>a,ul.marks3>li>a,ul.marks0>li>a {
     height: 0;
     border-style: solid;
     border-width: 8px 8px 0 0;
-    border-color: #C00000 transparent transparent transparent;
+    border-color: var(--mark-text) transparent transparent transparent;
 }
 li>a:hover {
     cursor: pointer;
@@ -175,18 +177,3 @@ li>a:hover {
     height : 280px;
 }
 
-@media only screen and (max-width: 400px) {
-    .markBlanks {
-        height: 150px;
-        margin : 5px 10%;
-    }
-    .ul12 {
-        width : 50px;
-    }
-    .withborder{
-        padding : 10px;
-    }
-    .dropdown-main-0{
-        margin : 5px 0 0 5px;
-    }
-}

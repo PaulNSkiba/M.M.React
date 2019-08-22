@@ -3,6 +3,7 @@
  */
 /* eslint-disable */
 import React, { Component } from 'react';
+import '../../css/colors.css';
 import './markblank.css'
 
 class MarkBlank extends Component {

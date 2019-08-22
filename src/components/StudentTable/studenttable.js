@@ -4,14 +4,11 @@
 /* eslint-disable */
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
-
 import MarkBlank from '../MarkBlank/markblank'
-import {numberToLang, AddDay, getSpanCount, toYYYYMMDD} from '../helpers'
+import {numberToLang, AddDay, getSpanCount, toYYYYMMDD, instanceAxios, mapStateToProps} from '../../js/helpers'
 import Select from '../Select/select'
 import Checkbox from '../CheckBox/checkbox'
-
-import { MARKS_URL, TABLE_GET_URL, instanceAxios } from '../../config/URLs'
-
+import { MARKS_URL, TABLE_GET_URL } from '../../config/config'
 import './studenttable.css'
 
 class StudentTable extends Component {
@@ -24,7 +21,7 @@ class StudentTable extends Component {
             dateStart: AddDay((new Date(this.props.userSetup.mark_date.date)),-(this.props.dayscount - 1)),
             dateEnd : new Date(this.props.userSetup.mark_date.date),
             mapDays : new Map(),
-            marks : new Map(), //this.fillMarks(AddDay((new Date()),-2000), new Date()),
+            marks : new Map(),
             selectedSubjs : new Map(),
             markSubjs : new Map(),
             subj_key : this.props.userSetup.selectedSubjects[0].subj_key,
@@ -53,10 +50,9 @@ class StudentTable extends Component {
         let marksBefore = new Map()
         let marksTypes = new Map()
         let selectedSubjs = new Map();
-        let arr = []
+        // let arr = []
 
         let {userID, curClass, selectedSubj,studentId,classID,marks:marksredux} = this.props.userSetup;
-        // console.log("marksredux", marksredux)
 
         if (marksredux.length>0) {
             marks.clear()
@@ -111,9 +107,6 @@ class StudentTable extends Component {
             });
 
         if (selectedSubjs.size > 0) {
-            // arr = Array.from(selectedSubjs.values())
-            // arr.sort()
-
             // console.log("selectedSubjs", selectedSubjs, selectedSubjs.size, Array.from(selectedSubjs.keys())[0])
             this.setState({
                     selectedSubjs : new Map().set(Array.from(selectedSubjs.keys())[0], Array.from(selectedSubjs.values())[0]),
@@ -281,10 +274,7 @@ class StudentTable extends Component {
         //console.log(e.target.id)
         let {selectedSubjs} = this.state
         selectedSubjs.clear()
-        // selectedSubjs.set(e.target.id, e.target.id)
-        // if (selectedSubjs.has(e.target.id))
-        //     selectedSubjs.delete(e.target.id)
-        // else
+
         selectedSubjs.set(e.target.id, e.target.innerHTML)
         this.setState({
             selectedSubjs
@@ -333,7 +323,7 @@ class StudentTable extends Component {
         mapDays.clear()
 
         // console.log(this.props)
-        console.log('tableMarks', this.state.tableMarks)
+        // console.log('tableMarks', this.state.tableMarks)
 
         if (this.state.isTable) {
             console.log('this.state.isTable', this.state)
@@ -576,16 +566,6 @@ class StudentTable extends Component {
         )
     }
 }
-const mapStateToProps = store => {
-    // console.log(store) // посмотрим, что же у нас в store?
-    return {
-        user:       store.user,
-        userSetup:  store.userSetup,
-    }
-}
-const mapDispatchToProps = dispatch => {
-    return ({
-    })
-}
-export default  connect(mapStateToProps, mapDispatchToProps)(StudentTable)
+
+export default  connect(mapStateToProps)(StudentTable)
 /* eslint-disable */

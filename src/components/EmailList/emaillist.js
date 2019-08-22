@@ -3,11 +3,10 @@
  */
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
-// import { InputForEdit } from '../InputForEdit/inputforedit'
 import AddSubject from '../AddSubject/addsubject'
 import './emaillist.css'
-import { EMAIL_ADD_URL, EMAIL_DELETE_URL, STUDENTS_ADD_URL, instanceAxios } from '../../config/URLs'
-import {ISDEBUG} from '../helpers'
+import { ISDEBUG, EMAIL_ADD_URL, EMAIL_DELETE_URL, STUDENTS_ADD_URL } from '../../config/config'
+import { instanceAxios, mapStateToProps} from '../../js/helpers'
 
 class EmailList extends Component {
     constructor(props){
@@ -19,16 +18,6 @@ class EmailList extends Component {
         this.addSubUser = this.addSubUser.bind(this)
     }
     componentWillMount(){
-        // instanceAxios().get(EMAIL_GET_URL + '/' + this.props.userID + '/emails', [])
-        //     .then(response => {
-        //         // ISDEBUG&&console.log(response.data)
-        //         this.setState({
-        //             emails : response.data
-        //         })
-        //     })
-        //     .catch(response => {
-        //         ISDEBUG&&console.log(response)
-        //     })
     }
     addEmailShow(){
         this.setState({addEmail:true})
@@ -41,11 +30,8 @@ class EmailList extends Component {
                 let emails = this.state.emails
                 emails.push(response.data)
                 this.setState({
-                    // emails : this.state.emails.push(`<div className="itemInEmailList" key=${response.data.id}>${response.data.email}<button id=${response.data.id} onClick=${this.deleteItemInList.bind(this)}>-</button></div>`)
                     emails : emails
                 })
-                // dispatch({type: 'UPDATE_SETUP_REMOTE', payload: response.data})
-                // this.props.onInitState(response.data.subjects_list, response.data.subjects_count);
             })
             .catch(response => {
                 ISDEBUG&&console.log(response)
@@ -63,34 +49,16 @@ class EmailList extends Component {
                 this.setState({
                     emails : emails
                 })
-
-                // dispatch({type: 'UPDATE_SETUP_REMOTE', payload: response.data})
-                // this.props.onInitState(response.data.subjects_list, response.data.subjects_count);
             })
             .catch(response => {
                 ISDEBUG&&console.log(response)
             })
-        // let emails = this.state.emails
-        // emails = emails.filter((item)=>(!(item.id===e.target.id)))
-        // this.setState({
-        //     emails : emails
-        // })
-        // alert("Удалить почту?")
     }
     hideAddEmail=()=> {
         this.setState({addEmail: false})
     }
     addSubUser=(email, i, e)=>{
         ISDEBUG&&console.log("email", email, i)
-        // let newuser = `{email:${e.target.id}`
-        // let header = {
-        //     headers: {
-        //         'Content-Type': "application/json",
-        //     }
-        // }
-        // return
-
-        // let email = e.target.id;
         const data = {
             "email": email,
             "name": this.props.userSetup.userName+'[v'+i+']',
@@ -132,9 +100,10 @@ class EmailList extends Component {
                                                                 {item.email}
                                                                 <div className="email-buttons">
                                                                     <div className="emaiListRemoveButton" value={i} id={item.id} onClick={this.deleteItemInList.bind(this)}>-</div>
-                                                                    {!(item.subuser_id===0||item.subuser_id===null)?"Пользователь создан":<div className="fastRegAndMail"
-                                                                                                                                               id={item.email}
-                                                                                                                                               onClick={()=>{this.addSubUser(item.email, (i + 1))}}>Зарегистрировать и отправить ссылку</div>}
+                                                                    {!(item.subuser_id===0||item.subuser_id===null)?"Пользователь создан"
+                                                                        :<div className="fastRegAndMail"
+                                                                                       id={item.email}
+                                                                                       onClick={()=>{this.addSubUser(item.email, (i + 1))}}>Зарегистрировать и отправить ссылку</div>}
                                                                 </div>
                                                         </div>))
         return (
@@ -153,17 +122,4 @@ class EmailList extends Component {
     }
 }
 
-// приклеиваем данные из store
-const mapStateToProps = store => {
-    return {
-        user:       store.user,
-        userSetup:  store.userSetup,
-    }
-}
-const mapDispatchToProps = dispatch => {
-    return ({
-        // onInitState: () => dispatch([]),
-        // onUserLoggingOut  : token => dispatch(userLoggedOut(token)),
-    })
-}
-export default connect(mapStateToProps, mapDispatchToProps)(EmailList)
+export default connect(mapStateToProps)(EmailList)

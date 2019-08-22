@@ -1,24 +1,11 @@
 /**
  * Created by Paul on 22.01.2019.
  */
-import axios from 'axios';
-import { LOGINUSER_URL, instanceAxios } from '../config/URLs'
-// import { store } from '../store/configureStore'
+import { LOGINUSER_URL } from '../config/config'
+import { instanceAxios, langLibrary as langLibraryF } from '../js/helpers'
 
-export const userLoggedIn = (email, pwd, provider, provider_id) => {
+export const userLoggedIn = (email, pwd, provider, provider_id, langLibrary) => {
     return dispatch => {
-
-        dispatch({type: 'APP_LOADING'})
-
-        let header = {
-            headers: {
-                // 'Content-Type': 'application/json',
-                'Access-Control-Allow-Origin': '*',
-                'Content-Type': 'text/plain',
-                'Access-Control-Allow-Methods' : 'POST',
-                'Access-Control-Max-Age' : 600,
-            }
-        }
 
         const data = {
             "email": email,
@@ -28,111 +15,106 @@ export const userLoggedIn = (email, pwd, provider, provider_id) => {
             "token" : null,
         };
         console.log('USER_LOGGIN', JSON.stringify(data))
-
         document.body.style.cursor = 'progress';
-        // instanceAxios().post(LOGINUSER_URL, JSON.stringify(data), header)
-        axios.post(LOGINUSER_URL, JSON.stringify(data), header)
-            .then(response => {
-                console.log('USER_LOGGEDIN', response.data);
-                // let token = response.data.token;
-                dispatch({type: 'USER_LOGGEDIN', payload: response.data});
-                // пробуем записать в LocalStorage имя пользователя, ID, имя и тип авторизации
-                let ls = {}
-                let { name : userName, id : userID, class_id : classID } = response.data.user;
-                let { token} = response.data;
-                ls.email = email;
-                ls.name = userName;
-                ls.id = userID;
-                ls.token = token;
-                ls.class_id = classID;
-                window.localStorage.setItem("myMarks.data", JSON.stringify(ls));
 
+        instanceAxios().post(LOGINUSER_URL, JSON.stringify(data), null)
+            .then(response => {
+                console.log('USER_LOGGEDIN.1', response.data);
+                dispatch({type: 'USER_LOGGEDIN', payload: response.data, langLibrary : langLibrary});
+                dispatch({type: 'ADD_CHAT_MESSAGES', payload : response.data.chatrows});
+                // пробуем записать в LocalStorage имя пользователя, ID, имя и тип авторизации
+                saveToLocalStorage("myMarks.data", email, response.data)
+                window.localStorage.setItem("localChatMessages", response.data.chatrows)
                 document.body.style.cursor = 'default';
+                dispatch({type: 'APP_LOADED'})
             })
             .catch(error => {
-                console.log("Error", error)
+                // Список ошибок в отклике...
+                console.log("ERROR_LOGGEDIN", error)
                 document.body.style.cursor = 'default';
                 dispatch({type: 'USER_PWD_MISSEDMATCH'})
                 dispatch({type: 'APP_LOADED'})
-                // Список ошибок в отклике...
             })
    };
 }
 
-export const userLoggedInByToken = (email, token, kind) => {
-    // console.log("userLoggedInByToken", email, token)
+export const userLoggedInByToken = (email, token, kind, langLibrary) => {
     return dispatch => {
-
-        dispatch({type: 'APP_LOADING'})
-
-        let header = {
-            headers: {
-                // 'Content-Type': 'application/json',
-                // 'Content-Type': 'x-www-form-urlencoded',
-                // 'Content-Type': 'application/json',
-                'Access-Control-Allow-Origin' : '*',
-                // 'Accept' : 'application/json',
-                'Content-Type': 'text/plain',
-                'Access-Control-Max-Age' : 600,
-                'Access-Control-Allow-Methods' : 'POST',
-                // 'Access-Control-Allow-Headers' : 'Origin, X-Requested-With, Content-Type, Accept',
-                // 'Access-Control-Allow-Credentials' : true,
-            }
-        }
-
         const data = {
             "email": email,
             "token": token,
             "kind": kind,
         };
-        console.log("userLoggedInByToken", data);
+        console.log("userLoggedInByToken", data, langLibrary);
         document.body.style.cursor = 'progress';
-        axios.post(LOGINUSER_URL, data, header)
+        instanceAxios().post(LOGINUSER_URL, data, null)
             .then(response => {
-                // console.log('USER_LOGGEDINBYTOKEN');
-                // let token = response.data.token;
-                dispatch({type: 'USER_LOGGEDIN', payload: response.data});
-                // пробуем записать в LocalStorage имя пользователя, ID, имя и тип авторизации
-                let ls = {}
-                let {   name : userName, id : userID, class_id : classID } = response.data.user;
-                let {   token} = response.data;
-                ls.email = email;
-                ls.name = userName;
-                ls.id = userID;
-                ls.class_id = classID;
-                ls.token = token;
-                window.localStorage.setItem("myMarks.data", JSON.stringify(ls));
+                dispatch({type: 'USER_LOGGEDIN', payload: response.data, langLibrary : langLibrary?langLibrary:langLibraryF(localStorage.getItem("myCountryCode")?localStorage.getItem("myCountryCode"):"EN")});
+                dispatch({type: 'ADD_CHAT_MESSAGES', payload : response.data.chatrows});
                 dispatch({type: 'APP_LOADED'})
+                // пробуем записать в LocalStorage имя пользователя, ID, имя и тип авторизации
+                saveToLocalStorage("myMarks.data", email, response.data)
+                window.localStorage.setItem("localChatMessages", response.data.chatrows)
+                // let ls = {}
+                // let {   name : userName, id : userID, class_id : classID } = response.data.user;
+                // let {   token} = response.data;
+                // ls.email = email;
+                // ls.name = userName;
+                // ls.id = userID;
+                // ls.class_id = classID;
+                // ls.token = token;
+                // window.localStorage.setItem("myMarks.data", JSON.stringify(ls));
                 document.body.style.cursor = 'default';
             })
             .catch(response => {
-                console.log(response.data);
+                console.log("userLoggedInByTokenError", response.data);
+                dispatch({type: "LANG_LIBRARY", langLibrary: langLibrary})
                 dispatch({type: 'APP_LOADED'})
                 // Список ошибок в отклике...
             })
     };
 }
 
-export const userLoggedOut = (token) => {
+export const userLoggedOut = (token, langLibrary) => {
     return dispatch => {
-        document.body.style.cursor = 'progress';
-        instanceAxios().get('logout')
-            .then(response => {
-                // return response.data;
-                // console.log(response.data, response.data);
-                dispatch({type: 'USER_LOGGEDOUT', payload: response.data});
-                window.localStorage.removeItem("myMarks.data");
-                document.body.style.cursor = 'default';
-            })
-            .catch(response => {
+            console.log("userLoggedOut", window.localStorage.getItem("userSetupDate"))
+            document.body.style.cursor = 'progress';
+            window.localStorage.removeItem("myMarks.data");
+            window.localStorage.removeItem("userSetup")
+            window.localStorage.removeItem("userSetupDate")
+            window.localStorage.removeItem("localChatMessages")
 
-                window.localStorage.removeItem("myMarks.data");
-                document.body.style.cursor = 'default';
-                console.log(response);
-                // Список ошибок в отклике...
-            })
-                window.localStorage.removeItem("myMarks.data");
+            dispatch({type: 'APP_LOADING'})
+            instanceAxios().get('logout')
+                .then(response => {
+                    // return response.data;
+                    // console.log(response.data, response.data);
+                    dispatch({type: 'USER_LOGGEDOUT', langLibrary : langLibrary});
+                    dispatch({type: 'APP_LOADED'})
+                    console.log("logoutSuccess", response);
+                    document.body.style.cursor = 'default';
+                })
+                .catch(response => {
+                    dispatch({type: 'USER_LOGGEDOUT', langLibrary : langLibrary});
+                    dispatch({type: "LANG_LIBRARY", payload: langLibrary})
+                    dispatch({type: 'APP_LOADED'})
+                    document.body.style.cursor = 'default';
+                    console.log("logoutError", response);
+                    // Список ошибок в отклике...
+                })
+                dispatch({type: 'APP_LOADED'})
                 document.body.style.cursor = 'default';
             };
+}
 
+const saveToLocalStorage=(localName, email, data)=>{
+    let ls = {}
+    let { name : userName, id : userID, class_id : classID } = data.user;
+    let { token} = data;
+    ls.email = email;
+    ls.name = userName;
+    ls.id = userID;
+    ls.token = token;
+    ls.class_id = classID;
+    window.localStorage.setItem(localName, JSON.stringify(ls));
 }

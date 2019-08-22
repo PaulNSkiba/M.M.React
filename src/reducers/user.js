@@ -35,7 +35,5 @@ export function userReducer(state = initialState, action) {
             return {...state, loginmsg: ''};
         default:
             return state
-        // return action.payload;
     }
-    // return state
 }

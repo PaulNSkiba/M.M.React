@@ -2,16 +2,13 @@
  * Created by Paul on 26.01.2019.
  */
 import React, { Component } from 'react';
-import { SUBJECTS_ADD_URL, SUBJECTS_GET_URL, MARKS_STATS_URL, instanceAxios } from '../../config/URLs'
+import { SUBJECTS_ADD_URL, SUBJECTS_GET_URL, MARKS_STATS_URL } from '../../config/config'
+import { instanceAxios, mapStateToProps } from '../../js/helpers'
 import { connect } from 'react-redux'
-// import UniversalTable from '../UniversalTable/universaltable'
-// import { Link } from 'react-router-dom';
-// import MobileMenu from '../MobileMenu/mobilemenu'
-
 import '../../containers/App.css'
 import './adminpageadmin.css'
-
 import {withRouter} from 'react-router-dom'
+import Checkbox from '../../components/CheckBox/checkbox'
 
 class AdminPageAdmin extends Component {
     constructor(props) {
@@ -32,28 +29,30 @@ class AdminPageAdmin extends Component {
                 {name: "Сек/оценку", width : "100%"},
             ])
         }
+        this.onLoad = this.props.onStartLoading
+        this.onLoaded = this.props.onStopLoading
+        this.onClassClick = this.onClassClick.bind(this)
     }
     componentWillMount(){
-        this.getStats()
+        (async()=>{
+            await this.getSubjects()
+            await this.getSubjListForClass(1)
+            await this.getStats()
+        })()
     }
     componentDidMount(){
-        let header = {
-            headers: {
-                'Content-Type': "application/json",
-            }
-        }
-        // console.log("DIDMOUNT")
-        instanceAxios().get(SUBJECTS_GET_URL, [], header)
-            .then(response => {
-                this.setState({ subjects: response.data });
-                // console.log(response);
-            })
-            .catch(response => {
-                console.log(response.data);
-                // Список ошибок в отклике...
-            })
 
-        this.getSubjListForClass(1)
+   }
+    getSubjects=()=>{
+       instanceAxios().get(SUBJECTS_GET_URL)
+           .then(response => {
+               this.setState({ subjects: response.data });
+               // console.log(response);
+           })
+           .catch(response => {
+               console.log(response.data);
+               // Список ошибок в отклике...
+           })
    }
     renderSubjects() {
         return this.state.subjects.map(subj=>{
@@ -108,25 +107,36 @@ class AdminPageAdmin extends Component {
 
     }
     getStats=()=>{
-        let header = {
-            headers: {
-                'Content-Type': "application/json",
-            }
-        }
         let rows = ''
         console.log('query', MARKS_STATS_URL+'/'+this.props.userSetup.classID)
-        instanceAxios().get(MARKS_STATS_URL+'/'+this.props.userSetup.classID, [], header)
+        instanceAxios().get(MARKS_STATS_URL+'/'+this.props.userSetup.classID)
             .then(response => {
                 this.setState({
                     stats :response.data.stats,
                 })
+                this.props.onStopLoading()
                 console.log(response.data.stats, rows);
             })
             .catch(response => {
                 console.log(response.data);
-                // Список ошибок в отклике...
+                this.props.onStopLoading()
             })
         return <table>{rows}</table>
+    }
+    getSubjListForClass(classid){
+        this.onLoad()
+        this.setState({ subjectsSelected: [] })
+        instanceAxios().get(SUBJECTS_GET_URL+'/'+classid)
+            .then(response => {
+                this.setState({ subjectsSelected: response.data });
+                this.onLoaded()
+                // console.log(response);
+            })
+            .catch(response => {
+                console.log(response.data);
+                this.onLoaded()
+                // Список ошибок в отклике...
+            })
     }
     renderClasses=()=>{
         return (
@@ -140,39 +150,18 @@ class AdminPageAdmin extends Component {
         )
     }
     onClassClick=(e)=>{
-        console.log("onClassClick", e.target.value)
-        console.log("renderSubjectsSelected", this.state.subjects, this.state.subjectsSelected )
-        this.getSubjListForClass(e.target.value)
-        this.setState(
-            {
-                curClass : e.target.value,
-            }
-        )
-    }
-    getSubjListForClass(classid){
-        // let header = {
-        //     headers: {
-        //         'Content-Type': "application/json",
-        //     }
-        // }
-        instanceAxios().get(SUBJECTS_GET_URL+'/'+classid)
-            .then(response => {
-                this.setState({ subjectsSelected: response.data });
-                // console.log('getSubjListForClass', response.data);
-                // return response.data;
-                // console.log(response);
-            })
-            .catch(response => {
-                console.log(response.data);
-                // Список ошибок в отклике...
-            })
+        console.log("onClassClick", e.target.value, this.state.curClass, e.target.value!==this.state.curClass)
+        // console.log("renderSubjectsSelected", this.state.subjects, this.state.subjectsSelected )
+        if (Number(e.target.value)!==Number(this.state.curClass)) {
+            this.getSubjListForClass(e.target.value)
+            this.setState({curClass: e.target.value})
+        }
     }
     renderSubjectsSelected() {
-        console.log("renderSubjectsSelected", this.state.subjects, this.state.subjectsSelected )
+        // console.log("renderSubjectsSelected", this.state.subjects, this.state.subjectsSelected )
         return this.state.subjectsSelected.map(subj=>{
             return (
                 <option key={subj.id} id={subj.subj_key}>
-                    {/*{console.log("subjectsSelected", subj)}*/}
                     { subj.subj_name_ua }
                 </option>
             );
@@ -185,12 +174,12 @@ class AdminPageAdmin extends Component {
         <tr id="row-1" key={"r0"}>{head.map((val, index)=><th  className={this.columnClassName(index)} key={index}>{val.name}</th>)}</tr>
     )
     render(){
-        // console.log('SUBJECTS', this.state.subjects, this.state.subjects.length, this.state.subjectsSelected)
-
         return (
-            <div>
+            <div className="mym-adminpage-container">
+                <div><Checkbox onclick={this.props.onReduxUpdate.bind(this)} bold={true} name={"CHAT_SSL"} defelem={this.props.userSetup.chatSSL} label=" работа Чата по SSL"/></div>
+
                 <h4 className="h4">Перечень предметов для {
-                <select name="classes" onClick={this.onClassClick.bind(this)}>
+                <select name="classes" onClick={this.onClassClick}>
                     {this.state.classes.length&&this.renderClasses()}
                 </select>}-го класса</h4>
 
@@ -229,18 +218,12 @@ class AdminPageAdmin extends Component {
         )
 }
 }
-const mapStateToProps = store => {
-    // console.log(store) // посмотрим, что же у нас в store?
-    return {
-        user:       store.user,
-        userSetup:  store.userSetup,
-    }
-}
+
 const mapDispatchToProps = dispatch => {
     return ({
-        // onInitState: () => dispatch([]),
-        // onUserLoggingOut  : token => dispatch(userLoggedOut(token)),
-        // onStudentUpdate: (data)=> dispatch({type: 'UPDATE_STUDENTS_LOCALLY', payload: data})
+        onReduxUpdate : (key, payload) => dispatch({type: key, payload: payload}),
+        onStopLoading : ()=> dispatch({type: 'APP_LOADED'}),
+        onStartLoading : ()=> dispatch({type: 'APP_LOADING'}),
     })
 }
 export default  connect(mapStateToProps, mapDispatchToProps)(withRouter(AdminPageAdmin))

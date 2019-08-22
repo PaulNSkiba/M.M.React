@@ -6,6 +6,8 @@ import './titleblock.css'
 import arrow_down from '../../img/ARROW_DOWN.png'
 import arrow_up from '../../img/ARROW_UP.png'
 import ReactCountryFlag from "react-country-flag";
+import { connect } from 'react-redux'
+import {mapStateToProps} from '../../js/helpers'
 
 class TitleBlock extends Component {
 
@@ -15,6 +17,8 @@ class TitleBlock extends Component {
 
     render() {
         const {done, title, step, onclick, hide, caption} = this.props;
+        let {langLibrary} = this.props.userSetup
+        // console.log("langLibrary", langLibrary)
         var divStyle = {
             "marginTop":"-5px"
         };
@@ -57,9 +61,9 @@ class TitleBlock extends Component {
                     <div className="block-0-1" onClick={onclick} id={step}><h4 id={step}>{
                         this.props.hasOwnProperty("isMarkSpeed")&&this.props.isMarkSpeed?
                                 <div className="markDiv">
-                                    <div className="markTopLabel">{"TОП"}</div>
+                                    <div className="markTopLabel">{langLibrary.top}</div>
                                     {caption}
-                                    <div className="markBottomLabel">{"сек/оценку"}</div>
+                                    <div className="markBottomLabel">{langLibrary.speedByMark}</div>
                                 </div>
                             :caption
                     }</h4></div>
@@ -75,4 +79,4 @@ class TitleBlock extends Component {
     }
 }
 
-export default TitleBlock
+export default connect(mapStateToProps)(TitleBlock)

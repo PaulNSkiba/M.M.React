@@ -1,0 +1,25 @@
+:root {
+    --border-color : darkgrey;
+    --msg-header-color : #33ccff;
+    --msg-header-color-new : #f2b436;
+    --msg-hw-color : #b40530;
+    --msg-hw-color-light : #ecabb9;
+    --msg-left-side : #edf0f2;
+    --msg-right-side : rgba(163, 234, 247, 0.49);
+
+    --selected-item: #7DA8E6;
+    --selected-item-hard: #4472C4;
+    --selected-item-background : rgba(64, 155, 230, 0.25);
+    --selected-item-hover : rgba(64, 155, 230, 0.16);
+    --shadow : rgba(0,0,0,0.3);
+
+    --mark-text : #C00000;
+    --excel-mark : #87DD97;
+    --good-mark: #C6EFCE;
+    --norm-mark: #FFEB9C;
+    --bad-mark: #FF8594;
+    --erase-mark: rgb(224, 224, 224);
+
+    --navbar-color : #f0f0f0;
+    --menu-item: #1890e6;
+}

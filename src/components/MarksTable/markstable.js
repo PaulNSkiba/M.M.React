@@ -4,29 +4,15 @@
 /* eslint-disable */
 import React, { Component } from 'react'
 import MarkBlank from '../MarkBlank/markblank'
-import {numberToLang, AddDay, getSpanCount, toYYYYMMDD, consoleLog, ISDEBUG} from '../helpers'
+import { AddDay, getSpanCount, toYYYYMMDD, consoleLog, instanceAxios, mapStateToProps} from '../../js/helpers'
 import Select from '../Select/select'
 import { connect } from 'react-redux'
-import { MARKS_URL, instanceAxios } from '../../config/URLs'
+import { MARKS_URL, ISDEBUG, markType } from '../../config/config'
 import Checkbox from '../CheckBox/checkbox'
+import './markstable.css'
 
-    import './markstable.css'
-const markType = [
-    {id : 0, letter : '', name : 'Пустое'},
-    {id : 1, letter : 'K', name : 'Контрольная'},
-    {id : 2, letter : 'C', name : 'Самостоятельная'},
-    {id : 3, letter : 'T', name : 'Тематическая'},
-    {id : 4, letter : 'S1', name : '1-й Семестр'},
-    {id : 5, letter : 'S2', name : '2-й Семестр'},
-    {id : 6, letter : 'A', name : 'Годовая'},
-]
-    // <div className={this.state.markType===1?"markType-selected":"markType"} id={"marktype-1"} onClick={this.setMarkType}>K<div className="hoverText">Контрольная</div></div>
-    // <div className={this.state.markType===2?"markType-selected":"markType"} id={"marktype-2"} onClick={this.setMarkType}>C<div className="hoverText">Самостоятельная</div></div>
-    // <div className={this.state.markType===3?"markType-selected":"markType"} id={"marktype-3"} onClick={this.setMarkType}>T<div className="hoverText">Тематическая</div></div>
-    // <div className={this.state.markType===4?"markType-selected":"markType"} id={"marktype-4"} onClick={this.setMarkType}>S<div className="hoverText">Семестровая</div></div>
-    // <div className={this.state.markType===5?"markType-selected":"markType"} id={"marktype-5"} onClick={this.setMarkType}>A<div className="hoverText">Годовая</div></div></div>:""}
 
-    class Table extends Component {
+class Table extends Component {
     constructor(props){
         super(props);
         this.state = {
@@ -539,20 +525,6 @@ const markType = [
         )
     }
 }
-const mapStateToProps = store => {
-    // console.log(store) // посмотрим, что же у нас в store?
-    return {
-        user:       store.user,
-        userSetup:  store.userSetup,
-    }
-}
-const mapDispatchToProps = dispatch => {
-    return ({
-        // onInitState: () => dispatch([]),
-        // onUserLoggingOut  : token => dispatch(userLoggedOut(token)),
-        // onStudentUpdate: (data)=> dispatch({type: 'UPDATE_STUDENTS_LOCALLY', payload: data})
-    })
-}
 
-export default  connect(mapStateToProps, mapDispatchToProps)(Table)
+export default  connect(mapStateToProps)(Table)
 /* eslint-disable */

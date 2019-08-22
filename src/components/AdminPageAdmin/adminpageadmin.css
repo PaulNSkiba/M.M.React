@@ -1,5 +1,5 @@
 .subjFromSelector, .subjToSelector {
-    width : auto;
+    width : 200px;
     height : 400px;
 }
 .subBlocks {
@@ -7,7 +7,7 @@
     justify-content: flex-start;
     flex-direction: row;
     align-items: flex-start;
-    margin: 10px 10%;
+    /*margin: 10px 10%;*/
     border : 1px lightgrey solid;
     padding : 2px;
 }
@@ -15,10 +15,10 @@
     margin: 2px;
 }
 .h4 {
-    margin: 10px 10%;
+    /*margin: 10px 10%;*/
 }
 .tableStats{
-    margin: 10px 10%;
+    /*margin: 10px 10%;*/
     /*width: 100%;*/
 }
 /*{name: "Дата", width : "80"} ,*/
@@ -35,3 +35,7 @@
 .colstat-4 {width: 5%;}
 .colstat-5 {width: 5%;}
 .colstat-6 {width: 5%;}
+
+.mym-adminpage-container{
+    margin: 10px 10%;
+}

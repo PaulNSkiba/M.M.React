@@ -5,12 +5,11 @@
  * Created by Paul on 22.01.2019.
  */
 import React, { Component } from 'react';
-import { SUBJECT_CREATE_URL, instanceAxios } from '../../config/URLs'
+import { SUBJECT_CREATE_URL } from '../../config/config'
+import { instanceAxios, mapStateToProps } from '../../js/helpers'
 import { connect } from 'react-redux'
 import './addsubject.css'
-// import { userLoggedIn } from '../../actions/userAuthActions'
 
-// export default
 class AddSubject extends Component {
 
     addSubject=()=> {
@@ -60,21 +59,13 @@ class AddSubject extends Component {
 
     }
 }
-// приклеиваем данные из store
-const mapStateToProps = store => {
-    // console.log(store) // посмотрим, что же у нас в store?
-    return {
-        user:       store.user,
-        userSetup:  store.userSetup,
-    }
-}
+
 const mapDispatchToProps = dispatch => {
     return ({
         onInitState: (subjList, subjCount) => {
             dispatch({type: 'UPDATE_SETUP_LOCALLY_SUBJLIST', payload: subjList})
             dispatch({type: 'UPDATE_SETUP_LOCALLY_SUBJCOUNT', payload: subjCount})
         },
-        // onUserLoggingOut  : token => dispatch(userLoggedOut(token)),
     })
 }
 export default connect(mapStateToProps, mapDispatchToProps)(AddSubject)

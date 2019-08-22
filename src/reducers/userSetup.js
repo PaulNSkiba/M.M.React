@@ -1,58 +1,47 @@
 /**
  * Created by Paul on 20.01.2019.
  */
+import {saveToLocalStorageOnDate, toYYYYMMDD} from '../js/helpers'
 
-const initialState = {
-        curClass: 0, classNumber : 0, classID : 0,
-        pupilCount: 0,
-        students : [],
-        currentYear: "",
-        curYearDone: 0,
-        subjCount: "0/0",
-        userID: 0,
-        selectedSubjsArray: [], selectedSubjects:[], selectedSubj : {id:0, subj_key:"#null"},
-        subjects_list : [],
-        markBlank : {id: "", alias: "", pk: 1},
-        currentPeriodDateCount : 5,
-        marks : [],
-        direction : "UPDOWN",
-        titlekind : "NICK",
-        withoutholidays : true,
-        token: "",
-        userName: "",
-        isadmin: 0,
-        studentName : "", studentId : 0,
-        studSubj : new Map(),
-        mark_dates : [], best_lines : [], avg_lines : [], avg_marks : [],
-        addUserToken : "",
-        cnt_marks : 0,
-        stud_cnt : 0,
-        subj_cnt : 0,
-        lastmarkssent : "",
-        emails : [],
-        homework : [],
-        stats2 : [], stats3 : [],
-        mark_date : {date : new Date()},
-        avgclassmarks : [],
-        loading : true,
-        stepsLeft : 6,
-        chatSessionID : '',
-        classObj : { chatroom_id : 0},
-        newMsgCount : 0,
+const initialState = (check)=>{
+        // console.log("initialState", window.localStorage.getItem("userSetup"), window.localStorage.getItem("userSetupDate")===toYYYYMMDD(new Date()))
+        let obj = {}
+        if (window.localStorage.getItem("userSetup")&&window.localStorage.getItem("userSetupDate")===toYYYYMMDD(new Date())&&check) {
+            obj = JSON.parse(window.localStorage.getItem("userSetup"))
+            obj.loading = false }
+        else
+            obj =
+            {
+            curClass: 0, classNumber : 0, classID : 0,
+            pupilCount: 0, students : [], currentYear: "", curYearDone: 0, subjCount: "0/0", userID: 0,
+            selectedSubjsArray: [], selectedSubjects:[], selectedSubj : {id:0, subj_key:"#null"},
+            subjects_list : [], markBlank : {id: "", alias: "", pk: 1},
+            currentPeriodDateCount : 5, marks : [], direction : "UPDOWN", titlekind : "NICK",
+            withoutholidays : true, token: "", userName: "",
+            isadmin: 0, studentName : "", studentId : 0,
+            studSubj : new Map(), mark_dates : [], best_lines : [], avg_lines : [], avg_marks : [],
+            addUserToken : "", cnt_marks : 0, stud_cnt : 0, subj_cnt : 0,
+            lastmarkssent : "", emails : [], homework : [],
+            stats2 : [], stats3 : [], mark_date : {date : new Date()},
+            avgclassmarks : [], loading : -1, stepsLeft : 6,
+            chatSessionID : '', classObj : { chatroom_id : 0},
+            newMsgCount : 0, countryCode : "EN", langLibrary : {}, chatSSL : false, localChatMessages : []
+        }
+    return obj
 }
 
-export function userSetupReducer(state = initialState, action) {
+export function userSetupReducer(state = initialState(true), action) {
+    let setup = []
     // ToDO: При отсутствтии настроек проверить на undefined
     switch (action.type) {
         case 'INIT_STATE':
-            // console.log('INIT_STATE')
             return {...state, initialState}
         case 'USER_LOGGEDIN' : {
-            // console.log("JUST_LOGGEDIN", action.payload)
+            // console.log("JUST_LOGGEDIN", action.langLibrary)
             let {   token, subj_count, subjects_list,
                     selected_subjects, selected_subj, students, marks,
                     mark_dates, best_lines, avg_lines, avg_marks, addUserToken,
-                    lastmarkssent, emails, homework, stats2, stats3, mark_date, avgclassmarks, classObj} = action.payload;
+                    lastmarkssent, emails, homework, stats2, stats3, mark_date, avgclassmarks, classObj, chatrows} = action.payload;
             let {   name : userName, id : userID, isadmin } = action.payload.user;
             let {   class_number, pupil_count, year_name, perioddayscount,
                     markblank_id, markblank_alias, selected_marker, titlekind,
@@ -60,7 +49,8 @@ export function userSetupReducer(state = initialState, action) {
             let {   id : studentId, student_name : studentName} = action.payload.student;
             let {   cnt_marks, stud_cnt, subj_cnt } = action.payload.stats[0];
             studentId = studentId?studentId:0;
-            return {...state, userName, userID, token,
+
+            setup = {...state, userName, userID, token,
                 curClass: class_number, classNumber : class_number, classID : class_id, pupilCount: pupil_count,
                 currentYear: year_name, currentPeriodDateCount: perioddayscount,
                 markBlank:{id: markblank_id, alias: markblank_alias, pk: selected_marker},
@@ -69,9 +59,14 @@ export function userSetupReducer(state = initialState, action) {
                 selectedSubj : selected_subj, students : students?students:[], classObj,
                 isadmin, studentName, studentId, marks, mark_dates, best_lines, avg_lines, avg_marks, addUserToken,
                 cnt_marks, stud_cnt, subj_cnt, lastmarkssent, emails, homework, stats2 : stats2[0], stats3 : stats3[0],
-                mark_date, avgclassmarks,
+                mark_date, avgclassmarks, langLibrary : action.langLibrary, localChatMessages : chatrows
                 }
+            saveToLocalStorageOnDate("userSetupDate", toYYYYMMDD(new Date()))
+            saveToLocalStorageOnDate("userSetup", JSON.stringify(setup))
+            return setup
             }
+        case "USER_SETUP" :
+            return {...state}
         case 'UPDATE_SETUP_REMOTE' : {
             let {   class_number, pupil_count, year_name, perioddayscount,
                     markblank_id, markblank_alias, selected_marker, titlekind, direction} = action.payload.usersetup;
@@ -150,6 +145,9 @@ export function userSetupReducer(state = initialState, action) {
         case 'APP_LOADED' : {
             return{...state, loading : false}
         }
+        case 'LANG_LIBRARY' : {
+            return{...state, langLibrary: action.payload}
+        }
         case 'CHAT_SESSION_ID' : {
             return{...state, chatSessionID : action.payload}
         }
@@ -159,54 +157,21 @@ export function userSetupReducer(state = initialState, action) {
         case 'ENABLE_SAVE_STEPS' : {
             return{...state, stepsLeft : action.payload}
         }
+        case 'CHAT_SSL' : {
+            return{...state, chatSSL: action.payload}
+        }
+        // case "INIT_CHAT_MESSAGES" : {
+        //     return{...state, localChatMessages: action.payload}
+        // }
+        // case "ADD_CHAT_MESSAGES" : {
+        //     return{...state, localChatMessages: action.payload}
+        // }
         case 'USER_LOGGEDOUT' :
-            // console.log("userSetupReducer", 'USER_LOGGEDOUT')
-            return {...state,         curClass: 0,
-                classNumber : 0,
-                classID : 0,
-                pupilCount: 0,
-                students : [],
-                currentYear: "",
-                curYearDone: 0,
-                subjCount: "0/0",
-                userID: 0,
-                selectedSubjsArray: [],
-                selectedSubjects:[],
-                selectedSubj : {id:0, subj_key:"#null"},
-                subjects_list : [],
-                markBlank : {id: "", alias: "", pk: 1},
-                currentPeriodDateCount : 5,
-                marks : [],
-                direction : "UPDOWN",
-                titlekind : "NICK",
-                withoutholidays : true,
-                token: "",
-                userName: "",
-                isadmin: 0,
-                studentId : 0,
-                studentName : '',
-                studSubj : new Map(),
-                mark_dates : [],
-                best_lines : [],
-                avg_lines : [],
-                avg_marks : [],
-                addUserToken : "",
-                cnt_marks : 0,
-                stud_cnt : 0,
-                subj_cnt : 0,
-                lastmarkssent : "",
-                emails : [],
-                homework : [],
-                stats2 : [],
-                stats3 : [],
-                mark_date : {date : new Date()},
-                avgclassmarks : [],
-                loading : false,
-                stepsLeft : 6,
-                chatSessionID : '',
-                classObj : { chatroom_id : 0},
-                newMsgCount : 0,
-                };
+
+            let initState = initialState(false)
+            initState.langLibrary = action.langLibrary
+            console.log("userSetupReducer", 'USER_LOGGEDOUT', initState, action.langLibrary)
+            return {...initState};
         default :
             return state
     }

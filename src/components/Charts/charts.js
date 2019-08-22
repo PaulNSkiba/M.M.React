@@ -5,7 +5,7 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux'
 // import {LineChart, BarChart} from 'react-easy-chart';
 import Select from '../Select/select'
-import {AddDay} from '../helpers'
+import {AddDay} from '../../js/helpers'
 import Chart from "react-google-charts";
 
 import "./charts.css"

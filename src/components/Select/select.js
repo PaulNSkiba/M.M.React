@@ -3,11 +3,10 @@
  */
 import React, { Component } from 'react';
 import './select.css'
-import { UPDATESETUP_URL, SUBJECTS_GET_URL, instanceAxios } from '../../config/URLs'
+import { UPDATESETUP_URL, SUBJECTS_GET_URL } from '../../config/config'
+import { instanceAxios, mapStateToProps } from '../../js/helpers'
 import { connect } from 'react-redux'
-// import {subjectsforclasses} from '../helpers'
-// import {saveToLocalStorage, getUserId, isSetInLocalStorage} from '../helpers'
-// import { connect } from 'react-redux'
+
 
 class Select extends Component {
     constructor(props){
@@ -16,16 +15,6 @@ class Select extends Component {
             map : new Map()
         }
     }
-    initMap=()=>{
-        // let map = new Map()
-        // this.props.list.forEach(function(item, i, arr) {
-        //     //alert( i + ": " + item + " (массив:" + arr + ")" );
-        //     item.hasOwnProperty('subj_key')&&map.set(item.subj_key, item.id)
-        // });
-        // this.setState(map)
-        // console.log('InitMap', map)
-    }
-
     onChangeSelect=(e)=>{
 
         // let json = `{"selected_subject":"${[e.target.value, e.target.options[e.target.selectedIndex].text]}"}`;
@@ -63,13 +52,6 @@ class Select extends Component {
     }
 }
 // приклеиваем данные из store
-const mapStateToProps = store => {
-    // console.log(store) // посмотрим, что же у нас в store?
-    return {
-        user:       store.user,
-        userSetup:  store.userSetup,
-    }
-}
 const mapDispatchToProps = dispatch => {
     return ({
         onSetSetup: (data, userID) => {

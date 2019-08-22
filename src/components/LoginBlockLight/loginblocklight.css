@@ -2,21 +2,21 @@
     display: block;
     position: absolute;
     z-index: 11;
-    border: 2px solid #70c2e6;
-    background-color: #e8e8e8;
-    box-shadow: 0px 3px 5px 0px rgba(0, 0, 0, 0.2);
+    /*border: 2px solid #70c2e6;*/
+    background-color: var(--selected-item);
+    box-shadow: 0px 7px 7px 0px rgba(0, 0, 0, 0.4);
     width: 150px;
     height: 175px;
-    right: 12%;
-    top : 45px;
+    /*right: 12%;*/
+    /*top : 45px;*/
     padding : 5px;
-    /*margin: 0 -50px 0;*/
-    /*overflow: visible;*/
+    border-bottom-left-radius: 10px;
+    border-bottom-right-radius: 10px;
+    border-top-right-radius: 10px;
 }
 
 .loginBlockLight input {
     width: 95%;
-    /*margin : 0 5%;*/
 }
 .loginButtons > button {
     margin: 10px 5px 5px 0;

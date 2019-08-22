@@ -1,13 +1,3 @@
-:root {
-    --border-color : darkgrey;
-    --msg-header-color : #33ccff;
-    --msg-header-color-new : #f2b436;
-    --msg-hw-color : #b40530;
-    --msg-hw-color-light : #ecabb9;
-    --msg-left-side : #edf0f2;
-    --msg-right-side : rgba(163, 234, 247, 0.49);
-}
-
 @media only screen and (max-width: 400px) {
     .chat-container {
         width : 90%;
@@ -84,6 +74,26 @@
     padding: 0;
     /*border : 2px solid white;*/
 }
+.message-block-edit-left, .message-block-edit-right {
+    position: absolute;
+    resize: none;
+    display:block;
+    font-size: 1.3em;
+    width: 100%;
+    height: 85%;
+    border : solid 2px var(--selected-item);
+    background-color: var(--msg-right-side);
+    top : -2px;
+    outline: none;
+    border-radius: 10px;
+}
+.message-block-edit-left{
+    left : 0;
+}
+.message-block-edit-right{
+    right : 0;
+}
+
 .msg-text {
     font-size : .95em;
     font-weight : 500;
@@ -213,7 +223,6 @@
 }
 .btn-add-time-done {    color : #526ef3; }
 .btn-add-time {    color : darkgrey; }
-
 .add-msg-container{
     display: flex;
     flex-direction: column;
@@ -251,7 +260,6 @@
 .homework-plus:hover{
     cursor: pointer;
 }
-
 .service-plus{
     position : absolute;
     right : 5px;
@@ -271,7 +279,6 @@
 .service-plus:hover{
     cursor: pointer;
 }
-
 .add-msg-homework-title{
     margin-top : -20px;
     margin-left : 10px;
@@ -481,3 +488,49 @@ textarea.message-input {
     background-color: skyblue;
 }
 
+.mym-msg-block-buttons{
+    position: absolute;
+    /*left : 80%;*/
+    top : -5px;
+    right : 0;
+    width : 120px;
+    height: 120%;
+}
+.mym-msg-block-save:hover, .mym-msg-block-delete:hover, .mym-msg-block-cancel:hover, .mym-msg-block-hw:hover{
+    cursor: pointer;
+}
+.mym-msg-block-save, .mym-msg-block-delete, .mym-msg-block-cancel, .mym-msg-block-hw{
+    position: absolute;
+    padding : 1.5px 4px;
+    font-size: .8em;
+    width : 60px;
+    margin: 4px 0;
+    text-align: center;
+    /*background-color: var(--selected-item-hard);*/
+    color : white;
+    border-radius: 7px;
+}
+.mym-msg-block-save{
+     top : 2px;
+     right : 0;
+     background-color: var(--selected-item-hard);
+ }
+.mym-msg-block-cancel{
+    bottom : 3px;
+    right : 0;
+    background-color: var(--erase-mark);
+    border: .5px solid var(--selected-item-hard);
+    color : var(--selected-item-hard);
+}
+.mym-msg-block-delete{
+    bottom : 3px;
+    right : 80px;
+    background-color: var(--erase-mark);
+    border: .5px solid var(--selected-item-hard);
+    color : var(--selected-item-hard);
+}
+.mym-msg-block-hw{
+    top : 2px;
+    right : 80px;
+    background-color: var(--msg-hw-color);
+}

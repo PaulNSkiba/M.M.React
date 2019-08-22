@@ -1,22 +1,37 @@
-/*.menuBlock {*/
-    /*display:flex;*/
-    /*padding-left: 20px;*/
-/*}*/
 .menuItem a {
     color : #1890e6;
     font-weight: 700;
     font-size : 0.9em;
 }
-.menuItem a:hover{    color : #52aee6;}
+.menuItem a:hover{
+    color : #52aee6;
+    text-decoration: underline;
+}
 .menuItemHw a {
     color : rgb(231, 173, 0);
     font-weight: 700;
     font-size : 0.9em;
 }
-.menuItemHw a:hover{    color : rgb(233, 190, 73);}
+.menuItemHw a:hover{
+    color : rgb(233, 190, 73);
+    text-decoration: underline;
+}
+.menuBlock{
+    margin : 10px;
+}
 .menuItems {
     display:flex;
     left : 0;
-    margin-left: 45%;
-    width : 300px;
+    margin-left: 10px;
+    width : auto;
+    min-width: 360px;
+    max-width: 460px;
+}
+.mym-menuitem-workflow a {
+    font-weight: 700;
+    color : #B40530;
+    font-size : 0.9em;
+}
+.mym-menuitem-workflow a:hover{
+    text-decoration: underline;
 }

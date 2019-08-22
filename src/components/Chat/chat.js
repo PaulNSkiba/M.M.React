@@ -2,17 +2,15 @@
  * Created by Paul on 13.05.2019.
  */
 import React, { Component } from 'react'
-import {MessageList} from './messagelist'
-import {AddDay, arrOfWeekDays, dateDiff, toYYYYMMDD,
-        instanceLocator, testToken, chatUserName,
-        } from '../helpers'
+import MessageList from '../MessageList/messagelist'
 import { store } from '../../store/configureStore'
 import emailPropType from 'email-prop-type';
 import { ChatManager, TokenProvider } from '@pusher/chatkit-client'
 import arrow_down from '../../img/ARROW_DOWN.png'
 import arrow_up from '../../img/ARROW_UP.png'
-import { API_URL, BASE_HOST, WEBSOCKETPORT, LOCALPUSHERPWD, HOMEWORK_ADD_URL, instanceAxios } from '../../config/URLs'
-import './chat.css';
+import { API_URL, BASE_HOST, WEBSOCKETPORT, LOCALPUSHERPWD, HOMEWORK_ADD_URL,
+        instanceLocator, testToken, chatUserName } from '../../config/config'
+import {AddDay, arrOfWeekDays, dateDiff, toYYYYMMDD, instanceAxios, mapStateToProps, prepareMessageToFormat} from '../../js/helpers'
 import addMsg from '../../img/addMsg.svg'
 import { Smile } from 'react-feather';
 import { Picker, emojiIndex } from 'emoji-mart';
@@ -21,6 +19,8 @@ import {Pusher} from 'pusher-js'
 import { connect } from 'react-redux'
 import { default as uniqid } from 'uniqid'
 
+import '../../css/colors.css';
+import './chat.css';
 
 // export default
 class Chat extends Component {
@@ -31,7 +31,7 @@ class Chat extends Component {
             curDate: AddDay(new Date(), 1),
             currentUser: null,
             currentRoom: {users:[]},
-            messages: this.initChatMessages(),
+            messages: [],//this.initChatMessages(),
             users: [],
             selSubject : false,
             selSubjkey : null,
@@ -50,9 +50,10 @@ class Chat extends Component {
             messagesNew : [],
             Echo : {},
             typingUsers : new Map(),
+            localChatMessages : [],
         }
         this.now = new Date()
-        this.roomId = this.props.userSetup.classObj.chatroom_id
+        this.roomId = this.props.chatroomID //this.props.userSetup.classObj.chatroom_id
         this.initLocalPusher = this.initLocalPusher.bind(this)
         this.initNetPusher = this.initNetPusher.bind(this)
         this.addEmoji = this.addEmoji.bind(this);
@@ -61,16 +62,29 @@ class Chat extends Component {
         this.prepareJSON = this.prepareJSON.bind(this)
         // this.prepareMessageToFormat = this.prepareMessageToFormat.bind(this)
         this.initChatMessages = this.initChatMessages.bind(this)
+        // this.getChatMessages = this.getChatMessages.bind(this)
         this._handleKeyDown = this._handleKeyDown.bind(this)
+        this.sendMessage = this.sendMessage.bind(this)
     }
     toggleEmojiPicker=()=>{
         this.setState({            showEmojiPicker: !this.state.showEmojiPicker,        });
     }
-    initChatMessages=()=>{
-        // console.log("this.props.messages", this.props.messages,
-        //     this.prepareMessageArrayToFormat(this.props.messages), item=>this.prepareMessageToFormat(item))
+    getChatMessages=(classID)=>{
+        console.log('getChatMessages', this.props.userSetup.classID, classID)
+        instanceAxios().get(API_URL +`chat/get/${classID}`, [], null)
+            .then(resp => {
+                this.setState({localChatMessages : resp.data})
+                this.props.onReduxUpdate("ADD_CHAT_MESSAGES", resp.data)
+                console.log('resp.data', resp, resp.data, resp.data.data)
+            })
+            .catch(error => {
+                console.log('getChatMessagesError', error)
+            })
+    }
+    initChatMessages=async ()=>{
+        console.log("initChatMessages", this.props.userSetup.localChatMessages, this.props.userSetup.classID)
         if (this.props.isnew) {
-            return this.props.messages.map(item=>this.prepareMessageToFormat(item))
+            this.getChatMessages(this.props.userSetup.classID)
         }
         else {
             return []
@@ -85,29 +99,10 @@ class Chat extends Component {
         });
         this.inputMessage.value = this.inputMessage.value + emoji.native
     }
-
-    prepareMessageToFormat=(msg)=>{
-        let obj = {}
-        obj.senderId = msg.user_name
-        obj.text = msg.message
-        obj.time = msg.msg_time
-        obj.userID = msg.user_id
-        obj.userName = msg.user_name
-        obj.uniqid = msg.uniqid
-        if (!(msg.homework_date === null)) {
-            obj.hwdate = msg.homework_date
-            obj.subjkey = msg.homework_subj_key
-            obj.subjname = msg.homework_subj_name
-            obj.subjid = msg.homework_subj_id
-        }
-        obj.id = msg.id
-        //"{"senderId":"my-marks","text":"выучить параграф 12","time":"14:59","userID":209,"userName":"Menen",
-        // "hwdate":"2019-07-16T21:00:00.000Z","subjkey":"#lngukr","subjname":"Українська мова"}"
-        // console.log('obj', JSON.stringify(obj))
-        return JSON.stringify(obj)
-    }
     initLocalPusher=()=>{
         let {token} = store.getState().user
+        let {chatSSL} = this.props.userSetup
+
         let echo = new Echo(
             {
                 broadcaster : 'pusher',
@@ -118,6 +113,7 @@ class Chat extends Component {
                 wssPort: WEBSOCKETPORT,
                 disableStats: true,
                 enabledTransports: ['ws', 'wss'],
+                encrypted: chatSSL,
                 auth: {
                     headers: {
                         'V-Auth': true,
@@ -130,18 +126,14 @@ class Chat extends Component {
         let channelName = 'class.'+this.props.userSetup.classID
         this.setState({Echo: echo})
         console.log('websocket', echo, channelName)
+        if (chatSSL)
         echo.private(channelName)
-            .listen('ChatMessage', (e) => {
-                let msg = this.prepareMessageToFormat(e.message)
-                // console.log('chatRecieve', e.message,
-                //     JSON.parse(msg).uniqid,
-                //     this.state.messagesNew,
-                //     this.state.messagesNew.includes(JSON.parse(msg).uniqid),
-                //     this.state.messages.filter(item=>!(this.state.messagesNew.includes(JSON.parse(msg).uniqid))));
+            .listen('ChatMessageSSL', (e) => {
+                let msg = prepareMessageToFormat(e.message)
                 let stateArr = this.state.messages.filter(
                     item=>
                     {
-                        // console.log("FILTER", JSON.parse(msg).uniqid, item, item.uniqid, JSON.parse(msg).uniqid === item.uniqid, this.state.messagesNew.includes(item.uniqid))
+                        console.log("FILTER-SSL", JSON.parse(msg).uniqid, item, item.uniqid, JSON.parse(msg).uniqid === item.uniqid, this.state.messagesNew.includes(item.uniqid))
                         return    !(JSON.parse(msg).uniqid === JSON.parse(item).uniqid && this.state.messagesNew.includes(JSON.parse(item).uniqid))
                     }
                 )
@@ -159,9 +151,69 @@ class Chat extends Component {
                     this.setState({typingUsers: mp})
                 }
                 console.log('typing', e.name);
-            });
-        ;
-    }
+            })
+        else
+            echo.channel(channelName)
+                .listen('ChatMessage', (e) => {
+                let msg = prepareMessageToFormat(e.message), msgorig = e.message, isSideMsg = true
+                let arr =   this.state.localChatMessages,
+                            newArr = []
+                    console.log("FILTER-NOT-SSL", this.state.localChatMessages)
+                    console.log("FILTER-NOT-SSL: this.props", this.props)
+                    newArr = arr.map(
+                    item=>
+                    {
+                        // console.log("map", item, JSON.parse(msg))
+
+                        if (this.state.messagesNew.includes(item.uniqid)) {
+                            // Для своих новых
+                            if (JSON.parse(msg).uniqid === item.uniqid) {
+                                console.log("MSGORIG", msgorig, msgorig.id)
+                                isSideMsg = false
+                                let obj = item
+                                obj.id = msgorig.id
+                                return obj
+                            }
+                            else {
+                                return item
+                            }
+
+                        }
+                        else {
+                            return item
+                        }
+                        // return item
+
+                        // if (!(JSON.parse(msg).uniqid === item.uniqid)) // Если сообщение по уникальному ключу не совпадает с нашим, то возвращаем его //  && this.state.messagesNew.includes(item.uniqid)
+                        //     return item
+                        // else if (JSON.parse(msg).uniqid === item.uniqid && item.id === 0) { // Если сообщение по уникальному ключу не совпадает с нашим, то возвращаем его
+                        //     verynewmsg = false
+                        //     return item
+                        // }
+                        // else
+                        //     return item
+                        //
+                        // if (JSON.parse(msg).id===item.id) verynewmsg = false
+                        //
+                        // return    !(JSON.parse(msg).uniqid === JSON.parse(item).uniqid && this.state.messagesNew.includes(JSON.parse(item).uniqid))
+                    }
+                )
+
+                console.log("FILTER-NOT-SSL: stateArr", newArr, JSON.parse(msg), "isSideMsg: " + isSideMsg, this.state.messagesNew)
+
+                // Если новое и стороннее!!!
+                if  (isSideMsg) newArr.push(msgorig)
+
+                this.setState({
+                    localChatMessages : newArr,
+                    messages: [...arr, msg],
+                    messagesNew : this.state.messagesNew.filter(item=>!(item.uniqid===JSON.parse(msg).uniqid))
+                })
+                    this.props.onReduxUpdate("ADD_CHAT_MESSAGES", newArr)
+
+                    this.props.updatemessage(msg)
+            })
+        }
 
     initNetPusher=()=>{
         console.log("initNetPusher:roomId", this.roomId)
@@ -186,6 +238,7 @@ class Chat extends Component {
                                         messages: [...this.state.messages, message.text],
                                     })
                                 }
+                                this.props.newmessage(JSON.parse(message.text).hasOwnProperty('hwdate'));
                                 // console.log("MESSAGES", message, JSON.parse(message.text))
                             },
                         }
@@ -207,12 +260,17 @@ class Chat extends Component {
                 }
         }
     }
+    componentWillMount(){
+        // console.log("this.props.isnew", this.props.isnew)
+    }
     componentDidMount(){
+        // console.log("this.props.isnew", this.props.isnew)
         if (this.props.isnew)
             this.initLocalPusher()
         else {
             this.initNetPusher()
         }
+        this.initChatMessages()
         // if (this.typingTimer) clearTimeout(this.typingTimer)
         this.typingTimer = setInterval(()=>{
             // console.log("setInterval-tag")
@@ -229,13 +287,6 @@ class Chat extends Component {
                 }
 
             }
-            if (this.props.isnew)
-            console.log("maps", mp, this.state.typingUsers, mp.size, this.state.typingUsers.size)
-            // if (!(mp.size === this.state.typingUsers.size)) {
-            //     console.log("deleteMap")
-            //     this.setState({typingUsers: mp})
-            //     // this.forceUpdate()
-            // }
         }, 2000)
      }
     componentWillUnmount() {
@@ -247,6 +298,7 @@ class Chat extends Component {
         let obj = {}
         switch (this.props.isnew) {
             case true :
+                obj.id = 0;
                 obj.class_id = classID;
                 obj.message = this.inputMessage.value;
                 obj.msg_date = toYYYYMMDD(new Date());
@@ -268,17 +320,17 @@ class Chat extends Component {
                 obj.senderId = chatUserName
                 obj.text = this.inputMessage.value
                 obj.time = (new Date()).toLocaleTimeString().slice(0, 5)
-                obj.userID = this.props.userID
-                obj.userName = this.props.userName
+                obj.userID = userID
+                obj.userName = userName
                 if (!(this.state.selSubjkey === null)) {
                     obj.hwdate = toYYYYMMDD(this.state.curDate)
                     obj.subjkey = this.state.selSubjkey
                     obj.subjname = this.state.selSubjname
                     this.addHomeWork(obj.text)
                 }
-                // this.addMsg(obj)
                 break;
         }
+        // console.log("prepareJSON", obj, JSON.stringify(obj))
         this.inputMessage.value = ''
         this.setState({
             selSubject: false,
@@ -310,8 +362,10 @@ class Chat extends Component {
     addMessage=()=>{
         let obj = this.prepareJSON()
         let objForState = this.prepareMessageToState(obj)
-        this.setState({messages : [...this.state.messages, objForState]})
-        this.sendMessage(obj)
+        if (this.props.isnew) {
+            this.setState({messages: [...this.state.messages, objForState]})
+        }
+        this.sendMessage(obj, 0)
         this.addHomeWork(this.props.isnew?JSON.parse(obj).message:JSON.parse(obj).text)
     }
     _handleKeyDown = (e) => {
@@ -327,9 +381,12 @@ class Chat extends Component {
             e.preventDefault();
             let obj = this.prepareJSON()
             let objForState = this.prepareMessageToState(obj)
+
+            if (this.props.isnew)
             this.setState({messages : [...this.state.messages, objForState]})
-            // console.log(obj, this.state.selSubjkey)
-            this.sendMessage(obj)
+            // console.log("handleKeyDown", obj, this.state.selSubjkey)
+
+            this.sendMessage(obj, 0)
         }
         else {
             // console.log('e', e.target.value, e.target.value.slice(-1), e.key)
@@ -389,7 +446,7 @@ class Chat extends Component {
         console.log(json);
         instanceAxios().post(HOMEWORK_ADD_URL + '/' + classID + '/hw/' + 0, json)
             .then(response => {
-                console.log(response.data)
+                // console.log(response.data)
                 this.props.onHomeWorkChanged(response.data)
                 // this.setState({
                 //     emails : response.data//response.data.map((item, i) => (<div className="itemInEmailList" key={item.id}>{item.email}<button id={item.id} onClick={this.deleteItemInList.bind(this)}>-</button></div>))
@@ -443,8 +500,8 @@ class Chat extends Component {
     * или же просто в state в случае письма в техподдержку
     * ToDo: Вывести сообщение (сделать умный input) в случае незаполнения полей имени и электронки
     * */
-    sendMessage(text) {
-        console.log("sendMessage", this.state.currentUser, text)
+    sendMessage(text, id) {
+        // console.log("sendMessage", this.state.currentUser, text)
         let arr = this.state.addMsgs
         if (this.state.isServiceChat||!this.state.servicePlus) {
             console.log('Отправим электронку', this.state.addMsgs)
@@ -463,7 +520,7 @@ class Chat extends Component {
             this.setState({addMsgs : arr})
             return
         }
-        console.log("Next message!", text)
+        // console.log("Next message!", text)
         // return
         // Передаём сообщение с определёнными параметрами (ID-сессии + ClassID)
 
@@ -471,11 +528,32 @@ class Chat extends Component {
 
         switch (this.props.isnew) {
             case true :
-
-                instanceAxios().post(API_URL + 'chat/add', text)
+                let arr = this.state.localChatMessages, obj = {}
+                console.log("Send message to server.1", "arr.before: ", arr)
+                if (id > 0) {
+                    arr = arr.map(item => {
+                        obj = item
+                        if (Number(obj.id) !== id)
+                            return item
+                        else {
+                            obj.text = JSON.parse(text).message
+                            return JSON.stringify(obj)
+                        }
+                    })
+                }
+                else {
+                   arr.push(JSON.parse(text))
+                }
+                console.log("Send message to server.2", "arr.after: ", arr)
+                this.setState({messages: arr})
+                this.props.onReduxUpdate("ADD_CHAT_MESSAGES", arr)
+                instanceAxios().post(API_URL + 'chat/add' + (id?`/${id}`:''), text)
                     .then(response => {
                         console.log('ADD_MSG', response)
                     })
+                    .catch(response=>
+                        console.log("AXIOUS_ERROR", response)
+                    )
                 break;
             default :
             this.state.currentUser.sendMessage({
@@ -488,8 +566,6 @@ class Chat extends Component {
     }
 
     daysList=()=>{
-        // const daysArr = [ {key:0, name:"Сегодня"}, {key:1, name:"Завтра"}, {key:2, name:"Послезавтра"}]
-        // <div className="add-msg-homework-title">
         let daysArr = []
         for (let i = -2; i < 8; i++) {
             let obj = {}
@@ -555,26 +631,24 @@ class Chat extends Component {
 
         if (newMessage.trim() === '') return;
 
-        // currentUser.sendMessage({
-        //     text: newMessage,
-        //     roomId: `${currentRoom.id}`,
-        // });
-
         this.setState({
             newMessage: '',
         });
     }
+    btnCloseOwn=()=>{
+
+    }
     render() {
         const {
             showEmojiPicker,
-            // newMessage,
         } = this.state;
 
         // console.log('this.state.messages', this.state.messages)
+        console.log("RENDER_CHAT", this.state.localChatMessages)
         return (
 
 
-            <div className={this.props.isnew?"chat-container-new":"chat-container"} style={{opacity: 1 }}>
+            <div className={this.props.isnew?"chat-container-new":"chat-container"} style={this.props.display?{opacity: 1 }:{display:"none"}}>
 
                 {showEmojiPicker ? (
                     <div className="picker-background">
@@ -616,10 +690,10 @@ class Chat extends Component {
                     :""}
 
                 <MessageList hwdate={this.state.selDate?this.state.curDate:null}
-                             messages={this.state.messages} username={chatUserName}
+                             messages={this.state.messages} localmessages={this.state.localChatMessages}
+                             username={chatUserName}
                              isshortmsg={this.state.isServiceChat||!this.state.servicePlus}
-                             classID={this.props.classID}
-                             addmsgs={this.state.addMsgs}/>
+                             classID={this.props.classID} addmsgs={this.state.addMsgs} sendmessage={this.sendMessage} isnew={this.props.isnew}/>
 
                 <div className="who-typing">
                     {this.state.typingUsers.size > 0?"Сообщение набира" + ((this.state.typingUsers.size===1?"е":"ю") + "т: ") + Array.from(this.state.typingUsers.keys()).join(', '):""}
@@ -706,12 +780,9 @@ class Chat extends Component {
     }
 }
 
-// приклеиваем данные из store
-const mapStateToProps = store => {
-    // console.log(store) // посмотрим, что же у нас в store?
+export default connect(mapStateToProps,
+    dispatch => {
     return {
-        user:       store.user,
-        userSetup:  store.userSetup,
+        onReduxUpdate: (key, payload) => dispatch({type: key, payload: payload}),
     }
-}
-export default connect(mapStateToProps, {})(Chat)
+    })(Chat)

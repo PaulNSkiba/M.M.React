@@ -1,6 +1,15 @@
-.App {
-  /*position: relative;*/
-  /*text-align: center;*/
+@media only screen and (max-width: 400px) {
+  .app-homeWorkSection {
+    margin-left: 5%;
+  }
+}
+@media only screen and (min-width: 400px) {
+  .descrAndAnnounceMobile{
+    width : 100%;
+  }
+  .description, .description-main {
+    margin : 15px 0;
+  }
 }
 
 .App-logo {
@@ -31,6 +40,11 @@
     transform: rotate(360deg);
   }
 }
+.description-main {
+  margin: 15px;
+  text-align: left;
+  width : 90%;
+}
 .description {
   margin: 15px 10%;
   text-align: left;
@@ -42,13 +56,13 @@ h3 {
   float: left;
 }
 .navbar {
-  display:flex;
-  padding : 0px 10px;
+  display: flex;
+  padding: 0 10%;
   justify-content: space-between;
   align-items: center;
   /*overflow: hidden;*/
   overflow: visible;
-  background-color: #f0f0f0;
+  background-color: var(--navbar-color);
   position: fixed; /* Set the navbar to fixed position */
   top: 0; /* Position the navbar at the top of the page */
   width: 100%; /* Full width */
@@ -97,22 +111,14 @@ h3 {
   opactity : 1;
 }
 .menuBlock {
-  /*display : inline-block;*/
   position: relative;
-  /*display: flex;*/
-  /*justify-content: flex-start;*/
-  /*align-items: flex-start;*/
-  /*text-align: left;*/
-  /*float : left;*/
-  margin : 10px 10%;
-  /*padding-left: 0;*/
-  /*padding : 0 0 0 10px;*/
+  margin : 10px;
 }
 .logBtnsBlock {
   display: flex;
   justify-content: space-between;
-  margin : 10px 10%;
-  /*padding : 0 0 0 10px;*/
+  right : 0;
+  /*margin : 10px;*/
 }
 a {
   color: black;
@@ -124,22 +130,42 @@ a {
 .menuBlock div {
   margin-right : 10px;
 }
-.logBtnsBlock > div {
-  margin-left : 10px;
-}
-button.loginbtn, button.logoutbtn {
-  border-radius: 3px;
-  border : 1px solid lightblue;
+button.loginbtn {
+  border-radius: 10px;
+  border : 1px solid var(--selected-item);
+  color: var(--navbar-color);
+  background-color: var(--selected-item);/*var(--selected-item);*/
   padding: 5px;
   height: 30px;
   /*margin: 0 5px 0 0;*/
   width: 100px;
   font-weight: 600;
+  outline: none;
 }
-
-button.loginbtn:hover, button.logoutbtn:hover {
+button.logoutbtn {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  border-radius: 10px;
+  border : 1px solid var(--selected-item);
+  /*background-color: var(--selected-item-background);*/
+  background-color: var(--selected-item);/*var(--selected-item);*/
+  color: white;
+  padding: 0 8px;
+  height: 30px;
+  /*margin: 0 5px 0 0;*/
+  min-width: 150px;
+  max-width: 270px;
+  width: auto;
+  font-weight: 600;
+  outline: none;
+}
+button.loginbtn:hover {
   cursor: pointer;
-  background-color: lightblue;
+  /*background-color: var(--selected-item-background);*/
+}
+button.logoutbtn:hover {
+  cursor: pointer;
 }
 
 .infoMsg {
@@ -159,27 +185,15 @@ button.loggedbtn:hover{
   border : 1px solid #f2cb66;
 }
 .myTitle {
-  /*float:left;*/
-  position: absolute;
+  /*position: absolute;*/
   text-decoration: underline;
-  left : 10%;
-  /*top : -1px;*/
-  /*font-size: 1.2em;*/
+  /*left : 10%;*/
   font-family: 'Poiret One', cursive;
   font-weight: 900;
+  min-width: 140px;
   z-index: 20;
-  /*background-color: #666666;*/
-  /*-webkit-background-clip: text;*/
-  /*-moz-background-clip: text;*/
-  /*background-clip: text;*/
-  /*color: transparent;*/
-  /*text-shadow: rgba(255,255,255,0.5) 0px 3px 3px;*/
-  /*text-shadow: 2px 2px 0px #fff, 2px 2px 0px rgba(0, 0, 0, 0.57);*/
   text-shadow: 1px 1px 0px #eee, 1px 1px 2px #707070;
 }
-/*.menuTop {*/
-  /*left : 20%;*/
-/*}*/
 .studentName {
   color : #1890e6;
   font-weight: 700;
@@ -281,7 +295,7 @@ button.loggedbtn:hover{
 }
 
 @media only screen and (max-width: 400px) {
-  .description{
+  .description, .description-main{
     font-size: 0.7em;
     margin: 5px 10%;
   }
@@ -435,19 +449,97 @@ button.loggedbtn:hover{
   left : 10%;
   background-color: #33ccff;
 }
-.btn-chat:hover{
+.btn-chat:hover, .btn-chat-new:hover{
   cursor : pointer
 }
-@media only screen and (max-width: 400px) {
-  .app-homeWorkSection {
-    margin-left: 5%;
-  }
+
+.mym-new-chat-messages-count{
+    position: absolute;
+    display : flex;
+    /*align-items: center;*/
+    justify-content: center;
+    right : 0;
+    top : 0;
+    background-color: var(--selected-item-hard);
+    width : 20px;
+    height: 20px;
+    border-radius: 10px;
+    color : white;
+    font-size : .8em;
+    border : none;
+    /*padding-top: -5px;*/
 }
-@media only screen and (min-width: 400px) {
-  .descrAndAnnounceMobile{
-    width : 100%;
-  }
-  .description {
-    margin : 15px 0;
-  }
+.mym-new-chat-messages-hw-count{
+    position: absolute;
+    display : flex;
+    /*align-items: center;*/
+    justify-content: center;
+    left : 0;
+    top : 0;
+    background-color: var(--msg-hw-color);
+    width : 20px;
+    height: 20px;
+    border-radius: 10px;
+    color : white;
+    font-size : .8em;
+    border : none;
+}
+.mym-app-arrow-down{
+  color: #4d4d4d;
+  /*padding: 2px;*/
+  font-size: 1em;
+  /*width: 0;*/
+  /*height: 0;*/
+  /*border-style: solid;*/
+  /*border-width: 5px 5px 0 5px;*/
+  /*border-color: #000000 transparent transparent transparent;*/
+}
+.mym-app-arrow-up{
+  color: #4d4d4d;
+  padding: 2px;
+  font-size: 1em;
+  /*width: 0;*/
+  /*height: 0;*/
+  /*border-style: solid;*/
+  /*border-width: 0px 5px 5px 5px;*/
+  /*border-color: #000000 transparent transparent transparent;*/
+}
+.mym-app-button-with-arrow{
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+}
+.mym-app-button-exit{
+  border-radius: 5px;
+  padding: 2px;
+  text-align: center;
+  color: var(--navbar-color);
+  /*background-color: var(--selected-item);*/
+  /*background-color: var(--selected-item-background);*/
+  /*color: white;*/
+  font-weight: 600;
+}
+.mym-app-button-name{
+  background-color: var(--navbar-color);
+  color: var(--menu-item);
+  font-weight: 600;
+  border-radius: 7px;
+  padding: 2.5px 10px;
+}
+.navBlock{
+  display: inline-block;
+  justify-content: space-between;
+  align-items: center;
+  width : 100%;
+  /*margin-right: 10%;*/
+}
+.navBlockEx{
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width : 80%;
+}
+button.mym-login-logged{
+  border-bottom-left-radius: 0;
+  border-bottom-right-radius: 0;
 }

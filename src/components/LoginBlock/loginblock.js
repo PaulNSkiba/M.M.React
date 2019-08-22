@@ -4,18 +4,13 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux'
 import './loginblock.css'
-import {numberToLang, msgTimeOut, instanceLocator, testToken, chatUserName} from '../../components/helpers'
-import { FACEBOOK_URL, CREATEUSER_URL, UPDATESETUP_URL, SUBJECTS_GET_URL, UPDATECLASS_URL, STUDENTS_ADD_URL, instanceAxios } from '../../config/URLs'
+import {numberToLang, msgTimeOut, instanceAxios, mapStateToProps} from '../../js/helpers'
+import { FACEBOOK_URL, CREATEUSER_URL, UPDATESETUP_URL, SUBJECTS_GET_URL, UPDATECLASS_URL, STUDENTS_ADD_URL, instanceLocator, testToken, chatUserName } from '../../config/config'
 import emailPropType from 'email-prop-type';
 import { ChatManager, TokenProvider } from '@pusher/chatkit-client'
 import FacebookLogin from 'react-facebook-login';
 import {GoogleLogin} from 'react-google-login';
-
-// import fbLogin from '../../img/login-with-facebook-button-transparent-background-www-171.png'
-// import fbBtn from '../../img/fb-btn.png'
-// import googleBtn from '../../img/google-btn.png'
-// import linkedinBtn from '../../img/linkedin-btn.png'
-
+import '../../containers/App.css'
 
 class LoginBlock extends Component {
 
@@ -522,14 +517,6 @@ class LoginBlock extends Component {
     )
     }
 }
-const mapStateToProps = store => {
-    // console.log(store) // посмотрим, что же у нас в store?
-    return {
-        user:       store.user,
-        userSetup:  store.userSetup,
-    }
-}
-
 const mapDispatchToProps = dispatch => {
     return ({
         onSetSetup: (data, userID, curClass) => {
