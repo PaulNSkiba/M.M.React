@@ -13,7 +13,7 @@ import Table from '../components/MarksTable/markstable'
 import StudentTable from '../components/StudentTable/studenttable'
 import Chart from "react-google-charts";
 import EmailList from '../components/EmailList/emaillist'
-import HomeWorkSection from '../components/HomeWorkSection/homeworksection'
+import HomeWorkSection from '../components/AdminHomeWorkSection/homeworksection'
 import { Link } from 'react-router-dom';
 import MobileMenu from '../components/MobileMenu/mobilemenu'
 import Charts from '../components/Charts/charts'
@@ -21,8 +21,11 @@ import { userLoggedIn, userLoggedInByToken, userLoggedOut } from '../actions/use
 import Chat from '../components/Chat/chat'
 import 'react-chat-widget/lib/styles.css';
 import {Pusher} from 'pusher-js'
-import { AUTH_URL, API_URL, EXCEL_URL, UPDATESETUP_URL, SUBJECTS_GET_URL, STUDENTS_GET_URL, MARKS_STATS_URL } from '../config/config'
-import {numberToLang, msgTimeOut, instanceAxios, mapStateToProps, langLibrary as langLibraryF, toYYYYMMDD, getLangByCountry} from '../js/helpers'
+import { AUTH_URL, API_URL, EXCEL_URL, UPDATESETUP_URL, SUBJECTS_GET_URL, STUDENTS_GET_URL, MARKS_STATS_URL,
+        arrLangs, defLang}
+        from '../config/config'
+import {numberToLang, msgTimeOut, instanceAxios, mapStateToProps, getLangLibrary,
+        toYYYYMMDD, getLangByCountry} from '../js/helpers'
 
 import LoginBlock from '../components/LoginBlock/loginblock'
 import LoginBlockLight from '../components/LoginBlockLight/loginblocklight'
@@ -55,9 +58,8 @@ class App extends Component {
             myCity : localStorage.getItem("myCity")===null?'':localStorage.getItem("myCity"),
             myCountry : localStorage.getItem("myCountry")===null?'':localStorage.getItem("myCountry"),
             myCountryCode : localStorage.getItem("myCountryCode")===null?'':localStorage.getItem("myCountryCode"),
-            isMobile : window.innerWidth < 400,
+            isMobile : window.innerWidth < 400 || (/Android|webOS|iPhone|iPad|iPod|BlackBerry|BB|PlayBook|IEMobile|Windows Phone|Kindle|Silk|Opera Mini/i.test(navigator.userAgent)),
             stats : localStorage.getItem("markStats")===null?{}:JSON.parse(localStorage.getItem("markStats")),
-            // loading : false,
             isJournalClicked : false,
             stepsLeft : 7,
             displayChat : false,
@@ -90,7 +92,7 @@ class App extends Component {
     }
     componentDidMount(){
         this.props.onStartLoading()
-        let {langLibrary, classID} = this.props.userSetup
+        let {langLibrary} = this.props.userSetup
 
         if (!(window.localStorage.getItem("myMarks.data") === null)&&!(window.localStorage.getItem("userSetup")&&window.localStorage.getItem("userSetupDate")===toYYYYMMDD(new Date()))) {
             // &&!window.localStorage.getItem("userSetup")
@@ -101,14 +103,13 @@ class App extends Component {
             let {email, token, class_id : classID} = localstorage
             // console.log("onUserLoggingByToken!!!!", this.initLangLibrary(langLibrary, false))
             this.props.onUserLoggingByToken(email, token, null, this.initLangLibrary(langLibrary, false));
-
             // this.getChatMessages(classID);
         }
         else if (window.localStorage.getItem("userSetup")&&window.localStorage.getItem("userSetupDate")===toYYYYMMDD(new Date())) {
             // console.log("USER_SETUP", JSON.parse(window.localStorage.getItem("userSetup")))
             // console.log("componentDidMount.2", langLibrary)
             // let {email, token, class_id : classID} = localstorage
-
+            console.log("componentDidMount:langLibrary", langLibrary)
             this.initLangLibrary(langLibrary, true)
 
             // this.getChatMessages(classID);
@@ -119,6 +120,7 @@ class App extends Component {
             this.initLangLibrary(langLibrary, true)
             this.props.onStopLoading()
         }
+        this.props.onReduxUpdate("IS_MOBILE", this.state.isMobile)
         this.props.onChangeStepsQty(this.isSaveEnabled())
     }
 
@@ -135,7 +137,7 @@ class App extends Component {
         // console.log("initLangLibrary", langLibrary)
         if ((!langLibrary)||langLibrary===undefined||langLibrary==="undefined"||JSON.stringify(langLibrary)===JSON.stringify({})) {
             // console.log("initLangLibrary.2", langLibrary, setRedux, this.state.myCountryCode)
-            langLibrary = langLibraryF(this.state.myCountryCode?this.state.myCountryCode:"EN")
+            langLibrary = getLangLibrary(localStorage.getItem("langCode")?localStorage.getItem("langCode"):defLang)
             // console.log("initLangLibrary.3", langLibrary, setRedux, this.state.myCountryCode, this.props.userSetup)
             if (setRedux) this.props.onReduxUpdate("LANG_LIBRARY", langLibrary)
             // console.log("initLangLibrary.4", langLibrary, setRedux, this.state.myCountryCode, this.props.userSetup)
@@ -143,7 +145,8 @@ class App extends Component {
         return langLibrary
     }
     onSelectLang=async countryCode=>{
-        this.props.onReduxUpdate("LANG_LIBRARY", langLibraryF(countryCode))
+        this.props.onReduxUpdate("LANG_LIBRARY", getLangLibrary(countryCode))
+        localStorage.setItem("langCode", countryCode)
         // console.log(countryCode)
     }
     /*
@@ -253,6 +256,8 @@ class App extends Component {
                   localStorage.setItem("myCity", response.data.city)
                   localStorage.setItem("myCountry", response.data.country_name)
                   localStorage.setItem("myCountryCode", response.data.country)
+                  localStorage.setItem("langCode", arrLangs.includes(response.data.country)?response.data.country:defLang)
+
               }
           })
           .catch(response => {
@@ -261,11 +266,13 @@ class App extends Component {
                       myCity: "Kyiv",
                       myCountry: "Ukraine",
                       myCountryCode: "UA",
+                      // langCode: "UA"
                   }
               )
               localStorage.setItem("myCity", "Kyiv")
               localStorage.setItem("myCountry", "Ukraine")
               localStorage.setItem("myCountryCode", "UA")
+              localStorage.setItem("langCode", defLang)
           })
       }
       else {
@@ -281,6 +288,7 @@ class App extends Component {
                 localStorage.setItem("myCity", "Kyiv")
                 localStorage.setItem("myCountry", "Ukraine")
                 localStorage.setItem("myCountryCode", "UA")
+                if (!localStorage.getItem("langCode")) localStorage.setItem("langCode", defLang)
             }
       }
       // console.log("onReduxUpdate", countryCode)
@@ -536,16 +544,14 @@ class App extends Component {
         return [retArr, columns];
     }
     fireUserV3Login=url=>{
-        // let arr = (url.toString().split('/r3/')(1))
-        // console.log('arr', arr)
         let arr = url.toString().split('/r3/')[1].replace('/r3','').trim()
         let namelen = Number(arr.substring(0, 6)) - 42
         let name = arr.slice(-namelen)
         let pwd = arr.substring(6).replace(arr.slice(-namelen), '')
-
+        const {myCountryCode} = this.state
         console.log('URL', url, namelen, arr.slice(-namelen), arr.substring(6).replace(arr.slice(-namelen), ''))
         // console.log(name, pwd)
-        this.props.onUserLogging(name, pwd, '', '',  langLibraryF(this.state.myCountryCode?this.state.myCountryCode:"EN"));
+        this.props.onUserLogging(name, pwd, '', '', getLangLibrary(myCountryCode?myCountryCode:defLang));
         this.props.history.push('/');
     }
     userLogin() {
@@ -553,21 +559,21 @@ class App extends Component {
         this.setState({ "showLoginLight" : !this.state.showLoginLight })
     }
     userLogout() {
-        console.log('userLOGOUT')
+        // console.log('userLOGOUT')
+        const {myCountryCode} = this.state
         window.localStorage.removeItem("myMarks.data");
         window.localStorage.removeItem("userSetup")
         window.localStorage.removeItem("userSetupDate")
         this.hideSteps();
-        this.props.onUserLoggingOut(this.props.userSetup.token, langLibraryF(this.state.myCountryCode?this.state.myCountryCode:"EN"))
-        // this.forceUpdate();
+        this.props.onUserLoggingOut(this.props.userSetup.token, getLangLibrary(myCountryCode?myCountryCode:defLang))
     }
     langBlock=()=>{
         return <ReactFlagsSelect
-            defaultCountry={this.state.myCountryCode?this.state.myCountryCode:"US"}
+            defaultCountry={localStorage.getItem("langCode")?localStorage.getItem("langCode"):defLang}
             placeholder={getLangByCountry(this.state.myCountryCode)}
             showSelectedLabel={false}
-            searchPlaceholder={this.props.userSetup.langLibrary?this.props.userSetup.langLibrary.lang:"EN"}
-            countries={["EN", "FR", "DE", "IT", "PL", "RU", "US", "UA"]}
+            searchPlaceholder={this.props.userSetup.langLibrary?this.props.userSetup.langLibrary.lang:defLang}
+            countries={arrLangs}
             onSelect={this.onSelectLang}
             selectedSize={14}
             optionsSize={12}
@@ -652,8 +658,6 @@ class App extends Component {
             </div>);
 
         // console.log("this.props.USERSETUP: ", this.props.userSetup);
-
-
 
         let descrFirst = `${langLibrary.introBegin} ${this.isShortList()?"7":"10"} ${langLibrary.introEnd}:`
         // this.props.history.push('/');
@@ -894,7 +898,7 @@ class App extends Component {
                 <div>
                     <TitleBlock title={!isMobile?`${langLibrary.step} ${!this.isShortList()?7:6}${langLibrary.step6Descr}`:`${!this.isShortList()?7:6}${langLibrary.step6DescrMob}`}
                                         done={currentPeriodDateCount>0}
-                                        caption={!isMobile?(currentPeriodDateCount.toString()+"дн,").concat(withoutholidays?"Б/вых-х,":"",titlekind==="NICK"?"+НИК":(titlekind==="EMAIL"?"+EMAIL":"+ИМЯ")):"Да"}
+                                        caption={!isMobile?(currentPeriodDateCount.toString()+"дн,").concat(withoutholidays?"Б/вых-х,":"",titlekind==="NICK"?"+НИК":(titlekind==="EMAIL"?"+EMAIL":"+ИМЯ")):langLibrary.yes}
                                         onclick={this.stepClick.bind(this)} step={!this.isShortList()?7:6} hide={!this.isShortList()?step7:step6}/>
                 </div>
                 {!(!this.isShortList()?step7:step6)?
@@ -940,7 +944,7 @@ class App extends Component {
                             />}
                     </div>
                     :""}
-                {studentId === 0 && this.props.userSetup.isadmin?
+                {studentId === 0 && isadmin?
                 <div>
                     <TitleBlock title={!isMobile?`${langLibrary.step} ${!this.isShortList()?9:8}${langLibrary.step8Descr}`:`${!this.isShortList()?9:8}${langLibrary.step8DescrMob}`} done={false}
                                 onclick={this.stepClick.bind(this)} step={!this.isShortList()?9:8} hide={!this.isShortList()?step9:step8}/>
@@ -960,7 +964,7 @@ class App extends Component {
                     </div>
                 :""}
 
-                {studentId === 0 && this.props.userSetup.isadmin?
+                {studentId === 0 && isadmin?
                 <div>
                     <TitleBlock title={!isMobile?`${langLibrary.step} ${!this.isShortList()?10:9}${langLibrary.step9Descr}`:`${!this.isShortList()?10:9}${langLibrary.step9DescrMob}`} done={false} onclick={this.stepClick.bind(this)}
                                 step={!this.isShortList()?10:9} hide={!this.isShortList()?step10:step9}/>
@@ -1018,10 +1022,11 @@ class App extends Component {
                 {/*</TransitionGroup>>*/}
 
                 {/*{!this.state.displayChat?*/}
+                {userID&&isadmin?
                 <div className={"btn-chat"} onClick={()=>{this.setState({displayChat:!this.state.displayChat})}}><img height={"40px"} src={ChatBtn} alt=""/>
                     {this.state.newChatMessages?<div className="mym-new-chat-messages-count">{this.state.newChatMessages}</div>:null}
                     {this.state.newHomeworkMessages?<div className="mym-new-chat-messages-hw-count">{this.state.newHomeworkMessages}</div>:null}
-                    </div>
+                </div>:null}
                 {/*:""} */}
                 {/*{!this.state.displayNewChat?*/}
                 <div className={"btn-chat-new"} onClick={()=>{this.setState({displayNewChat:!this.state.displayNewChat})}}><img height={"40px"} src={ChatBtn} alt=""/>
@@ -1031,6 +1036,7 @@ class App extends Component {
                 {/*:""}*/}
 
                 {/*{this.state.displayChat?*/}
+
                     <Chat
                           isnew = {false} updatemessage={this.updateMessages}
                           session_id={this.props.userSetup.chatSessionID} homeworkarray={this.props.userSetup.homework}

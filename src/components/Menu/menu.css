@@ -8,7 +8,7 @@
     text-decoration: underline;
 }
 .menuItemHw a {
-    color : rgb(231, 173, 0);
+    color : var(--menu-homework);
     font-weight: 700;
     font-size : 0.9em;
 }

@@ -15,7 +15,7 @@ export function chatReducer(state = initialState, action) {
             return{...state, initialState}
         }
         case "ADD_CHAT_MESSAGES" : {
-            console.log("ADD_CHAT_MESSAGES", action.payload)
+            // console.log("ADD_CHAT_MESSAGES", action.payload)
             return{...state, localChatMessages: action.payload}
         }
         default:

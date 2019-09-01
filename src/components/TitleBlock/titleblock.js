@@ -7,18 +7,23 @@ import arrow_down from '../../img/ARROW_DOWN.png'
 import arrow_up from '../../img/ARROW_UP.png'
 import ReactCountryFlag from "react-country-flag";
 import { connect } from 'react-redux'
-import {mapStateToProps} from '../../js/helpers'
+import {mapStateToProps, getLangLibrary} from '../../js/helpers'
+import {defLang} from '../../config/config'
 
 class TitleBlock extends Component {
-
     classNames=(curclass, hide)=>{
         return (curclass?"block-0 done":"block-0") + (hide?"":" activeblock ") + (this.props.hasOwnProperty("isyellow")?" saveDiv":"") + (this.props.hasOwnProperty("isgrey")?(this.props.isgrey?" disabledSave":""):"")
     }
-
+    initLangLibrary=(langLibrary, setRedux)=>{
+        if ((!langLibrary)||langLibrary===undefined||langLibrary==="undefined"||JSON.stringify(langLibrary)===JSON.stringify({})) {
+            langLibrary = getLangLibrary(localStorage.getItem("langCode")?localStorage.getItem("langCode"):defLang)
+        }
+        return langLibrary
+    }
     render() {
         const {done, title, step, onclick, hide, caption} = this.props;
-        let {langLibrary} = this.props.userSetup
-        // console.log("langLibrary", langLibrary)
+        const langLibrary = this.initLangLibrary(this.props.userSetup.langLibrary)
+
         var divStyle = {
             "marginTop":"-5px"
         };

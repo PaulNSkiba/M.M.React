@@ -2,7 +2,7 @@
  * Created by Paul on 22.01.2019.
  */
 import { LOGINUSER_URL } from '../config/config'
-import { instanceAxios, langLibrary as langLibraryF } from '../js/helpers'
+import { instanceAxios, getLangLibrary } from '../js/helpers'
 
 export const userLoggedIn = (email, pwd, provider, provider_id, langLibrary) => {
     return dispatch => {
@@ -49,7 +49,7 @@ export const userLoggedInByToken = (email, token, kind, langLibrary) => {
         document.body.style.cursor = 'progress';
         instanceAxios().post(LOGINUSER_URL, data, null)
             .then(response => {
-                dispatch({type: 'USER_LOGGEDIN', payload: response.data, langLibrary : langLibrary?langLibrary:langLibraryF(localStorage.getItem("myCountryCode")?localStorage.getItem("myCountryCode"):"EN")});
+                dispatch({type: 'USER_LOGGEDIN', payload: response.data, langLibrary : langLibrary?langLibrary:getLangLibrary(localStorage.getItem("myCountryCode")?localStorage.getItem("myCountryCode"):"EN")});
                 dispatch({type: 'ADD_CHAT_MESSAGES', payload : response.data.chatrows});
                 dispatch({type: 'APP_LOADED'})
                 // пробуем записать в LocalStorage имя пользователя, ID, имя и тип авторизации

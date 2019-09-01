@@ -18,8 +18,9 @@
     --good-mark: #C6EFCE;
     --norm-mark: #FFEB9C;
     --bad-mark: #FF8594;
-    --erase-mark: rgb(224, 224, 224);
+    --erase-mark: #E0E0E0;
 
     --navbar-color : #f0f0f0;
     --menu-item: #1890e6;
+    --menu-homework : #E7AD00;
 }

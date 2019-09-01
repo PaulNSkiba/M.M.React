@@ -29,17 +29,7 @@ tr#row-1, tr#row-2{
 .verified{
     background-color: rgb(198,239,206)
 }
+.mym-universaltable-container {
 
-/*.col-0 {width: 5%;}*/
-/*.col-1 {width: 15%;}*/
-/*.col-2 {width: 20%;}*/
-/*.col-3 {width: 20%;}*/
-
-
-/*.col-4 {width: 100%;}*/
-
-/*#simple-board td:last-child {*/
-    /*width : 1000px;*/
-    /*min-width : 100%;       */
-/*}*/
+}
 

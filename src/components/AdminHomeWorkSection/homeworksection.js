@@ -300,11 +300,11 @@ class HomeWorkSection extends Component {
     )
     langBlock=()=>{
         return <ReactFlagsSelect
-            defaultCountry={this.state.myCountryCode?this.state.myCountryCode:"US"}
-            placeholder={getLangByCountry(this.state.myCountryCode?this.state.myCountryCode:"US")}
+            defaultCountry={this.state.myCountryCode?this.state.myCountryCode:"GB"}
+            placeholder={getLangByCountry(this.state.myCountryCode)}
             showSelectedLabel={false}
-            searchPlaceholder={this.props.userSetup.langLibrary.lang}
-            countries={["EN", "FR", "DE", "IT", "PL", "RU", "US", "UA"]}
+            searchPlaceholder={this.props.userSetup.langLibrary?this.props.userSetup.langLibrary.lang:"GB"}
+            countries={["DE", "FR", "IT", "PL", "RU", "ES", "UA", "GB"]}
             onSelect={this.onSelectLang}
             selectedSize={14}
             optionsSize={12}

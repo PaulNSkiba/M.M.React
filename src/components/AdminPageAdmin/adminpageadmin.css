@@ -1,5 +1,5 @@
 .subjFromSelector, .subjToSelector {
-    width : 200px;
+    width : 170px;
     height : 400px;
 }
 .subBlocks {
@@ -15,7 +15,9 @@
     margin: 2px;
 }
 .h4 {
-    /*margin: 10px 10%;*/
+    font-weight: 600;
+    padding : 5px;
+    /*margin-bottom: 5px;*/
 }
 .tableStats{
     /*margin: 10px 10%;*/
@@ -37,5 +39,50 @@
 .colstat-6 {width: 5%;}
 
 .mym-adminpage-container{
-    margin: 10px 10%;
+    margin: 10px 5%;
+}
+.mym-adminpage-subjblock {
+    display: flex;
+    flex-direction: column;
+}
+.mym-adminpage-subjblock-selectors {
+    display: flex;
+    flex-direction: row;
+}
+.mym-adminpage-subjblock {
+    display: flex;
+    flex-direction: column;
+}
+.mym-adminpage-translateblock {
+    width : 100%;
+}
+.mym-adminpage-translateblock-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 5px;
+}
+.mym-btn-add-lang-alias {
+    border: 2px solid var(--selected-item-hard);
+    text-align: center;
+    border-radius: 5px;
+    background-color: lightgrey;
+    width : 80px;
+    height : 25px;
+}
+.mym-btn-add-lang-alias:hover {
+    background-color: var(--erase-mark);
+    cursor: pointer;
+}
+.mym-adminpage-subjblock-header {
+    background-color: var(--selected-item-background);
+    border-radius: 5px;
+    padding : 3px;
+    margin-bottom: 5px;
+}
+.mym-adminpage-translateblock-header {
+    background-color: var(--selected-item-background);
+    border-radius: 5px;
+    padding : 3px;
+    margin-bottom: 5px;
 }

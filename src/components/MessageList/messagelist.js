@@ -38,25 +38,7 @@ class MessageList extends Component {
 
             }
             catch (err){
-
             }
-            console.log("await")
-                // console.log("this.state.messages", this.state.messages)
-
-            // let arr = this.state.messages
-            // arr = arr.map(item=>{
-            //     obj = JSON.parse(item)
-            //     // console.log("item.message", id, obj, obj.id, obj.message)
-            //
-            //     if (Number(obj.id)!==id)
-            //         return item
-            //     else {
-            //          obj.text = this.textareaValue.value
-            //         // console.log("item.message", obj.id, id, obj.text)
-            //         return JSON.stringify(obj)
-            //     }
-            // })
-            // this.setState({messages: arr})
         }
         this.setState({editKey : -1})
     }
@@ -83,35 +65,27 @@ class MessageList extends Component {
             overflow: "auto",
         });
         // console.log("addmsgs", this.props.addmsgs)
-        // window.scrollTo(0, document.getElementById('messages').innerHeight)
+
         let questionText = "Здравствуйте. Оставьте, пожалуйста, своё сообщение в этом чате. " +
             "Оно автоматически будет доставлено в нашу службу поддержки и мы как можно скорее отправим Вам ответ на "
 
         questionText = questionText.concat(this.props.classID?"Вашу электронную почту.":"указанную Вами электронной почте.")
-
         // console.log("RENDERMESSAGES", this.props.isnew, this.state.messages, this.props.userSetup)
         let messages = []
         if (this.props.isnew)
             messages = this.props.localmessages //this.props.chat.localChatMessages.map(item=>prepareMessageToFormat(item))
         else
             messages = this.props.messages
-
         // console.log('MESSAGES', this.props.localmessages, messages)
-
         return (
-
-
 
             <div className="msg-list">
                 {!this.props.isshortmsg?
                     <ScrollToBottom className={ ROOT_CSS }>
                         {messages.length?messages.map((message, i) =>{
-
                             let msg = this.props.isnew?prepareMessageToFormat(message, true):JSON.parse(message)
-                            console.log("MESSAGELIST-MSG", msg)
-
+                            // console.log("MESSAGELIST-MSG", msg)
                             const urlMatches = msg.text.match(/\b(http|https)?:\/\/\S+/gi) || [];
-
                             let { text } = msg;
                             urlMatches.forEach(link => {
                                 const startIndex = text.indexOf(link);
@@ -121,7 +95,6 @@ class MessageList extends Component {
                                     [endIndex]: '</a>',
                                 });
                             });
-
                             // add this line
                             const LinkPreviews = urlMatches.map(link => <MicrolinkCard  key={"url"+i} url={link} />);
                                 let username = msg.hasOwnProperty('userID')?msg.userName:msg.senderId
@@ -130,9 +103,7 @@ class MessageList extends Component {
                             let ownMsg = (username===this.props.username)
                             // console.log(this.props.hwdate===msg.hwdate)
                             return (this.props.hwdate===null||(!(this.props.hwdate===null)&&((new Date(this.props.hwdate)).toLocaleDateString()===(new Date(msg.hwdate)).toLocaleDateString())))?
-                            <div key={i} id={"msg-"+msg.id} className={"message-block"} onClick={()=>i!==this.state.editKey?this.setState({editKey:-1}):null} onDoubleClick={(e)=>this.onMessageDblClick(e)}
-                            /*style={this.state.editKey===i?{visibility:"hidden"}:null}*/
-                            >
+                            <div key={i} id={"msg-"+msg.id} className={"message-block"} onClick={()=>i!==this.state.editKey?this.setState({editKey:-1}):null} onDoubleClick={(e)=>this.onMessageDblClick(e)}>
                                 <div className={ownMsg?(hw.length?"msg-right-side homework-border":"msg-right-side  homework-no-border"):(hw.length?"msg-left-side homework-border":"msg-left-side homework-no-border")}
                                      style={this.state.editKey===i?{color:"white", backgroundColor : "white", border: "white 2px solid"}:null} key={msg.id}>
 

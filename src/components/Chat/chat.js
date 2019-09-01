@@ -10,14 +10,15 @@ import arrow_down from '../../img/ARROW_DOWN.png'
 import arrow_up from '../../img/ARROW_UP.png'
 import { API_URL, BASE_HOST, WEBSOCKETPORT, LOCALPUSHERPWD, HOMEWORK_ADD_URL,
         instanceLocator, testToken, chatUserName } from '../../config/config'
-import {AddDay, arrOfWeekDays, dateDiff, toYYYYMMDD, instanceAxios, mapStateToProps, prepareMessageToFormat} from '../../js/helpers'
+import {AddDay, arrOfWeekDays, dateDiff, toYYYYMMDD, instanceAxios, mapStateToProps, prepareMessageToFormat, echoClient, pusherClient} from '../../js/helpers'
 import addMsg from '../../img/addMsg.svg'
 import { Smile } from 'react-feather';
 import { Picker, emojiIndex } from 'emoji-mart';
-import Echo from 'laravel-echo'
-import {Pusher} from 'pusher-js'
+// import Echo from 'laravel-echo'
+// import {Pusher} from 'pusher-js'
 import { connect } from 'react-redux'
-import { default as uniqid } from 'uniqid'
+// import {Pusher} from 'pusher-js'
+// import { default as uniqid } from 'uniqid'
 
 import '../../css/colors.css';
 import './chat.css';
@@ -31,7 +32,7 @@ class Chat extends Component {
             curDate: AddDay(new Date(), 1),
             currentUser: null,
             currentRoom: {users:[]},
-            messages: [],//this.initChatMessages(),
+            messages: [],
             users: [],
             selSubject : false,
             selSubjkey : null,
@@ -60,87 +61,102 @@ class Chat extends Component {
         this.toggleEmojiPicker = this.toggleEmojiPicker.bind(this);
         this.sendMessageTextArea = this.sendMessageTextArea.bind(this);
         this.prepareJSON = this.prepareJSON.bind(this)
-        // this.prepareMessageToFormat = this.prepareMessageToFormat.bind(this)
         this.initChatMessages = this.initChatMessages.bind(this)
-        // this.getChatMessages = this.getChatMessages.bind(this)
         this._handleKeyDown = this._handleKeyDown.bind(this)
         this.sendMessage = this.sendMessage.bind(this)
     }
-    toggleEmojiPicker=()=>{
-        this.setState({            showEmojiPicker: !this.state.showEmojiPicker,        });
+
+    componentWillMount(){
+        // console.log("this.props.isnew", this.props.isnew)
     }
-    getChatMessages=(classID)=>{
-        console.log('getChatMessages', this.props.userSetup.classID, classID)
-        instanceAxios().get(API_URL +`chat/get/${classID}`, [], null)
-            .then(resp => {
-                this.setState({localChatMessages : resp.data})
-                this.props.onReduxUpdate("ADD_CHAT_MESSAGES", resp.data)
-                console.log('resp.data', resp, resp.data, resp.data.data)
-            })
-            .catch(error => {
-                console.log('getChatMessagesError', error)
-            })
-    }
-    initChatMessages=async ()=>{
-        console.log("initChatMessages", this.props.userSetup.localChatMessages, this.props.userSetup.classID)
-        if (this.props.isnew) {
-            this.getChatMessages(this.props.userSetup.classID)
-        }
+    componentDidMount(){
+        // console.log("this.props.isnew", this.props.isnew)
+        if (this.props.isnew)
+            this.initLocalPusher()
         else {
-            return []
+            this.initNetPusher()
         }
+        this.initChatMessages()
+        // if (this.typingTimer) clearTimeout(this.typingTimer)
+        this.typingTimer = setInterval(()=>{
+            // console.log("setInterval-tag")
+            let mp = this.state.typingUsers,
+                now = (new Date())
+            for (let user of mp.keys()) {
+                // console.log("setInterval", user, now, mp.get(user),
+                //     Math.abs(now.getUTCSeconds() - mp.get(user).getUTCSeconds()),
+                //     Math.floor((Date.UTC(now.getFullYear(), now.getMonth(), now.getDate()) - Date.UTC(mp.get(user).getFullYear(), mp.get(user).getMonth(), mp.get(user).getDate()) ) /(1000)))
+
+                if (Math.abs(now.getUTCSeconds() - mp.get(user).getUTCSeconds()) > 2) {
+                    mp.delete(user)
+                    this.setState({typingUsers: mp})
+                }
+
+            }
+        }, 2000)
     }
-    addEmoji=(emoji)=>{
-        const { newMessage } = this.state;
-        const text = `${newMessage}${emoji.native}`;
-        this.setState({
-            newMessage: text,
-            showEmojiPicker: false,
-        });
-        this.inputMessage.value = this.inputMessage.value + emoji.native
+    componentWillUnmount() {
+        if (this.typingTimer) clearInterval(this.typingTimer)
     }
     initLocalPusher=()=>{
-        let {token} = store.getState().user
-        let {chatSSL} = this.props.userSetup
+        const {chatSSL} = this.props.userSetup
 
-        let echo = new Echo(
-            {
-                broadcaster : 'pusher',
-                key : LOCALPUSHERPWD,
-                cluster : 'mt1',
-                wsHost : BASE_HOST,
-                wsPort : WEBSOCKETPORT,
-                wssPort: WEBSOCKETPORT,
-                disableStats: true,
-                enabledTransports: ['ws', 'wss'],
-                encrypted: chatSSL,
-                auth: {
-                    headers: {
-                        'V-Auth': true,
-                        Authorization: `Bearer ${token}`,
-                    }
-                }
-            }
-        )
+        // const larasocket = pusherClient(store.getState().user.token, chatSSL)
+        const echo = echoClient(store.getState().user.token, chatSSL)
 
-        let channelName = 'class.'+this.props.userSetup.classID
+        echo.connector.pusher.logToConsole = true
+        echo.connector.pusher.log = (msg) => {console.log(msg);};
+        echo.connect()
+        console.log('echo.pusher', echo.connector.pusher)
+        // larasocket.connect()
+
+        const channelName = 'class.'+this.props.userSetup.classID
+
+        // const channel = larasocket.subcribe('private'-channelName)
+        // channel.bind('ChatMessageSSL', data => {             console.log('larasocket-message', data.message);         });
+
         this.setState({Echo: echo})
+        // console.log("SOCKET", larasocket, larasocket.allChannels())
         console.log('websocket', echo, channelName)
         if (chatSSL)
         echo.private(channelName)
             .listen('ChatMessageSSL', (e) => {
-                let msg = prepareMessageToFormat(e.message)
-                let stateArr = this.state.messages.filter(
+                console.log("FILTER-SSL")
+                let msg = prepareMessageToFormat(e.message), msgorig = e.message, isSideMsg = true
+                let localChat =   this.state.localChatMessages,
+                    arrChat = []
+                // console.log("FILTER-NOT-SSL", this.state.localChatMessages)
+                arrChat = localChat.map(
                     item=>
                     {
-                        console.log("FILTER-SSL", JSON.parse(msg).uniqid, item, item.uniqid, JSON.parse(msg).uniqid === item.uniqid, this.state.messagesNew.includes(item.uniqid))
-                        return    !(JSON.parse(msg).uniqid === JSON.parse(item).uniqid && this.state.messagesNew.includes(JSON.parse(item).uniqid))
+                        // console.log("map", item, JSON.parse(msg))
+                        if (this.state.messagesNew.includes(item.uniqid)) {
+                            // Для своих новых
+                            if (JSON.parse(msg).uniqid === item.uniqid) {
+                                // console.log("MSGORIG", msgorig, msgorig.id)
+                                isSideMsg = false
+                                let obj = item
+                                obj.id = msgorig.id
+                                return obj
+                            }
+                            else {
+                                return item
+                            }
+                        }
+                        else {
+                            return item
+                        }
                     }
                 )
+                 // Если новое и стороннее!!!
+                if  (isSideMsg) arrChat.push(msgorig)
+
                 this.setState({
-                    messages: [...stateArr, msg],
+                    localChatMessages : arrChat,
+                    messages: [...arrChat, msg],
                     messagesNew : this.state.messagesNew.filter(item=>!(item.uniqid===JSON.parse(msg).uniqid))
                 })
+                // this.props.onReduxUpdate("ADD_CHAT_MESSAGES", arrChat)
                 this.props.updatemessage(msg)
             })
             .listenForWhisper('typing', (e) => {
@@ -158,8 +174,8 @@ class Chat extends Component {
                 let msg = prepareMessageToFormat(e.message), msgorig = e.message, isSideMsg = true
                 let arr =   this.state.localChatMessages,
                             newArr = []
-                    console.log("FILTER-NOT-SSL", this.state.localChatMessages)
-                    console.log("FILTER-NOT-SSL: this.props", this.props)
+                    console.log("FILTER-NOT-SSL")
+                    // console.log("FILTER-NOT-SSL: this.props", this.props)
                     newArr = arr.map(
                     item=>
                     {
@@ -168,7 +184,7 @@ class Chat extends Component {
                         if (this.state.messagesNew.includes(item.uniqid)) {
                             // Для своих новых
                             if (JSON.parse(msg).uniqid === item.uniqid) {
-                                console.log("MSGORIG", msgorig, msgorig.id)
+                                // console.log("MSGORIG", msgorig, msgorig.id)
                                 isSideMsg = false
                                 let obj = item
                                 obj.id = msgorig.id
@@ -177,30 +193,13 @@ class Chat extends Component {
                             else {
                                 return item
                             }
-
                         }
                         else {
                             return item
                         }
-                        // return item
-
-                        // if (!(JSON.parse(msg).uniqid === item.uniqid)) // Если сообщение по уникальному ключу не совпадает с нашим, то возвращаем его //  && this.state.messagesNew.includes(item.uniqid)
-                        //     return item
-                        // else if (JSON.parse(msg).uniqid === item.uniqid && item.id === 0) { // Если сообщение по уникальному ключу не совпадает с нашим, то возвращаем его
-                        //     verynewmsg = false
-                        //     return item
-                        // }
-                        // else
-                        //     return item
-                        //
-                        // if (JSON.parse(msg).id===item.id) verynewmsg = false
-                        //
-                        // return    !(JSON.parse(msg).uniqid === JSON.parse(item).uniqid && this.state.messagesNew.includes(JSON.parse(item).uniqid))
                     }
                 )
-
-                console.log("FILTER-NOT-SSL: stateArr", newArr, JSON.parse(msg), "isSideMsg: " + isSideMsg, this.state.messagesNew)
-
+                // console.log("FILTER-NOT-SSL: stateArr", newArr, JSON.parse(msg), "isSideMsg: " + isSideMsg, this.state.messagesNew)
                 // Если новое и стороннее!!!
                 if  (isSideMsg) newArr.push(msgorig)
 
@@ -209,14 +208,13 @@ class Chat extends Component {
                     messages: [...arr, msg],
                     messagesNew : this.state.messagesNew.filter(item=>!(item.uniqid===JSON.parse(msg).uniqid))
                 })
-                    this.props.onReduxUpdate("ADD_CHAT_MESSAGES", newArr)
-
+                    // this.props.onReduxUpdate("ADD_CHAT_MESSAGES", newArr)
                     this.props.updatemessage(msg)
             })
         }
 
     initNetPusher=()=>{
-        console.log("initNetPusher:roomId", this.roomId)
+        // console.log("initNetPusher:roomId", this.roomId)
         if (this.roomId) {
             const chatManager = new ChatManager({
                 instanceLocator: instanceLocator,
@@ -260,37 +258,38 @@ class Chat extends Component {
                 }
         }
     }
-    componentWillMount(){
-        // console.log("this.props.isnew", this.props.isnew)
+
+    toggleEmojiPicker=()=>{
+        this.setState({            showEmojiPicker: !this.state.showEmojiPicker,        });
     }
-    componentDidMount(){
-        // console.log("this.props.isnew", this.props.isnew)
-        if (this.props.isnew)
-            this.initLocalPusher()
-        else {
-            this.initNetPusher()
+    getChatMessages=(classID)=>{
+        // console.log('getChatMessages', this.props.userSetup.classID, classID)
+        instanceAxios().get(API_URL +`chat/get/${classID}`, [], null)
+            .then(resp => {
+                this.setState({localChatMessages : resp.data})
+                // this.props.onReduxUpdate("ADD_CHAT_MESSAGES", resp.data)
+            })
+            .catch(error => {
+                console.log('getChatMessagesError', error)
+            })
+    }
+    initChatMessages=async ()=>{
+        // console.log("initChatMessages", this.props.userSetup.localChatMessages, this.props.userSetup.classID)
+        if (this.props.isnew) {
+            this.getChatMessages(this.props.userSetup.classID)
         }
-        this.initChatMessages()
-        // if (this.typingTimer) clearTimeout(this.typingTimer)
-        this.typingTimer = setInterval(()=>{
-            // console.log("setInterval-tag")
-            let mp = this.state.typingUsers,
-                now = (new Date())
-            for (let user of mp.keys()) {
-                console.log("setInterval", user, now, mp.get(user),
-                    Math.abs(now.getUTCSeconds() - mp.get(user).getUTCSeconds()),
-                    Math.floor((Date.UTC(now.getFullYear(), now.getMonth(), now.getDate()) - Date.UTC(mp.get(user).getFullYear(), mp.get(user).getMonth(), mp.get(user).getDate()) ) /(1000)))
-
-                if (Math.abs(now.getUTCSeconds() - mp.get(user).getUTCSeconds()) > 2) {
-                    mp.delete(user)
-                    this.setState({typingUsers: mp})
-                }
-
-            }
-        }, 2000)
-     }
-    componentWillUnmount() {
-        if (this.typingTimer) clearInterval(this.typingTimer)
+        else {
+            return []
+        }
+    }
+    addEmoji=(emoji)=>{
+        const { newMessage } = this.state;
+        const text = `${newMessage}${emoji.native}`;
+        this.setState({
+            newMessage: text,
+            showEmojiPicker: false,
+        });
+        this.inputMessage.value = this.inputMessage.value + emoji.native
     }
 
     prepareJSON=()=>{
@@ -313,7 +312,7 @@ class Chat extends Component {
                 obj.user_name = userName
                 obj.student_id = studentId
                 obj.student_name = studentName
-                obj.uniqid = uniqid()
+                obj.uniqid = new Date().getTime() + this.props.userSetup.userName// uniqid()
                 this.setState({messagesNew : [...this.state.messagesNew, obj.uniqid]})
                 break;
             default :
@@ -366,6 +365,7 @@ class Chat extends Component {
             this.setState({messages: [...this.state.messages, objForState]})
         }
         this.sendMessage(obj, 0)
+        if (!(this.state.selSubjkey === null))
         this.addHomeWork(this.props.isnew?JSON.parse(obj).message:JSON.parse(obj).text)
     }
     _handleKeyDown = (e) => {
@@ -521,17 +521,13 @@ class Chat extends Component {
             return
         }
         // console.log("Next message!", text)
-        // return
         // Передаём сообщение с определёнными параметрами (ID-сессии + ClassID)
-
-        // + Сохраним данные в своей БД
-
         switch (this.props.isnew) {
             case true :
-                let arr = this.state.localChatMessages, obj = {}
+                let arrChat = this.state.localChatMessages, obj = {}
                 console.log("Send message to server.1", "arr.before: ", arr)
                 if (id > 0) {
-                    arr = arr.map(item => {
+                    arrChat = arrChat.map(item => {
                         obj = item
                         if (Number(obj.id) !== id)
                             return item
@@ -542,11 +538,11 @@ class Chat extends Component {
                     })
                 }
                 else {
-                   arr.push(JSON.parse(text))
+                   arrChat.push(JSON.parse(text))
                 }
-                console.log("Send message to server.2", "arr.after: ", arr)
-                this.setState({messages: arr})
-                this.props.onReduxUpdate("ADD_CHAT_MESSAGES", arr)
+                console.log("Send message to server.2", "arr.after: ", arr, text)
+                this.setState({messages: arrChat})
+                // this.props.onReduxUpdate("ADD_CHAT_MESSAGES", arrChat)
                 instanceAxios().post(API_URL + 'chat/add' + (id?`/${id}`:''), text)
                     .then(response => {
                         console.log('ADD_MSG', response)
@@ -643,8 +639,7 @@ class Chat extends Component {
             showEmojiPicker,
         } = this.state;
 
-        // console.log('this.state.messages', this.state.messages)
-        console.log("RENDER_CHAT", this.state.localChatMessages)
+        // console.log("RENDER_CHAT", this.state.localChatMessages)
         return (
 
 
@@ -690,7 +685,8 @@ class Chat extends Component {
                     :""}
 
                 <MessageList hwdate={this.state.selDate?this.state.curDate:null}
-                             messages={this.state.messages} localmessages={this.state.localChatMessages}
+                             messages={this.state.messages}
+                             localmessages={this.state.localChatMessages}
                              username={chatUserName}
                              isshortmsg={this.state.isServiceChat||!this.state.servicePlus}
                              classID={this.props.classID} addmsgs={this.state.addMsgs} sendmessage={this.sendMessage} isnew={this.props.isnew}/>
@@ -708,49 +704,6 @@ class Chat extends Component {
                                 >
                                     <Smile />
                                 </button>
-
-                                {/*<ReactTextareaAutocomplete*/}
-                                    {/*className="message-input msg-add-textarea"*/}
-                                    {/*name="newMessage"*/}
-                                    {/*value={newMessage}*/}
-                                    {/*loadingComponent={() => <span>Загрузка</span>}*/}
-                                    {/*onKeyPress={this.handleKeyPress}*/}
-                                    {/*onChange={this.handleInput}*/}
-                                    {/*placeholder="Введите сообщение..."*/}
-                                    {/*trigger={{*/}
-                                        {/*':': {*/}
-                                            {/*dataProvider: token =>{*/}
-                                                {/*console.log("token", token)*/}
-                                                {/*// console.log("newMessage", newMessage)*/}
-                                                {/*console.log("emojiIndex.search(token)"*/}
-                                                    {/*, emojiIndex.search(token)*/}
-                                                    {/*, emojiIndex.search(token)*/}
-                                                        {/*.filter(item=>item.emoticons.indexOf(':'+token)>=0)*/}
-                                                        {/*// .map(*/}
-                                                        {/*//o=>o.emoticons.filter(item=>item.indexOf(token)>=0)*/}
-                                                        {/*// )*/}
-                                                        {/*// .filter(item=>item.length)*/}
-                                                {/*)*/}
-                                                {/*// return emojiIndex.search(token).map(o => ({*/}
-                                                {/*//     colons: o.colons,*/}
-                                                {/*//     native: o.native,*/}
-                                                {/*// }))*/}
-                                                {/*return emojiIndex.search(token)*/}
-                                                    {/*.filter(item=>item.emoticons.indexOf(':'+token)>=0).map(o => ({*/}
-                                                        {/*colons: o.colons,*/}
-                                                        {/*native: o.native,*/}
-                                                    {/*}))*/}
-                                            {/*}*/}
-
-                                                {/*,*/}
-                                            {/*component: ({ entity: { native, colons } }) => (*/}
-                                                {/*<div>{`${native}`}</div>*/}
-                                            {/*),*/}
-                                            {/*output: item => `${item.native}`,*/}
-                                        {/*},*/}
-                                    {/*}}*/}
-                                {/*/>*/}
-
 
                                 <textarea onKeyDown={this._handleKeyDown} className="msg-add-textarea"
                                   placeholder="Введите сообщение..."  type="text" ref={input=>{this.inputMessage=input}}

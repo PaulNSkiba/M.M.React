@@ -9,7 +9,7 @@ import { Provider } from 'react-redux'
 import { Route, BrowserRouter } from 'react-router-dom';
 import AdminPage from './components/AdminPage/adminpage'
 import AdminPageTeacher from './components/AdminPageTeacher/adminpageteacher'
-import HomeWorkSection from './components/HomeWorkSection/homeworksection'
+import HomeWorkSection from './components/AdminHomeWorkSection/homeworksection'
 import AdminPageWorkFlow from './components/AdminPageWorkFlow/adminpageworkflow'
 import { CookiesProvider } from 'react-cookie';
 // import {CSSTransitionGroup, CSSTransition, TransitionGroup } from 'react-transition-group/CSSTransitionGroup';

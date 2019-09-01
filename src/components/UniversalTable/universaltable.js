@@ -19,12 +19,19 @@ class UniversalTable extends Component {
             rows : [],
             checkedMap : this.fillMap(),
         }
+        this.onClick = this.onClick.bind(this)
+        this.onBlur = this.onBlur.bind(this)
+        this.changeState = this.changeState.bind(this)
+        this.createTableRows = this.props.createTableRows.bind(this)
     }
 
     componentDidMount() {
+        const {rows, classNameOfTD} = this.props
+        const {row : row_state, column : column_state, checkedMap} = this.state
+
         this.setState ( {
             head : this.createTableHead(this.props.head),
-            rows : this.createTableRows(this.props.rows, this.onInputChange, true)
+            rows : this.createTableRows(rows, this.onInputChange, true, row_state, column_state, classNameOfTD, checkedMap)
         })
     }
     fillMap=()=>{
@@ -46,18 +53,20 @@ class UniversalTable extends Component {
                 style={{"width" : val.width, "paddingLeft" : "5px", "paddingRight" : "5px"}} key={index}>{val.name}</th>)}</tr>
     )
     onClick(e) {
+        const {rows, classNameOfTD} = this.props
+        const {row : row_state, column : column_state, checkedMap} = this.state
+
         console.log("onClick", e.target, e.target.nodeName, e.target.innerHTML, e.target.getAttribute('id2'))
         if (e.target.nodeName === "TD") {
             let row = Number(e.target.id.split('#')[0]),
                 column = Number(e.target.id.split('#')[1])
-                // id = Number(e.target.id.split('#')[2])
 
             console.log("table_OnClick", row, column)
             this.setState(
                 {
                     row: row,
                     column: column,
-                    rows : this.createTableRows(this.props.rows, this.onInputChange, true)
+                    rows : this.createTableRows(rows, this.onInputChange, true, row_state, column_state, classNameOfTD, checkedMap)
                 }
             )
         }
@@ -71,7 +80,9 @@ class UniversalTable extends Component {
             json = "",
             data = "";
 
-        // row = Number(e.target.id.split('#')[0]),
+        const {rows, classNameOfTD} = this.props
+        const {row : row_state, column : column_state, checkedMap} = this.state
+
         switch (column) {
             case 2:
                 this.props.rows[this.state.row - 1].student_nick = e.target.value
@@ -110,20 +121,20 @@ class UniversalTable extends Component {
         })
 
         this.setState({
-            rows: this.createTableRows(this.props.rows, this.onInputChange, false)
+            rows: this.createTableRows(rows, this.onInputChange, false, row_state, column_state, classNameOfTD, checkedMap)
         })
 
     }
     onInputKeyPress=(e)=>{
         if (e.key === 'Enter') {
             console.log('do validate', e.target, e.target.value, e.target.id);
-
             let column = Number(e.target.id.split('#')[1]),
                 id = Number(e.target.id.split('#')[2]),
                 json = "",
                 data = "";
+            const {rows, classNameOfTD} = this.props
+            const {row : row_state, column : column_state, checkedMap} = this.state
 
-            // row = Number(e.target.id.split('#')[0]),
             switch (column) {
                 case 2:
                     this.props.rows[this.state.row - 1].student_nick = e.target.value
@@ -163,11 +174,11 @@ class UniversalTable extends Component {
         })
 
         this.setState({
-                rows: this.createTableRows(this.props.rows, this.onInputChange, false)
+                rows: this.createTableRows(rows, this.onInputChange, false, row_state, column_state, classNameOfTD, checkedMap)
             })
         }
     }
-    classNameOfTD=(email, verified)=> {
+    classNameOfTDOld=(email, verified)=> {
         return email ? (verified ? "left-text verified" : "left-text verification") : "left-text"
     }
     changeState=(e)=>{
@@ -175,11 +186,13 @@ class UniversalTable extends Component {
             id = Number(e.target.id.split('#')[2]),
             json = "",
             data = "";
-        let {checkedMap} = this.state
+        const {rows, classNameOfTD} = this.props
+        const {row : row_state, column : column_state, checkedMap} = this.state
+
         checkedMap.has(e.target.id)?checkedMap.delete(e.target.id):checkedMap.set(e.target.id, true)
         this.setState({checkedMap, })
         this.setState ( {
-            rows : this.createTableRows(this.props.rows, this.onInputChange, true)
+            rows : this.createTableRows(rows, this.onInputChange, true, row_state, column_state, classNameOfTD, checkedMap)
         })
         console.log(e.target.id, checkedMap, column)
         json = `{"${column==="6_1"?"isout":"isRealName"}":"${checkedMap.has(e.target.id)?1:0}"}`;
@@ -199,7 +212,7 @@ class UniversalTable extends Component {
         }
         console.log(json)
     }
-    createTableRows(rowsArr, onInputChange, withInput) {
+    createTableRowsOld(rowsArr, onInputChange, withInput) {
         let{row, column} = this.state
         console.log("createTableRows", row, column)
         let cell = [],
@@ -229,7 +242,7 @@ class UniversalTable extends Component {
         let {head, rows, row, column} = this.state
         console.log("RENDER", row, column)
         return(
-            <div className="containertable">
+            <div className="mym-universaltable-container">
                 <div className="row">
                     <div className="col s12 board">
                         <table id="simple-board">

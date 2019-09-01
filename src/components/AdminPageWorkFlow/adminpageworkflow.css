@@ -3,13 +3,13 @@
     /*margin: 0;*/
 /*}*/
 .mym-wf-main-title{
-    margin : 0 5%;
+    margin : 10px 5% 20px;
 }
 .mym-wf-main-block {
     position: relative;
     display : flex;
     flex-direction: row;
-    margin : 0 5%;
+    margin : 5px 5% 20px;
     border : .5px solid grey;
     width : 90%;
     height: 90vh;

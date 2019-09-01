@@ -5,8 +5,9 @@ import React, { Component } from 'react';
 import { Link } from 'react-router-dom';
 import '../../containers/App.css'
 import { connect } from 'react-redux'
-import {mapStateToProps} from '../../js/helpers'
-
+import {mapStateToProps, getLangLibrary} from '../../js/helpers'
+import {defLang} from '../../config/config'
+import '../../css/colors.css'
 class Menu extends Component {
     constructor(props) {
         super(props);
@@ -14,10 +15,21 @@ class Menu extends Component {
         this.state = {
             isMobile : window.screen.width < 400,
         }
+        // this.langLibrary = this.props.userSetup.langLibrary
+    }
+    // componentDidMount(){
+    //     // this.langLibrary = this.initLangLibrary(this.props.userSetup.langLibrary)
+    // }
+    initLangLibrary=(langLibrary, setRedux)=>{
+        if ((!langLibrary)||langLibrary===undefined||langLibrary==="undefined"||JSON.stringify(langLibrary)===JSON.stringify({})) {
+            langLibrary = getLangLibrary(localStorage.getItem("langCode")?localStorage.getItem("langCode"):defLang)
+        }
+        return langLibrary
     }
     render() {
-        // console.log("menuRender", this.props.userSetup)
-        let {langLibrary} = this.props.userSetup
+        console.log("menuRender", this.langLibrary)
+
+        const langLibrary = this.initLangLibrary(this.props.userSetup.langLibrary)
         return (
             <div className="menuBlock">
                 <div className="menuItems">

@@ -2,6 +2,7 @@
  * Created by Paul on 20.01.2019.
  */
 import {saveToLocalStorageOnDate, toYYYYMMDD} from '../js/helpers'
+import {isSSLChat} from '../config/config'
 
 const initialState = (check)=>{
         // console.log("initialState", window.localStorage.getItem("userSetup"), window.localStorage.getItem("userSetupDate")===toYYYYMMDD(new Date()))
@@ -25,7 +26,8 @@ const initialState = (check)=>{
             stats2 : [], stats3 : [], mark_date : {date : new Date()},
             avgclassmarks : [], loading : -1, stepsLeft : 6,
             chatSessionID : '', classObj : { chatroom_id : 0},
-            newMsgCount : 0, countryCode : "EN", langLibrary : {}, chatSSL : false, localChatMessages : []
+            newMsgCount : 0, countryCode : "EN", langLibrary : {}, chatSSL : isSSLChat, localChatMessages : [],
+                isMobile : false,
         }
     return obj
 }
@@ -63,6 +65,7 @@ export function userSetupReducer(state = initialState(true), action) {
                 }
             saveToLocalStorageOnDate("userSetupDate", toYYYYMMDD(new Date()))
             saveToLocalStorageOnDate("userSetup", JSON.stringify(setup))
+            saveToLocalStorageOnDate("langLibrary", JSON.stringify(action.langLibrary))
             return setup
             }
         case "USER_SETUP" :
@@ -153,6 +156,9 @@ export function userSetupReducer(state = initialState(true), action) {
         }
         case 'APP_LOADING' : {
             return{...state, loading : true}
+        }
+        case 'IS_MOBILE' : {
+            return{...state, isMobile : action.payload}
         }
         case 'ENABLE_SAVE_STEPS' : {
             return{...state, stepsLeft : action.payload}

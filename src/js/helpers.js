@@ -3,7 +3,9 @@
  */
 import axios from 'axios';
 import { store } from '../store/configureStore'
-import {AUTH_URL} from '../config/config'
+import {AUTH_URL, API_URL, BASE_HOST, WEBSOCKETPORT, LOCALPUSHERPWD} from '../config/config'
+import Echo from 'laravel-echo'
+import Pusher from 'pusher-js'
 
 /* eslint-disable */
 export const mapStateToProps = store => {
@@ -507,7 +509,7 @@ export function consoleLog(){
     return ISDEBUG&&console.log(...arguments)
 }
 
-export function langLibrary(lang){
+export function getLangLibrary(lang){
     let langObj = {
         siteName : "Мои оценки",
         lang : "Язык",
@@ -571,7 +573,7 @@ export function langLibrary(lang){
             langObj.step6Descr = ". Додаткові налаштування:"
             langObj.step7Descr = ". Журнал та установка оцінок:"
             langObj.step8Descr = ". Імпорт/експорт оцінок в Ексель:"
-            langObj.step9Descr = ". Діаграмми"
+            langObj.step9Descr = ". Діаграми"
             langObj.step10Descr = "Зберегти дані на майбутнє?"
             langObj.step1DescrMob = ".Клас"
             langObj.step2DescrMob = ".Учні"
@@ -581,7 +583,7 @@ export function langLibrary(lang){
             langObj.step6DescrMob = ".Налаштування"
             langObj.step7DescrMob = ".Журнал"
             langObj.step8DescrMob = ".Excel-обмін"
-            langObj.step9DescrMob = ".Діаграмми"
+            langObj.step9DescrMob = ".Діаграми"
             langObj.step10DescrMob = "Зберегти?"
             langObj.yes = "Так"
             langObj.no = "Ні"
@@ -635,42 +637,42 @@ export function langLibrary(lang){
         case "ES":
             langObj.siteName = "Mis calificaciones"
             langObj.lang = "Idioma"
-            langObj.introBegin = "Цей додаток допоможе вчителям і батькам вести щоденник і стежити за успішністю учнів. Для цього потрібно зробити всього лише"
-            langObj.introEnd = " маленьких кроків"
-            langObj.entry = "Вхід"
-            langObj.exit = "Вихід"
-            langObj.mainSite = "Головна"
-            langObj.adminSite = "Aдмінка"
-            langObj.adminSiteClass = "Адмінка класу"
-            langObj.homework = "Домашка"
-            langObj.project = "Проект"
-            langObj.refNewStudentBegin = "Посилання для"
-            langObj.refNewStudentEnd = " додавання нових студентів"
-            langObj.step1Descr = ". Виберіть клас:"
-            langObj.step2Descr = ". Кількість учнів:"
-            langObj.step3Descr = ". Предмети для навчання:"
-            langObj.step4Descr = ". Предмет для оцінок:"
-            langObj.step5Descr = ". Маркер для оцінок:"
-            langObj.step6Descr = ". Додаткові налаштування:"
-            langObj.step7Descr = ". Журнал та установка оцінок:"
-            langObj.step8Descr = ". Імпорт/експорт оцінок в Ексель:"
-            langObj.step9Descr = ". Діаграмми"
-            langObj.step10Descr = "Зберегти дані на майбутнє?"
-            langObj.step1DescrMob = ".Клас"
-            langObj.step2DescrMob = ".Учні"
-            langObj.step3DescrMob = ".Предмети"
-            langObj.step4DescrMob = ".Обраний"
-            langObj.step5DescrMob = ".Маркер оцінок"
-            langObj.step6DescrMob = ".Налаштування"
-            langObj.step7DescrMob = ".Журнал"
-            langObj.step8DescrMob = ".Excel-обмін"
-            langObj.step9DescrMob = ".Діаграмми"
-            langObj.step10DescrMob = "Зберегти?"
-            langObj.yes = "Так"
-            langObj.no = "Ні"
-            langObj.speedByMark = "сек/оцінку"
-            langObj.top = "ТОП"
-            langObj.step = "Крок"
+            langObj.introBegin = "Esta aplicación ayudará a los maestros y padres a llevar un diario y realizar un seguimiento del rendimiento de los estudiantes. Todo lo que tienes que hacer es hacerlo "
+            langObj.introEnd = " pequeños pasos"
+            langObj.entry = "Login"
+            langObj.exit = "Logout"
+            langObj.mainSite = "Inicio"
+            langObj.adminSite = "Admin"
+            langObj.adminSiteClass = "Admin de la clase"
+            langObj.homework = "Deberes"
+            langObj.project = "Proyecto"
+            langObj.refNewStudentBegin = "Enlace para"
+            langObj.refNewStudentEnd = " agregar nuevos estudiantes"
+            langObj.step1Descr = ". Elige una clase:"
+            langObj.step2Descr = ". Numero de estudiantes:"
+            langObj.step3Descr = ". Sujetos para estudio:"
+            langObj.step4Descr = ". Grados:"
+            langObj.step5Descr = ". Marcador:"
+            langObj.step6Descr = ". Ajustes adicionales:"
+            langObj.step7Descr = ". Diario escolar y ajuste de grado:"
+            langObj.step8Descr = ". Importar/Exportar estimación en Excel:"
+            langObj.step9Descr = ". Diagramas"
+            langObj.step10Descr = "¿Guardar datos para el futuro?"
+            langObj.step1DescrMob = ".Clase"
+            langObj.step2DescrMob = ".Estudiantes"
+            langObj.step3DescrMob = ".Asignaturas"
+            langObj.step4DescrMob = ".Seleccionado"
+            langObj.step5DescrMob = ".Marcador"
+            langObj.step6DescrMob = ".Configuraciones"
+            langObj.step7DescrMob = ".Diario escolar"
+            langObj.step8DescrMob = ".Excel"
+            langObj.step9DescrMob = ".Diagramas"
+            langObj.step10DescrMob = "Guardar?"
+            langObj.yes = "Si"
+            langObj.no = "No"
+            langObj.speedByMark = "seg/eval"
+            langObj.top = "TOP"
+            langObj.step = "Paso"
             break;
         case "DE":
             langObj.siteName = "Meine Schulnoten"
@@ -694,7 +696,7 @@ export function langLibrary(lang){
             langObj.step6Descr = ". Додаткові налаштування:"
             langObj.step7Descr = ". Журнал та установка оцінок:"
             langObj.step8Descr = ". Імпорт/експорт оцінок в Ексель:"
-            langObj.step9Descr = ". Діаграмми"
+            langObj.step9Descr = ". Діаграми"
             langObj.step10Descr = "Зберегти дані на майбутнє?"
             langObj.step1DescrMob = ".Клас"
             langObj.step2DescrMob = ".Учні"
@@ -704,7 +706,7 @@ export function langLibrary(lang){
             langObj.step6DescrMob = ".Налаштування"
             langObj.step7DescrMob = ".Журнал"
             langObj.step8DescrMob = ".Excel-обмін"
-            langObj.step9DescrMob = ".Діаграмми"
+            langObj.step9DescrMob = ".Діаграми"
             langObj.step10DescrMob = "Зберегти?"
             langObj.yes = "Так"
             langObj.no = "Ні"
@@ -734,7 +736,7 @@ export function langLibrary(lang){
             langObj.step6Descr = ". Додаткові налаштування:"
             langObj.step7Descr = ". Журнал та установка оцінок:"
             langObj.step8Descr = ". Імпорт/експорт оцінок в Ексель:"
-            langObj.step9Descr = ". Діаграмми"
+            langObj.step9Descr = ". Діаграми"
             langObj.step10Descr = "Зберегти дані на майбутнє?"
             langObj.step1DescrMob = ".Клас"
             langObj.step2DescrMob = ".Учні"
@@ -744,7 +746,7 @@ export function langLibrary(lang){
             langObj.step6DescrMob = ".Налаштування"
             langObj.step7DescrMob = ".Журнал"
             langObj.step8DescrMob = ".Excel-обмін"
-            langObj.step9DescrMob = ".Діаграмми"
+            langObj.step9DescrMob = ".Діаграми"
             langObj.step10DescrMob = "Зберегти?"
             langObj.yes = "Так"
             langObj.no = "Ні"
@@ -774,7 +776,7 @@ export function langLibrary(lang){
             langObj.step6Descr = ". Додаткові налаштування:"
             langObj.step7Descr = ". Журнал та установка оцінок:"
             langObj.step8Descr = ". Імпорт/експорт оцінок в Ексель:"
-            langObj.step9Descr = ". Діаграмми"
+            langObj.step9Descr = ". Діаграми"
             langObj.step10Descr = "Зберегти дані на майбутнє?"
             langObj.step1DescrMob = ".Клас"
             langObj.step2DescrMob = ".Учні"
@@ -784,7 +786,7 @@ export function langLibrary(lang){
             langObj.step6DescrMob = ".Налаштування"
             langObj.step7DescrMob = ".Журнал"
             langObj.step8DescrMob = ".Excel-обмін"
-            langObj.step9DescrMob = ".Діаграмми"
+            langObj.step9DescrMob = ".Діаграми"
             langObj.step10DescrMob = "Зберегти?"
             langObj.yes = "Так"
             langObj.no = "Ні"
@@ -795,82 +797,82 @@ export function langLibrary(lang){
         case "EN":
             langObj.siteName = "Мy marks"
             langObj.lang = "Lang"
-            langObj.introBegin = "Цей додаток допоможе вчителям і батькам вести щоденник і стежити за успішністю учнів. Для цього потрібно зробити всього лише"
-            langObj.introEnd = " маленьких кроків"
-            langObj.entry = "Вхід"
-            langObj.exit = "Вихід"
-            langObj.mainSite = "Головна"
-            langObj.adminSite = "Aдмінка"
-            langObj.adminSiteClass = "Адмінка класу"
-            langObj.homework = "Домашка"
-            langObj.project = "Проект"
-            langObj.refNewStudentBegin = "Посилання для"
-            langObj.refNewStudentEnd = " додавання нових студентів"
-            langObj.step1Descr = ". Виберіть клас:"
-            langObj.step2Descr = ". Кількість учнів:"
-            langObj.step3Descr = ". Предмети для навчання:"
-            langObj.step4Descr = ". Предмет для оцінок:"
-            langObj.step5Descr = ". Маркер для оцінок:"
-            langObj.step6Descr = ". Додаткові налаштування:"
-            langObj.step7Descr = ". Журнал та установка оцінок:"
-            langObj.step8Descr = ". Імпорт/експорт оцінок в Ексель:"
-            langObj.step9Descr = ". Діаграмми"
-            langObj.step10Descr = "Зберегти дані на майбутнє?"
-            langObj.step1DescrMob = ".Клас"
-            langObj.step2DescrMob = ".Учні"
-            langObj.step3DescrMob = ".Предмети"
-            langObj.step4DescrMob = ".Обраний"
-            langObj.step5DescrMob = ".Маркер оцінок"
-            langObj.step6DescrMob = ".Налаштування"
-            langObj.step7DescrMob = ".Журнал"
-            langObj.step8DescrMob = ".Excel-обмін"
-            langObj.step9DescrMob = ".Діаграмми"
-            langObj.step10DescrMob = "Зберегти?"
-            langObj.yes = "Так"
-            langObj.no = "Ні"
-            langObj.speedByMark = "сек/оцінку"
-            langObj.top = "ТОП"
-            langObj.step = "Крок"
+            langObj.introBegin = "This application will help teachers and parents keep a diary and monitor student performance. To do this, just "
+            langObj.introEnd = " small steps"
+            langObj.entry = "Login"
+            langObj.exit = "Logout"
+            langObj.mainSite = "Main"
+            langObj.adminSite = "Admin"
+            langObj.adminSiteClass = "Class admin"
+            langObj.homework = "Homework"
+            langObj.project = "Project"
+            langObj.refNewStudentBegin = "Link for"
+            langObj.refNewStudentEnd = " adding new students"
+            langObj.step1Descr = ". Choose a class:"
+            langObj.step2Descr = ". Number of students:"
+            langObj.step3Descr = ". Subjects for study:"
+            langObj.step4Descr = ". Grade subject:"
+            langObj.step5Descr = ". Marker for grades:"
+            langObj.step6Descr = ". Additional settings:"
+            langObj.step7Descr = ". A register and grade setting:"
+            langObj.step8Descr = ". Import/Export grades to Excel:"
+            langObj.step9Descr = ". Diagrams"
+            langObj.step10Descr = "Save data for the future??"
+            langObj.step1DescrMob = ".Class"
+            langObj.step2DescrMob = ".Students"
+            langObj.step3DescrMob = ".Subjects"
+            langObj.step4DescrMob = ".Selected"
+            langObj.step5DescrMob = ".Grade marker"
+            langObj.step6DescrMob = ".Settings"
+            langObj.step7DescrMob = ".Register"
+            langObj.step8DescrMob = ".Excel-in/out"
+            langObj.step9DescrMob = ".Diagrams"
+            langObj.step10DescrMob = "Save?"
+            langObj.yes = "Yes"
+            langObj.no = "No"
+            langObj.speedByMark = "sec/mark"
+            langObj.top = "TOP"
+            langObj.step = "Step"
             break;
         default:
             langObj.siteName = "My marks"
             langObj.lang = "Lang"
-            langObj.introBegin = "Цей додаток допоможе вчителям і батькам вести щоденник і стежити за успішністю учнів. Для цього потрібно зробити всього лише"
-            langObj.introEnd = " маленьких кроків"
-            langObj.entry = "Вхід"
-            langObj.exit = "Вихід"
-            langObj.mainSite = "Головна"
-            langObj.adminSite = "Aдмінка"
-            langObj.adminSiteClass = "Адмінка класу"
-            langObj.homework = "Домашка"
-            langObj.project = "Проект"
-            langObj.refNewStudentBegin = "Посилання для"
-            langObj.refNewStudentEnd = " додавання нових студентів"
-            langObj.step1Descr = ". Виберіть клас:"
-            langObj.step2Descr = ". Кількість учнів:"
-            langObj.step3Descr = ". Предмети для навчання:"
-            langObj.step4Descr = ". Предмет для оцінок:"
-            langObj.step5Descr = ". Маркер для оцінок:"
-            langObj.step6Descr = ". Додаткові налаштування:"
-            langObj.step7Descr = ". Журнал та установка оцінок:"
-            langObj.step8Descr = ". Імпорт/експорт оцінок в Ексель:"
-            langObj.step9Descr = ". Діаграмми"
-            langObj.step10Descr = "Зберегти дані на майбутнє?"
-            langObj.step1DescrMob = ".Клас"
-            langObj.step2DescrMob = ".Учні"
-            langObj.step3DescrMob = ".Предмети"
-            langObj.step4DescrMob = ".Обраний"
-            langObj.step5DescrMob = ".Маркер оцінок"
-            langObj.step6DescrMob = ".Налаштування"
-            langObj.step7DescrMob = ".Журнал"
-            langObj.step8DescrMob = ".Excel-обмін"
-            langObj.step9DescrMob = ".Діаграмми"
-            langObj.step10DescrMob = "Зберегти?"
-            langObj.yes = "Так"
-            langObj.no = "Ні"
-            langObj.speedByMark = "сек/оцінку"
-            langObj.top = "ТОП"
-            langObj.step = "Крок"
+            langObj.introBegin = "This application will help teachers and parents keep a diary and monitor student performance. To do this, just take "
+            langObj.introEnd = " small steps"
+            langObj.entry = "Login"
+            langObj.exit = "Logout"
+            langObj.mainSite = "Main"
+            langObj.adminSite = "Admin"
+            langObj.adminSiteClass = "Class admin"
+            langObj.homework = "Homework"
+            langObj.project = "Project"
+            langObj.refNewStudentBegin = "Link for"
+            langObj.refNewStudentEnd = " adding new students"
+            langObj.step1Descr = ". Choose a class:"
+            langObj.step2Descr = ". Number of students:"
+            langObj.step3Descr = ". Subjects for study:"
+            langObj.step4Descr = ". Grade subject:"
+            langObj.step5Descr = ". Marker for grades:"
+            langObj.step6Descr = ". Additional settings:"
+            langObj.step7Descr = ". A register and grade setting:"
+            langObj.step8Descr = ". Import/Export grades to Excel:"
+            langObj.step9Descr = ". Diagrams"
+            langObj.step10Descr = "Save data for the future??"
+            langObj.step1DescrMob = ".Class"
+            langObj.step2DescrMob = ".Students"
+            langObj.step3DescrMob = ".Subjects"
+            langObj.step4DescrMob = ".Selected"
+            langObj.step5DescrMob = ".Grade marker"
+            langObj.step6DescrMob = ".Settings"
+            langObj.step7DescrMob = ".Register"
+            langObj.step8DescrMob = ".Excel-in/out"
+            langObj.step9DescrMob = ".Diagrams"
+            langObj.step10DescrMob = "Save?"
+            langObj.yes = "Yes"
+            langObj.no = "No"
+            langObj.speedByMark = "sec/mark"
+            langObj.top = "TOP"
+            langObj.step = "Step"
             break
     }
     return langObj
@@ -917,4 +919,71 @@ export const prepareMessageToFormat=(msg, returnObject)=>{
     // console.log('obj', JSON.stringify(obj))
     return returnObject?obj:JSON.stringify(obj)
 }
+
+export const echoClient = (token, chatSSL) => {
+    return new Echo(
+        {
+            broadcaster: 'pusher',
+            key: LOCALPUSHERPWD,
+            cluster: 'mt1',
+            wsHost: BASE_HOST,
+            wsPort: WEBSOCKETPORT,
+            wssPort: WEBSOCKETPORT,
+            disableStats: true,
+            enabledTransports: chatSSL ? ['ws', 'wss'] : ['ws'],
+            encrypted: chatSSL,
+            authEndpoint: AUTH_URL + '/broadcasting/auth',
+            namespace: "App.Events",
+            auth: {
+                headers: {
+                    'V-Auth': true,
+                    Authorization: `Bearer ${token}`,
+                }
+            }
+        }
+    )
+}
+export const pusherClient = (token, chatSSL) => {
+    const pusher = new Pusher(LOCALPUSHERPWD,
+        {
+            broadcaster: 'pusher',
+            key: LOCALPUSHERPWD,
+            cluster: 'mt1',
+            wsHost: BASE_HOST,
+            wsPort: WEBSOCKETPORT,
+            wssPort: WEBSOCKETPORT,
+            authEndpoint: AUTH_URL + '/broadcasting/auth',
+            csrfToken: null,
+            host: null,
+            // authorizer: function (channel, options) {
+            //     return {
+            //         authorize: function (socketId, callback) {
+            //             // Do some ajax to get the auth information
+            //             callback(false, authInformation);
+            //         }
+            //     };
+            // },
+            disableStats: true,
+            enabledTransports: chatSSL ? ['ws', 'wss'] : ['ws'],
+            disabledTransports: ['sockjs'],
+            encrypted: chatSSL,
+            auth: {
+                headers: {
+                    'V-Auth': true,
+                    Authorization: `Bearer ${token}`,
+                }
+            }
+        }
+    )
+    pusher.logToConsole = true
+    return pusher
+}
+
+export const waitCursorBlock=()=>
+    <div className="lds-ring">
+        <div></div>
+        <div></div>
+        <div></div>
+        <div></div>
+    </div>
 /* eslint-disable */

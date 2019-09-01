@@ -13,7 +13,8 @@ import './adminpageteacher.css'
 import '../Menu/menu.css'
 import { Link } from 'react-router-dom';
 import MobileMenu from '../MobileMenu/mobilemenu'
-import { instanceAxios, mapStateToProps, getLangByCountry } from '../../js/helpers'
+import { instanceAxios, mapStateToProps, getLangByCountry, waitCursorBlock } from '../../js/helpers'
+import { arrLangs, defLang } from '../../config/config'
 import ReactFlagsSelect from 'react-flags-select';
 import 'react-flags-select/css/react-flags-select.css';
 
@@ -21,18 +22,22 @@ class AdminPageTeacher extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            headArray : [
-                            {name: "№ п/п", width : "30px"} ,
-                            {name: "Ник", width : "150px"},
-                            {name: "Имя", width : "300px"},
-                            {name: "Email", width : "200px"},
-                            {name: "Скрыть", width : "30px"},
-                            {name: "Реальный без Email", width : "30px"},
-                            {name: "Примечание", width : "100%"},
-                             ],
+
             rowArray : this.props.userSetup.students,
             isMobile : window.screen.width < 400,
         }
+        this.headArray = [
+            {name: "№ п/п", width : "30px"} ,
+            {name: "Ник", width : "150px"},
+            {name: "Имя", width : "300px"},
+            {name: "Email", width : "200px"},
+            {name: "Скрыть", width : "30px"},
+            {name: "Реальный без Email", width : "30px"},
+            {name: "Примечание", width : "100%"},
+        ]
+        // this.onClick = this.onClick.bind(this)
+        // this.onBlur = this.onBlur.bind(this)
+        // this.changeState = this.changeState.bind(this)
     }
     btnLoginClassName=()=>(
         this.props.userSetup.userID > 0?"loginbtn loggedbtn":"loginbtn"
@@ -50,11 +55,11 @@ class AdminPageTeacher extends Component {
     }
     langBlock=()=>{
         return <ReactFlagsSelect
-            defaultCountry={this.state.myCountryCode?this.state.myCountryCode:"US"}
-            placeholder={getLangByCountry(this.state.myCountryCode?this.state.myCountryCode:"US")}
+            defaultCountry={localStorage.getItem("langCode")?localStorage.getItem("langCode"):defLang}
+            placeholder={getLangByCountry(this.state.myCountryCode)}
             showSelectedLabel={false}
-            searchPlaceholder={this.props.userSetup.langLibrary.lang}
-            countries={["EN", "FR", "DE", "IT", "PL", "RU", "US", "UA"]}
+            searchPlaceholder={this.props.userSetup.langLibrary?this.props.userSetup.langLibrary.lang:defLang}
+            countries={arrLangs}
             onSelect={this.onSelectLang}
             selectedSize={14}
             optionsSize={12}
@@ -79,58 +84,12 @@ class AdminPageTeacher extends Component {
             {this.langBlock()}
         </div>
     }
-    waitCursorBlock=()=>{
-        return  <div className="lds-ring">
-            <div></div>
-            <div></div>
-            <div></div>
-            <div></div>
-        </div>
-    }
+
     render() {
         let {userID, userName, isadmin, loading, showLoginLight, langLibrary} = this.props.userSetup;
         let {isMobile} = this.state
         return (
             <div className="AdminPage">
-                {/*<div className="navbar">*/}
-
-                    {/*<div className="myTitle"><h3><Link to="/">Мои оценки</Link></h3></div>*/}
-
-                    {/*{this.state.isMobile?*/}
-                        {/*<MobileMenu userID={userID} userName={userName} isadmin={isadmin} withtomain={true} userLogin={this.userLogin.bind(this)} userLogout={this.userLogout.bind(this)}/>:*/}
-                        {/*userID && <Menu userid={this.props.user.id} withtomain={true} isadmin={this.props.userSetup.isadmin}/>*/}
-                    {/*}*/}
-
-                    {/*{this.state.isMobile?<div>*/}
-                        {/*{this.state.showLoginLight||(window.location.href.slice(-2)==="/r"&&userID===0)?*/}
-                            {/*<LoginBlockLight onclick={this.props.onUserLogging} firehide={this.fireLoginLight.bind(this)}/>:""}*/}
-
-                        {/*<div className={this.props.user.loginmsg.length?"popup show":"popup"} onClick={this.props.onClearErrorMsg}>*/}
-                            {/*{this.props.user.loginmsg.length?<span className="popuptext" id="myPopup">{this.props.user.loginmsg}</span>:""}*/}
-                        {/*</div>*/}
-                    {/*</div>:""}*/}
-
-                    {/*{!this.state.isMobile?<div className="logBtnsBlock">*/}
-                        {/*{console.log("this.props.userSetup", this.props.userSetup)}*/}
-                        {/*<div >*/}
-                            {/*{this.props.userSetup.userID===0?*/}
-                                {/*<button className={this.btnLoginClassName()}*/}
-                                        {/*onClick={this.userLogin.bind(this)}>Вход*/}
-                                {/*</button>:*/}
-                                {/*<button className={this.btnLoginClassName()}*/}
-                                        {/*onClick={this.userEdit.bind(this)}>*/}
-                                    {/*{this.props.userSetup.userName}*/}
-                                {/*</button>}*/}
-                            {/*{this.state.showLoginLight?<LoginBlockLight onclick={this.props.onUserLogging} firehide={this.fireLoginLight.bind(this)}/>:""}*/}
-                        {/*</div>*/}
-                        {/*<div>*/}
-                            {/*{this.props.userSetup.userID>0&&*/}
-                            {/*<button className="logoutbtn" onClick={this.userLogout.bind(this)}>Выйти</button>}*/}
-                        {/*</div>*/}
-                    {/*</div>:""}*/}
-
-                {/*</div>*/}
-                {/*<div className="navbar-shadow"></div>*/}
                 <div className="navbar" style={userID===0?{"justifyContent":  "flex-end"}:{"justifyContent":  "space-between"}}>
                     <div className="navBlock">
                         <div className="navBlockEx">
@@ -163,10 +122,45 @@ class AdminPageTeacher extends Component {
                         </div>
                     </div>
                 </div>
-                <UniversalTable head={this.state.headArray} rows={this.state.rowArray}/>
-                {/*{this.props.userSetup.userID>0&&<AdminPageAdmin />}*/}
-            </div>
+                <div className={"mym-adminpageteacher-tableblock"}>
+                    <UniversalTable head={this.headArray} rows={this.state.rowArray} createTableRows={this.createTableRows} classNameOfTD={this.classNameOfTD}/>
+                </div>
+             </div>
         )
+    }
+    classNameOfTD=(email, verified)=> {
+        return email ? (verified ? "left-text verified" : "left-text verification") : "left-text"
+    }
+    createTableRows(rowsArr, onInputChange, withInput, row, column, classNameOfTD, checkedMap) {
+        // let {row, column} = this.state
+        console.log("createTableRows", row, column)
+        let cell = [],
+            rows = [];
+        for (let i = 0; i < rowsArr.length; i++) {
+            cell = []
+            cell.push(<th key={"r"+(i+1)+"c1"}>{i+1}</th>)
+            cell.push(<td className="left-text" style={{"paddingLeft" : "5px", "paddingRight" : "5px"}} id={(i+1)+"#2#"+rowsArr[i].id} key={"r"+(i+1)+"c2"} onClick={this.onClick}>{rowsArr[i].student_nick} {(row===(i+1)&&column===2&&withInput)?<input type="text" id={(i+1)+"#2#"+rowsArr[i].id} className="inputEditor" onChange={this.onInputChange} onKeyPress={this.onInputKeyPress} defaultValue={rowsArr[i].student_nick}/>:""}</td>) //this.isActive(i, 2, rowsArr[i].student_nick)
+            cell.push(<td className="left-text" style={{"paddingLeft" : "5px", "paddingRight" : "5px"}} id={(i+1)+"#3#"+rowsArr[i].id} key={"r"+(i+1)+"c3"} onClick={this.onClick}>{rowsArr[i].student_name} {(row===(i+1)&&column===3&&withInput)?<input type="text" id={(i+1)+"#3#"+rowsArr[i].id} className="inputEditor" onChange={this.onInputChange} onKeyPress={this.onInputKeyPress} defaultValue={rowsArr[i].student_name}/>:""}</td>)
+            cell.push(<td className={classNameOfTD(!(rowsArr[i].email===null), !(rowsArr[i].email_verified_at===null))}
+                          style={{"paddingLeft" : "5px", "paddingRight" : "5px", "fontSize" : "0.8em"}}
+                          id={(i+1)+"#4#"+rowsArr[i].id} key={"r"+(i+1)+"c4"}
+                          onBlur={this.onBlur}
+                          onClick={this.onClick}>{rowsArr[i].email}{(row===(i+1)&&column===4&&withInput)?
+                                    <input type="text" id={(i+1)+"#4#"+rowsArr[i].id} className="inputEditor" onChange={this.onInputChange} onKeyPress={this.onInputKeyPress} defaultValue={rowsArr[i].email}/>
+                                    :null}
+                      </td>)
+            // Галочка скрыть студента из списка
+            cell.push(  <td className="center-text" id={(i+1)+"#6#"+rowsArr[i].id} key={"r"+(i+1)+"c6"}>
+                            <input type="checkbox" onChange={this.changeState} id={(i+1)+"#6_1#"+rowsArr[i].id} checked={checkedMap.has((i+1)+"#6_1#"+rowsArr[i].id)}/>
+                        </td>)
+            // Реальный без Email
+            cell.push(  <td className="center-text" id={(i+1)+"#7#"+rowsArr[i].id} key={"r"+(i+1)+"c7"}>
+                            <input type="checkbox" onChange={this.changeState} id={(i+1)+"#7_1#"+rowsArr[i].id} checked={checkedMap.has((i+1)+"#7_1#"+rowsArr[i].id)}/>
+                        </td>)
+            cell.push(<td className="left-text" style={{"paddingLeft" : "5px", "paddingRight" : "5px", "fontSize" : "0.8em"}} id={(i+1)+"#5#"+rowsArr[i].id} key={"r"+(i+1)+"c5"} onClick={this.onClick}>{rowsArr[i].memo}{(row===(i+1)&&column===5&&withInput)?<input type="text" id={(i+1)+"#5#"+rowsArr[i].id} className="inputEditor" onChange={this.onInputChange} onKeyPress={this.onInputKeyPress} defaultValue={rowsArr[i].memo}/>:""}</td>)
+            rows.push(<tr key={i}>{cell}</tr>)
+        }
+        return rows;
     }
 }
 

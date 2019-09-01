@@ -2,12 +2,10 @@
  * Created by Paul on 10.08.2019.
  */
 import React, { Component } from 'react';
-import { AUTH_URL } from '../../config/config'
+import { AUTH_URL, defLang, arrLangs } from '../../config/config'
 import { connect } from 'react-redux'
-import { toYYYYMMDD, instanceAxios, mapStateToProps, getLangByCountry } from '../../js/helpers'
+import { toYYYYMMDD, instanceAxios, mapStateToProps, getLangByCountry, waitCursorBlock } from '../../js/helpers'
 import LoginBlockLight from '../LoginBlockLight/loginblocklight'
-import ReactFlagsSelect from 'react-flags-select';
-import 'react-flags-select/css/react-flags-select.css';
 import '../../css/colors.css';
 import './adminpageworkflow.css'
 import '../Menu/menu.css'
@@ -16,6 +14,8 @@ import MobileMenu from '../MobileMenu/mobilemenu'
 import {withRouter} from 'react-router-dom'
 import Menu from '../Menu/menu'
 import { userLoggedInByToken, userLoggedOut } from '../../actions/userAuthActions'
+import ReactFlagsSelect from 'react-flags-select';
+import 'react-flags-select/css/react-flags-select.css';
 
 class AdminPageWorkFlow extends Component {
     constructor(props) {
@@ -242,11 +242,11 @@ class AdminPageWorkFlow extends Component {
     }
     langBlock=()=>{
         return <ReactFlagsSelect
-            defaultCountry={this.state.myCountryCode?this.state.myCountryCode:"US"}
-            placeholder={getLangByCountry(this.state.myCountryCode?this.state.myCountryCode:"US")}
+            defaultCountry={localStorage.getItem("langCode")?localStorage.getItem("langCode"):defLang}
+            placeholder={getLangByCountry(this.state.myCountryCode)}
             showSelectedLabel={false}
-            searchPlaceholder={this.props.userSetup.langLibrary.lang}
-            countries={["EN", "FR", "DE", "IT", "PL", "RU", "US", "UA"]}
+            searchPlaceholder={this.props.userSetup.langLibrary?this.props.userSetup.langLibrary.lang:defLang}
+            countries={arrLangs}
             onSelect={this.onSelectLang}
             selectedSize={14}
             optionsSize={12}
@@ -269,14 +269,6 @@ class AdminPageWorkFlow extends Component {
                 {userID>0?<button className="logoutbtn" onClick={this.userLogout}><div className="mym-app-button-name">{userName}</div><div className="mym-app-button-exit">{langLibrary.exit}</div></button>:null}
             </div>
             {this.langBlock()}
-        </div>
-    }
-    waitCursorBlock=()=>{
-        return  <div className="lds-ring">
-            <div></div>
-            <div></div>
-            <div></div>
-            <div></div>
         </div>
     }
     render(){

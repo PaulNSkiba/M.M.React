@@ -2,7 +2,8 @@
  * Created by Paul on 17.08.2019.
  */
 // Global consts
-export const ISDEBUG = false;
+export const ISDEBUG = true;
+export const isSSLChat = true
 
 // URL's
 export const AUTH_URL  = ISDEBUG?'https://sch-journal.dev':'https://mymarks.info'
@@ -68,3 +69,7 @@ export const markType = [
     {id : 5, letter : 'S2', name : '2-й Семестр'},
     {id : 6, letter : 'A', name : 'Годовая'},
 ]
+
+export const arrClasses = [1,2,3,4,5,6,7,8,9,10,11,12]
+export const arrLangs = ["DE", "FR", "IT", "PL", "RU", "ES", "UA", "GB"]
+export const defLang = "GB"
