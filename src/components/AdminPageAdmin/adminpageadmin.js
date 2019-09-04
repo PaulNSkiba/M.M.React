@@ -2,7 +2,7 @@
  * Created by Paul on 26.01.2019.
  */
 import React, { Component } from 'react';
-import { SUBJECTS_ADD_URL, SUBJECTS_GET_URL, MARKS_STATS_URL, arrLangs, arrClasses } from '../../config/config'
+import { AUTH_URL, SUBJECTS_ADD_URL, SUBJECTS_GET_URL, MARKS_STATS_URL, arrLangs, arrClasses, defLang } from '../../config/config'
 import { instanceAxios, mapStateToProps } from '../../js/helpers'
 import { connect } from 'react-redux'
 import '../../containers/App.css'
@@ -20,8 +20,9 @@ class AdminPageAdmin extends Component {
             subjectsSelected : [],
             classes : arrClasses,
             curClass : 1,
+            curLang : localStorage.getItem("langCode") ? localStorage.getItem("langCode") : defLang,
             stats : [],
-            rowArray : this.initLangArray(),
+            rowArray : this.initAliasArray(localStorage.getItem("langCode") ? localStorage.getItem("langCode") : defLang),
         }
         this.head = this.createTableHead([
             {name: "Дата", width : "80"} ,
@@ -45,7 +46,8 @@ class AdminPageAdmin extends Component {
         this.renderLangs = this.renderLangs.bind(this)
         this.renderClasses = this.renderClasses.bind(this)
         this.onClick = this.onClick.bind(this)
-        this.onAddLangAlias = this.onAddLangAlias.bind(this)
+        // this.initAliasArray = this.initAliasArray.bind(this)
+        // this.onAddLangAlias = this.onAddLangAlias.bind(this)
 
     }
     componentWillMount(){
@@ -54,25 +56,29 @@ class AdminPageAdmin extends Component {
             await this.getSubjListForClass(1)
             await this.getStats()
         })()
+        const defLangValue = localStorage.getItem("langCode") ? localStorage.getItem("langCode") : defLang
+        this.props.onReduxUpdate('ALIASES_LANG', defLangValue)
     }
     componentDidMount(){
 
    }
-    initLangArray=()=>{
-        return [
-            {
-                alias : "mainSite",
-                base_phrase : "Название сайта",
-                translated_phrase : "My.Marks",
-                lang : "GB"
-            },
-            {
-                alias : "exit",
-                base_phrase : "Выход",
-                translated_phrase : "Exit",
-                lang : "GB"
-            },
-        ]
+    initAliasArray=async (langid)=>{
+        if (!langid) {
+            langid = localStorage.getItem("langCode") ? localStorage.getItem("langCode") : defLang
+        }
+        // console.log('initAliasArray', AUTH_URL + ('/api/langs/get' + (langid?('/' + langid):'')));
+        await  instanceAxios().get(AUTH_URL + ('/api/langs/get' + (langid?('/' + langid):'')))
+            .then(response => {
+                // console.log('initAliasArray', response.data);
+                this.props.onReduxUpdate('ALIASES_LIST', response.data)
+                return response.data
+                //this.setState({ subjects: response.data });
+                // console.log(response);
+            })
+            .catch(response => {
+                console.log('initAliasArray:err', response.data);
+                // Список ошибок в отклике...
+            })
     }
     getSubjects=()=>{
        instanceAxios().get(SUBJECTS_GET_URL)
@@ -96,18 +102,6 @@ class AdminPageAdmin extends Component {
     }
     onClick=(e)=>{
         // console.log(e.target.id)
-    }
-    onAddLangAlias=()=>{
-        let arr = this.state.rowArray
-        let newObj = {
-            alias : "empty",
-            base_phrase : "введите описание",
-            translated_phrase : "введите перевод",
-            lang : "GB",
-        }
-        arr.push(newObj)
-        this.setState({rowArray : arr})
-        // alert('addAlias')
     }
     onDoubleClick=(e)=>{
         console.log("dbl.click", e.target, e.target.id)
@@ -157,7 +151,7 @@ class AdminPageAdmin extends Component {
                     stats :response.data.stats,
                 })
                 this.props.onStopLoading()
-                console.log(response.data.stats, rows);
+                // console.log(response.data.stats, rows);
             })
             .catch(response => {
                 console.log(response.data);
@@ -186,14 +180,21 @@ class AdminPageAdmin extends Component {
                     { value }
                 </option>)
 
-    renderLangs=()=>
-            this.state.langs.map(value=>
-                    <option key={value} value={value}>
-                        { value }
-                    </option>)
-
-    onLangClick=()=>{
-
+    renderLangs=()=> {
+        // const defLangValue = localStorage.getItem("langCode") ? localStorage.getItem("langCode") : defLang
+        // this.props.onReduxUpdate('ALIASES_LANG', defLangValue)
+        return this.state.langs.map(value =>
+            <option key={value} value={value} /*selected={defLangValue===value}*/>
+                { value }
+            </option>)
+    }
+    onLangClick=(e)=>{
+        // console.log("ONLANGCLICK", (e.target.value), this.state.curLang)
+        if (e.target.value!==(this.state.curLang)) {
+            this.setState({curLang: e.target.value})
+            this.initAliasArray(e.target.value)
+            this.props.onReduxUpdate('ALIASES_LANG', e.target.value)
+        }
     }
     onClassClick=(e)=>{
         console.log("onClassClick", e.target.value, this.state.curClass, e.target.value!==this.state.curClass)
@@ -219,51 +220,82 @@ class AdminPageAdmin extends Component {
     createTableHead=(head)=>(
         <tr id="row-1" key={"r0"}>{head.map((val, index)=><th  className={this.columnClassName(index)} key={index}>{val.name}</th>)}</tr>
     )
-    createTableRows(rowsArr, onInputChange, withInput, row, column, classNameOfTD) {
+    createTableRows(rowsArrOrig, onInputChange, withInput, row, column, classNameOfTD) {
         let cell = [],
             rows = [];
-        for (let i = 0; i < rowsArr.length; i++) {
-            cell = []
-            cell.push(<th key={"r"+(i+1)+"c1"}>{i+1}</th>)
-            cell.push(<td className="left-text" style={{"paddingLeft" : "5px", "paddingRight" : "5px"}} id={(i+1)+"#2#"+rowsArr[i].id} key={"r"+(i+1)+"c2"} onClick={this.onClick}>{rowsArr[i].alias} {(row===(i+1)&&column===2&&withInput)?<input type="text" id={(i+1)+"#2#"+rowsArr[i].id} className="inputEditor" onChange={this.onInputChange} onKeyPress={this.onInputKeyPress} defaultValue={rowsArr[i].alias}/>:""}</td>)
-            cell.push(<td className="left-text" style={{"paddingLeft" : "5px", "paddingRight" : "5px"}} id={(i+1)+"#3#"+rowsArr[i].id} key={"r"+(i+1)+"c3"} onClick={this.onClick}>{rowsArr[i].base_phrase} {(row===(i+1)&&column===3&&withInput)?<input type="text" id={(i+1)+"#3#"+rowsArr[i].id} className="inputEditor" onChange={this.onInputChange} onKeyPress={this.onInputKeyPress} defaultValue={rowsArr[i].base_phrase}/>:""}</td>)
-            cell.push(<td className="left-text" style={{"paddingLeft" : "5px", "paddingRight" : "5px"}} id={(i+1)+"#4#"+rowsArr[i].id} key={"r"+(i+1)+"c4"} onClick={this.onClick}>{rowsArr[i].translated_phrase} {(row===(i+1)&&column===3&&withInput)?<input type="text" id={(i+1)+"#3#"+rowsArr[i].id} className="inputEditor" onChange={this.onInputChange} onKeyPress={this.onInputKeyPress} defaultValue={rowsArr[i].translated_phrase}/>:""}</td>)
-            rows.push(<tr key={i}>{cell}</tr>)
-        }
+        const rowsArr = this.props.userSetup.aliasesList
+        // console.log("createTableRows.3", rowsArr)
+        if (rowsArr) {
+            for (let i = 0; i < rowsArr.length; i++) {
+                cell = []
+                // console.log("createTableRows", rowsArr[i])
+                cell.push(<th key={"r" + (i + 1) + "c1"}>{i + 1}</th>)
+                cell.push(<td className="left-text" style={{"paddingLeft": "5px", "paddingRight": "5px"}}
+                              id={(i + 1) + "#2#" + rowsArr[i].id} key={"r" + (i + 1) + "c2" }
+                              onClick={this.onClick}>{rowsArr[i].alias} {(row === (i + 1) && column === 2 && withInput) ?
+                    <input type="text"
+                           id={(i + 1) + "#2#" + rowsArr[i].id + "#" + rowsArr[i].alias + "#" + (rowsArr[i].llw_id||rowsArr[i].llw_id===null?0:rowsArr[i].llw_id)} className="inputEditor"
+                           onChange={e=>this.onInputChange(e.target.value, rowsArr[i].id)} onKeyPress={this.onInputKeyPress} onBlur={this.onBlur}
+                           defaultValue={rowsArr[i].alias}/> : ""}</td>)
+                cell.push(<td className="left-text" style={{"paddingLeft": "5px", "paddingRight": "5px"}}
+                              id={(i + 1) + "#3#" + rowsArr[i].id} key={"r" + (i + 1) + "c3"}
+                              onClick={this.onClick}>{rowsArr[i].baseLangValue} {(row === (i + 1) && column === 3 && withInput) ?
+                    <input type="text" id={(i + 1) + "#3#" + rowsArr[i].id + "#" + rowsArr[i].alias + "#" + (rowsArr[i].llw_id||rowsArr[i].llw_id===null?0:rowsArr[i].llw_id)} className="inputEditor"
+                           onChange={e=>this.onInputChange(e.target.value, rowsArr[i].id)} onKeyPress={this.onInputKeyPress}  onBlur={this.onBlur}
+                           defaultValue={rowsArr[i].baseLangValue}/> : ""}</td>)
+                cell.push(<td className="left-text" style={{"paddingLeft": "5px", "paddingRight": "5px"}}
+                              id={(i + 1) + "#4#" + rowsArr[i].id} key={"r" + (i + 1) + "c4"}
+                              onClick={this.onClick}>{rowsArr[i].word} {(row === (i + 1) && column === 4 && withInput) ?
+                    <input type="text" id={(i + 1) + "#4#" + rowsArr[i].id + "#" + rowsArr[i].alias + "#" + (rowsArr[i].llw_id||rowsArr[i].llw_id===null?0:rowsArr[i].llw_id)} className="inputEditor"
+                           onChange={text=>this.onInputChange(text, rowsArr[i].id)} onKeyPress={this.onInputKeyPress} onBlur={this.onBlur}
+                           defaultValue={rowsArr[i].word}/> : ""}</td>)
+                rows.push(<tr key={i}>{cell}</tr>)
+            }
+         }
         return rows;
     }
     classNameOfTD=(email, verified)=> {
         return email ? (verified ? "left-text verified" : "left-text verification") : "left-text"
     }
-    createTableRowsOld(rowsArr, onInputChange, withInput, row, column) {
-        // let {row, column} = this.state
-        console.log("createTableRows", row, column)
-        let cell = [],
-            rows = [];
-        for (let i = 0; i < rowsArr.length; i++) {
-            cell = []
-            cell.push(<th key={"r"+(i+1)+"c1"}>{i+1}</th>)
-            cell.push(<td className="left-text" style={{"paddingLeft" : "5px", "paddingRight" : "5px"}} id={(i+1)+"#2#"+rowsArr[i].id} key={"r"+(i+1)+"c2"} onClick={this.onClick.bind(this)}>{rowsArr[i].student_nick} {(row===(i+1)&&column===2&&withInput)?<input type="text" id={(i+1)+"#2#"+rowsArr[i].id} className="inputEditor" onChange={this.onInputChange} onKeyPress={this.onInputKeyPress} defaultValue={rowsArr[i].student_nick}/>:""}</td>) //this.isActive(i, 2, rowsArr[i].student_nick)
-            cell.push(<td className="left-text" style={{"paddingLeft" : "5px", "paddingRight" : "5px"}} id={(i+1)+"#3#"+rowsArr[i].id} key={"r"+(i+1)+"c3"} onClick={this.onClick.bind(this)}>{rowsArr[i].student_name} {(row===(i+1)&&column===3&&withInput)?<input type="text" id={(i+1)+"#3#"+rowsArr[i].id} className="inputEditor" onChange={this.onInputChange} onKeyPress={this.onInputKeyPress} defaultValue={rowsArr[i].student_name}/>:""}</td>)
-            cell.push(<td className={this.classNameOfTD(!(rowsArr[i].email===null), !(rowsArr[i].email_verified_at===null))} style={{"paddingLeft" : "5px", "paddingRight" : "5px", "fontSize" : "0.8em"}} id={(i+1)+"#4#"+rowsArr[i].id} key={"r"+(i+1)+"c4"} onBlur={this.onBlur.bind(this)} onClick={this.onClick.bind(this)}>{rowsArr[i].email}{(row===(i+1)&&column===4&&withInput)?<input type="text" id={(i+1)+"#4#"+rowsArr[i].id} className="inputEditor" onChange={this.onInputChange} onKeyPress={this.onInputKeyPress} defaultValue={rowsArr[i].email}/>:""}</td>)
-            // Галочка скрыть студента из списка
-            cell.push(<td className="center-text" id={(i+1)+"#6#"+rowsArr[i].id} key={"r"+(i+1)+"c6"}>
-                {/*<Checkbox onclick={this.changeState.bind(this)} id={(i+1)+"#6_1#"+rowsArr[i].id} onclick2={this.changeState.bind(this)} name={"isout"+(i+1)} defelem={!!rowsArr[i].isout} label=""/>*/}
-                <input type="checkbox" onChange={this.changeState.bind(this)} id={(i+1)+"#6_1#"+rowsArr[i].id} checked={this.state.checkedMap.has((i+1)+"#6_1#"+rowsArr[i].id)}/>
-            </td>)
-            // Реальный без Email
-            cell.push(<td className="center-text" id={(i+1)+"#7#"+rowsArr[i].id} key={"r"+(i+1)+"c7"}>
-                {/*<Checkbox onclick={this.changeState.bind(this)} id={(i+1)+"#6_1#"+rowsArr[i].id} onclick2={this.changeState.bind(this)} name={"isout"+(i+1)} defelem={!!rowsArr[i].isout} label=""/>*/}
-                <input type="checkbox" onChange={this.changeState.bind(this)} id={(i+1)+"#7_1#"+rowsArr[i].id} checked={this.state.checkedMap.has((i+1)+"#7_1#"+rowsArr[i].id)}/>
-            </td>)
-            cell.push(<td className="left-text" style={{"paddingLeft" : "5px", "paddingRight" : "5px", "fontSize" : "0.8em"}} id={(i+1)+"#5#"+rowsArr[i].id} key={"r"+(i+1)+"c5"} onClick={this.onClick.bind(this)}>{rowsArr[i].memo}{(row===(i+1)&&column===5&&withInput)?<input type="text" id={(i+1)+"#5#"+rowsArr[i].id} className="inputEditor" onChange={this.onInputChange} onKeyPress={this.onInputKeyPress} defaultValue={rowsArr[i].memo}/>:""}</td>)
-            rows.push(<tr key={i}>{cell}</tr>)
-        }
-        return rows;
-    }
+    // createTableRowsOld(rowsArr, onInputChange, withInput, row, column) {
+    //     // let {row, column} = this.state
+    //     console.log("createTableRows", row, column)
+    //     let cell = [],
+    //         rows = [];
+    //     for (let i = 0; i < rowsArr.length; i++) {
+    //         cell = []
+    //         cell.push(<th key={"r"+(i+1)+"c1"}>{i+1}</th>)
+    //         cell.push(<td className="left-text" style={{"paddingLeft" : "5px", "paddingRight" : "5px"}} id={(i+1)+"#2#"+rowsArr[i].id} key={"r"+(i+1)+"c2"} onClick={this.onClick.bind(this)}>{rowsArr[i].student_nick} {(row===(i+1)&&column===2&&withInput)?<input type="text" id={(i+1)+"#2#"+rowsArr[i].id} className="inputEditor" onChange={this.onInputChange} onKeyPress={this.onInputKeyPress} defaultValue={rowsArr[i].student_nick}/>:""}</td>) //this.isActive(i, 2, rowsArr[i].student_nick)
+    //         cell.push(<td className="left-text" style={{"paddingLeft" : "5px", "paddingRight" : "5px"}} id={(i+1)+"#3#"+rowsArr[i].id} key={"r"+(i+1)+"c3"} onClick={this.onClick.bind(this)}>{rowsArr[i].student_name} {(row===(i+1)&&column===3&&withInput)?<input type="text" id={(i+1)+"#3#"+rowsArr[i].id} className="inputEditor" onChange={this.onInputChange} onKeyPress={this.onInputKeyPress} defaultValue={rowsArr[i].student_name}/>:""}</td>)
+    //         cell.push(<td className={this.classNameOfTD(!(rowsArr[i].email===null), !(rowsArr[i].email_verified_at===null))} style={{"paddingLeft" : "5px", "paddingRight" : "5px", "fontSize" : "0.8em"}} id={(i+1)+"#4#"+rowsArr[i].id} key={"r"+(i+1)+"c4"} onBlur={this.onBlur.bind(this)} onClick={this.onClick.bind(this)}>{rowsArr[i].email}{(row===(i+1)&&column===4&&withInput)?<input type="text" id={(i+1)+"#4#"+rowsArr[i].id} className="inputEditor" onChange={this.onInputChange} onKeyPress={this.onInputKeyPress} defaultValue={rowsArr[i].email}/>:""}</td>)
+    //         // Галочка скрыть студента из списка
+    //         cell.push(<td className="center-text" id={(i+1)+"#6#"+rowsArr[i].id} key={"r"+(i+1)+"c6"}>
+    //             {/*<Checkbox onclick={this.changeState.bind(this)} id={(i+1)+"#6_1#"+rowsArr[i].id} onclick2={this.changeState.bind(this)} name={"isout"+(i+1)} defelem={!!rowsArr[i].isout} label=""/>*/}
+    //             <input type="checkbox" onChange={this.changeState.bind(this)} id={(i+1)+"#6_1#"+rowsArr[i].id} checked={this.state.checkedMap.has((i+1)+"#6_1#"+rowsArr[i].id)}/>
+    //         </td>)
+    //         // Реальный без Email
+    //         cell.push(<td className="center-text" id={(i+1)+"#7#"+rowsArr[i].id} key={"r"+(i+1)+"c7"}>
+    //             {/*<Checkbox onclick={this.changeState.bind(this)} id={(i+1)+"#6_1#"+rowsArr[i].id} onclick2={this.changeState.bind(this)} name={"isout"+(i+1)} defelem={!!rowsArr[i].isout} label=""/>*/}
+    //             <input type="checkbox" onChange={this.changeState.bind(this)} id={(i+1)+"#7_1#"+rowsArr[i].id} checked={this.state.checkedMap.has((i+1)+"#7_1#"+rowsArr[i].id)}/>
+    //         </td>)
+    //         cell.push(<td className="left-text" style={{"paddingLeft" : "5px", "paddingRight" : "5px", "fontSize" : "0.8em"}} id={(i+1)+"#5#"+rowsArr[i].id} key={"r"+(i+1)+"c5"} onClick={this.onClick.bind(this)}>{rowsArr[i].memo}{(row===(i+1)&&column===5&&withInput)?<input type="text" id={(i+1)+"#5#"+rowsArr[i].id} className="inputEditor" onChange={this.onInputChange} onKeyPress={this.onInputKeyPress} defaultValue={rowsArr[i].memo}/>:""}</td>)
+    //         rows.push(<tr key={i}>{cell}</tr>)
+    //     }
+    //     return rows;
+    // }
 
     render(){
         const {classes, langs, subjectsSelected, subjects, rowArray, stats} = this.state
+        const objBlank = {
+            id : 0,
+            alias : "empty",
+            baseLangValue : "введите описание",
+            description : "введите перевод",
+            lang : this.props.userSetup.aliasesLang?this.props.userSetup.aliasesLang:defLang,
+            llw_id : 0,
+            uniqid : localStorage.getItem("langCode") ? localStorage.getItem("langCode") : defLang,
+        }
+        // console.log("adminPareAdmin:Render", rowArray)
         return (
             <div className="mym-adminpage-container">
                 <div><Checkbox onclick={this.props.onReduxUpdate.bind(this)} bold={true} name={"CHAT_SSL"} defelem={this.props.userSetup.chatSSL} label=" работа Чата по SSL"/></div>
@@ -294,21 +326,23 @@ class AdminPageAdmin extends Component {
                         <div className={"mym-adminpage-translateblock-header"}>
                             <div>
                                 <div className="h4">Перечень ключевых слов для {
-                                    <select name="langs" onClick={this.onLangClick}>
+                                    <select name="langs" onClick={this.onLangClick} defaultValue={localStorage.getItem("langCode") ? localStorage.getItem("langCode") : defLang}>
                                         {langs.length&&this.renderLangs()}
                                     </select>} языка
                                 </div>
                             </div>
-                            <div className="mym-btn-add-lang-alias" onClick={this.onAddLangAlias}>+Алиас</div>
+                            {/*<div className="mym-btn-add-lang-alias" onClick={this.onAddLangAlias}>+Алиас</div>*/}
                         </div>
                         <div>
-                            <UniversalTable head={this.headArray} rows={rowArray} createTableRows={this.createTableRows} classNameOfTD={this.classNameOfTD}/>
+                            {/*{console.log("UniversalTable.2")}*/}
+                            <UniversalTable head={this.headArray} rows={rowArray} createTableRows={this.createTableRows} classNameOfTD={this.classNameOfTD} btncaption={"+Алиас"}
+                                            objblank={objBlank} initrows={this.initAliasArray} kind={"aliases"}/>
                         </div>
                     </div>
                 </div>
 
                 <div className="tableStats">
-                    <h4>Статистика</h4>
+                    <div className="h4">Статистика</div>
                     <table>
                         <thead>
                         {this.head}

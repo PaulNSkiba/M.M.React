@@ -1,14 +1,15 @@
 /**
  * Created by Paul on 20.01.2019.
  */
-import {saveToLocalStorageOnDate, toYYYYMMDD} from '../js/helpers'
+import {saveToLocalStorageOnDate, toYYYYMMDD, getLangLibrary} from '../js/helpers'
+import {defLang} from '../config/config'
 import {isSSLChat} from '../config/config'
 
 const initialState = (check)=>{
         // console.log("initialState", window.localStorage.getItem("userSetup"), window.localStorage.getItem("userSetupDate")===toYYYYMMDD(new Date()))
         let obj = {}
-        if (window.localStorage.getItem("userSetup")&&window.localStorage.getItem("userSetupDate")===toYYYYMMDD(new Date())&&check) {
-            obj = JSON.parse(window.localStorage.getItem("userSetup"))
+        if (localStorage.getItem("userSetup")&&localStorage.getItem("userSetupDate")===toYYYYMMDD(new Date())&&check) {
+            obj = JSON.parse(localStorage.getItem("userSetup"))
             obj.loading = false }
         else
             obj =
@@ -26,8 +27,10 @@ const initialState = (check)=>{
             stats2 : [], stats3 : [], mark_date : {date : new Date()},
             avgclassmarks : [], loading : -1, stepsLeft : 6,
             chatSessionID : '', classObj : { chatroom_id : 0},
-            newMsgCount : 0, countryCode : "EN", langLibrary : {}, chatSSL : isSSLChat, localChatMessages : [],
-                isMobile : false,
+            newMsgCount : 0, countryCode : defLang,
+            langLibrary : localStorage.getItem("langLibrary")?JSON.parse(localStorage.getItem("langLibrary")):null,
+            chatSSL : isSSLChat, localChatMessages : [],
+            isMobile : false, aliasesList : [], aliasesLang : ""
         }
     return obj
 }
@@ -166,6 +169,12 @@ export function userSetupReducer(state = initialState(true), action) {
         case 'CHAT_SSL' : {
             return{...state, chatSSL: action.payload}
         }
+        case 'ALIASES_LIST' : {
+            return{...state, aliasesList: action.payload}
+        }
+        case 'ALIASES_LANG' : {
+            return{...state, aliasesLang: action.payload}
+        }
         // case "INIT_CHAT_MESSAGES" : {
         //     return{...state, localChatMessages: action.payload}
         // }
@@ -175,8 +184,8 @@ export function userSetupReducer(state = initialState(true), action) {
         case 'USER_LOGGEDOUT' :
 
             let initState = initialState(false)
-            initState.langLibrary = action.langLibrary
-            console.log("userSetupReducer", 'USER_LOGGEDOUT', initState, action.langLibrary)
+            initState.langLibrary = localStorage.getItem("langLibrary")?JSON.parse(localStorage.getItem("langLibrary")):null
+            console.log("userSetupReducer", 'USER_LOGGEDOUT', initState)
             return {...initState};
         default :
             return state

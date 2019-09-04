@@ -16,7 +16,6 @@ export const mapStateToProps = store => {
         chat :      store.chat,
     }
 }
-
 export const instanceAxios=()=>{
     let {token} = store.getState().user
     return (axios.create({
@@ -30,9 +29,7 @@ export const instanceAxios=()=>{
             'Access-Control-Allow-Methods' : 'GET, POST, PUT, DELETE, OPTIONS',
         }
     }));
-
 };
-
 let mainDiv = document.createElement("div")//document.getElementById("markblank")
 // let curCell = {r:0, c:0}
 
@@ -365,6 +362,12 @@ export function dateDiff(date1, date2) {
     let dt2 = new Date(date2);
     return Math.floor((Date.UTC(dt2.getFullYear(), dt2.getMonth(), dt2.getDate()) - Date.UTC(dt1.getFullYear(), dt1.getMonth(), dt1.getDate()) ) /(1000 * 60 * 60 * 24));
 }
+export function dateDiffHour(date1, date2) {
+    let dt1 = new Date(date1);
+    let dt2 = new Date(date2);
+    console.log("dateDiffHour", dt1, dt2, (Date.UTC(dt2.getFullYear(), dt2.getMonth(), dt2.getDate(), dt2.getHours()) - Date.UTC(dt1.getFullYear(), dt1.getMonth(), dt1.getDate(), dt1.getHours())))
+    return  Math.round(Number(Math.abs(dt1 - dt2) / 36e5), 0) //Math.floor((Date.UTC(dt2.getFullYear(), dt2.getMonth(), dt2.getDate(), dt2.getHours()) - Date.UTC(dt1.getFullYear(), dt1.getMonth(), dt1.getDate(), dt1.getHours()) ) /(1000 * 60 * 24));
+}
 export let arrOfWeekDays = ['Вс','Пн','Вт','Ср','Чт','Пт','Сб']
 // AddDay function (format MM-DD-YYY)
 export function AddDay(strDate,intNum)
@@ -509,8 +512,77 @@ export function consoleLog(){
     return ISDEBUG&&console.log(...arguments)
 }
 
-export function getLangLibrary(lang){
-    let langObj = {
+export function getDefLangLibrary() {
+    let langObj = {}
+    langObj.siteName = "My marks"
+    langObj.lang = "Lang"
+    langObj.introBegin = "This application will help teachers and parents keep a diary and monitor student performance. To do this, just take "
+    langObj.introEnd = " small steps"
+    langObj.entry = "Login"
+    langObj.exit = "Logout"
+    langObj.mainSite = "Main"
+    langObj.adminSite = "Admin"
+    langObj.adminSiteClass = "Class admin"
+    langObj.homework = "Homework"
+    langObj.project = "Project"
+    langObj.refNewStudentBegin = "Link for"
+    langObj.refNewStudentEnd = " adding new students"
+    langObj.step1Descr = ". Choose a class:"
+    langObj.step2Descr = ". Number of students:"
+    langObj.step3Descr = ". Subjects for study:"
+    langObj.step4Descr = ". Grade subject:"
+    langObj.step5Descr = ". Marker for grades:"
+    langObj.step6Descr = ". Additional settings:"
+    langObj.step7Descr = ". A register and grade setting:"
+    langObj.step8Descr = ". Import/Export grades to Excel:"
+    langObj.step9Descr = ". Diagrams"
+    langObj.step10Descr = "Save data for the future?"
+    langObj.step1DescrMob = ".Class"
+    langObj.step2DescrMob = ".Students"
+    langObj.step3DescrMob = ".Subjects"
+    langObj.step4DescrMob = ".Selected"
+    langObj.step5DescrMob = ".Grade marker"
+    langObj.step6DescrMob = ".Settings"
+    langObj.step7DescrMob = ".Register"
+    langObj.step8DescrMob = ".Excel-in/out"
+    langObj.step9DescrMob = ".Diagrams"
+    langObj.step10DescrMob = "Save?"
+    langObj.yes = "Yes"
+    langObj.no = "No"
+    langObj.speedByMark = "sec/mark"
+    langObj.top = "TOP"
+    langObj.step = "Step"
+    return langObj
+}
+
+export const getLangLibrary=async (lang)=>{
+    if (!lang) {
+        lang = localStorage.getItem("langCode") ? localStorage.getItem("langCode") : defLang
+    }
+    let langObj = {}
+    // console.log('initAliasArray', AUTH_URL + ('/api/langs/get' + (langid?('/' + langid):'')));
+    // console.log("getLangLibrary:start")
+    await instanceAxios().get(AUTH_URL + ('/api/langs/get' + (lang?('/' + lang):'')))
+        .then(response => {
+
+            // this.props.onReduxUpdate('ALIASES_LIST', response.data)
+            response.data.forEach(item=>{
+                langObj[item.alias] = item.word
+            })
+            console.log("LANGOBJ", langObj)
+            // console.log("getLangLibrary:end")
+            return langObj
+            //this.setState({ subjects: response.data });
+            // console.log(response);
+        })
+        .catch(response => {
+            console.log('initAliasArray:err', response.data);
+            // Список ошибок в отклике...
+        })
+
+    return langObj
+
+    langObj = {
         siteName : "Мои оценки",
         lang : "Язык",
         introBegin : "Данное приложение поможет учителям и родителям вести дневник и следить за успеваемостью учеников. Для этого нужно сделать всего лишь ",
@@ -857,7 +929,7 @@ export function getLangLibrary(lang){
             langObj.step7Descr = ". A register and grade setting:"
             langObj.step8Descr = ". Import/Export grades to Excel:"
             langObj.step9Descr = ". Diagrams"
-            langObj.step10Descr = "Save data for the future??"
+            langObj.step10Descr = "Save data for the future?"
             langObj.step1DescrMob = ".Class"
             langObj.step2DescrMob = ".Students"
             langObj.step3DescrMob = ".Subjects"

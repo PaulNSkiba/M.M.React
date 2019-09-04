@@ -22,7 +22,7 @@ class TitleBlock extends Component {
     }
     render() {
         const {done, title, step, onclick, hide, caption} = this.props;
-        const langLibrary = this.initLangLibrary(this.props.userSetup.langLibrary)
+        const langLibrary = this.props.userSetup.langLibrary//this.initLangLibrary(this.props.userSetup.langLibrary)
 
         var divStyle = {
             "marginTop":"-5px"

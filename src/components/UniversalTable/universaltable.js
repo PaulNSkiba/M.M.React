@@ -4,7 +4,7 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux'
 import { userLoggedOut } from '../../actions/userAuthActions'
-import { STUDENTS_UPDATE_URL } from '../../config/config'
+import { AUTH_URL, STUDENTS_UPDATE_URL } from '../../config/config'
 import { instanceAxios, mapStateToProps } from '../../js/helpers'
 import '../../containers/App.css'
 import './universaltable.css'
@@ -16,52 +16,207 @@ class UniversalTable extends Component {
             row : -1,
             column: -1,
             head : [],
-            rows : [],
+            rows : [], //this.props.rowsArr,
             checkedMap : this.fillMap(),
+            arrRows : [],
+            addNew : false,
+            curAlias : '',
         }
+        this.currentEditedCellValue = ''
+        this.currentEditedCellId = -1
+        this.addNewRowFlag = false
         this.onClick = this.onClick.bind(this)
         this.onBlur = this.onBlur.bind(this)
         this.changeState = this.changeState.bind(this)
         this.createTableRows = this.props.createTableRows.bind(this)
+        this.onAddNewRow = this.onAddNewRow.bind(this)
+        this.updateSource = this.updateSource.bind(this)
     }
-
     componentDidMount() {
-        const {rows, classNameOfTD} = this.props
-        const {row : row_state, column : column_state, checkedMap} = this.state
+        // console.log("UniversalTable.DidMount")
+        const {classNameOfTD} = this.props
+        const {arrRows : rows, row : row_state, column : column_state, checkedMap} = this.state
 
         this.setState ( {
             head : this.createTableHead(this.props.head),
-            rows : this.createTableRows(rows, this.onInputChange, true, row_state, column_state, classNameOfTD, checkedMap)
+            rows : this.createTableRows(this.props.initrows(this.props.userSetup.aliasesLang), this.onInputChange, true, row_state, column_state, classNameOfTD, checkedMap)
         })
     }
     fillMap=()=>{
         let {rows} = this.props
         let map = new Map()
-        for (let i = 0; i < rows.length; i++) {
-            if (rows[i].isout===1) map.set((i+1)+"#6_1#"+rows[i].id, rows[i].isout===1)
-            if (rows[i].isRealName===1) map.set((i+1)+"#7_1#"+rows[i].id, rows[i].isRealName===1)
+        console.log('fillMap', rows)
+        if (rows) {
+            for (let i = 0; i < rows.length; i++) {
+                if (rows[i].isout === 1) map.set((i + 1) + "#6_1#" + rows[i].id, rows[i].isout === 1)
+                if (rows[i].isRealName === 1) map.set((i + 1) + "#7_1#" + rows[i].id, rows[i].isRealName === 1)
             }
+        }
         return map;
     }
-    // width={val.width}
-    columnClassName=key=> {
-        return "col-" + key;
-    }
+    // columnClassName=key=> {
+    //     return "col-" + key;
+    // }
     createTableHead=(head)=>(
         <tr id="row-1" key={"r0"}>{head.map((val, index)=>
-            <th className={this.columnClassName(index)}
+            <th className={"col-" + index}
                 style={{"width" : val.width, "paddingLeft" : "5px", "paddingRight" : "5px"}} key={index}>{val.name}</th>)}</tr>
     )
-    onClick(e) {
-        const {rows, classNameOfTD} = this.props
-        const {row : row_state, column : column_state, checkedMap} = this.state
+    onInputChange(text, id) {
+        console.log("onInputChange", text, id)
+        this.currentEditedCellValue = text
+        this.currentEditedCellId = id
+        // console.log("onInputChange", e.target)
+    }
+    // classNameOfTDOld=(email, verified)=> {
+    //     return email ? (verified ? "left-text verified" : "left-text verification") : "left-text"
+    // }
+    updateSource=(column, id, value, key)=>{
+        console.log("updateSource", column, id, value, key)
+        // return
+        const {classNameOfTD} = this.props
+        const {arrRows : rows, row : row_state, column : column_state, checkedMap} = this.state
 
-        console.log("onClick", e.target, e.target.nodeName, e.target.innerHTML, e.target.getAttribute('id2'))
+        let json = "", data = "", isCheckBox = false;
+        switch (this.props.kind) {
+            case 'students' :
+                switch (column) {
+                    case 2:
+                        this.props.rows[this.state.row - 1].student_nick = value
+                        json = `{"student_nick":"${value}"}`;
+                        break;
+                    case 3:
+                        this.props.rows[this.state.row - 1].student_name = value
+                        json = `{"student_name":"${value}"}`;
+                        break;
+                    case 4:
+                        this.props.rows[this.state.row - 1].email = value
+                        json = `{"email":"${value}"}`;
+                        break;
+                    case 5:
+                        this.props.rows[this.state.row - 1].memo = value
+                        json = `{"memo":"${value}"}`;
+                        break;
+                    case 6:
+                        checkedMap.has(value) ? checkedMap.delete(value) : checkedMap.set(value, true)
+                        json = `{"isout":"${checkedMap.has(value) ? 1 : 0}"}`;
+                        this.setState({checkedMap});
+                        isCheckBox = true;
+                        console.log("checkedMap", checkedMap, checkedMap.has(value), value)
+                        break;
+                    case 7:
+                        checkedMap.has(value) ? checkedMap.delete(value) : checkedMap.set(value, true)
+                        json = `{"isRealName":"${checkedMap.has(value) ? 1 : 0}"}`;
+                        this.setState({checkedMap});
+                        isCheckBox = true;
+                        console.log("checkedMap", checkedMap, checkedMap.has(value), value)
+                        break;
+                    default:
+                        break;
+                }
+                if (json) {
+                    data = JSON.parse(json);
+                    this.props.onStudentUpdate(this.props.rows)
+                    instanceAxios().post(STUDENTS_UPDATE_URL + '/' + id, JSON.stringify(data))
+                        .then(response => {
+                            console.log('UPDATE_STUDENTS_REMOTE', response.data)
+                        })
+                        .catch(response => {
+                            console.log(response);
+                        })
+                }
+                this.setState({ row : -1, column :-1, rows: this.createTableRows(rows, this.onInputChange, isCheckBox, row_state, column_state, classNameOfTD, checkedMap)})
+                break;
+            case "aliases" :
+                const   alias =  String(key.split('#')[3]),
+                        llw_id = Number(key.split('#')[4])
+                let url = ''
+                const uniqid = new Date().getTime() + this.props.userSetup.userName
+                let arr = this.props.userSetup.aliasesList
+                let newarr = arr.map(item=>{
+                    if (item.id === id) {
+                        item.uniqid = uniqid;
+                    }
+                    return item
+                })
+                switch (column) {
+                    case 2 :
+                        // Алиасы
+                        url = AUTH_URL + '/api/langs/update/alias' + (id?`/${id}`:'')
+                        json = `{"alias":"${value}","uniqid":"${uniqid}"}`;
+                        break;
+                    case 3 :
+                        // Описание
+                        url = AUTH_URL + '/api/langs/update/alias' + (id?`/${id}`:'')
+                        json = `{"baseLangValue":"${value}","uniqid":"${uniqid}"}`;
+                        break;
+                    case 4 :
+                        // Перевод
+                        url = AUTH_URL + '/api/langs/update/word' + (llw_id?`/${llw_id}`:'')
+                        json = `{"word":"${value}","lang":"${this.props.userSetup.aliasesLang}","alias":"${alias}","uniqid":"${uniqid}"}`;
+                        break;
+                    default :
+                        break;
+                }
+                if (json) {
+                    data = JSON.parse(json);
+                    // this.props.onStudentUpdate(this.props.rows)
+                    // console.log("UPDATE_URL", url, json)
+                    instanceAxios().post(url, JSON.stringify(data))
+                        .then(response => {
+                            // arr = this.props.userSetup.aliasesList
+                            // console.log("RESPONSE", response.data)
+                            newarr = arr.map(item=>{
+                                if (item.uniqid === response.data.uniqid) {
+                                    if (column === 4) {
+                                        item.word = response.data.word
+                                    }
+                                    else {
+                                        item.id = response.data.id
+                                        item.lang = response.data.lang
+                                        item.alias = response.data.alias
+                                        item.baseLangValue = response.data.baseLangValue
+                                        item.description = response.data.description
+                                    }
+                                }
+                                return item
+                            })
+                            console.log('ALIASES_LIST', newarr)
+                            this.props.onReduxUpdate('ALIASES_LIST', newarr)
+                            this.setState({ row : -1, column :-1, rows: this.createTableRows(newarr, this.onInputChange, isCheckBox, row_state, column_state, classNameOfTD, checkedMap)})
+
+                            //console.log('UPDATE_ALIAS_REMOTE', response.data)
+                        })
+                        .catch(response => {
+                            console.log(response);
+                        })
+                }
+                break;
+            default:
+
+                break;
+        }
+        // this.setState({ row : -1, column :-1, rows: this.createTableRows(rows, this.onInputChange, isCheckBox, row_state, column_state, classNameOfTD, checkedMap)})
+    }
+    onClick(e) {
+        const {classNameOfTD} = this.props
+        const {arrRows : rows, row : row_state, column : column_state, checkedMap} = this.state
+
+        // console.log("onClick", this.state.arrRows, this.state.rows)
         if (e.target.nodeName === "TD") {
             let row = Number(e.target.id.split('#')[0]),
                 column = Number(e.target.id.split('#')[1])
 
-            console.log("table_OnClick", row, column)
+            // console.log("onClick", row, column)
+            if (this.currentEditedCellId>0) {
+                if ((Math.abs(row - this.state.row) + Math.abs(column - this.state.column)) && (this.state.row > 0) && (this.state.column > 0)) {
+                    // alert(`${this.state.row} and ${this.state.column} was edited. And now: ${row} and ${column}`, this.currentEditedCellValue)
+                    // this.updateSource(this.state.column, this.currentEditedCellId, this.currentEditedCellValue, e.target.id)
+                }
+            }
+            // console.log("table_OnClick", row, column)
+            this.currentEditedCellValue = ''
+            this.currentEditedCellId = -1
             this.setState(
                 {
                     row: row,
@@ -70,187 +225,97 @@ class UniversalTable extends Component {
                 }
             )
         }
+        // console.log("onClick.2", this.state.arrRows, this.state.rows)
     }
     onBlur(e) {
-        console.log("onBlur", e.target, e.target.nodeName, e.target.innerHTML, e.target.getAttribute('id2'), e.target.value);
-        // console.log('do validate', e.target, e.target.value, e.target.id);
+        const {classNameOfTD} = this.props
+        const {arrRows : rows, row : row_state, column : column_state, checkedMap} = this.state
 
-        let column = Number(e.target.id.split('#')[1]),
-            id = Number(e.target.id.split('#')[2]),
-            json = "",
-            data = "";
+        console.log("onBlur", e.target, e.target.nodeName, e.target.innerHTML, e.target.getAttribute('id2'), e.target.value)
+        if (true) {//(e.target.nodeName === "TD") {
+            // let row = Number(e.target.id.split('#')[0]),
+            //     column = Number(e.target.id.split('#')[1])
+            const column = Number(e.target.id.split('#')[1]),
+                id = Number(e.target.id.split('#')[2]),
+                value = e.target.value;
+            this.updateSource(column, id, value, e.target.id)
 
-        const {rows, classNameOfTD} = this.props
-        const {row : row_state, column : column_state, checkedMap} = this.state
-
-        switch (column) {
-            case 2:
-                this.props.rows[this.state.row - 1].student_nick = e.target.value
-                json = `{"student_nick":"${e.target.value}"}`;
-                break;
-            case 3:
-                this.props.rows[this.state.row - 1].student_name = e.target.value
-                json = `{"student_name":"${e.target.value}"}`;
-                break;
-            case 4:
-                this.props.rows[this.state.row - 1].email = e.target.value
-                json = `{"email":"${e.target.value}"}`;
-                break;
-            case 5:
-                this.props.rows[this.state.row - 1].memo = e.target.value
-                json = `{"memo":"${e.target.value}"}`;
-                break;
-            default: break;
+            this.currentEditedCellValue = ''
+            this.currentEditedCellId = -1
+            this.setState(
+                {
+                    row: Number(e.target.id.split('#')[0]),
+                    column: Number(e.target.id.split('#')[1]),
+                    rows: this.createTableRows(rows, this.onInputChange, true, row_state, column_state, classNameOfTD, checkedMap)
+                }
+            )
         }
-        if (json) {
-            data = JSON.parse(json);
-            this.props.onStudentUpdate(this.props.rows)
-            instanceAxios().post(STUDENTS_UPDATE_URL + '/' + id, JSON.stringify(data))
-                .then(response => {
-                    console.log('UPDATE_STUDENTS_REMOTE', response.data)
-                    // dispatch({type: 'UPDATE_STUDENTS_REMOTE', payload: response.data})
-                })
-                .catch(response => {
-                    console.log(response);
-                    // dispatch({type: 'UPDATE_STUDENTS_FAILED', payload: response.data})
-                })
-        }
-        this.setState({
-            row : -1,
-            column :-1,
-        })
-
-        this.setState({
-            rows: this.createTableRows(rows, this.onInputChange, false, row_state, column_state, classNameOfTD, checkedMap)
-        })
-
     }
     onInputKeyPress=(e)=>{
+        console.log('onInputKeyPress', e.target, e.target.id, e.target.value);
         if (e.key === 'Enter') {
-            console.log('do validate', e.target, e.target.value, e.target.id);
-            let column = Number(e.target.id.split('#')[1]),
-                id = Number(e.target.id.split('#')[2]),
-                json = "",
-                data = "";
-            const {rows, classNameOfTD} = this.props
-            const {row : row_state, column : column_state, checkedMap} = this.state
-
-            switch (column) {
-                case 2:
-                    this.props.rows[this.state.row - 1].student_nick = e.target.value
-                    json = `{"student_nick":"${e.target.value}"}`;
-                    break;
-                case 3:
-                    this.props.rows[this.state.row - 1].student_name = e.target.value
-                    json = `{"student_name":"${e.target.value}"}`;
-                    break;
-                case 4:
-                    this.props.rows[this.state.row - 1].email = e.target.value
-                    json = `{"email":"${e.target.value}"}`;
-                    break;
-                case 5:
-                    this.props.rows[this.state.row - 1].memo = e.target.value
-                    json = `{"memo":"${e.target.value}"}`;
-                    break;
-                default: break;
-            }
-            if (json) {
-                data = JSON.parse(json);
-                this.props.onStudentUpdate(this.props.rows)
-                console.log("UPDATE_STUDENTS_REMOTE", JSON.stringify(data));
-                instanceAxios().post(STUDENTS_UPDATE_URL + '/' + id, JSON.stringify(data))
-                    .then(response => {
-                        console.log('UPDATE_STUDENTS_REMOTE', response.data)
-                        // dispatch({type: 'UPDATE_STUDENTS_REMOTE', payload: response.data})
-                    })
-                    .catch(response => {
-                        console.log(response);
-                        // dispatch({type: 'UPDATE_STUDENTS_FAILED', payload: response.data})
-                    })
-            }
-            this.setState({
-            row : -1,
-            column :-1,
-        })
-
-        this.setState({
-                rows: this.createTableRows(rows, this.onInputChange, false, row_state, column_state, classNameOfTD, checkedMap)
-            })
+            const   column = Number(e.target.id.split('#')[1]),
+                    id = Number(e.target.id.split('#')[2]),
+                    value = e.target.value;
+            this.updateSource(column, id, value, e.target.id)
         }
-    }
-    classNameOfTDOld=(email, verified)=> {
-        return email ? (verified ? "left-text verified" : "left-text verification") : "left-text"
     }
     changeState=(e)=>{
-        let column = String(e.target.id.split('#')[1]),
-            id = Number(e.target.id.split('#')[2]),
-            json = "",
-            data = "";
-        const {rows, classNameOfTD} = this.props
-        const {row : row_state, column : column_state, checkedMap} = this.state
-
-        checkedMap.has(e.target.id)?checkedMap.delete(e.target.id):checkedMap.set(e.target.id, true)
-        this.setState({checkedMap, })
-        this.setState ( {
-            rows : this.createTableRows(rows, this.onInputChange, true, row_state, column_state, classNameOfTD, checkedMap)
-        })
-        console.log(e.target.id, checkedMap, column)
-        json = `{"${column==="6_1"?"isout":"isRealName"}":"${checkedMap.has(e.target.id)?1:0}"}`;
-        console.log("JSON", json)
-        if (json) {
-            data = JSON.parse(json);
-            this.props.onStudentUpdate(this.props.rows)
-            instanceAxios().post(STUDENTS_UPDATE_URL + '/' + id, JSON.stringify(data))
-                .then(response => {
-                    console.log('UPDATE_STUDENTS_REMOTE', response.data)
-                    // dispatch({type: 'UPDATE_STUDENTS_REMOTE', payload: response.data})
-                })
-                .catch(response => {
-                    console.log(response);
-                    // dispatch({type: 'UPDATE_STUDENTS_FAILED', payload: response.data})
-                })
-        }
-        console.log(json)
+        const   column = String(e.target.id.split('#')[1]),
+                id = Number(e.target.id.split('#')[2])
+        console.log("changeState", e.target.id, column.split('_')[0])
+        this.updateSource(Number(column.split('_')[0]), id, e.target.id, e.target.id)
     }
-    createTableRowsOld(rowsArr, onInputChange, withInput) {
-        let{row, column} = this.state
-        console.log("createTableRows", row, column)
-        let cell = [],
-            rows = [];
-        for (let i = 0; i < rowsArr.length; i++) {
-            cell = []
-            cell.push(<th key={"r"+(i+1)+"c1"}>{i+1}</th>)
-            cell.push(<td className="left-text" style={{"paddingLeft" : "5px", "paddingRight" : "5px"}} id={(i+1)+"#2#"+rowsArr[i].id} key={"r"+(i+1)+"c2"} onClick={this.onClick.bind(this)}>{rowsArr[i].student_nick} {(row===(i+1)&&column===2&&withInput)?<input type="text" id={(i+1)+"#2#"+rowsArr[i].id} className="inputEditor" onChange={this.onInputChange} onKeyPress={this.onInputKeyPress} defaultValue={rowsArr[i].student_nick}/>:""}</td>) //this.isActive(i, 2, rowsArr[i].student_nick)
-            cell.push(<td className="left-text" style={{"paddingLeft" : "5px", "paddingRight" : "5px"}} id={(i+1)+"#3#"+rowsArr[i].id} key={"r"+(i+1)+"c3"} onClick={this.onClick.bind(this)}>{rowsArr[i].student_name} {(row===(i+1)&&column===3&&withInput)?<input type="text" id={(i+1)+"#3#"+rowsArr[i].id} className="inputEditor" onChange={this.onInputChange} onKeyPress={this.onInputKeyPress} defaultValue={rowsArr[i].student_name}/>:""}</td>)
-            cell.push(<td className={this.classNameOfTD(!(rowsArr[i].email===null), !(rowsArr[i].email_verified_at===null))} style={{"paddingLeft" : "5px", "paddingRight" : "5px", "fontSize" : "0.8em"}} id={(i+1)+"#4#"+rowsArr[i].id} key={"r"+(i+1)+"c4"} onBlur={this.onBlur.bind(this)} onClick={this.onClick.bind(this)}>{rowsArr[i].email}{(row===(i+1)&&column===4&&withInput)?<input type="text" id={(i+1)+"#4#"+rowsArr[i].id} className="inputEditor" onChange={this.onInputChange} onKeyPress={this.onInputKeyPress} defaultValue={rowsArr[i].email}/>:""}</td>)
-            // Галочка скрыть студента из списка
-            cell.push(<td className="center-text" id={(i+1)+"#6#"+rowsArr[i].id} key={"r"+(i+1)+"c6"}>
-                    {/*<Checkbox onclick={this.changeState.bind(this)} id={(i+1)+"#6_1#"+rowsArr[i].id} onclick2={this.changeState.bind(this)} name={"isout"+(i+1)} defelem={!!rowsArr[i].isout} label=""/>*/}
-                    <input type="checkbox" onChange={this.changeState.bind(this)} id={(i+1)+"#6_1#"+rowsArr[i].id} checked={this.state.checkedMap.has((i+1)+"#6_1#"+rowsArr[i].id)}/>
-                    </td>)
-            // Реальный без Email
-            cell.push(<td className="center-text" id={(i+1)+"#7#"+rowsArr[i].id} key={"r"+(i+1)+"c7"}>
-                {/*<Checkbox onclick={this.changeState.bind(this)} id={(i+1)+"#6_1#"+rowsArr[i].id} onclick2={this.changeState.bind(this)} name={"isout"+(i+1)} defelem={!!rowsArr[i].isout} label=""/>*/}
-                <input type="checkbox" onChange={this.changeState.bind(this)} id={(i+1)+"#7_1#"+rowsArr[i].id} checked={this.state.checkedMap.has((i+1)+"#7_1#"+rowsArr[i].id)}/>
-            </td>)
-            cell.push(<td className="left-text" style={{"paddingLeft" : "5px", "paddingRight" : "5px", "fontSize" : "0.8em"}} id={(i+1)+"#5#"+rowsArr[i].id} key={"r"+(i+1)+"c5"} onClick={this.onClick.bind(this)}>{rowsArr[i].memo}{(row===(i+1)&&column===5&&withInput)?<input type="text" id={(i+1)+"#5#"+rowsArr[i].id} className="inputEditor" onChange={this.onInputChange} onKeyPress={this.onInputKeyPress} defaultValue={rowsArr[i].memo}/>:""}</td>)
-            rows.push(<tr key={i}>{cell}</tr>)
-        }
-        return rows;
+    onAddNewRow=()=>{
+        const {classNameOfTD, objblank} = this.props
+        const {arrRows, row : row_state, column : column_state, checkedMap} = this.state
+        let arr = arrRows;
+        // console.log("onAddNewRow", arr)
+        arr.push(objblank);
+        this.addNewRowFlag = true
+        // this.forceUpdate()
+        this.setState({
+                            arrRows : arr,
+                            // addNew : true,
+                            rows : this.createTableRows(arr, this.onInputChange, true, row_state, column_state, classNameOfTD, checkedMap)
+                        })
+        // // alert('addAlias')
     }
+    // emptyNew=()=>{
+    //     this.setState({addNew:!this.state.addNew})
+    // }
     render(){
-        let {head, rows, row, column} = this.state
-        console.log("RENDER", row, column)
+        // let {head, row, column} = this.state
+        const {classNameOfTD, objblank} = this.props
+        const {head, row : row_state, column : column_state, checkedMap} = this.state
+        let reduxrows = []
+        switch (this.props.kind) {
+            case 'students' :
+                reduxrows = this.props.userSetup.students;
+                break;
+            case 'aliases' :
+                reduxrows = this.props.userSetup.aliasesList;
+                break;
+            default :
+                break;
+        }
+        if (this.addNewRowFlag ) {
+            reduxrows.push(objblank);
+            this.addNewRowFlag = false
+        }
+        // console.log("UniversalTable: RENDER", reduxrows)
+        let rows = this.createTableRows(reduxrows, this.onInputChange, true, row_state, column_state, classNameOfTD, checkedMap)
         return(
             <div className="mym-universaltable-container">
                 <div className="row">
                     <div className="col s12 board">
+                        <div className="mym-btn-add-lang-alias" onClick={this.onAddNewRow}>{this.props.btncaption}</div>
                         <table id="simple-board">
                             <thead className="marktable">
-                            {head}
+                                {head}
                             </thead>
                             <tbody>
-                            {rows}
+                                {rows}
                             </tbody>
                         </table>
                     </div>
@@ -264,7 +329,8 @@ const mapDispatchToProps = dispatch => {
     return ({
         onInitState: () => dispatch([]),
         onUserLoggingOut  : token => dispatch(userLoggedOut(token)),
-        onStudentUpdate: (data)=> dispatch({type: 'UPDATE_STUDENTS_LOCALLY', payload: data})
+        onStudentUpdate: (data)=> dispatch({type: 'UPDATE_STUDENTS_LOCALLY', payload: data}),
+        onReduxUpdate : (key, payload) => dispatch({type: key, payload: payload}),
     })
 }
 export default connect(mapStateToProps, mapDispatchToProps)(UniversalTable)

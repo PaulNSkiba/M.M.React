@@ -25,7 +25,7 @@ import { AUTH_URL, API_URL, EXCEL_URL, UPDATESETUP_URL, SUBJECTS_GET_URL, STUDEN
         arrLangs, defLang}
         from '../config/config'
 import {numberToLang, msgTimeOut, instanceAxios, mapStateToProps, getLangLibrary,
-        toYYYYMMDD, getLangByCountry} from '../js/helpers'
+        toYYYYMMDD, getLangByCountry, waitCursorBlock, getDefLangLibrary} from '../js/helpers'
 
 import LoginBlock from '../components/LoginBlock/loginblock'
 import LoginBlockLight from '../components/LoginBlockLight/loginblocklight'
@@ -33,6 +33,7 @@ import Menu from '../components/Menu/menu'
 import ChatBtn from "../img/chat-btn.svg"
 import './App.css';
 import { withCookies } from 'react-cookie';
+import { store } from '../store/configureStore'
 import ReactFlagsSelect from 'react-flags-select';
 import 'react-flags-select/css/react-flags-select.css';
 
@@ -67,10 +68,11 @@ class App extends Component {
             chatMessages : [],
             newChatMessages : 0,
             newHomeworkMessages : 0,
+            langLibrary : {}
         }
         this.userGot = false
         this.loading = true
-        this.getChatMessages = this.getChatMessages.bind(this)
+        // this.getChatMessages = this.getChatMessages.bind(this)
         this.updateMessages = this.updateMessages.bind(this)
         this.newChatMessage = this.newChatMessage.bind(this)
         this.userLogout = this.userLogout.bind(this)
@@ -86,67 +88,106 @@ class App extends Component {
     componentWillMount(){
         (async()=>{
             this.getSessionID();
+            // await getLangLibrary(localStorage.getItem("langCode")?localStorage.getItem("langCode"):defLang)
             await this.getGeo();
             await this.getStats();
         })();
     }
+    getAsync =  async (lang)=> {
+        if(
+        !lang
+            ) {
+        lang = localStorage.getItem("langCode") ? localStorage.getItem("langCode") : defLang
+        }
+        let langObj = {}
+        // console.log("getLangLibrary:start")
+        let {token} = store.getState().user
+
+        const  headers = {
+            Authorization: `Bearer ${token}`,
+            Accept: 'application/json',
+            'Content-Type': 'application/json',
+            'Access-Control-Allow-Origin' : '*',
+            'Access-Control-Allow-Methods' : 'GET, POST, PUT, DELETE, OPTIONS',
+        }
+        await axios.get(AUTH_URL + ('/api/langs/get' + (lang ? ('/' + lang) : '')), {}, headers)
+            .then(res=> {
+                    res.data.forEach(item => langObj[item.alias] = item.word)
+                    this.setState({langLibray: langObj});
+                    // console.log("getLangLibrary:end")
+                    this.props.onReduxUpdate("LANG_LIBRARY", langObj)
+                    this.props.onStopLoading()
+                }
+                )
+     }
     componentDidMount(){
         this.props.onStartLoading()
-        let {langLibrary} = this.props.userSetup
+        // console.log("start")
+        let lb = this.getAsync(localStorage.getItem("langCode")?localStorage.getItem("langCode"):defLang)//getLangLibrary(localStorage.getItem("langCode")?localStorage.getItem("langCode"):defLang)
+        // console.log("end");
+
+        let {langLibrary} = this.state//this.props.userSetup
+
+        // console.log("componentDidMount")
 
         if (!(window.localStorage.getItem("myMarks.data") === null)&&!(window.localStorage.getItem("userSetup")&&window.localStorage.getItem("userSetupDate")===toYYYYMMDD(new Date()))) {
-            // &&!window.localStorage.getItem("userSetup")
-            // console.log("componentDidMount", JSON.parse(window.localStorage.getItem("myMarks.data")))
             // console.log("componentDidMount.1", langLibrary)
 
             let localstorage = JSON.parse(window.localStorage.getItem("myMarks.data"))
             let {email, token, class_id : classID} = localstorage
-            // console.log("onUserLoggingByToken!!!!", this.initLangLibrary(langLibrary, false))
-            this.props.onUserLoggingByToken(email, token, null, this.initLangLibrary(langLibrary, false));
-            // this.getChatMessages(classID);
+
+            this.props.onUserLoggingByToken(email, token, null, langLibrary);
+            // this.props.onStopLoading()
         }
         else if (window.localStorage.getItem("userSetup")&&window.localStorage.getItem("userSetupDate")===toYYYYMMDD(new Date())) {
             // console.log("USER_SETUP", JSON.parse(window.localStorage.getItem("userSetup")))
-            // console.log("componentDidMount.2", langLibrary)
-            // let {email, token, class_id : classID} = localstorage
-            console.log("componentDidMount:langLibrary", langLibrary)
-            this.initLangLibrary(langLibrary, true)
-
-            // this.getChatMessages(classID);
-            this.props.onStopLoading()
-        }
+            // console.log("componentDidMount:langLibrary", langLibrary)
+            // this.initLangLibrary(langLibrary, true)
+           }
         else {
-            // console.log("componentDidMount.3", langLibrary)
-            this.initLangLibrary(langLibrary, true)
-            this.props.onStopLoading()
+            // console.log("else")
+            // this.initLangLibrary(langLibrary, true)
+            // this.props.onStopLoading()
         }
         this.props.onReduxUpdate("IS_MOBILE", this.state.isMobile)
         this.props.onChangeStepsQty(this.isSaveEnabled())
     }
 
     shouldComponentUpdate(nextProps, nextState) {
-        // console.log("shouldComponentUpdate", this.props.userSetup.chatSessionID, nextProps.userSetup.chatSessionID)
+        // console.log("shouldComponentUpdate", this.props.userSetup.langLibrary, nextProps.userSetup.langLibrary)
         if ((this.props.userSetup.chatSessionID !== nextProps.userSetup.chatSessionID))
-            return false
+             return false
             // return this.props.userSetup.chatSessionID !== nextProps.userSetup.chatSessionID
         else
+        // if ((!this.state.langLibrary)||(this.props.userSetup.langLibrary=={}))
+        if (!this.state.langLibrary)
+            return false
+        else {
+            // this.props.onStopLoading()
             return true
+        }
     }
 
     initLangLibrary=(langLibrary, setRedux)=>{
-        // console.log("initLangLibrary", langLibrary)
+        console.log("initLangLibrary", langLibrary)
         if ((!langLibrary)||langLibrary===undefined||langLibrary==="undefined"||JSON.stringify(langLibrary)===JSON.stringify({})) {
             // console.log("initLangLibrary.2", langLibrary, setRedux, this.state.myCountryCode)
+
             langLibrary = getLangLibrary(localStorage.getItem("langCode")?localStorage.getItem("langCode"):defLang)
             // console.log("initLangLibrary.3", langLibrary, setRedux, this.state.myCountryCode, this.props.userSetup)
             if (setRedux) this.props.onReduxUpdate("LANG_LIBRARY", langLibrary)
+
             // console.log("initLangLibrary.4", langLibrary, setRedux, this.state.myCountryCode, this.props.userSetup)
         }
-        return langLibrary
+        return langLibrary //getLangLibrary(localStorage.getItem("langCode")?localStorage.getItem("langCode"):defLang)
     }
     onSelectLang=async countryCode=>{
-        this.props.onReduxUpdate("LANG_LIBRARY", getLangLibrary(countryCode))
+        this.props.onStartLoading()
+        let lb = this.getAsync(countryCode)//getLangLibrary(localStorage.getItem("langCode")?localStorage.getItem("langCode"):defLang)
+
+        this.props.onReduxUpdate("LANG_LIBRARY", this.state.langLibrary)
         localStorage.setItem("langCode", countryCode)
+        localStorage.setItem("langLibrary", JSON.stringify(this.state.langLibrary))
         // console.log(countryCode)
     }
     /*
@@ -166,18 +207,18 @@ class App extends Component {
         this.setState({chatMessages : [...this.state.chatMessages, stateValue]})
     }
 
-    getChatMessages=(classID, localState, reduxState)=>{
-        console.log('getChatMessages', this.props.userSetup.classID, classID)
-        instanceAxios().get(API_URL +`chat/get/${classID}`, [], null)
-            .then(resp => {
-                this.setState({localState : resp.data})
-                this.props.onReduxUpdate(reduxState, resp.data)
-                console.log('resp.data', resp, resp.data, resp.data.data)
-            })
-            .catch(error => {
-                console.log('getChatMessagesError', error)
-            })
-    }
+    // getChatMessages=(classID, localState, reduxState)=>{
+    //     console.log('getChatMessages', this.props.userSetup.classID, classID)
+    //     instanceAxios().get(API_URL +`chat/get/${classID}`, [], null)
+    //         .then(resp => {
+    //             this.setState({localState : resp.data})
+    //             this.props.onReduxUpdate(reduxState, resp.data)
+    //             console.log('resp.data', resp, resp.data, resp.data.data)
+    //         })
+    //         .catch(error => {
+    //             console.log('getChatMessagesError', error)
+    //         })
+    // }
 
     getSessionID(){
         let session_id = ''
@@ -619,7 +660,9 @@ class App extends Component {
             subjects_list, studentId, studentName, classID, isadmin, loading, langLibrary} = this.props.userSetup;
 
         // console.log("LANGLIBRARY", langLibrary, this.state.myCountryCode)
-        langLibrary = this.initLangLibrary(langLibrary, false)
+
+        // let langLibrary = this.state.langLibrary
+
         // console.log("LANGLIBRARY_AFTER", langLibrary, this.state.myCountryCode)
 
         let {isMobile} = this.state;
@@ -637,7 +680,8 @@ class App extends Component {
         };
         let data = this.prepDataForChart([])
 
-        // console.log("APP_RENDER", loading, window.location.href.slice(-6))
+        // console.log("APP_RENDER", loading, langLibrary, this.state.langLibrary)
+
         // *************************
         // Если идёт загрузка
         // *************************
@@ -649,15 +693,17 @@ class App extends Component {
                     <div className="navBlock">
                         <div className="navBlockEx">
                         {userID?<Menu className="menuTop" userid={userID} isadmin={isadmin} withtomain={true}/>:null}
-                        <div className="myTitle"><h3><Link to="/">{langLibrary.siteName}</Link></h3></div>
-                        {this.loginBlock(userID, userName, langLibrary)}
+                        <div className="myTitle"><h3><Link to="/">{getDefLangLibrary().siteName}</Link></h3></div>
+                        {this.loginBlock(userID, userName, getDefLangLibrary())}
                         </div>
                     </div>
                 </div>
                 <div className="navbar-shadow"></div>
             </div>);
 
+
         // console.log("this.props.USERSETUP: ", this.props.userSetup);
+        // return (<div>111</div>)
 
         let descrFirst = `${langLibrary.introBegin} ${this.isShortList()?"7":"10"} ${langLibrary.introEnd}:`
         // this.props.history.push('/');
@@ -735,8 +781,8 @@ class App extends Component {
                 <div className="navbar-shadow"></div>
                 {isMobile?
                     <div className="descrAndAnnounce">
-                        {classID?<span className="addRef">{langLibrary.refNewStudentBegin}
-                                    <a className="infoMsg" href={AUTH_URL+"/student/add/"+this.props.userSetup.addUserToken} target="_blank" rel="noopener noreferrer">{langLibrary.refNewStudentEnd}</a></span>
+                        {classID?<span className="addRef">{`${langLibrary.refNewStudentBegin} `}
+                                    <a className="infoMsg" href={AUTH_URL+"/student/add/"+this.props.userSetup.addUserToken} target="_blank" rel="noopener noreferrer">` ${langLibrary.refNewStudentEnd}`</a></span>
                             :""
                         }
                         {   studentId === 0&&userID===0?<div className="description-main"><span>{descrFirst}</span></div>:
@@ -757,8 +803,8 @@ class App extends Component {
                         }
                     </div>
                     :<div className="descrAndAnnounce">
-                        {classID?<span className="addRef">{langLibrary.refNewStudentBegin}
-                        <a className="infoMsg" href={AUTH_URL+"/student/add/"+this.props.userSetup.addUserToken} target="_blank" rel="noopener noreferrer">{langLibrary.refNewStudentEnd}</a></span>
+                        {classID?<span className="addRef">{`${langLibrary.refNewStudentBegin} `}
+                        <a className="infoMsg" href={AUTH_URL+"/student/add/"+this.props.userSetup.addUserToken} target="_blank" rel="noopener noreferrer">{` ${langLibrary.refNewStudentEnd}`}</a></span>
                             :""
                         }
                         <div className="descrAndAnnounceNotMobile">
@@ -812,9 +858,9 @@ class App extends Component {
 
                     {!step1&&!this.props.user.logging&&studentId === 0?
                     <div className="block-1">
-                    <ClassList classtype="primary-school school" click={this.buttonClick.bind(this)} classnumber={classNumber} classlabel="Начальная школа" buttons={[1, 2, 3, 4]}/>
-                    <ClassList classtype="secondary-school school" click={this.buttonClick.bind(this)} classnumber={classNumber} classlabel="Основная школа" buttons={[5, 6, 7, 8, 9]}/>
-                    <ClassList classtype="high-school school" click={this.buttonClick.bind(this)} classnumber={classNumber} classlabel="Старшая школа" buttons={[10, 11]}/>
+                    <ClassList classtype="primary-school school" click={this.buttonClick.bind(this)} classnumber={classNumber} classlabel={`${langLibrary.schoolPrimary} `} buttons={[1, 2, 3, 4]}/>
+                    <ClassList classtype="secondary-school school" click={this.buttonClick.bind(this)} classnumber={classNumber} classlabel={`${langLibrary.schoolMain} `} buttons={[5, 6, 7, 8, 9]}/>
+                    <ClassList classtype="high-school school" click={this.buttonClick.bind(this)} classnumber={classNumber} classlabel={`${langLibrary.schoolHigh} `} buttons={[10, 11]}/>
                     </div>
                     :""}
 
@@ -861,7 +907,7 @@ class App extends Component {
                                                              subjects_list={subjects_list}
                                                              studentid ={studentId}
                     />
-                        :<div className="descrAndAnnounce"><span className="infoMsg">Вначале нужно "Выбрать класс" для получения перечня предметов...</span></div>
+                        :<div className="descrAndAnnounce"><span className="infoMsg">{`${langLibrary.toChoosClassHelp}`}</span></div>
                 :""}
 
                 {studentId === 0?
@@ -877,7 +923,7 @@ class App extends Component {
                                                              selectedsubjects={selectedSubjects}
                                                              selectedSubj={selectedSubj}
                                                              isnewmech={true}/>
-                        :<div className="descrAndAnnounce"><span className="infoMsg">Вначале нужно выбрать "Изучаемые предметы" для выбора конкретного...</span></div>
+                        :<div className="descrAndAnnounce"><span className="infoMsg">{`${langLibrary.toChooseSubjectHelp}`}</span></div>
                     :""}
                 {studentId === 0 ?
                     <div>
@@ -994,7 +1040,7 @@ class App extends Component {
                     <TitleBlock title={!isMobile?langLibrary.step10Descr:langLibrary.step10DescrMob}
                                 isyellow={true} done={false} onclick={this.stepClick.bind(this)}
                                 isgrey={this.props.userSetup.stepsLeft}
-                                caption={this.props.userSetup.stepsLeft?("осталось " + (this.props.userSetup.stepsLeft).toString() + (this.props.userSetup.stepsLeft===1?" шаг":(this.props.userSetup.stepsLeft<5)?" шага":" шагов")):""}
+                                caption={this.props.userSetup.stepsLeft?(`${langLibrary.leftStepBegin} ` + (this.props.userSetup.stepsLeft).toString() + (this.props.userSetup.stepsLeft===1?` ${langLibrary.leftStepsEnd}`:(this.props.userSetup.stepsLeft<5)?` ${langLibrary.leftStepsEnd}`:` ${langLibrary.leftStepsEnd}`)):""}
                                 step={!this.isShortList()?11:10} hide={!this.isShortList()?step11:step10}/>
                 </div>:""}
                 {!(!this.isShortList()?step11:step10)&&userID===0&&!(this.props.userSetup.stepsLeft)?

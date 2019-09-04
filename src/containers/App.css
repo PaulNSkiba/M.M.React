@@ -11,7 +11,23 @@
     margin : 15px 0;
   }
 }
-
+@media only screen and (max-width: 400px) {
+  .description, .description-main{
+    font-size: 0.7em;
+    margin: 5px 10%;
+  }
+  .addRef {
+    padding: 2px 0 2px;
+    font-size: 0.8em;
+  }
+  #markblank-1,#markblank-2,#markblank-3{
+    width: 130px;
+  }
+  .descrHeader > h4 {
+    font-size: 0.8em;
+    margin : 5px 0;
+  }
+}
 .App-logo {
   animation: App-logo-spin infinite 20s linear;
   height: 40vmin;
@@ -294,26 +310,6 @@ button.loggedbtn:hover{
   position: relative;
 }
 
-@media only screen and (max-width: 400px) {
-  .description, .description-main{
-    font-size: 0.7em;
-    margin: 5px 10%;
-  }
-  .addRef {
-    padding: 2px 0 2px;
-    font-size: 0.8em;
-  }
-  *{
-    /*font-size: 0.8em;*/
-  }
-  #markblank-1,#markblank-2,#markblank-3{
-    width: 130px;
-  }
-  .descrHeader > h4 {
-    font-size: 0.8em;
-    margin : 5px 0;
-  }
-}
 .moveButtons-enter {
    right : 100px;
 }
@@ -517,7 +513,6 @@ button.loggedbtn:hover{
   justify-content: space-between;
   align-items: center;
   width : 100%;
-  /*margin-right: 10%;*/
 }
 .navBlockEx{
   display: flex;

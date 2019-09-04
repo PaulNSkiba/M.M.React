@@ -8,18 +8,17 @@ import emailPropType from 'email-prop-type';
 import { ChatManager, TokenProvider } from '@pusher/chatkit-client'
 import arrow_down from '../../img/ARROW_DOWN.png'
 import arrow_up from '../../img/ARROW_UP.png'
-import { API_URL, BASE_HOST, WEBSOCKETPORT, LOCALPUSHERPWD, HOMEWORK_ADD_URL,
+import { API_URL, HOMEWORK_ADD_URL,
         instanceLocator, testToken, chatUserName } from '../../config/config'
 import {AddDay, arrOfWeekDays, dateDiff, toYYYYMMDD, instanceAxios, mapStateToProps, prepareMessageToFormat, echoClient, pusherClient} from '../../js/helpers'
 import addMsg from '../../img/addMsg.svg'
 import { Smile } from 'react-feather';
 import { Picker, emojiIndex } from 'emoji-mart';
+import { connect } from 'react-redux'
 // import Echo from 'laravel-echo'
 // import {Pusher} from 'pusher-js'
-import { connect } from 'react-redux'
 // import {Pusher} from 'pusher-js'
 // import { default as uniqid } from 'uniqid'
-
 import '../../css/colors.css';
 import './chat.css';
 
@@ -276,7 +275,10 @@ class Chat extends Component {
     initChatMessages=async ()=>{
         // console.log("initChatMessages", this.props.userSetup.localChatMessages, this.props.userSetup.classID)
         if (this.props.isnew) {
-            this.getChatMessages(this.props.userSetup.classID)
+            if (this.props.userSetup.classID)
+                return this.getChatMessages(this.props.userSetup.classID)
+            else
+                return []
         }
         else {
             return []

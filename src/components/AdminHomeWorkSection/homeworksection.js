@@ -11,7 +11,7 @@ import { Link } from 'react-router-dom';
 import MobileMenu from '../MobileMenu/mobilemenu'
 import LoginBlockLight from '../LoginBlockLight/loginblocklight'
 import edit_icon from '../../img/Edit-512s.png'
-import { HOMEWORK_ADD_URL } from '../../config/config'
+import { HOMEWORK_ADD_URL, defLang, arrLangs } from '../../config/config'
 import '../../containers/App.css'
 import './homeworksection.css'
 import ReactFlagsSelect from 'react-flags-select';
@@ -300,11 +300,11 @@ class HomeWorkSection extends Component {
     )
     langBlock=()=>{
         return <ReactFlagsSelect
-            defaultCountry={this.state.myCountryCode?this.state.myCountryCode:"GB"}
-            placeholder={getLangByCountry(this.state.myCountryCode)}
+            defaultCountry={localStorage.getItem("langCode")?localStorage.getItem("langCode"):defLang}
+            placeholder={getLangByCountry(localStorage.getItem("langCode"))}
             showSelectedLabel={false}
-            searchPlaceholder={this.props.userSetup.langLibrary?this.props.userSetup.langLibrary.lang:"GB"}
-            countries={["DE", "FR", "IT", "PL", "RU", "ES", "UA", "GB"]}
+            searchPlaceholder={this.props.userSetup.langLibrary?this.props.userSetup.langLibrary.lang:defLang}
+            countries={arrLangs}
             onSelect={this.onSelectLang}
             selectedSize={14}
             optionsSize={12}

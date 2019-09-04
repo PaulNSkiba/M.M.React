@@ -11,17 +11,20 @@ import {withRouter} from 'react-router-dom'
 import { Link } from 'react-router-dom';
 import '../../containers/App.css'
 import MobileMenu from '../MobileMenu/mobilemenu'
-import {mapStateToProps, langLibrary, getLangByCountry} from '../../js/helpers'
+import {mapStateToProps, getLangLibrary, getLangByCountry} from '../../js/helpers'
+import {defLang, arrLangs} from '../../config/config'
 import ReactFlagsSelect from 'react-flags-select';
 import 'react-flags-select/css/react-flags-select.css';
+
 
 class AdminPage extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            isMobile : window.screen.width < 400,
+            isMobile : this.props.userSetup.isMobile,//window.screen.width < 400,
         }
-        }
+        this.onSelectLang = this.onSelectLang.bind(this)
+}
     componentWillMount(){
         this.props.onStartLoading()
     }
@@ -49,13 +52,17 @@ class AdminPage extends Component {
         this.props.history.push('/')
         this.props.onUserLoggingOut(this.props.userSetup.token)
     }
+    onSelectLang=async countryCode=>{
+        this.props.onReduxUpdate("LANG_LIBRARY", getLangLibrary(countryCode))
+        localStorage.setItem("langCode", countryCode)
+    }
     langBlock=()=>{
         return <ReactFlagsSelect
-            defaultCountry={this.state.myCountryCode?this.state.myCountryCode:"GB"}
-            placeholder={getLangByCountry(this.state.myCountryCode)}
+            defaultCountry={localStorage.getItem("langCode")?localStorage.getItem("langCode"):defLang}
+            placeholder={getLangByCountry(localStorage.getItem("langCode"))}
             showSelectedLabel={false}
-            searchPlaceholder={this.props.userSetup.langLibrary?this.props.userSetup.langLibrary.lang:"GB"}
-            countries={["DE", "FR", "IT", "PL", "RU", "ES", "UA", "GB"]}
+            searchPlaceholder={this.props.userSetup.langLibrary?this.props.userSetup.langLibrary.lang:defLang}
+            countries={arrLangs}
             onSelect={this.onSelectLang}
             selectedSize={14}
             optionsSize={12}
@@ -64,7 +71,7 @@ class AdminPage extends Component {
     loginBlock=(userID, userName, langLibrary)=>{
         let {loading} = this.props.userSetup
         let {showLoginLight} = this.state
-        console.log("loginBlock", loading, userID)
+        // console.log("loginBlock", loading, userID)
         return <div className="logBtnsBlock">
             <div>
                 {!loading&&!userID?
@@ -80,14 +87,14 @@ class AdminPage extends Component {
             {this.langBlock()}
         </div>
     }
-    waitCursorBlock=()=>{
-        return  <div className="lds-ring">
-            <div></div>
-            <div></div>
-            <div></div>
-            <div></div>
-        </div>
-    }
+    // waitCursorBlock=()=>{
+    //     return  <div className="lds-ring">
+    //         <div></div>
+    //         <div></div>
+    //         <div></div>
+    //         <div></div>
+    //     </div>
+    // }
     render() {
         let {userID, userName, isadmin, loading, showLoginLight, langLibrary} = this.props.userSetup;
         let {isMobile} = this.state
@@ -95,7 +102,7 @@ class AdminPage extends Component {
         // return (<div>test</div>)
         return (
         <div className="AdminPage">
-            {loading?this.waitCursorBlock():null}
+            {loading?this.waitCursorBlock:null}
             {/*{ (window.location.href.slice(-3)==="/hw")?this.props.history.push('/hw'):null}*/}
             {/*{ (window.location.href.slice(-6)==="/admin")?this.props.history.push('/admin'):null}*/}
             <div className="navbar" style={userID===0?{"justifyContent":  "flex-end"}:{"justifyContent":  "space-between"}}>

@@ -4,7 +4,7 @@
 import React, { Component } from 'react';
 import { AUTH_URL, defLang, arrLangs } from '../../config/config'
 import { connect } from 'react-redux'
-import { toYYYYMMDD, instanceAxios, mapStateToProps, getLangByCountry, waitCursorBlock } from '../../js/helpers'
+import { toYYYYMMDD, instanceAxios, mapStateToProps, getLangByCountry, dateDiffHour } from '../../js/helpers'
 import LoginBlockLight from '../LoginBlockLight/loginblocklight'
 import '../../css/colors.css';
 import './adminpageworkflow.css'
@@ -243,7 +243,7 @@ class AdminPageWorkFlow extends Component {
     langBlock=()=>{
         return <ReactFlagsSelect
             defaultCountry={localStorage.getItem("langCode")?localStorage.getItem("langCode"):defLang}
-            placeholder={getLangByCountry(this.state.myCountryCode)}
+            placeholder={getLangByCountry(localStorage.getItem("langCode"))}
             showSelectedLabel={false}
             searchPlaceholder={this.props.userSetup.langLibrary?this.props.userSetup.langLibrary.lang:defLang}
             countries={arrLangs}
@@ -322,6 +322,7 @@ class AdminPageWorkFlow extends Component {
                                 item=>
                                     <div key={"row"+item.id} className={item.active?"mym-wf-workflow-row mym-wf-workflow-active":"mym-wf-workflow-row"} onDoubleClick={this.onDoubleItemDescrClick}>
                                         <div className={Number(item.wf_type)===4?"mym-wf-type mym-wf-type-error":Number(item.wf_type)===2?"mym-wf-type mym-wf-type-future":Number(item.wf_type)===1?"mym-wf-type mym-wf-type-nearest":"mym-wf-type"}>
+                                            {item.created_at!==item.updated_at?<span className={"mym-wf-modified"}>{'Updated-' + dateDiffHour(item.updated_at, new Date()) + 'ч: '}</span>:null}
                                             {Number(item.wf_type)===2?"На перспективу":(Number(item.wf_type)===1?"Ближайшая":(Number(item.wf_type)===4?"Ошибка":"Текущая"))}
                                         </div>
                                         <div className={Number(item.wf_status)===2?"mym-wf-workflow-rowno mym-wf-workflow-done":(Number(item.wf_status)===1?"mym-wf-workflow-rowno mym-wf-workflow-doing":"mym-wf-workflow-rowno mym-wf-workflow-plan")}>
@@ -330,6 +331,11 @@ class AdminPageWorkFlow extends Component {
                                         <div key={item.id} id={item.id} className={item.active?"mym-wf-workflow-item mym-wf-workflow-active":"mym-wf-workflow-item"} onClick={this.onItemClick}>
                                             <b>{`[${item.name}]`}</b>{item.wf_memo}
                                         </div>
+                                        {item.created_at!==item.updated_at?
+                                            <div className={"mym-wf-modified"}>
+                                                {dateDiffHour(item.created_at, item.updated_at) + 'ч'}
+                                            </div>:
+                                            null}
                                     </div>):null
                             }
                         </div>
