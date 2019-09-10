@@ -63,7 +63,7 @@ class UniversalTable extends Component {
                 style={{"width" : val.width, "paddingLeft" : "5px", "paddingRight" : "5px"}} key={index}>{val.name}</th>)}</tr>
     )
     onInputChange(text, id) {
-        console.log("onInputChange", text, id)
+        // console.log("onInputChange", text, id)
         this.currentEditedCellValue = text
         this.currentEditedCellId = id
         // console.log("onInputChange", e.target)
@@ -72,7 +72,7 @@ class UniversalTable extends Component {
     //     return email ? (verified ? "left-text verified" : "left-text verification") : "left-text"
     // }
     updateSource=(column, id, value, key)=>{
-        console.log("updateSource", column, id, value, key)
+        // console.log("updateSource", column, id, value, key)
         // return
         const {classNameOfTD} = this.props
         const {arrRows : rows, row : row_state, column : column_state, checkedMap} = this.state
@@ -181,7 +181,7 @@ class UniversalTable extends Component {
                                 }
                                 return item
                             })
-                            console.log('ALIASES_LIST', newarr)
+                            // console.log('ALIASES_LIST', newarr)
                             this.props.onReduxUpdate('ALIASES_LIST', newarr)
                             this.setState({ row : -1, column :-1, rows: this.createTableRows(newarr, this.onInputChange, isCheckBox, row_state, column_state, classNameOfTD, checkedMap)})
 
@@ -231,7 +231,7 @@ class UniversalTable extends Component {
         const {classNameOfTD} = this.props
         const {arrRows : rows, row : row_state, column : column_state, checkedMap} = this.state
 
-        console.log("onBlur", e.target, e.target.nodeName, e.target.innerHTML, e.target.getAttribute('id2'), e.target.value)
+        // console.log("onBlur", e.target, e.target.nodeName, e.target.innerHTML, e.target.getAttribute('id2'), e.target.value)
         if (true) {//(e.target.nodeName === "TD") {
             // let row = Number(e.target.id.split('#')[0]),
             //     column = Number(e.target.id.split('#')[1])
@@ -252,7 +252,7 @@ class UniversalTable extends Component {
         }
     }
     onInputKeyPress=(e)=>{
-        console.log('onInputKeyPress', e.target, e.target.id, e.target.value);
+        // console.log('onInputKeyPress', e.target, e.target.id, e.target.value);
         if (e.key === 'Enter') {
             const   column = Number(e.target.id.split('#')[1]),
                     id = Number(e.target.id.split('#')[2]),

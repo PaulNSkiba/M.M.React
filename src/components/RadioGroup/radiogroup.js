@@ -3,6 +3,8 @@
  */
 import React, { Component } from 'react';
 import './radiogroup.css'
+import { connect } from 'react-redux'
+import {mapStateToProps, getLangLibrary, getDefLangLibrary} from '../../js/helpers'
 
 class RadioGroup extends Component {
 
@@ -10,14 +12,6 @@ class RadioGroup extends Component {
         console.log("setValue", this.props.name, event.target.value);
         this.props.onclick(this.props.name, event.target.value)
     }
-
-// <div key={key}>
-// <input type="radio" value={elem.id} name="gender" defaultChecked/> {elem.alias}
-// </div>
-// :
-// <div key={key}>
-// <input type="radio" value={elem.id} name="gender"/> {elem.alias}
-// </div>
 
     getInput = (defelem, elem, name)=>
     {
@@ -43,11 +37,12 @@ class RadioGroup extends Component {
                 </div>
                 <div className="radioMap" onChange={this.setValue.bind(this)}>
                     {values.map((elem, key)=>this.getInput(defelem, elem, name))}
-                    {this.props.hasOwnProperty("addinput")?(<label>Задать: <input className="customInput" defaultValue={defelem} type="text" id="custominput"/></label>):""}
+                    {this.props.hasOwnProperty("addinput")?(<label>{this.props.userSetup.langLibrary.addSettings1_1} <input className="customInput" defaultValue={defelem} type="text" id="custominput"/></label>):""}
                 </div>
             </div>
 
         )
     }
 }
-export default RadioGroup
+
+export default connect(mapStateToProps)(RadioGroup)

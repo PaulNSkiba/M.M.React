@@ -3,14 +3,16 @@
  */
 /* eslint-disable */
 import React, { Component } from 'react';
+import { connect } from 'react-redux'
 import '../../css/colors.css';
 import './markblank.css'
+import {mapStateToProps, getLangLibrary, getDefLangLibrary} from '../../js/helpers'
+
+const classNames = (selected, withborder) =>
+    selected?"dropdown-main-0 selected " + (withborder?" withborder ":""):"dropdown-main-0 " + (withborder?" withborder ":"")
 
 class MarkBlank extends Component {
 
-    classNames(selected, withborder) {
-         return selected?"dropdown-main-0 selected " + (withborder?" withborder ":""):"dropdown-main-0 " + (withborder?" withborder ":"")
-    }
     onClick(e) {
         // console.log("onClick", e.target)
         // if (!(e.target.nodeName==="A"))
@@ -26,12 +28,13 @@ class MarkBlank extends Component {
     render() {
         // console.log("subjects",subjects, subjects())
         const {selected, nohover, kind, withborder} = this.props;
+        const {langLibrary} = this.props.userSetup
 
             switch (kind) {
                 case 1 :
                 return (
 
-                    <div id="markblank_twelve" className={this.classNames(selected, withborder)} onClick={this.onClick.bind(this)}>
+                    <div id="markblank_twelve" className={classNames(selected, withborder)} onClick={this.onClick.bind(this)}>
                         <div id="leftrect"></div>
                         <ul className={nohover?"nohover ul12":"ul12"}>
                             <div className="dropdown-content3">
@@ -64,7 +67,7 @@ class MarkBlank extends Component {
                             </div>
                             <div className="dropdown-content0">
                                 <ul className="marks0">
-                                    <li><a onClick={this.onClickA.bind(this)}>Стереть</a></li>
+                                    <li><a onClick={this.onClickA.bind(this)}>{langLibrary.toErase}</a></li>
                                 </ul>
                             </div>
                         </ul>
@@ -73,7 +76,7 @@ class MarkBlank extends Component {
                 break;
                 case 2 :
                     return (
-                        <div id="markblank_five" className={this.classNames(selected, withborder)} onClick={this.onClick.bind(this)}>
+                        <div id="markblank_five" className={classNames(selected, withborder)} onClick={this.onClick.bind(this)}>
                             <div id="leftrect"></div>
                             <ul className={nohover?"nohover":""}>
                                 <div className="dropdown-content3">
@@ -103,7 +106,7 @@ class MarkBlank extends Component {
                                 </div>
                                 <div className="dropdown-content0">
                                     <ul className="marks0">
-                                        <li><a onClick={this.onClickA.bind(this)}>Стереть</a></li>
+                                        <li><a onClick={this.onClickA.bind(this)}>{langLibrary.toErase}</a></li>
                                     </ul>
                                 </div>
                             </ul>
@@ -112,7 +115,7 @@ class MarkBlank extends Component {
                     break;
                 case 3 :
                     return (
-                        <div id="markblank_letters" className={this.classNames(selected, withborder)} onClick={this.onClick.bind(this)}>
+                        <div id="markblank_letters" className={classNames(selected, withborder)} onClick={this.onClick.bind(this)}>
                             <div id="leftrect"></div>
                             <ul className={nohover?"nohover":""}>
                                 <div className="dropdown-content3">
@@ -142,7 +145,7 @@ class MarkBlank extends Component {
                                 </div>
                                 <div className="dropdown-content0">
                                     <ul className="marks0">
-                                        <li><a onClick={this.onClickA.bind(this)}>Стереть</a></li>
+                                        <li><a onClick={this.onClickA.bind(this)}>{langLibrary.toErase}</a></li>
                                     </ul>
                                 </div>
                             </ul>
@@ -150,12 +153,11 @@ class MarkBlank extends Component {
                     )
                 break;
                 default :
-                    return (
-                        <div></div>
-                    )
+                    return null
             }
     }
 }
 
-export default MarkBlank
+export default connect(mapStateToProps)(MarkBlank)
+
 /* eslint-disable */

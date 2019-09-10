@@ -62,8 +62,7 @@ class TitleBlock extends Component {
                             </div>
                             :""}
                     </div>
-
-                    <div className="block-0-1" onClick={onclick} id={step}><h4 id={step}>{
+                   <div className="block-0-1" onClick={onclick} id={step}><h4 id={step}>{
                         this.props.hasOwnProperty("isMarkSpeed")&&this.props.isMarkSpeed?
                                 <div className="markDiv">
                                     <div className="markTopLabel">{langLibrary.top}</div>
@@ -72,12 +71,10 @@ class TitleBlock extends Component {
                                 </div>
                             :caption
                     }</h4></div>
-
-                    <div className="block-0-2" onClick={onclick}>
+                   <div className="block-0-2" onClick={onclick}>
                         <img id={step} src={hide?arrow_down:arrow_up} alt={hide?"Раскрыть":"Свернуть"}/>
                         {/*<a href="#"><span></span></a>*/}
                     </div>
-
                 </div>
             </div>
         )

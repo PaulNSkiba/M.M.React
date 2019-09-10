@@ -56,6 +56,9 @@ class MessageList extends Component {
         // console.log("onMessageDblClick", "e.target.id:", e.target.id, "key", key, "this.state.editKey", this.state.editKey)
         if (Number(key)!==this.state.editKey) this.setState({editKey : Number(key)})
     }
+    onAddHomeworkMsgClick=e=>{
+
+    }
     render() {
         const ROOT_CSS = css({
             borderRadius: "10px",
@@ -112,7 +115,7 @@ class MessageList extends Component {
                                         </textarea>:null}
                                         {this.state.editKey === i ?
                                             <div className="mym-msg-block-buttons">
-                                                <div id={"btn-hw-"+msg.id} onClick={this.onAddHomwworkMsgClick} className="mym-msg-block-hw">Домашка</div>
+                                                <div id={"btn-hw-"+msg.id} onClick={this.onAddHomeworkMsgClick} className="mym-msg-block-hw">Домашка</div>
                                                 <div id={"btn-save-"+msg.id} onClick={this.onSaveMsgClick} className="mym-msg-block-save">Сохранить</div>
                                                 <div id={"btn-cancel-"+msg.id} onClick={this.onCancelMsgClick} className="mym-msg-block-cancel">Отмена </div >
                                                 <div id={"btn-del-"+msg.id} onClick={this.onDelMsgClick} className="mym-msg-block-delete">Удалить</div>

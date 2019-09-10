@@ -80,6 +80,7 @@ class App extends Component {
         this.langBlock = this.langBlock.bind(this)
         this.loginBlock = this.loginBlock.bind(this)
         this.initLangLibrary = this.initLangLibrary.bind(this)
+        this.clickClassButton = this.clickClassButton.bind(this)
     }
 
     componentWillUnmount() {
@@ -361,17 +362,19 @@ class App extends Component {
             })
         }
     }
-  buttonClick(event) {
+  clickClassButton(event) {
       const classNumber = Number(event.target.id.toString().replace("btn-class-",""));
-      let {userID} = this.props.userSetup;
-      let json = `{"class_number":${classNumber}}`;
-      let data = JSON.parse(json);
-      this.props.onSetSetup(data, userID, classNumber);
+      let {classNumber : classNumberOriginal} = this.props.userSetup;
+      if (classNumber!==classNumberOriginal) {
+          let json = `{"class_number":${classNumber}}`;
+          let data = JSON.parse(json);
+          this.props.onSetSetup(data, this.props.userSetup);
+      }
     }
 
   changeState(name, value) {
       let json, data;
-      let {pupilCount, students : studs, userID, subjects_list, selectedSubjects, classID} = this.props.userSetup;
+      let {pupilCount, students : studs, userID, subjects_list, selectedSubjects, classID, langLibrary} = this.props.userSetup;
       switch (name) {
             case 'classNumber' :
                json = `{"class_number":${value}}`; break;
@@ -390,14 +393,17 @@ class App extends Component {
                     json = `{"students":${JSON.stringify(arr)}}`;
                     data = JSON.parse(json);
                     console.log("PupilCountArr", arr, data);
-                    this.props.onSetSetup(data, userID, classID) // curClass
+                    this.props.onSetSetup(data, this.props.userSetup) // curClass
                 }
                 json = `{"pupil_count":${value}}`; break;
             case 'currentYear' :
                 json = `{"year_name":"${value.toString().replace(/[/]/g, '\\/')}"}`; break;
               case "selectedSubj" :
-                  // console.log("selectedSubj", value);
-                  value.push(this.props.userSetup.subjects_list.filter(val=>(val.subj_key===value[0]))[0].id)
+                  console.log("selectedSubj", value,
+                        subjects_list.filter(val=>(val.subj_key===value[0])),
+                        subjects_list, value[0]
+                  );
+                  value.push(subjects_list.filter(val=>(val.subj_key===value[0]))[0].id)
                   // console.log("SELECTED_SUBJ", this.props.userSetup.subjects_list.filter(val=>(val.subj_key===value[0])), value);
                   json = `{"selected_subject":"${value}"}`; break;
               case "subjCount" :
@@ -408,14 +414,14 @@ class App extends Component {
                   json = `{"selected_subjects":[${value.map(val=>`{"subj_key":"${val.subj_key}","subj_name_ua":"${val.subj_name_ua}"}`)}]}`;
                   data = JSON.parse(json);
                   // console.log("selected_subjects", value, json);
-                  this.props.onSetSetup(data, userID, classID); // curClass
+                  this.props.onSetSetup(data, this.props.userSetup); // curClass
                   json = `{"subjects_count":"${subjects_list.length +'/'+ value.length}"}`; break;
               case "markBlank" :
                   let   alias = "", pk = 0; //id = value;
                   switch (value) {
-                      case "markblank_twelve" : alias = "Двенадцатибальная"; pk = 1; break;
-                      case "markblank_five" : alias = "Пятибальная"; pk = 2; break;
-                      case "markblank_letters" : alias = "A-E/F"; pk = 3; break;
+                      case "markblank_twelve" : alias = `${langLibrary.markName12}`; pk = 1; break;
+                      case "markblank_five" : alias = `${langLibrary.markName5}`; pk = 2; break;
+                      case "markblank_letters" : alias = `${langLibrary.markNameAD}`; pk = 3; break;
                       default: break;
                   }
                   let key1, key2, key3;
@@ -439,7 +445,7 @@ class App extends Component {
                 break;
         }
       data = JSON.parse(json);
-      this.props.onSetSetup(data, userID, classID); //curClass
+      this.props.onSetSetup(data, this.props.userSetup); //curClass
    }
 
    refreshSteps(steps, keyValue) {
@@ -652,19 +658,39 @@ class App extends Component {
                     <div></div>
                 </div>
     }
+    markBlankAlias=(pk, langLibrary)=>{
+        switch(pk) {
+            case 1 :
+                return langLibrary.markName12
+                break;
+            case 2 :
+                return langLibrary.markName5
+                break;
+            case 3 :
+                return langLibrary.markNameAD
+                break;
+            default :
+                return langLibrary.markNameAD
+                break;
+        }
+    }
     render() {
 
 
         let {userID, userName, pupilCount, currentYear, subjCount, currentPeriodDateCount, markBlank,
             direction, titlekind, withoutholidays, classNumber, selectedSubjects, selectedSubj,
-            subjects_list, studentId, studentName, classID, isadmin, loading, langLibrary} = this.props.userSetup;
+            subjects_list, studentId, studentName, classID, isadmin, loading} = this.props.userSetup;
 
         // console.log("LANGLIBRARY", langLibrary, this.state.myCountryCode)
 
         // let langLibrary = this.state.langLibrary
-
-        // console.log("LANGLIBRARY_AFTER", langLibrary, this.state.myCountryCode)
-
+        // console.log("LANGLIBRARY_AFTER", this.props.userSetup.langLibrary)
+        let langLibrary = getDefLangLibrary()
+        if (this.props.userSetup.langLibrary) {
+            if (Object.keys(this.props.userSetup.langLibrary).length) {
+                langLibrary = this.props.userSetup.langLibrary
+            }
+        }
         let {isMobile} = this.state;
         let {step1,step2,step3,step4,step5,step6,step7,step8,step9,step10,step11} = this.state.steps;
 
@@ -692,7 +718,11 @@ class App extends Component {
                 <div className="navbar" style={userID===0?{"justifyContent":  "flex-end"}:{"justifyContent":  "space-between"}}>
                     <div className="navBlock">
                         <div className="navBlockEx">
-                        {userID?<Menu className="menuTop" userid={userID} isadmin={isadmin} withtomain={true}/>:null}
+                        {userID?<Menu className="menuTop"
+                                      userid={userID}
+                                      isadmin={isadmin}
+                                      withtomain={true}
+                                      langlibrary={langLibrary}/>:null}
                         <div className="myTitle"><h3><Link to="/">{getDefLangLibrary().siteName}</Link></h3></div>
                         {this.loginBlock(userID, userName, getDefLangLibrary())}
                         </div>
@@ -702,7 +732,7 @@ class App extends Component {
             </div>);
 
 
-        // console.log("this.props.USERSETUP: ", this.props.userSetup);
+        console.log("this.props.USERSETUP: ", this.props.userSetup);
         // return (<div>111</div>)
 
         let descrFirst = `${langLibrary.introBegin} ${this.isShortList()?"7":"10"} ${langLibrary.introEnd}:`
@@ -725,7 +755,12 @@ class App extends Component {
             <div className="navbar" style={userID===0?{"justifyContent":  "flex-end"}:{"justifyContent":  "space-between"}}>
                 <div className="navBlock">
                     <div className="navBlockEx">
-                    {userID>0&&<Menu className="menuTop" userid={userID} isadmin={isadmin} withtomain={true}/>}
+                    {userID>0&&<Menu className="menuTop"
+                                     userid={userID}
+                                     isadmin={isadmin}
+                                     withtomain={true}
+                                     langlibrary={langLibrary}
+                    />}
                     <div className="myTitle"><h3><Link to="/">{langLibrary.siteName}</Link></h3></div>
                     {this.loginBlock(userID, userName, langLibrary)}
                     </div>
@@ -761,8 +796,19 @@ class App extends Component {
                         <div className="navBlockEx">
                         <div className="myTitle"><h3><Link to="/">{langLibrary.siteName}</Link></h3></div>
                         {isMobile?
-                            <MobileMenu userID={userID} userName={userName} isadmin={isadmin} withtomain={this.props.withtomain} userLogin={this.userLogin.bind(this)} userLogout={this.userLogout}/>:
-                            userID>0 && <Menu className="menuTop" userid={userID} isadmin={isadmin}/>
+                            <MobileMenu userID={userID}
+                                        userName={userName}
+                                        isadmin={isadmin}
+                                        withtomain={this.props.withtomain}
+                                        userLogin={this.userLogin.bind(this)}
+                                        userLogout={this.userLogout}
+                                        langlibrary={langLibrary}
+                            />:
+                            userID>0 && <Menu className="menuTop"
+                                              userid={userID}
+                                              isadmin={isadmin}
+                                              langlibrary={langLibrary}
+                            />
                         }
                         {(window.location.href.slice(-3)==="/r3"&&userID===0)?
                             this.fireUserV3Login(window.location.href):""}
@@ -858,9 +904,9 @@ class App extends Component {
 
                     {!step1&&!this.props.user.logging&&studentId === 0?
                     <div className="block-1">
-                    <ClassList classtype="primary-school school" click={this.buttonClick.bind(this)} classnumber={classNumber} classlabel={`${langLibrary.schoolPrimary} `} buttons={[1, 2, 3, 4]}/>
-                    <ClassList classtype="secondary-school school" click={this.buttonClick.bind(this)} classnumber={classNumber} classlabel={`${langLibrary.schoolMain} `} buttons={[5, 6, 7, 8, 9]}/>
-                    <ClassList classtype="high-school school" click={this.buttonClick.bind(this)} classnumber={classNumber} classlabel={`${langLibrary.schoolHigh} `} buttons={[10, 11]}/>
+                    <ClassList classtype="primary-school school" click={this.clickClassButton} classnumber={classNumber} classlabel={`${langLibrary.schoolPrimary} `} buttons={[1, 2, 3, 4]}/>
+                    <ClassList classtype="secondary-school school" click={this.clickClassButton} classnumber={classNumber} classlabel={`${langLibrary.schoolMain} `} buttons={[5, 6, 7, 8, 9]}/>
+                    <ClassList classtype="high-school school" click={this.clickClassButton} classnumber={classNumber} classlabel={`${langLibrary.schoolHigh} `} buttons={[10, 11]}/>
                     </div>
                     :""}
 
@@ -927,7 +973,8 @@ class App extends Component {
                     :""}
                 {studentId === 0 ?
                     <div>
-                        <TitleBlock title={!isMobile?`${langLibrary.step} ${!this.isShortList()?6:5}${langLibrary.step5Descr}`:`${!this.isShortList()?6:5}${langLibrary.step5DescrMob}`} caption={!isMobile?markBlank.alias:(markBlank.alias.length?langLibrary.yes:"")}
+                        <TitleBlock title={!isMobile?`${langLibrary.step} ${!this.isShortList()?6:5}${langLibrary.step5Descr}`:`${!this.isShortList()?6:5}${langLibrary.step5DescrMob}`}
+                                    caption={!isMobile?this.markBlankAlias(markBlank.pk, langLibrary):(markBlank.alias.length?langLibrary.yes:"")}
                                     done={!(markBlank.alias === "")} onclick={this.stepClick.bind(this)} step={!this.isShortList()?6:5}
                                     hide={!this.isShortList()?step6:step5}/>
                     </div>
@@ -949,10 +996,10 @@ class App extends Component {
                 </div>
                 {!(!this.isShortList()?step7:step6)?
                     <div className="additionalSection">
-                        <div><RadioGroup onclick={this.changeState.bind(this)} title="Зафиксировать выбираемый период в днях:" name={"rangedays"} defelem={currentPeriodDateCount} values={[{id:5, alias:5},{id:10, alias:10},{id:14, alias:14},{id:20, alias:20}]} addinput={true}/></div>
-                        {studentId===0?<div><RadioGroup onclick={this.changeState.bind(this)} title="Выводить в столбце наименования учеников:" name={"listnames"} defelem={titlekind} values={[{id:"NAME", alias:"ИМЯ"},{id:"NICK", alias:"НИК"}, {id:"EMAIL", alias:"EMAIL"}]}/></div>:""}
-                        {studentId===0?<div><RadioGroup onclick={this.changeState.bind(this)} title="Переходить автоматически на следующую позицию при вводе оценок:" name={"rangedirection"} defelem={direction} values={[{id:"UPDOWN", alias:"СВЕРХУ ВНИЗ"},{id:"LEFTRIGHT", alias:"СЛЕВА НАПРАВО"}]}/></div>:""}
-                        <div><Checkbox onclick={this.changeState.bind(this)} bold={true} name={"withoutholidays"} defelem={withoutholidays} label=" В перечне дат для ввода оценок убрать выходные дни"/></div>
+                        <div><RadioGroup onclick={this.changeState.bind(this)} title={langLibrary.addSettings1} name={"rangedays"} defelem={currentPeriodDateCount} values={[{id:5, alias:5},{id:10, alias:10},{id:14, alias:14},{id:20, alias:20}]} addinput={true}/></div>
+                        {studentId===0?<div><RadioGroup onclick={this.changeState.bind(this)} title={langLibrary.addSettings2} name={"listnames"} defelem={titlekind} values={[{id:"NAME", alias:`${langLibrary.wordName}`},{id:"NICK", alias:`${langLibrary.wordNick}`}, {id:"EMAIL", alias:"EMAIL"}]}/></div>:""}
+                        {studentId===0?<div><RadioGroup onclick={this.changeState.bind(this)} title={langLibrary.addSettins3} name={"rangedirection"} defelem={direction} values={[{id:"UPDOWN", alias:`${langLibrary.directionUpDown}`},{id:"LEFTRIGHT", alias:`${langLibrary.directionLeftRight}`}]}/></div>:""}
+                        <div><Checkbox onclick={this.changeState.bind(this)} bold={true} name={"withoutholidays"} defelem={withoutholidays} label={` ${langLibrary.addSettings4}`}/></div>
                         {studentId>0&&<EmailList studentID={studentId}  studentName={studentName}  userID={userID}/>}
                     </div>
                     :""}
@@ -1046,7 +1093,7 @@ class App extends Component {
                 {!(!this.isShortList()?step11:step10)&&userID===0&&!(this.props.userSetup.stepsLeft)?
                     <div>
                         <LoginBlock pupilcount = {pupilCount} usersetup={this.props.userSetup}
-                                    changestate={this.changeState} onsetup={this.props.onSetSetup}/>
+                                    changestate={this.changeState} /*onsetup={this.props.onSetSetup}*//>
                     </div>:""}
 
                 {/*{this.props.userSetup.isadmin?*/}
@@ -1081,7 +1128,6 @@ class App extends Component {
                 </div>
                 {/*:""}*/}
 
-                {/*{this.state.displayChat?*/}
 
                     <Chat
                           isnew = {false} updatemessage={this.updateMessages}
@@ -1089,19 +1135,19 @@ class App extends Component {
                           chatroomID={this.props.userSetup.classObj.chatroom_id}
                           messages={this.state.chatMessages}
                           subjs={selectedSubjects} btnclose={()=>{this.setState({displayChat:!this.state.displayChat})}}
-                          display={this.state.displayChat} newmessage={this.newChatMessage}
-                    />
-                {/* :""} */}
-                {/*{this.state.displayNewChat?*/}
+                          display={this.state.displayChat} newmessage={this.newChatMessage}/>
+
+
                     <Chat
                           isnew = {true} updatemessage={this.updateMessages}
                           session_id={this.props.userSetup.chatSessionID} homeworkarray={this.props.userSetup.homework}
                           chatroomID={this.props.userSetup.classObj.chatroom_id}
                           messages={this.state.chatMessages}
                           subjs={selectedSubjects} btnclose={()=>{this.setState({displayNewChat:!this.state.displayNewChat})}}
-                          display={this.state.displayNewChat} newmessage={this.newChatMessage}
-                    />
-                {/*  :""}*/}
+                          display={this.state.displayNewChat} newmessage={this.newChatMessage}/>
+
+
+
 
             </div>
 
@@ -1117,41 +1163,52 @@ class App extends Component {
 }
 
 const mapDispatchToProps = dispatch => {
-    // console.log("mapDispatchToProps", this.props)
-    // console.log("mapDispatchToProps", dispatch)
-    // let {userSetup} = this.props
     return ({
         // onInitState : () => dispatch(initState),
-        onSetSetup: (data, userID, classNumber) => {
-            // console.log("onSetSetup", data, userID)
-            const asyncSetSetup = (data, userID, classNumber) =>{
+        onSetSetup: (data, userSetup) => {
+            const asyncSetSetup = (data, userSetup) =>{
                  return dispatch => {
-                    // let responsedata = []
                     // console.log('UPDATE_SETUP_LOCALLY', data, Object.keys(data)[0], Object.values(data)[0])
                     dispatch({type: 'UPDATE_SETUP_LOCALLY', payload: data})
                     if (Object.keys(data)[0]==="class_number") {
-                        // dispatch({type: 'UPDATE_SETUP_LOCALLY', payload: data})
-                        let postdata = JSON.parse(`{"subjects_list":"${Object.values(data)[0]}"}`);
                         document.body.style.cursor = 'progress';
-                        instanceAxios().get(SUBJECTS_GET_URL+'/'+Object.values(data)[0], postdata)
+
+                        instanceAxios().get(SUBJECTS_GET_URL + '/' + Object.values(data)[0])
                             .then(response => {
                                 // let responsedata = response.data;
+                                console.log("CLASS_NUMBER", response.data)
                                 dispatch({type: 'UPDATE_SETUP_LOCALLY_SUBJLIST', payload: response.data})
-                                let arr = response.data.map(value=>value.subj_key);//`{"subj_id": ${value.subj_id}}`
-                                let postdata = `{"subjects_list":"${arr}"}`;
-                                userID&&instanceAxios().post(UPDATESETUP_URL + '/' + userID, postdata)
+                                dispatch({type: 'UPDATE_SETUP_LOCALLY_SELECTEDSUBJECTS', payload: response.data})
+                                dispatch({type: 'UPDATE_SETUP_LOCALLY_SELECTEDSUBJECT', payload: response.data[0]})
+
+                                let arr = response.data.map(value=>value.subj_key);
+                                let postdata = `{"subjects_list":"${arr}", {"selected_subjects":"${arr}"}`;
+                                if (userSetup.userID) {
+                                    instanceAxios().post(UPDATESETUP_URL + '/' + userSetup.userID, postdata)
+                                        .then(response=>{
+                                            console.log('UPDATE_SETUP_SUCCESSFULLY_subjects_list', response.data, userSetup.userID);
+                                        })
+                                        .catch(response => {
+                                            console.log('UPDATE_SETUP_FAILED_subjects_list', response);
+                                            // dispatch({type: 'UPDATE_SETUP_FAILED', payload: response.data})
+                                        })
+                                }
+                                console.log("userSetup.isadmin", userSetup.isadmin)
+                                // ToDO: Проставим перечень предметов + для всех студентов (будем делать это на стороне сервера)
+                                // ToDO: Выберем все предметы + для всех студентов (будем делать это на стороне сервера)
+                                // ToDO: Предметом укажем первый + для всех студентов (будем делать это на стороне сервера)
+
+                                if (userSetup.userID&&userSetup.isadmin > 0)
+                                instanceAxios().get(API_URL + 'class/' + userSetup.classID + '/'+Object.keys(data)[0]+'/'+Object.values(data)[0])
                                     .then(response=>{
-                                        // console.log('UPDATE_SETUP_SUCCESSFULLY_subjects_list', response.data, userID);
-                                    })
+                                        console.log("GROUP_UPDATE")
+                                     })
                                     .catch(response => {
-                                        // console.log('UPDATE_SETUP_FAILED_subjects_list', response);
-                                        // dispatch({type: 'UPDATE_SETUP_FAILED', payload: response.data})
-                                        // Список ошибок в отклике...
+                                        console.log("GROUP_UPDATE_ERROR")
                                     })
 
-                                let json = `{"subjects_count":"${response.data.length+"/0"}"}`;
-                                let postjson = JSON.parse(json);
-                                dispatch({type: 'UPDATE_SETUP_LOCALLY', payload: postjson});
+                                let json = `{"subjects_count":"${response.data.length+"/"+response.data.length}"}`;
+                                dispatch({type: 'UPDATE_SETUP_LOCALLY', payload: JSON.parse(json)});
                                 document.body.style.cursor = 'default';
                             })
                             .catch(response => {
@@ -1160,7 +1217,7 @@ const mapDispatchToProps = dispatch => {
                                 // Список ошибок в отклике...
                             })
                     }
-                    if (userID) {
+                    if (userSetup.userID) {
                         if (Object.keys(data)[0]==="selected_subjects") {
                             // console.log("SELECTED_SUBJECTS", data, Object.values(data)[0], Object.values(data)[0].map(val=>val.subj_key), Object.values(data)[0].map(val=>val.subj_key).join())
                             // console.log(data)
@@ -1168,10 +1225,8 @@ const mapDispatchToProps = dispatch => {
                             data = JSON.parse(json);
                             // return
                         }
-
                         if (Object.keys(data)[0]==="students") {
-                            // console.log("STUDENTS_GET_URL", userID, data, JSON.stringify(data))
-                            instanceAxios().post(STUDENTS_GET_URL + '/' + userID + '/class/' + classNumber, JSON.stringify(data))
+                            instanceAxios().post(STUDENTS_GET_URL + '/' + userSetup.userID + '/class/' + userSetup.classID, JSON.stringify(data))
                                 .then(response => {
                                     // console.log('UPDATE_STUDENTS_REMOTE', response.data)
                                     dispatch({type: 'UPDATE_STUDENTS_REMOTE', payload: response.data})
@@ -1182,12 +1237,10 @@ const mapDispatchToProps = dispatch => {
                                 })
                         }
                         else {
-                            // console.log("UPDATESETUP_URL", userID, data, JSON.stringify(data))
-                            instanceAxios().post(UPDATESETUP_URL + '/' + userID, data)
+                            instanceAxios().post(UPDATESETUP_URL + '/' + userSetup.userID, data)
                                 .then(response => {
                                     // console.log(response, response.data, userID);
                                     dispatch({type: 'UPDATE_SETUP_REMOTE', payload: response.data})
-
                                 })
                                 .catch(response => {
                                     // console.log(response);
@@ -1199,7 +1252,7 @@ const mapDispatchToProps = dispatch => {
                 }
             }
 
-            dispatch(asyncSetSetup(data, userID, classNumber))
+            dispatch(asyncSetSetup(data, userSetup))
         },
         onUserLogging : (name, pwd, provider, provider_id, langLibrary) =>{
                 dispatch({type: 'APP_LOADING'})

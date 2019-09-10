@@ -84,49 +84,95 @@ export function userSetupReducer(state = initialState(true), action) {
             }
         }
         case 'UPDATE_SETUP_LOCALLY' : {
-            console.log('UPDATE_SETUP_LOCALLY', Object.keys(action.payload)[0], Object.values(action.payload)[0], Object.values(action.payload)[0][0])
-            // if (Object.keys(action.payload)[0]==='students') {
-            //     console.log(Object.values(action.payload)[0].map(value=>JSON.parse(JSON.stringify(value))))
-            // }
+            console.log('UPDATE_SETUP_LOCALLY', Object.keys(action.payload)[0], Object.values(action.payload)[0])
+
             switch(Object.keys(action.payload)[0]) {
                 case "year_name":
-                    return{...state, currentYear: Object.values(action.payload)[0]};
+                    saveToLocalStorageOnDate("userSetup",
+                        JSON.stringify({...state, currentYear: Object.values(action.payload)[0]}))
+                    return {...state, currentYear: Object.values(action.payload)[0]};
                 case "pupil_count":
-                    return{...state, pupilCount: Object.values(action.payload)[0]};
+                    saveToLocalStorageOnDate("userSetup",
+                        JSON.stringify({...state, pupilCount: Object.values(action.payload)[0]}))
+                    return {...state, pupilCount: Object.values(action.payload)[0]};
                 case "class_number":
-                    return{...state,    curClass: Object.values(action.payload)[0],
+                    saveToLocalStorageOnDate("userSetup",
+                        JSON.stringify({...state,
+                            curClass: Object.values(action.payload)[0],
+                            classNumber : Object.values(action.payload)[0],
+                            selectedSubjects : []}))
+                    return {...state,   curClass: Object.values(action.payload)[0],
                                         classNumber : Object.values(action.payload)[0],
                                         selectedSubjects : []};
                 case "subjects_count" :
-                    return{...state, subjCount: Object.values(action.payload)[0]};
+                    saveToLocalStorageOnDate("userSetup",
+                        JSON.stringify({...state, subjCount: Object.values(action.payload)[0]}))
+                    return {...state, subjCount: Object.values(action.payload)[0]};
                 case "selected_subject" :
                     let arr = Object.values(action.payload)[0].split(",");
-                    return{...state, selectedSubj: JSON.parse(`{"id":${arr[2]},"subj_key":"${arr[0]}","subj_name_ua":"${arr[1]}"}`)};
+                    saveToLocalStorageOnDate("userSetup",
+                        JSON.stringify({...state, selectedSubj: JSON.parse(`{"id":${arr[2]},
+                                                                "subj_key":"${arr[0]}",
+                                                                "subj_name_ua":"${arr[1]}"}`)}))
+                    return {...state, selectedSubj: JSON.parse(`{"id":${arr[2]},
+                                                                "subj_key":"${arr[0]}",
+                                                                "subj_name_ua":"${arr[1]}"}`)};
                 case "selected_subjects" :
-                    return{...state, selectedSubjects: Object.values(action.payload)[0]};
+                    saveToLocalStorageOnDate("userSetup",
+                        JSON.stringify({...state, selectedSubjects: Object.values(action.payload)[0]}))
+                    return {...state, selectedSubjects: Object.values(action.payload)[0]};
                 case "markblank_alias" :
-                    return{...state, markBlank:{alias: Object.values(action.payload)[0]}};
+                    saveToLocalStorageOnDate("userSetup",
+                        JSON.stringify({...state, markBlank:{alias: Object.values(action.payload)[0]}}))
+                    return {...state, markBlank:{alias: Object.values(action.payload)[0]}};
                 case "markblank_id" :
-                    return{...state, markBlank:{id: Object.values(action.payload)[0]}};
+                    saveToLocalStorageOnDate("userSetup",
+                        JSON.stringify({...state, markBlank:{id: Object.values(action.payload)[0]}}))
+                    return {...state, markBlank:{id: Object.values(action.payload)[0]}};
                 case "selected_marker" :
-                    return{...state, markBlank:{pk: Object.values(action.payload)[0]}};
+                    saveToLocalStorageOnDate("userSetup",
+                        JSON.stringify({...state, markBlank:{pk: Object.values(action.payload)[0]}}))
+                    return {...state, markBlank:{pk: Object.values(action.payload)[0]}};
                 case "markblank" :
-                    return{...state, markBlank:{id: Object.values(action.payload)[0][0].markblank_id,  alias: Object.values(action.payload)[0][1].markblank_alias, pk: Object.values(action.payload)[0][2].selected_marker}}
+                    saveToLocalStorageOnDate("userSetup",
+                        JSON.stringify({...state, markBlank:{id: Object.values(action.payload)[0][0].markblank_id,
+                            alias: Object.values(action.payload)[0][1].markblank_alias,
+                            pk: Object.values(action.payload)[0][2].selected_marker}}))
+                    return {...state, markBlank:{id: Object.values(action.payload)[0][0].markblank_id,
+                                                 alias: Object.values(action.payload)[0][1].markblank_alias,
+                                                 pk: Object.values(action.payload)[0][2].selected_marker}}
                 case "students" :
-                    return{...state, students: Object.values(action.payload)[0]};
+                    saveToLocalStorageOnDate("userSetup",
+                        JSON.stringify({...state, students: Object.values(action.payload)[0]}))
+                    return {...state, students: Object.values(action.payload)[0]};
                 case "titlekind" :
-                    return{...state, titlekind: Object.values(action.payload)[0]};
+                    saveToLocalStorageOnDate("userSetup",
+                        JSON.stringify({...state, titlekind: Object.values(action.payload)[0]}))
+                    return {...state, titlekind: Object.values(action.payload)[0]};
                 case "perioddayscount" :
-                    return{...state, currentPeriodDateCount: Object.values(action.payload)[0]};
+                    saveToLocalStorageOnDate("userSetup",
+                        JSON.stringify({...state, currentPeriodDateCount: Object.values(action.payload)[0]}))
+                    return {...state, currentPeriodDateCount: Object.values(action.payload)[0]};
                 case "direction" :
-                    return{...state, direction: Object.values(action.payload)[0]};
+                    saveToLocalStorageOnDate("userSetup",
+                        JSON.stringify({...state, direction: Object.values(action.payload)[0]}))
+                    return {...state, direction: Object.values(action.payload)[0]};
                 case "withoutholidays" :
-                    return{...state, withoutholidays: Object.values(action.payload)[0]};
+                    saveToLocalStorageOnDate("userSetup",
+                        JSON.stringify({...state, withoutholidays: Object.values(action.payload)[0]}))
+                    return {...state, withoutholidays: Object.values(action.payload)[0]};
                 default :
                     return state
-            }}
+            }
+        }
         case 'UPDATE_SETUP_LOCALLY_SUBJLIST' : {
             return{...state, subjects_list: action.payload}
+        }
+        case 'UPDATE_SETUP_LOCALLY_SELECTEDSUBJECTS' : {
+            return{...state, selectedSubjects: action.payload}
+        }
+        case 'UPDATE_SETUP_LOCALLY_SELECTEDSUBJECT' : {
+            return{...state, selectedSubj: action.payload}
         }
         case 'UPDATE_SETUP_LOCALLY_SUBJCOUNT' : {
             return{...state, subjCount: action.payload}

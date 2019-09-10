@@ -223,7 +223,7 @@ class LoginBlock extends Component {
     changeState(name, value, userID, classID) {
         // let {curClass} = this.state
         let json, data, arr=[];
-        let {students : studs, subjects_list, selectedSubjects} = this.props.usersetup;
+        let {students : studs, subjects_list, selectedSubjects, langLibrary} = this.props.usersetup;
         console.log("changeState", name, value, userID)
         switch (name) {
             // case 'userId' : { this.setState({ userID : userID }); break;}
@@ -300,9 +300,9 @@ class LoginBlock extends Component {
                 }
                 else
                 switch (value) {
-                    case "markblank_twelve" : alias = "Двенадцатибальная"; pk = 1; break;
-                    case "markblank_five" : alias = "Пятибальная"; pk = 2; break;
-                    case "markblank_letters" : alias = "A-E/F"; pk = 3; break;
+                    case "markblank_twelve" : alias = `${langLibrary.markName12}`; pk = 1; break;
+                    case "markblank_five" : alias = `${langLibrary.markName5}`; pk = 2; break;
+                    case "markblank_letters" : alias = `${langLibrary.markNameAD}`; pk = 3; break;
                     default: break;
                 }
                 let key1, key2, key3;

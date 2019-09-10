@@ -119,6 +119,12 @@ class Chat extends Component {
         console.log('websocket', echo, channelName)
         if (chatSSL)
         echo.private(channelName)
+            .listen('ChatMessageSSLHomework', (e) => {
+                console.log("FILTER-SSL-HOMEWORK")
+            })
+            .listen('ChatMessageSSLUpdated', (e) => {
+                console.log("FILTER-SSL-UPDATED")
+            })
             .listen('ChatMessageSSL', (e) => {
                 console.log("FILTER-SSL")
                 let msg = prepareMessageToFormat(e.message), msgorig = e.message, isSideMsg = true
@@ -666,14 +672,13 @@ class Chat extends Component {
                                     }}
                         />
                     </div>
-
-                    // <NimblePicker set='messenger' data={data} />
                     ) : null}
 
                 <div className={this.props.isnew?"msg-title-new":"msg-title"} onClick={this.props.btnclose}>
                     <div>{this.state.isServiceChat?"My.Marks CHAT: Вопрос разработчику":"My.Marks CHAT"}</div>
                     <div className="btn-close-chat" onClick={this.props.btnclose}>X</div>
                 </div>
+
                 {this.props.userSetup.classID?<div className="service-plus" onClick={()=>{this.setState({servicePlus : !this.state.servicePlus})}}>{this.state.servicePlus?"+":"-"} Вопрос разработчику</div>:""}
                 {!this.roomId?
                     <div className="msg-title-userdata">
@@ -686,12 +691,14 @@ class Chat extends Component {
                     </div>
                     :""}
 
+
                 <MessageList hwdate={this.state.selDate?this.state.curDate:null}
                              messages={this.state.messages}
                              localmessages={this.state.localChatMessages}
                              username={chatUserName}
                              isshortmsg={this.state.isServiceChat||!this.state.servicePlus}
                              classID={this.props.classID} addmsgs={this.state.addMsgs} sendmessage={this.sendMessage} isnew={this.props.isnew}/>
+
 
                 <div className="who-typing">
                     {this.state.typingUsers.size > 0?"Сообщение набира" + ((this.state.typingUsers.size===1?"е":"ю") + "т: ") + Array.from(this.state.typingUsers.keys()).join(', '):""}
