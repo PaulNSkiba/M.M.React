@@ -7,23 +7,28 @@ import arrow_down from '../../img/ARROW_DOWN.png'
 import arrow_up from '../../img/ARROW_UP.png'
 import ReactCountryFlag from "react-country-flag";
 import { connect } from 'react-redux'
-import {mapStateToProps, getLangLibrary} from '../../js/helpers'
+import {mapStateToProps, getLangLibrary, getDefLangLibrary} from '../../js/helpers'
 import {defLang} from '../../config/config'
 
 class TitleBlock extends Component {
     classNames=(curclass, hide)=>{
         return (curclass?"block-0 done":"block-0") + (hide?"":" activeblock ") + (this.props.hasOwnProperty("isyellow")?" saveDiv":"") + (this.props.hasOwnProperty("isgrey")?(this.props.isgrey?" disabledSave":""):"")
     }
-    initLangLibrary=(langLibrary, setRedux)=>{
-        if ((!langLibrary)||langLibrary===undefined||langLibrary==="undefined"||JSON.stringify(langLibrary)===JSON.stringify({})) {
-            langLibrary = getLangLibrary(localStorage.getItem("langCode")?localStorage.getItem("langCode"):defLang)
-        }
-        return langLibrary
-    }
+    // initLangLibrary=(langLibrary, setRedux)=>{
+    //     if ((!langLibrary)||langLibrary===undefined||langLibrary==="undefined"||JSON.stringify(langLibrary)===JSON.stringify({})) {
+    //         langLibrary = getLangLibrary(localStorage.getItem("langCode")?localStorage.getItem("langCode"):defLang)
+    //     }
+    //     return langLibrary
+    // }
     render() {
         const {done, title, step, onclick, hide, caption} = this.props;
-        const langLibrary = this.props.userSetup.langLibrary//this.initLangLibrary(this.props.userSetup.langLibrary)
+        // const langLibrary = this.props.userSetup.langLibrary//this.initLangLibrary(this.props.userSetup.langLibrary)
+        let langLibrary = getDefLangLibrary()
+        // console.log("TitleBlock", this.props.userSetup.langLibrary, this.props.userSetup)
 
+        if ((!this.props.userSetup.langLibrary===undefined)&&Object.keys(this.props.userSetup.langLibrary).length) {
+            langLibrary = this.props.userSetup.langLibrary
+        }
         var divStyle = {
             "marginTop":"-5px"
         };

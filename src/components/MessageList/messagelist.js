@@ -26,6 +26,7 @@ class MessageList extends Component {
         this.onSaveMsgClick=this.onSaveMsgClick.bind(this)
         this.onCancelMsgClick=this.onCancelMsgClick.bind(this)
         this.onDelMsgClick=this.onDelMsgClick.bind(this)
+        this.curMsgDate = null
     }
     onSaveMsgClick=async (e)=>{
         console.log("onSaveMsgClick", this.textareaValue.value, Number(e.target.id.replace("btn-save-", '')), this.props.isnew)
@@ -59,6 +60,16 @@ class MessageList extends Component {
     onAddHomeworkMsgClick=e=>{
 
     }
+    getDateSeparator=(msgDate)=>{
+        // console.log("getDateSeparator", this.curMsgDate, msgDate)
+        if (msgDate !== this.curMsgDate) {
+
+            this.curMsgDate = msgDate
+            return  <div className="mym-msg-date-separator">
+                        {new Date(msgDate).toLocaleDateString()}
+                    </div>
+        }
+    }
     render() {
         const ROOT_CSS = css({
             borderRadius: "10px",
@@ -73,21 +84,25 @@ class MessageList extends Component {
             "Оно автоматически будет доставлено в нашу службу поддержки и мы как можно скорее отправим Вам ответ на "
 
         questionText = questionText.concat(this.props.classID?"Вашу электронную почту.":"указанную Вами электронной почте.")
-        // console.log("RENDERMESSAGES", this.props.isnew, this.state.messages, this.props.userSetup)
+
         let messages = []
         if (this.props.isnew)
             messages = this.props.localmessages //this.props.chat.localChatMessages.map(item=>prepareMessageToFormat(item))
         else
             messages = this.props.messages
         // console.log('MESSAGES', this.props.localmessages, messages)
+        // console.log("RENDERMESSAGES", messages, this.props.userSetup, this.props.localmessages)
+        // let curMsgDate = null;
         return (
 
             <div className="msg-list">
                 {!this.props.isshortmsg?
                     <ScrollToBottom className={ ROOT_CSS }>
                         {messages.length?messages.map((message, i) =>{
+
                             let msg = this.props.isnew?prepareMessageToFormat(message, true):JSON.parse(message)
-                            // console.log("MESSAGELIST-MSG", msg)
+
+                                // console.log("MESSAGELIST-MSG", msg)
                             const urlMatches = msg.text.match(/\b(http|https)?:\/\/\S+/gi) || [];
                             let { text } = msg;
                             urlMatches.forEach(link => {
@@ -107,6 +122,9 @@ class MessageList extends Component {
                             // console.log(this.props.hwdate===msg.hwdate)
                             return (this.props.hwdate===null||(!(this.props.hwdate===null)&&((new Date(this.props.hwdate)).toLocaleDateString()===(new Date(msg.hwdate)).toLocaleDateString())))?
                             <div key={i} id={"msg-"+msg.id} className={"message-block"} onClick={()=>i!==this.state.editKey?this.setState({editKey:-1}):null} onDoubleClick={(e)=>this.onMessageDblClick(e)}>
+
+                                {this.getDateSeparator(message.msg_date)}
+
                                 <div className={ownMsg?(hw.length?"msg-right-side homework-border":"msg-right-side  homework-no-border"):(hw.length?"msg-left-side homework-border":"msg-left-side homework-no-border")}
                                      style={this.state.editKey===i?{color:"white", backgroundColor : "white", border: "white 2px solid"}:null} key={msg.id}>
 

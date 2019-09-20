@@ -31,6 +31,7 @@ import LoginBlock from '../components/LoginBlock/loginblock'
 import LoginBlockLight from '../components/LoginBlockLight/loginblocklight'
 import Menu from '../components/Menu/menu'
 import ChatBtn from "../img/chat-btn.svg"
+import AndroidBtn from "../img/android-icon-small.png"
 import './App.css';
 import { withCookies } from 'react-cookie';
 import { store } from '../store/configureStore'
@@ -732,7 +733,7 @@ class App extends Component {
             </div>);
 
 
-        console.log("this.props.USERSETUP: ", this.props.userSetup);
+        // console.log("this.props.USERSETUP: ", this.props.userSetup);
         // return (<div>111</div>)
 
         let descrFirst = `${langLibrary.introBegin} ${this.isShortList()?"7":"10"} ${langLibrary.introEnd}:`
@@ -827,11 +828,22 @@ class App extends Component {
                 <div className="navbar-shadow"></div>
                 {isMobile?
                     <div className="descrAndAnnounce">
-                        {classID?<span className="addRef">{`${langLibrary.refNewStudentBegin} `}
-                                    <a className="infoMsg" href={AUTH_URL+"/student/add/"+this.props.userSetup.addUserToken} target="_blank" rel="noopener noreferrer">` ${langLibrary.refNewStudentEnd}`</a></span>
-                            :""
+                        {classID?<span className="addRef">{langLibrary.refNewStudentBegin}
+                                    <a className="infoMsg" href={AUTH_URL+"/student/add/"+this.props.userSetup.addUserToken} target="_blank" rel="noopener noreferrer"> {langLibrary.refNewStudentEnd}</a></span>
+                            :null
                         }
-                        {   studentId === 0&&userID===0?<div className="description-main"><span>{descrFirst}</span></div>:
+                        {userID?<div className={"downloadAdnroid"}>
+                            <div>
+                                <img style={{left : "30px"}} height={"20px"} src={AndroidBtn} alt=""/></div>
+                            <div>
+                                <span style={{color: "#707070"}}> Скачать </span>
+                                <a className="infoMsgAndroid" href={API_URL +"android"} target="_blank" rel="noopener noreferrer">
+                                    Android-приложение</a>
+                            </div>
+                        </div>:null}
+                        {   studentId === 0&&userID===0?
+                            <div className="description-main"><span>{descrFirst}</span></div>:
+
                             studentName?<div className="descrHeader">
                                                 <div className="studentName">
                                                     <b>{studentName}</b>
@@ -839,14 +851,13 @@ class App extends Component {
                                 {!(this.props.userSetup.stats3===undefined)?
                                                 <div className="lastRecords">
                                                     {"Последние [" + (new Date(this.props.userSetup.stats3.max)).toLocaleDateString() + ' ' +  (new Date(this.props.userSetup.stats3.max)).toLocaleTimeString() + ']: Оценок:' + this.props.userSetup.stats3.cnt}
-                                                </div>:''}
-                                        </div>:""}
+                                                </div>:null}
+                                        </div>:null}
                         {studentId?
                             <div className="app-homeWorkSection">
                                 <HomeWorkSection withoutshadow={true} withouthead={true}/>
                             </div>
-                            :""
-                        }
+                            :null}
                     </div>
                     :<div className="descrAndAnnounce">
                         {classID?<span className="addRef">{`${langLibrary.refNewStudentBegin} `}
@@ -862,14 +873,24 @@ class App extends Component {
                             }
                             {/*<div className="descrAndAnnounceMobile">*/}
                             {   studentId === 0&&userID===0?<div className="description-main"><span>{descrFirst}</span></div>:
-                                studentName?<div className="descrHeaderNotMobile">
-                                    <div className="studentName">
-                                        <b>{studentName}</b>
-                                    </div>
-                                    {!(this.props.userSetup.stats3===undefined)?
-                                        <div className="lastRecords">
-                                            {"Последние [" + (new Date(this.props.userSetup.stats3.max)).toLocaleDateString() + ' ' +  (new Date(this.props.userSetup.stats3.max)).toLocaleTimeString() + ']: Оценок:' + this.props.userSetup.stats3.cnt}
-                                        </div>:''}
+                                studentName?
+                                    <div className="descrHeaderNotMobile">
+                                        <div className={"downloadAdnroid"}>
+                                            <div>
+                                                <img style={{left : "30px"}} height={"20px"} src={AndroidBtn} alt=""/></div>
+                                            <div>
+                                                <span style={{color: "#707070"}}> Скачать </span>
+                                                <a className="infoMsgAndroid" href={API_URL +"android"} target="_blank" rel="noopener noreferrer">
+                                                Android-приложение</a>
+                                            </div>
+                                        </div>
+                                        <div className="studentName">
+                                            <b>{studentName}</b>
+                                        </div>
+                                        {!(this.props.userSetup.stats3===undefined)?
+                                            <div className="lastRecords">
+                                                {"Последние [" + (new Date(this.props.userSetup.stats3.max)).toLocaleDateString() + ' ' +  (new Date(this.props.userSetup.stats3.max)).toLocaleTimeString() + ']: Оценок:' + this.props.userSetup.stats3.cnt}
+                                            </div>:''}
                                 </div>:null}
                             {/*</div>*/}
                         </div>

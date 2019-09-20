@@ -6,10 +6,10 @@ import '../../css/colors.css'
 import './loginblocklight.css'
 import FacebookLogin from 'react-facebook-login';
 import {GoogleLogin} from 'react-google-login';
+import {mapStateToProps, getLangLibrary, getDefLangLibrary} from '../../js/helpers'
+import { connect } from 'react-redux'
 
-
-
-export default class LoginBlockLight extends Component {
+class LoginBlockLight extends Component {
 
     userLogin = async (email, pwd, provider, provider_id)=> {
         // console.log("LoginBlockLight.userLogin", this.inputEmail.value, this.inputPwd.value)
@@ -90,10 +90,10 @@ export default class LoginBlockLight extends Component {
 
     render(){
             return (
-                <div className="loginBlockLight">
+                <div className={this.props.userSetup.isMobile?"loginBlockLightMobile":"loginBlockLight"}>
                     <form>
-                        <label>Email</label><input type="email" ref={input=>{this.inputEmail=input}}></input>
-                        <label>Пароль</label><input type="password" ref={input=>{this.inputPwd=input}}></input>
+                        <label>Email</label><input style={{width: "95%"}} type="email" ref={input=>{this.inputEmail=input}}></input>
+                        <label>Пароль</label><input style={{width: "95%"}} type="password" ref={input=>{this.inputPwd=input}}></input>
                         <div className="loginButtons">
                             <button type="submit" onClick={this.userLogin.bind(this)}>Войти</button><button onClick={this.userCancel.bind(this)}>Отмена</button>
                         </div>
@@ -136,3 +136,4 @@ export default class LoginBlockLight extends Component {
 
     }
 }
+export default connect(mapStateToProps)(LoginBlockLight)

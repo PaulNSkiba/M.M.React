@@ -250,6 +250,8 @@ class Charts extends Component {
         //     ["2007", 1030, 540, 700]
         // ];
         // console.log("this.props.userSetup.studSubj.keys())[0]", Array.from(this.props.userSetup.studSubj.keys())[0])
+        if (!this.props.userSetup.studSubj.length) return (<div></div>)
+
         data = this.prepDataForChart(Array.from(this.props.userSetup.studSubj.keys())[0])
         data2 = this.prepDataForBarChart()
         const options = {

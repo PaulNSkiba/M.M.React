@@ -534,3 +534,13 @@ textarea.message-input {
     right : 80px;
     background-color: var(--msg-hw-color);
 }
+.mym-msg-date-separator {
+    color: var(--selected-item);
+    background-color : var(--selected-item-hover);
+    text-align: center;
+    padding : 5px;
+    margin : 0 30%;
+    border : 1px solid var(--selected-item-hover);
+    border-radius: 10px;
+    font-weight: 600;
+}

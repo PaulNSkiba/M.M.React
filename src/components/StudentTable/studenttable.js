@@ -118,7 +118,9 @@ class StudentTable extends Component {
         // console.log("selectedSubjsOnLoad", selectedSubjs, selectedSubjs.length, selectedSubjs.keys().length, selectedSubjs.keys(), selectedSubjs.values())
         if (selectedSubjs.size)
         this.props.onStudSubjChanged(Array.from(selectedSubjs.keys())[0], Array.from(selectedSubjs.values())[0])
-
+        else
+        this.props.onStudSubjChanged("#mathem", "Математика")
+        // {"#mathem" => "Математика"}
         return marks
     }
     onClick(e){
