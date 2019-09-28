@@ -16,6 +16,7 @@ import '../../containers/App.css'
 import './homeworksection.css'
 import ReactFlagsSelect from 'react-flags-select';
 import 'react-flags-select/css/react-flags-select.css';
+import Logo from '../../img/LogoMyMsmall.png'
 
 let btns = ['§','Стр.','-','№','Упр.','Зад.','Кнсп.']
 let btnsNumb = [1,2,3,4,5,6,7,8,9,0]
@@ -299,7 +300,7 @@ class HomeWorkSection extends Component {
         this.props.userSetup.userID > 0?"loginbtn loggedbtn":"loginbtn"
     )
     langBlock=()=>{
-        return <ReactFlagsSelect
+        return <div style={{"width" : "80px"}}><ReactFlagsSelect
             defaultCountry={localStorage.getItem("langCode")?localStorage.getItem("langCode"):defLang}
             placeholder={getLangByCountry(localStorage.getItem("langCode"))}
             showSelectedLabel={false}
@@ -307,8 +308,8 @@ class HomeWorkSection extends Component {
             countries={arrLangs}
             onSelect={this.onSelectLang}
             selectedSize={14}
-            optionsSize={12}
-        />
+            optionsSize={12}/>
+        </div>
     }
     loginBlock=(userID, userName, langLibrary)=>{
         let {loading} = this.props.userSetup
@@ -384,24 +385,27 @@ class HomeWorkSection extends Component {
                         {/*</div>*/}
                         <div className="navbar" style={userID===0?{"justifyContent":  "flex-end"}:{"justifyContent":  "space-between"}}>
                             <div className="navBlock">
-                                <div className="navBlockEx">
+                                <div style={{"display": "flex", "justifyContent" : "space-between", "alignItems" : "center"}}>
+                                    <Link to="/"><img src={Logo} alt={"My.Marks"}/></Link>
                                     <div className="myTitle"><h3><Link to="/">{langLibrary.siteName}</Link></h3></div>
-                                    {isMobile?
-                                        <MobileMenu userID={userID} userName={userName} isadmin={isadmin} withtomain={this.props.withtomain} userLogin={this.userLogin.bind(this)} userLogout={this.userLogout.bind(this)}/>:
-                                        userID>0 && <Menu className="menuTop" userid={userID} isadmin={isadmin}/>
-                                    }
-                                    {/*{(window.location.href.slice(-3)==="/r3"&&userID===0)?*/}
-                                    {/*this.fireUserV3Login(window.location.href):""}*/}
-                                    {isMobile?<div>
-                                        {this.state.showLoginLight||(window.location.href.slice(-2)==="/r"&&userID===0)?
-                                            <LoginBlockLight onLogin={this.props.onUserLogging} firehide={this.fireLoginLight.bind(this)}/>:""}
-
-                                        <div className={this.props.user.loginmsg.length?"popup show":"popup"} onClick={this.props.onClearErrorMsg}>
-                                            {this.props.user.loginmsg.length?<span className="popuptext" id="myPopup">{this.props.user.loginmsg}</span>:""}
-                                        </div>
-                                    </div>:""}
-                                    {!isMobile?this.loginBlock(userID, userName, langLibrary):null}
                                 </div>
+                            </div>
+                            <div className="navBlockEx">
+                                {isMobile?
+                                    <MobileMenu userID={userID} userName={userName} isadmin={isadmin} withtomain={this.props.withtomain} userLogin={this.userLogin.bind(this)} userLogout={this.userLogout.bind(this)}/>:
+                                    userID>0 && <Menu className="menuTop" userid={userID} isadmin={isadmin}/>
+                                }
+                                {/*{(window.location.href.slice(-3)==="/r3"&&userID===0)?*/}
+                                {/*this.fireUserV3Login(window.location.href):""}*/}
+                                {isMobile?<div>
+                                    {this.state.showLoginLight||(window.location.href.slice(-2)==="/r"&&userID===0)?
+                                        <LoginBlockLight onLogin={this.props.onUserLogging} firehide={this.fireLoginLight.bind(this)}/>:""}
+
+                                    <div className={this.props.user.loginmsg.length?"popup show":"popup"} onClick={this.props.onClearErrorMsg}>
+                                        {this.props.user.loginmsg.length?<span className="popuptext" id="myPopup">{this.props.user.loginmsg}</span>:""}
+                                    </div>
+                                </div>:""}
+                                {!isMobile?this.loginBlock(userID, userName, langLibrary):null}
                             </div>
                         </div>
                         <div className="navbar-shadow"></div>

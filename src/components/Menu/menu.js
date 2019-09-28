@@ -18,15 +18,6 @@ class Menu extends Component {
         }
         // this.langLibrary = this.props.userSetup.langLibrary
     }
-    // componentDidMount(){
-    //     // this.langLibrary = this.initLangLibrary(this.props.userSetup.langLibrary)
-    // }
-    // initLangLibrary=(langLibrary, setRedux)=>{
-    //     if ((!langLibrary)||langLibrary===undefined||langLibrary==="undefined"||JSON.stringify(langLibrary)===JSON.stringify({})) {
-    //         langLibrary = getLangLibrary(localStorage.getItem("langCode")?localStorage.getItem("langCode"):defLang)
-    //     }
-    //     return langLibrary
-    // }
     render() {
 
         let langLibrary = getDefLangLibrary()

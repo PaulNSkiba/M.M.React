@@ -23,7 +23,7 @@ ul {
     overflow: hidden;
     box-shadow: 0px 8px 16px 0px var(--shadow);
 }
-.ul12 {
+.ul12,.ul5,.ulAF {
     width : 104px;
 }
 li {

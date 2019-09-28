@@ -432,14 +432,12 @@ class Table extends Component {
                                                 (this.props.userSetup.markBlank.id==="markblank_five"&&(mark==='1'||mark==='2'))||
                                                 (this.props.userSetup.markBlank.id==="markblank_letters"&&(mark==='D'||mark==='E/F'))
 
-                                // console.log('mark', mark)
-
                                 cell.push(<td key={cellID} id={cellID} onClick={this.onClick.bind(this)} className={badmark?"tableBody badmark":"tableBody"}>
 
                                 {!(mark===null)&&markTypes.length>0&&mark.length?<div className="topMarkLabel">{markTypes}</div>:""}
                                 {!(mark===null)&&markBefore.length>0&&mark.length?<div className="topMarkLabelBefore">{markBefore}</div>:""}
                                 {!(mark===null)&&mark}
-
+                                    {(this.props.userSetup.isadmin===1&&mark===null)&&"X"}
                                 {/*{this.getMarkHash(this.props.userSetup.selectedSubj.subj_key.replace('#', '') + "#" + this.props.userSetup.students[i].id + "#" + mapDays.get(idx))}*/}
                                 {/*mathem#242#2019-01-31*/}
                                 {i === (this.state.row) && idx === this.state.column ? this.getMarkBlank(cellID) : ""}

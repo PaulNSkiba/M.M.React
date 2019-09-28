@@ -55,6 +55,9 @@ export const instanceLocator = "v1:us1:6150d554-65a3-4c66-897a-bc65b2a5402d"
 export const testToken = "https://us1.pusherplatform.io/services/chatkit_token_provider/v1/6150d554-65a3-4c66-897a-bc65b2a5402d/token"
 export const chatUserName = "my-marks"
 
+// FB config
+export const appIdFB = "2330660220490285"
+
 // Local chat
 export const WEBSOCKETPORT = 6001
 export const LOCALPUSHERPWD = 123456

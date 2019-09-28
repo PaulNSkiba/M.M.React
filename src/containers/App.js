@@ -22,8 +22,7 @@ import Chat from '../components/Chat/chat'
 import 'react-chat-widget/lib/styles.css';
 import {Pusher} from 'pusher-js'
 import { AUTH_URL, API_URL, EXCEL_URL, UPDATESETUP_URL, SUBJECTS_GET_URL, STUDENTS_GET_URL, MARKS_STATS_URL,
-        arrLangs, defLang}
-        from '../config/config'
+        arrLangs, defLang}        from '../config/config'
 import {numberToLang, msgTimeOut, instanceAxios, mapStateToProps, getLangLibrary,
         toYYYYMMDD, getLangByCountry, waitCursorBlock, getDefLangLibrary} from '../js/helpers'
 
@@ -37,6 +36,7 @@ import { withCookies } from 'react-cookie';
 import { store } from '../store/configureStore'
 import ReactFlagsSelect from 'react-flags-select';
 import 'react-flags-select/css/react-flags-select.css';
+import Logo from '../img/LogoMyMsmall.png'
 
 // import Chart from "react-google-charts/dist/ReactGoogleCharts.d";
 // import {CSSTransitionGroup, CSSTransition, TransitionGroup } from 'react-transition-group/CSSTransitionGroup';
@@ -616,7 +616,8 @@ class App extends Component {
         this.props.onUserLoggingOut(this.props.userSetup.token, getLangLibrary(myCountryCode?myCountryCode:defLang))
     }
     langBlock=()=>{
-        return <ReactFlagsSelect
+        return <div style={{"width" : "80px"}}>
+            <ReactFlagsSelect
             defaultCountry={localStorage.getItem("langCode")?localStorage.getItem("langCode"):defLang}
             placeholder={getLangByCountry(this.state.myCountryCode)}
             showSelectedLabel={false}
@@ -624,8 +625,8 @@ class App extends Component {
             countries={arrLangs}
             onSelect={this.onSelectLang}
             selectedSize={14}
-            optionsSize={12}
-        />
+            optionsSize={12}/>
+        </div>
     }
     loginBlock=(userID, userName, langLibrary)=>{
         let {loading} = this.props.userSetup
@@ -716,17 +717,20 @@ class App extends Component {
             return (
             <div className="App">
                 {loading?this.waitCursorBlock():null}
-                <div className="navbar" style={userID===0?{"justifyContent":  "flex-end"}:{"justifyContent":  "space-between"}}>
+                <div className="navbar">
                     <div className="navBlock">
-                        <div className="navBlockEx">
+                        <div style={{"display": "flex", "justifyContent" : "space-between", "alignItems" : "center"}}>
+                            <Link to="/"><img src={Logo} alt={"My.Marks"}/></Link>
+                            <div className="myTitle"><h3><Link to="/">{langLibrary.siteName}</Link></h3></div>
+                        </div>
+                    </div>
+                    <div className="navBlockEx">
                         {userID?<Menu className="menuTop"
                                       userid={userID}
                                       isadmin={isadmin}
                                       withtomain={true}
                                       langlibrary={langLibrary}/>:null}
-                        <div className="myTitle"><h3><Link to="/">{getDefLangLibrary().siteName}</Link></h3></div>
                         {this.loginBlock(userID, userName, getDefLangLibrary())}
-                        </div>
                     </div>
                 </div>
                 <div className="navbar-shadow"></div>
@@ -753,18 +757,20 @@ class App extends Component {
           <div className="App">
               {loading?this.waitCursorBlock():null}
               {/*<CSSTransitionGroup {...transitionOptions}>*/}
-            <div className="navbar" style={userID===0?{"justifyContent":  "flex-end"}:{"justifyContent":  "space-between"}}>
+            <div className="navbar">
                 <div className="navBlock">
-                    <div className="navBlockEx">
-                    {userID>0&&<Menu className="menuTop"
-                                     userid={userID}
-                                     isadmin={isadmin}
-                                     withtomain={true}
-                                     langlibrary={langLibrary}
-                    />}
-                    <div className="myTitle"><h3><Link to="/">{langLibrary.siteName}</Link></h3></div>
-                    {this.loginBlock(userID, userName, langLibrary)}
+                    <div style={{"display": "flex", "justifyContent" : "space-between", "alignItems" : "center"}}>
+                        <Link to="/"><img src={Logo} alt={"My.Marks"}/></Link>
+                        <div className="myTitle"><h3><Link to="/">{langLibrary.siteName}</Link></h3></div>
                     </div>
+                </div>
+                <div className="navBlockEx">
+                    {userID?<Menu className="menuTop"
+                                  userid={userID}
+                                  isadmin={isadmin}
+                                  withtomain={true}
+                                  langlibrary={langLibrary}/>:null}
+                    {this.loginBlock(userID, userName, langLibrary)}
                 </div>
             </div>
             <div className="navbar-shadow"></div>
@@ -792,25 +798,25 @@ class App extends Component {
                 {/*<TransitionGroup>*/}
                     {/*<div key={"test-22"}>Test</div>*/}
                 {/*</TransitionGroup>*/}
-                <div className="navbar" style={userID===0?{"justifyContent":  "flex-end"}:{"justifyContent":  "space-between"}}>
+                <div className="navbar">
                     <div className="navBlock">
-                        <div className="navBlockEx">
-                        <div className="myTitle"><h3><Link to="/">{langLibrary.siteName}</Link></h3></div>
-                        {isMobile?
-                            <MobileMenu userID={userID}
-                                        userName={userName}
-                                        isadmin={isadmin}
-                                        withtomain={this.props.withtomain}
-                                        userLogin={this.userLogin.bind(this)}
-                                        userLogout={this.userLogout}
-                                        langlibrary={langLibrary}
-                            />:
-                            userID>0 && <Menu className="menuTop"
-                                              userid={userID}
+                        <div style={{"display": "flex", "justifyContent" : "space-between", "alignItems" : "center"}}>
+                            <Link to="/"><img src={Logo} alt={"My.Marks"}/></Link>
+                            <div className="myTitle"><h3><Link to="/">{langLibrary.siteName}</Link></h3></div>
+                        </div>
+                    </div>
+                    <div className="navBlockEx">
+                        {isMobile?<MobileMenu userID={userID}
+                                              userName={userName}
                                               isadmin={isadmin}
-                                              langlibrary={langLibrary}
-                            />
-                        }
+                                              withtomain={this.props.withtomain}
+                                              userLogin={this.userLogin.bind(this)}
+                                              userLogout={this.userLogout}
+                                              langlibrary={langLibrary}/>:
+                            userID?<Menu className="menuTop"
+                                         userid={userID}
+                                         isadmin={isadmin}
+                                         langlibrary={langLibrary}/>:null}
                         {(window.location.href.slice(-3)==="/r3"&&userID===0)?
                             this.fireUserV3Login(window.location.href):""}
                         {isMobile?<div>
@@ -822,7 +828,6 @@ class App extends Component {
                             </div>
                         </div>:""}
                         {!isMobile?this.loginBlock(userID, userName, langLibrary):null}
-                        </div>
                     </div>
                 </div>
                 <div className="navbar-shadow"></div>

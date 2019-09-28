@@ -7,6 +7,7 @@ import './loginblocklight.css'
 import FacebookLogin from 'react-facebook-login';
 import {GoogleLogin} from 'react-google-login';
 import {mapStateToProps, getLangLibrary, getDefLangLibrary} from '../../js/helpers'
+import {appIdFB} from '../../config/config'
 import { connect } from 'react-redux'
 
 class LoginBlockLight extends Component {
@@ -100,7 +101,7 @@ class LoginBlockLight extends Component {
                     </form>
                     <div className="socialBtns">
                         <FacebookLogin
-                            appId="2330660220490285"
+                            appId={appIdFB}
                             // autoLoad={true}
                             fields="name,email,picture"
                             onClick={this.componentClicked}

@@ -78,7 +78,7 @@ class MarkBlank extends Component {
                     return (
                         <div id="markblank_five" className={classNames(selected, withborder)} onClick={this.onClick.bind(this)}>
                             <div id="leftrect"></div>
-                            <ul className={nohover?"nohover":""}>
+                            <ul className={nohover?"nohover ul5":"ul5"}>
                                 <div className="dropdown-content3">
                                     <ul className="marks12 fivemarks">
                                         <li onClick={this.onClickA.bind(this)}><a>5</a></li>
@@ -117,7 +117,7 @@ class MarkBlank extends Component {
                     return (
                         <div id="markblank_letters" className={classNames(selected, withborder)} onClick={this.onClick.bind(this)}>
                             <div id="leftrect"></div>
-                            <ul className={nohover?"nohover":""}>
+                            <ul className={nohover?"nohover ulAF":"ulAF"}>
                                 <div className="dropdown-content3">
                                     <ul className="marks12 fiveletters">
                                         <li><a onClick={this.onClickA.bind(this)}>A</a></li>
