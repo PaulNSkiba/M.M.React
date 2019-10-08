@@ -114,7 +114,7 @@ class AdminPageWorkFlow extends Component {
     }
     userLogout() {
         this.props.history.push('/')
-        this.props.onUserLoggingOut(this.props.userSetup.token)
+        this.props.onUserLoggingOut(this.props.userSetup.token, this.props.userSetup.langLibrary)
     }
     onChangeItemStatus=(e)=>{
         let {selectedItem : itemState} = this.state

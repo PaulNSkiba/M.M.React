@@ -21,6 +21,7 @@ class UniversalTable extends Component {
             arrRows : [],
             addNew : false,
             curAlias : '',
+            curStudent : this.props.selectedstudent,
         }
         this.currentEditedCellValue = ''
         this.currentEditedCellId = -1
@@ -31,6 +32,7 @@ class UniversalTable extends Component {
         this.createTableRows = this.props.createTableRows.bind(this)
         this.onAddNewRow = this.onAddNewRow.bind(this)
         this.updateSource = this.updateSource.bind(this)
+        this.onSelectStudent = this.props.onstudentclick
     }
     componentDidMount() {
         // console.log("UniversalTable.DidMount")

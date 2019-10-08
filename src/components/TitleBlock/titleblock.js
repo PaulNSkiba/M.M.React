@@ -23,11 +23,14 @@ class TitleBlock extends Component {
     render() {
         const {done, title, step, onclick, hide, caption} = this.props;
         // const langLibrary = this.props.userSetup.langLibrary//this.initLangLibrary(this.props.userSetup.langLibrary)
-        let langLibrary = getDefLangLibrary()
-        // console.log("TitleBlock", this.props.userSetup.langLibrary, this.props.userSetup)
+        let langLibrary = this.props.userSetup.langLibrary //getLangLibrary()
+        // console.log("TitleBlock", this.props.userSetup.langLibrary, this.props.userSetup, Object.keys(this.props.userSetup.langLibrary).length)
 
-        if ((!this.props.userSetup.langLibrary===undefined)&&Object.keys(this.props.userSetup.langLibrary).length) {
+        if (Object.keys(this.props.userSetup.langLibrary).length) {
             langLibrary = this.props.userSetup.langLibrary
+        }
+        else {
+            langLibrary = getDefLangLibrary()
         }
         var divStyle = {
             "marginTop":"-5px"

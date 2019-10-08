@@ -1,7 +1,7 @@
 /**
  * Created by Paul on 22.01.2019.
  */
-import { LOGINUSER_URL } from '../config/config'
+import { LOGOUTUSER_URL, LOGINUSER_URL } from '../config/config'
 import { instanceAxios, getLangLibrary } from '../js/helpers'
 
 export const userLoggedIn = (email, pwd, provider, provider_id, langLibrary) => {
@@ -14,7 +14,7 @@ export const userLoggedIn = (email, pwd, provider, provider_id, langLibrary) => 
             "provider_id" : provider_id,
             "token" : null,
         };
-        console.log('USER_LOGGIN', JSON.stringify(data))
+        console.log('USER_LOGGIN', LOGINUSER_URL, JSON.stringify(data))
         document.body.style.cursor = 'progress';
 
         instanceAxios().post(LOGINUSER_URL, JSON.stringify(data), null)
@@ -49,7 +49,10 @@ export const userLoggedInByToken = (email, token, kind, langLibrary) => {
         document.body.style.cursor = 'progress';
         instanceAxios().post(LOGINUSER_URL, data, null)
             .then(response => {
-                dispatch({type: 'USER_LOGGEDIN', payload: response.data, langLibrary : langLibrary?langLibrary:getLangLibrary(localStorage.getItem("myCountryCode")?localStorage.getItem("myCountryCode"):"EN")});
+                // dispatch({type: 'USER_LOGGEDIN', payload: response.data, langLibrary : langLibrary?langLibrary:getLangLibrary(localStorage.getItem("myCountryCode")?localStorage.getItem("myCountryCode"):"EN")});
+
+                dispatch({type: 'USER_LOGGEDIN', payload: response.data, langLibrary : langLibrary});
+
                 dispatch({type: 'ADD_CHAT_MESSAGES', payload : response.data.chatrows});
                 dispatch({type: 'APP_LOADED'})
                 // пробуем записать в LocalStorage имя пользователя, ID, имя и тип авторизации
@@ -68,8 +71,10 @@ export const userLoggedInByToken = (email, token, kind, langLibrary) => {
             })
             .catch(response => {
                 console.log("userLoggedInByTokenError", response.data);
+                window.localStorage.removeItem("myMarks.data");
                 dispatch({type: "LANG_LIBRARY", langLibrary: langLibrary})
                 dispatch({type: 'APP_LOADED'})
+                document.body.style.cursor = 'default';
                 // Список ошибок в отклике...
             })
     };
@@ -77,15 +82,16 @@ export const userLoggedInByToken = (email, token, kind, langLibrary) => {
 
 export const userLoggedOut = (token, langLibrary) => {
     return dispatch => {
-            console.log("userLoggedOut", window.localStorage.getItem("userSetupDate"))
+            console.log("userLoggedOut", langLibrary)
             document.body.style.cursor = 'progress';
             window.localStorage.removeItem("myMarks.data");
             window.localStorage.removeItem("userSetup")
             window.localStorage.removeItem("userSetupDate")
             window.localStorage.removeItem("localChatMessages")
 
+
             dispatch({type: 'APP_LOADING'})
-            instanceAxios().get('logout')
+            instanceAxios().get(LOGOUTUSER_URL)
                 .then(response => {
                     // return response.data;
                     // console.log(response.data, response.data);

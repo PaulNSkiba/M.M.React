@@ -50,7 +50,7 @@ class AdminPage extends Component {
     }
     userLogout() {
         this.props.history.push('/')
-        this.props.onUserLoggingOut(this.props.userSetup.token)
+        this.props.onUserLoggingOut(this.props.userSetup.token, this.props.userSetup.langLibrary)
     }
     onSelectLang=async countryCode=>{
         this.props.onReduxUpdate("LANG_LIBRARY", getLangLibrary(countryCode))

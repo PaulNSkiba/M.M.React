@@ -556,6 +556,7 @@ export function getDefLangLibrary() {
 }
 
 export const getLangLibrary=async (lang)=>{
+    console.log("LangCode", localStorage.getItem("langCode"), lang)
     if (!lang) {
         lang = localStorage.getItem("langCode") ? localStorage.getItem("langCode") : defLang
     }

@@ -17,6 +17,7 @@ import './homeworksection.css'
 import ReactFlagsSelect from 'react-flags-select';
 import 'react-flags-select/css/react-flags-select.css';
 import Logo from '../../img/LogoMyMsmall.png'
+import ReactPlayer from 'react-player'
 
 let btns = ['§','Стр.','-','№','Упр.','Зад.','Кнсп.']
 let btnsNumb = [1,2,3,4,5,6,7,8,9,0]
@@ -71,8 +72,8 @@ class HomeWorkSection extends Component {
     }
     componentDidMount(){
         if (!(window.localStorage.getItem("myMarks.data") === null)) {
-            let ls = JSON.parse(window.localStorage.getItem("myMarks.data"))
-            this.props.onUserLoggingByToken(ls.email, ls.token, null)
+            // let ls = JSON.parse(window.localStorage.getItem("myMarks.data"))
+            // this.props.onUserLoggingByToken(ls.email, ls.token, null)
             // this.setState({homeWorkArray : this.props.userSetup.homework})
         }
         this.setState({actualHomeWorkList : this.getHomeWorkListForDate(new Date()) })
@@ -294,7 +295,7 @@ class HomeWorkSection extends Component {
     }
     userLogout() {
         this.props.history.push('/')
-        this.props.onUserLoggingOut(this.props.userSetup.token)
+        this.props.onUserLoggingOut(this.props.userSetup.token, this.props.userSetup.langLibrary)
     }
     btnLoginClassName=()=>(
         this.props.userSetup.userID > 0?"loginbtn loggedbtn":"loginbtn"
@@ -345,44 +346,9 @@ class HomeWorkSection extends Component {
         let {userID, userName, isadmin, loading, showLoginLight, langLibrary} = this.props.userSetup;
         let {isMobile} = this.state
         return (
-            <div>
+            <div style={{marginLeft : "5%", marginRight : "5%"}}>
                 {!this.props.hasOwnProperty("withouthead")?
                     <div>
-                        {/*<div className="navbar">*/}
-                            {/*<div className="myTitle"><h3><Link to="/">Мои оценки</Link></h3></div>*/}
-                            {/*{this.state.isMobile?*/}
-                                {/*<MobileMenu userID={userID} userName={userName} isadmin={isadmin} withtomain={true} userLogin={this.userLogin.bind(this)} userLogout={this.userLogout.bind(this)}/>:*/}
-                                {/*userID && <Menu userid={this.props.user.id} withtomain={true} isadmin={this.props.userSetup.isadmin}/>*/}
-                            {/*}*/}
-                            {/*{this.state.isMobile?<div>*/}
-                                {/*{this.state.showLoginLight||(window.location.href.slice(-2)==="/r"&&userID===0)?*/}
-                                    {/*<LoginBlockLight onclick={this.props.onUserLogging} firehide={this.fireLoginLight.bind(this)}/>:""}*/}
-
-                                {/*<div className={this.props.user.loginmsg.length?"popup show":"popup"} onClick={this.props.onClearErrorMsg}>*/}
-                                    {/*{this.props.user.loginmsg.length?<span className="popuptext" id="myPopup">{this.props.user.loginmsg}</span>:""}*/}
-                                {/*</div>*/}
-                            {/*</div>:""}*/}
-
-                            {/*{!this.state.isMobile?<div className="logBtnsBlock">*/}
-                                {/*{console.log("this.props.userSetup", this.props.userSetup)}*/}
-                                {/*<div >*/}
-                                    {/*{this.props.userSetup.userID===0?*/}
-                                        {/*<button className={this.btnLoginClassName()}*/}
-                                                {/*onClick={this.userLogin.bind(this)}>Вход*/}
-                                        {/*</button>:*/}
-                                        {/*<button className={this.btnLoginClassName()}*/}
-                                                {/*onClick={this.userEdit.bind(this)}>*/}
-                                            {/*{this.props.userSetup.userName}*/}
-                                        {/*</button>}*/}
-                                    {/*{this.state.showLoginLight?<LoginBlockLight onclick={this.props.onUserLogging} firehide={this.fireLoginLight.bind(this)}/>:""}*/}
-                                {/*</div>*/}
-                                {/*<div>*/}
-                                    {/*{this.props.userSetup.userID>0&&*/}
-                                    {/*<button className="logoutbtn" onClick={this.userLogout.bind(this)}>Выйти</button>}*/}
-                                {/*</div>*/}
-                            {/*</div>:null}*/}
-
-                        {/*</div>*/}
                         <div className="navbar" style={userID===0?{"justifyContent":  "flex-end"}:{"justifyContent":  "space-between"}}>
                             <div className="navBlock">
                                 <div style={{"display": "flex", "justifyContent" : "space-between", "alignItems" : "center"}}>
@@ -412,8 +378,8 @@ class HomeWorkSection extends Component {
                         {this.props.hasOwnProperty("withoutshadow")?"":<div className="navbar-shadow"></div>}
                     </div>
                     :null}
-              <div className="homeWorkSectionMain">
 
+              <div className="homeWorkSectionMain">
                 <div className="homeWorkSection">
                     <div className = "homeWorkSectionHeader">
                         <div className="hwSectionLeft">Домашка:</div><div className="hwSectionRight">{this.dateString()}</div>
@@ -463,6 +429,14 @@ class HomeWorkSection extends Component {
                 </div>
 
             </div>
+
+                {!this.props.hasOwnProperty("withouthead")?
+                    <div>
+                        <h3 style={{color : "#2F75B5"}}>1. Обучение работе с Android-приложением:</h3>
+                        <ReactPlayer url='https://mymarks.info/download/1.Android-Studing.mp4' controls/>
+                    </div>
+                    :null}
+
                 {/*{console.log("this.state.showMsg", this.state.showMsg)}*/}
           {this.state.sideListLeft&&this.state.showInfo&&<div className="hwInfo" onClick={this.hideInfo.bind(this)}> Создан:  {this.state.showMsg.name + ' в ' + (new Date(this.state.showMsg.updated_at)).toLocaleDateString() + ' ' + ('0'+(new Date(this.state.showMsg.updated_at)).getHours()).slice(-2) + ':' + ('0'+(new Date(this.state.showMsg.updated_at)).getMinutes()).slice(-2)}</div>}
         </div>

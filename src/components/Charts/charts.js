@@ -97,7 +97,6 @@ class Charts extends Component {
             }
         else {
             for (let valarr of map.values()) {
-
                 marksarray.push(valarr)
             }
         }
@@ -238,10 +237,23 @@ class Charts extends Component {
         return retArr
     }
     render() {
-        // console.log("this.props.userSetup.studSubj", this.props.userSetup.studSubj)
+        console.log("this.props.userSetup.studSubj", this.props.userSetup.studSubj, this.props.userSetup)
         let data = []
         let data2 = []
         let place = ""
+        let {studSubj, userID} = this.props.userSetup
+        let map = new Map()
+
+        if (!userID) return (<div></div>)
+
+        if (!studSubj.size) {
+            let {subjects_list : subjlist} = this.props.userSetup
+            map.clear()
+            // const name = subjlist[0].subj_name_ua
+            map.set(subjlist[0].subj_key, subjlist[0].subj_name_ua)
+            studSubj = map
+        }
+
         // let data = [
         //     ["Дата", "Мои оценки", "Лучший ученик", "Средние оценки"],
         //     ["2004", 1000, 400, 300],
@@ -250,12 +262,12 @@ class Charts extends Component {
         //     ["2007", 1030, 540, 700]
         // ];
         // console.log("this.props.userSetup.studSubj.keys())[0]", Array.from(this.props.userSetup.studSubj.keys())[0])
-        if (!this.props.userSetup.studSubj.length) return (<div></div>)
+        // if (!this.props.userSetup.studSubj.length) return (<div></div>)
 
-        data = this.prepDataForChart(Array.from(this.props.userSetup.studSubj.keys())[0])
+        data = this.prepDataForChart(Array.from(studSubj.keys())[0])
         data2 = this.prepDataForBarChart()
         const options = {
-            title: this.props.userSetup.studSubj.size?Array.from(this.props.userSetup.studSubj.values())[0].toString().toUpperCase():'',
+            title: studSubj.size?Array.from(studSubj.values())[0].toString().toUpperCase():'',
             curveType: "function",
             // series: {
             //     1: { curveType: 'function' },
@@ -272,7 +284,7 @@ class Charts extends Component {
             colors: [  "#87DD97", "#7DA8E6", "#C6EFCE", "#409be6", "silver", "gold", "#e5e4e2", "#C00000",'green','#006EFF','#00FF08', "#b87333", "#FFEB9C", "#FF8594", ],
             chartArea:{left:30,top:30,width:"90%",height:"80%"},
         }
-        place = this.getPlace(Array.from(this.props.userSetup.studSubj.keys())[0])
+        place = this.getPlace(Array.from(studSubj.keys())[0])
 
         return(
             <div className="mainChartSection">

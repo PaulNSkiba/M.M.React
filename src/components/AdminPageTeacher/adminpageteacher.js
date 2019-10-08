@@ -14,9 +14,10 @@ import '../Menu/menu.css'
 import { Link } from 'react-router-dom';
 import MobileMenu from '../MobileMenu/mobilemenu'
 import { instanceAxios, mapStateToProps, getLangByCountry, waitCursorBlock } from '../../js/helpers'
-import { arrLangs, defLang } from '../../config/config'
+import { arrLangs, defLang, STUDENTS_GET_URL } from '../../config/config'
 import ReactFlagsSelect from 'react-flags-select';
 import 'react-flags-select/css/react-flags-select.css';
+import { MARKS_URL } from '../../config/config'
 import Logo from '../../img/LogoMyMsmall.png'
 
 class AdminPageTeacher extends Component {
@@ -25,6 +26,8 @@ class AdminPageTeacher extends Component {
         this.state = {
             rowArray : this.props.userSetup.students,
             isMobile : this.props.userSetup.isMobile,
+            stats : [],
+            curStudent : 0,
         }
         this.headArray = [
             {name: "№ п/п", width : "5%"} ,
@@ -33,22 +36,44 @@ class AdminPageTeacher extends Component {
             {name: "Email", width : "200px"},
             {name: "Скрыть", width : "30px"},
             {name: "Реальный без Email", width : "30px"},
+            {name: "Оценок", width : "30px"},
+            {name: "Другой студент...", width : "100px"},
+            {name: "Привязать", width : "50px"},
             {name: "Примечание", width : "100%"},
         ]
-        // this.onClick = this.onClick.bind(this)
-        // this.onBlur = this.onBlur.bind(this)
-        // this.changeState = this.changeState.bind(this)
+        this.head = this.createTableHead([
+            {name: "Предмет", width : "10%"} ,
+            {name: "Автор", width : "10%"},
+            {name: "Дата", width : "5%"},
+            {name: "Начало", width : "5%"},
+            {name: "Конец", width : "5%"},
+            {name: "С даты", width : "5%"},
+            {name: "По дату", width : "5%"},
+            {name: "Оценок", width : "5%"},
+        ])
+        this.renderStudents=this.renderStudents.bind(this)
+    }
+    createTableHead=(head)=>(
+        <tr id="row-1" key={"r0"}>{head.map((val, index)=><th style={{width:`${val.width}`}} key={index}>{val.name}</th>)}</tr>
+    )
+    // className={this.columnClassName(index)}
+    columnClassName=key=> {
+        return "colstat-" + key;
     }
     btnLoginClassName=()=>(
         this.props.userSetup.userID > 0?"loginbtn loggedbtn":"loginbtn"
     )
-
+    componentDidMount(){
+        (async()=>{
+           await this.getStats()
+        })()
+    }
     userLogin=()=>{
 
     }
     userLogout=()=>{
         this.props.history.push('/')
-        this.props.onUserLoggingOut(this.props.userSetup.token)
+        this.props.onUserLoggingOut(this.props.userSetup.token, this.props.userSetup.langLibrary)
     }
     userEdit=()=>{
 
@@ -84,6 +109,24 @@ class AdminPageTeacher extends Component {
             {this.langBlock()}
         </div>
     }
+    getStats=()=>{
+        const {classID} = this.props.userSetup
+        let rows = ''
+        // console.log('query', MARKS_URL + '/statsteacher/' + classID)
+        instanceAxios().get(MARKS_URL + '/statsteacher/' + classID)
+            .then(response => {
+                this.setState({
+                    stats: response.data,
+                })
+                // this.props.onStopLoading()
+            })
+            .catch(response => {
+                console.log(response.data);
+                // this.props.onStopLoading()
+            })
+        return <table>{rows}</table>
+    }
+
     classNameOfTD=(email, verified)=> {
         return email ? (verified ? "left-text verified" : "left-text verification") : "left-text"
     }
@@ -133,6 +176,30 @@ class AdminPageTeacher extends Component {
                 <input type="checkbox" onChange={this.changeState} id={(i + 1) + "#7_1#" + rowsArr[i].id}
                        checked={checkedMap.has((i + 1) + "#7_1#" + rowsArr[i].id)}/>
             </td>)
+            // Оценок
+            cell.push(<td className="center-text" id={(i + 1) + "#8#" + rowsArr[i].id} key={"r" + (i + 1) + "c8"}>
+                {rowsArr[i].marks_count}
+            </td>)
+            // Выбрать
+            cell.push(<td className="center-text" id={(i + 1) + "#9#" + rowsArr[i].id} key={"r" + (i + 1) + "c9"}>
+                <select name="students" defaultValue={-1} onClick={this.onSelectStudent}>
+                    <option key={"key"} value={'-1#-1'}>
+                        { ""}
+                    </option>
+                    {
+                        rowsArr.map((value, key)=>{
+                        // console.log("students", value)
+                        if (value.id!==rowsArr[i].id&&value.email!==null&&value.email.length)
+                            return      <option key={key} value={rowsArr[i].id+'#'+value.id}>
+                                            { value.student_name + `[${value.student_nick}]` }
+                                        </option>})}
+                </select>
+            </td>)
+            // Привязать данные к пользователю
+            cell.push(<td className="center-text" id={(i + 1) + "#10#" + rowsArr[i].id} key={"r" + (i + 1) + "c10"}>
+                <button key={"btn"+rowsArr[i].id} onClick={this.onResetStudent}>Привязать</button>
+            </td>)
+            // Примечание
             cell.push(<td className="left-text"
                           style={{"paddingLeft": "5px", "paddingRight": "5px", "fontSize": "0.8em"}}
                           id={(i + 1) + "#5#" + rowsArr[i].id} key={"r" + (i + 1) + "c5"}
@@ -144,11 +211,47 @@ class AdminPageTeacher extends Component {
             }
         }
         return rows;
+    }
 
+    renderStudents=(myID)=>
+        this.state.rowsArr.map((value, key)=>{
+        if (value.id!==myID&&value.email.length)
+        return    <option key={key} value={value.id}>
+                { value.student_name }
+            </option>})
+
+    onResetStudent(studentFrom, studentTo) {
+
+    }
+    onSelectStudent=(e, id)=>{
+        if (this.props.userSetup.isadmin=1) {
+
+
+            this.setState({curStudent: id})
+            const student_from = e.target.value.split("#")[0], student_to = e.target.value.split("#")[1]
+
+            console.log("onStudentClick", e.target.value, student_from, student_to, STUDENTS_GET_URL + `/change/${student_from}/${student_to}`)
+            // return
+            if (Number(student_from)>0&&Number(student_to)>0) {
+                instanceAxios().get(STUDENTS_GET_URL + `/change/${student_from}/${student_to}`)
+                    .then(response => {
+                        console.log(response.data)
+                        // this.props.onStopLoading()
+                    })
+                    .catch(response => {
+                        console.log(response.data);
+                        // this.props.onStopLoading()
+                    })
+
+                this.forceUpdate()
+            }
+
+        }
     }
     render() {
         let {userID, userName, isadmin, loading, showLoginLight, langLibrary} = this.props.userSetup;
         let {isMobile} = this.state
+        console.log("RENDER_TEACHER")
         const objBlank = {}
         return (
             <div className="AdminPage">
@@ -192,7 +295,30 @@ class AdminPageTeacher extends Component {
                 <div className={"mym-adminpageteacher-tableblock"}>
                     <UniversalTable head={this.headArray} rows={this.state.rowArray} createTableRows={this.createTableRows} classNameOfTD={this.classNameOfTD}
                                     btncaption={"+ Новый студент (в разработке)"}
+                                    onstudentclick={this.onSelectStudent}
+                                    selectedstudent={this.state.curStudent}
                                     objblank={objBlank} initrows={()=>{return this.props.userSetup.students}} kind={"students"}/>
+                </div>
+                <div className="mym-adminpageteacher-tableblock">
+                    <div className="h4">Статистика</div>
+                    <table>
+                        <thead>
+                        {this.head}
+                        </thead>
+                        <tbody>
+                        {this.state.stats.map((item, i)=>(
+                            <tr key={"tr"+i}>
+                                <td>{item.subj_name_ua}</td>
+                                <td>{item.name}</td>
+                                <td>{item.ondate}</td>
+                                <td>{(new Date(item.create_min)).toLocaleTimeString()}</td>
+                                <td>{(new Date(item.create_max)).toLocaleTimeString()}</td>
+                                <td>{(new Date(item.min_date)).toLocaleDateString()}</td>
+                                <td>{(new Date(item.max_date)).toLocaleDateString()}</td>
+                                <td>{item.mark_cnt}</td>
+                            </tr>))}
+                        </tbody>
+                    </table>
                 </div>
              </div>
         )

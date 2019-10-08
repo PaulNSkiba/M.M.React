@@ -45,7 +45,7 @@ class StudentTable extends Component {
     }
 
     fillMarks(dStart, dEnd){
-        document.body.style.cursor = 'progress';
+        // document.body.style.cursor = 'progress';
         let marks = new Map()
         let marksBefore = new Map()
         let marksTypes = new Map()
@@ -115,12 +115,14 @@ class StudentTable extends Component {
 
         }
         // Сэмулируем нажатие кнопки
-        // console.log("selectedSubjsOnLoad", selectedSubjs, selectedSubjs.length, selectedSubjs.keys().length, selectedSubjs.keys(), selectedSubjs.values())
+        console.log("selectedSubjsOnLoad!!!", this.props.userSetup, selectedSubjs, selectedSubjs.length, selectedSubjs.keys().length, selectedSubjs.keys(), selectedSubjs.values())
         if (selectedSubjs.size)
         this.props.onStudSubjChanged(Array.from(selectedSubjs.keys())[0], Array.from(selectedSubjs.values())[0])
-        else
-        this.props.onStudSubjChanged("#mathem", "Математика")
-        // {"#mathem" => "Математика"}
+        else {
+            const {subjects_list} = this.props.userSetup
+
+            this.props.onStudSubjChanged(subjects_list[0].subj_key, subjects_list[0].subj_name_ua)
+        }// {"#mathem" => "Математика"}
         return marks
     }
     onClick(e){

@@ -20,10 +20,15 @@ class Menu extends Component {
     }
     render() {
 
-        let langLibrary = getDefLangLibrary()
+        console.log("MENU_FROM_REDUX", this.props.userSetup)
+
+        let langLibrary = {}
         if (Object.keys(this.props.userSetup.langLibrary).length) {
             langLibrary = this.props.userSetup.langLibrary
             // console.log("MENU_FROM_REDUX", true, this.props.userSetup.langLibrary)
+        }
+        else {
+            langLibrary = getDefLangLibrary()
         }
         // else
         //     console.log("MENU_FROM_REDUX", false, this.props.userSetup.langLibrary)
@@ -35,6 +40,8 @@ class Menu extends Component {
 
         // if (this.props.langlibrary) langLibrary = this.props.langlibrary
 
+        // if (!this.props.userSetup.langLibrary)
+        //     return null
 
         return (
             <div className="menuBlock">
@@ -43,7 +50,7 @@ class Menu extends Component {
                     {this.props.withtomain&&<div className="menuItem"><Link to="/">{`${langLibrary.mainSite.toString().concat(' |')}`}</Link></div>}
                     {this.props.isadmin>0&&this.props.userid>0&&<div className="menuItem"><Link to="/admin">{`${langLibrary.adminSite.toString().concat('\u205F|')}`}</Link></div>}
                     {this.props.isadmin>0&&this.props.userid>0&&<div className="menuItem"><Link to="/adminteacher">{`${langLibrary.adminSiteClass.toString().replace(' ', '\u205F').concat('\u205F|')}`}</Link></div>}
-                    <div className="menuItemHw"><Link to="/hw">{`${langLibrary.homework}`}</Link></div>
+                    <div className="menuItemHw"><Link to="/hw">{`${langLibrary.homework}/${langLibrary.studying}`}</Link></div>
                     {this.props.isadmin === 1?<div className="mym-menuitem-workflow"><Link to="/workflow">{`${'|\u205F'.concat(langLibrary.project.toString())}`}</Link></div>:null}
                 </div>:null}
             </div>

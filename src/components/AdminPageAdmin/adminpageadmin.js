@@ -144,14 +144,13 @@ class AdminPageAdmin extends Component {
     }
     getStats=()=>{
         let rows = ''
-        console.log('query', MARKS_STATS_URL+'/'+this.props.userSetup.classID)
-        instanceAxios().get(MARKS_STATS_URL+'/'+this.props.userSetup.classID)
+        console.log('query', MARKS_STATS_URL + '/' + this.props.userSetup.classID)
+        instanceAxios().get(MARKS_STATS_URL + '/' + this.props.userSetup.classID)
             .then(response => {
                 this.setState({
-                    stats :response.data.stats,
+                    stats: response.data.stats,
                 })
                 this.props.onStopLoading()
-                // console.log(response.data.stats, rows);
             })
             .catch(response => {
                 console.log(response.data);
@@ -283,7 +282,9 @@ class AdminPageAdmin extends Component {
     //     }
     //     return rows;
     // }
-
+    getLangCounters=()=>{
+        return this.props.aliasesList.length + "/" + this.props.aliasesList.filter(item=>true)
+    }
     render(){
         const {classes, langs, subjectsSelected, subjects, rowArray, stats} = this.state
         const objBlank = {
@@ -295,7 +296,7 @@ class AdminPageAdmin extends Component {
             llw_id : 0,
             uniqid : localStorage.getItem("langCode") ? localStorage.getItem("langCode") : defLang,
         }
-        // console.log("adminPareAdmin:Render", rowArray)
+        console.log("adminPareAdmin:Render", this.props.userSetup)
         return (
             <div className="mym-adminpage-container">
                 <div><Checkbox onclick={this.props.onReduxUpdate.bind(this)} bold={true} name={"CHAT_SSL"} defelem={this.props.userSetup.chatSSL} label=" работа Чата по SSL"/></div>
@@ -329,6 +330,7 @@ class AdminPageAdmin extends Component {
                                     <select name="langs" onClick={this.onLangClick} defaultValue={localStorage.getItem("langCode") ? localStorage.getItem("langCode") : defLang}>
                                         {langs.length&&this.renderLangs()}
                                     </select>} языка
+                                    {this.props.userSetup.aliasesList.length?': ' + (this.props.userSetup.aliasesList.length + "/" + this.props.userSetup.aliasesList.filter(item=>item.word!==null).length):null}
                                 </div>
                             </div>
                             {/*<div className="mym-btn-add-lang-alias" onClick={this.onAddLangAlias}>+Алиас</div>*/}

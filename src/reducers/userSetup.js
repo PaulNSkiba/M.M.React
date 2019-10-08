@@ -8,29 +8,35 @@ import {isSSLChat} from '../config/config'
 const initialState = (check)=>{
         // console.log("initialState", window.localStorage.getItem("userSetup"), window.localStorage.getItem("userSetupDate")===toYYYYMMDD(new Date()))
         let obj = {}
-        if (localStorage.getItem("userSetup")&&localStorage.getItem("userSetupDate")===toYYYYMMDD(new Date())&&check) {
+        if (localStorage.getItem("userSetup")!==null&&localStorage.getItem("userSetup")&&localStorage.getItem("userSetupDate")===toYYYYMMDD(new Date())&&check) {
             obj = JSON.parse(localStorage.getItem("userSetup"))
             obj.loading = false }
-        else
+        else {
+            // console.log("langlib", langLibrary)
+            // const langlib = (localStorage.getItem("langLibrary")!==null)&&localStorage.getItem("langLibrary")?JSON.parse(localStorage.getItem("langLibrary")):getLangLibrary()
+            // console.log("userSetup", langlib,
+            //     localStorage.getItem("langLibrary")===null, localStorage.getItem("langLibrary"), (localStorage.getItem("langLibrary")!==null)&&localStorage.getItem("langLibrary"))
+
             obj =
-            {
-            curClass: 0, classNumber : 0, classID : 0,
-            pupilCount: 0, students : [], currentYear: "", curYearDone: 0, subjCount: "0/0", userID: 0,
-            selectedSubjsArray: [], selectedSubjects:[], selectedSubj : {id:0, subj_key:"#null"},
-            subjects_list : [], markBlank : {id: "", alias: "", pk: 1},
-            currentPeriodDateCount : 5, marks : [], direction : "UPDOWN", titlekind : "NICK",
-            withoutholidays : true, token: "", userName: "",
-            isadmin: 0, studentName : "", studentId : 0,
-            studSubj : new Map(), mark_dates : [], best_lines : [], avg_lines : [], avg_marks : [],
-            addUserToken : "", cnt_marks : 0, stud_cnt : 0, subj_cnt : 0,
-            lastmarkssent : "", emails : [], homework : [],
-            stats2 : [], stats3 : [], mark_date : {date : new Date()},
-            avgclassmarks : [], loading : -1, stepsLeft : 6,
-            chatSessionID : '', classObj : { chatroom_id : 0},
-            newMsgCount : 0, countryCode : defLang,
-            langLibrary : localStorage.getItem("langLibrary")?JSON.parse(localStorage.getItem("langLibrary")):null,
-            chatSSL : isSSLChat, localChatMessages : [],
-            isMobile : false, aliasesList : [], aliasesLang : ""
+                {
+                    curClass: 0, classNumber: 0, classID: 0,
+                    pupilCount: 0, students: [], currentYear: "", curYearDone: 0, subjCount: "0/0", userID: 0,
+                    selectedSubjsArray: [], selectedSubjects: [], selectedSubj: {id: 0, subj_key: "#null"},
+                    subjects_list: [], markBlank: {id: "", alias: "", pk: 1},
+                    currentPeriodDateCount: 5, marks: [], direction: "UPDOWN", titlekind: "NICK",
+                    withoutholidays: true, token: "", userName: "",
+                    isadmin: 0, studentName: "", studentId: 0,
+                    studSubj: new Map(), mark_dates: [], best_lines: [], avg_lines: [], avg_marks: [],
+                    addUserToken: "", cnt_marks: 0, stud_cnt: 0, subj_cnt: 0,
+                    lastmarkssent: "", emails: [], homework: [],
+                    stats2: [], stats3: [], mark_date: {date: new Date()},
+                    avgclassmarks: [], loading: -1, stepsLeft: 6,
+                    chatSessionID: '', classObj: {chatroom_id: 0},
+                    newMsgCount: 0, countryCode: defLang,
+                    langLibrary: {}, //(localStorage.getItem("langLibrary")!==null)&&localStorage.getItem("langLibrary")?JSON.parse(localStorage.getItem("langLibrary")):getLangLibrary(),
+                    chatSSL: isSSLChat, localChatMessages: [],
+                    isMobile: false, aliasesList: [], aliasesLang: ""
+                }
         }
     return obj
 }
@@ -40,6 +46,7 @@ export function userSetupReducer(state = initialState(true), action) {
     // ToDO: При отсутствтии настроек проверить на undefined
     switch (action.type) {
         case 'INIT_STATE':
+            console.log('INIT_STATE', initialState)
             return {...state, initialState}
         case 'USER_LOGGEDIN' : {
             // console.log("JUST_LOGGEDIN", action.langLibrary)
@@ -230,7 +237,7 @@ export function userSetupReducer(state = initialState(true), action) {
         case 'USER_LOGGEDOUT' :
 
             let initState = initialState(false)
-            initState.langLibrary = localStorage.getItem("langLibrary")?JSON.parse(localStorage.getItem("langLibrary")):null
+            initState.langLibrary = action.langLibrary //action.langLibray?action.langLibray:(localStorage.getItem("langLibrary")?JSON.parse(localStorage.getItem("langLibrary")):null)
             console.log("userSetupReducer", 'USER_LOGGEDOUT', initState)
             return {...initState};
         default :

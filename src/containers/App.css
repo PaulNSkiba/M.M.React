@@ -525,6 +525,14 @@ button.loggedbtn:hover{
   border-radius: 7px;
   padding: 2.5px 10px;
 }
+.mym-app-button-name-small{
+  background-color: var(--navbar-color);
+  color: var(--menu-item);
+  /*font-weight: 600;*/
+  border-radius: 7px;
+  padding: 1px 10px;
+  font-size : 0.7em;
+}
 .navBlock{
   display: flex;
   /*justify-content: space-between;*/

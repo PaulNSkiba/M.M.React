@@ -4,8 +4,8 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux'
 import './loginblock.css'
-import {numberToLang, msgTimeOut, instanceAxios, mapStateToProps} from '../../js/helpers'
-import { FACEBOOK_URL, CREATEUSER_URL, UPDATESETUP_URL, SUBJECTS_GET_URL, UPDATECLASS_URL, STUDENTS_ADD_URL, instanceLocator, testToken, chatUserName } from '../../config/config'
+import {numberToLang, msgTimeOut, instanceAxios, mapStateToProps, getDefLangLibrary, getLangLibrary} from '../../js/helpers'
+import { FACEBOOK_URL, CREATEUSER_URL, UPDATESETUP_URL, SUBJECTS_GET_URL, UPDATECLASS_URL, STUDENTS_ADD_URL, instanceLocator, testToken, chatUserName, appIdFB } from '../../config/config'
 import emailPropType from 'email-prop-type';
 import { ChatManager, TokenProvider } from '@pusher/chatkit-client'
 import FacebookLogin from 'react-facebook-login';
@@ -34,8 +34,9 @@ class LoginBlock extends Component {
                 gmLoggedIn : !(localStorage.getItem("gmLogin")===null),
                 currentUser : {},
                 roomId : '',
-            }
-                        )
+                waitCursor : false,
+            })
+        this.createUser = this.createUser.bind(this)
     }
     responseFacebook = (res) => {
         console.log("resFacebook", res);
@@ -92,8 +93,8 @@ class LoginBlock extends Component {
         }
      }
     createUser(userType, user){
-        this.props.onStartLoading()
-
+        // this.props.onStartLoading()
+        this.setState({waitCursor : true})
         console.log('createUser', userType, user, this.inputEmail.value.toString().split("@")[0], this.inputEmail.value, this.inputPwd.value)
         let header = {
             headers: {
@@ -155,20 +156,22 @@ class LoginBlock extends Component {
                         userId: chatUserName,
                         tokenProvider: new TokenProvider({url: testToken})
                     })
-                    chatManager
-                        .connect()
-                        .then(currentUser => {
-                            this.setState({currentUser})
-                            let newRoomName = 'room'+response.data.user.id
-                            console.log('newRoomName', newRoomName)
-                            return currentUser.createRoom({name : newRoomName})
-                        })
-                        .then(room=>{
-                            this.props.onReduxUpdate("UPDATE_CHATROOMID", room.id)
-                            instanceAxios().get(UPDATECLASS_URL + response.data.user.class_id + '/chatroom_id/'+room.id, '', header)
-                                .then(resp=>console.log('UPDATE_CHATROOMID', resp))
-                                .catch(resp=>console.log('UPDATE_CHATROOMID_ERROR', resp))
-                        })
+
+                    // chatManager
+                    //     .connect()
+                    //     .then(currentUser => {
+                    //         this.setState({currentUser})
+                    //         let newRoomName = 'room'+response.data.user.id
+                    //         console.log('newRoomName', newRoomName)
+                    //         return currentUser.createRoom({name : newRoomName})
+                    //     })
+                    //     .then(room=>{
+                    //         this.props.onReduxUpdate("UPDATE_CHATROOMID", room.id)
+                    //         instanceAxios().get(UPDATECLASS_URL + response.data.user.class_id + '/chatroom_id/'+room.id, '', header)
+                    //             .then(resp=>console.log('UPDATE_CHATROOMID', resp))
+                    //             .catch(resp=>console.log('UPDATE_CHATROOMID_ERROR', resp))
+                    //     })
+
                 }
                 else {
                     console.log("CREATEUSER_URL_FAILED", Object.values(JSON.parse(JSON.stringify(response.data)).errortext)[0][0]); // , JSON.parse(response.data.errortext)
@@ -181,11 +184,13 @@ class LoginBlock extends Component {
                         });
                     }, msgTimeOut);
                 }
+                this.setState({waitCursor : false})
                 document.body.style.cursor = 'default';
             })
             .catch (response => {
                 console.log("CREATEUSER_URL_FAILED", response);
-                this.props.onStopLoading()
+                // this.props.onStopLoading()
+                this.setState({waitCursor : false})
                 document.body.style.cursor = 'default';
             })
     };
@@ -428,23 +433,39 @@ class LoginBlock extends Component {
             gmId : 0
         })
     }
+    waitCursorBlock=()=>{
+        return  <div className="lds-ring">
+            <div></div>
+            <div></div>
+            <div></div>
+            <div></div>
+        </div>
+    }
     render() {
-
+        let langLibrary = {}//getLangLibrary()
+        if (Object.keys(this.props.userSetup.langLibrary).length) {
+            langLibrary = this.props.userSetup.langLibrary
+            // console.log("MENU_FROM_REDUX", true, this.props.userSetup.langLibrary)
+        }
+        else {
+            langLibrary = getDefLangLibrary()
+        }
         return (
         <div className="loginSection">
+            {this.state.waitCursor?this.waitCursorBlock():null}
             <div className="loginSubSection">
                 {/*<div className="loginBlockHeader"><div><b>Зарегистрироваться самостоятельно</b></div><div><b>...или с помощью:</b></div></div>*/}
                 {/*<div>*/}
                     <div className="inputBlockTop">
-                        <div><b>Зарегистрироваться самостоятельно</b></div>
+                        <div><b>{langLibrary.selfRegister}</b></div>
                         <div className="inputBlockTop2">
                             <div className="inputBlock">
                                 <div><label>Email</label><input type="email" ref={input=>{this.inputEmail=input}}></input></div>
-                                <div><label>Пароль</label><input type="password" placeholder="свой пароль" ref={input=>{this.inputPwd=input}}></input></div>
+                                <div><label>Пароль</label><input type="password" placeholder={langLibrary.selfPassword} ref={input=>{this.inputPwd=input}}></input></div>
                             </div>
                             <div className="inputBlock">
-                                <button className={"btn-login-save"}onClick={this.createUser.bind(this)}>Сохранить</button>
-                                <div><input type="password" placeholder="проверка пароля" ref={input=>{this.inputPwdCheck=input}}></input></div>
+                                <input type="button" className={"btn-login-save"} onClick={this.createUser} value={langLibrary.toSave}/>
+                                <div><input type="password" placeholder={langLibrary.passwordChecking} ref={input=>{this.inputPwdCheck=input}}/></div>
                             </div>
                             <div className={this.state.Error.length?"popup3 show3":"popup3"} onClick={this.hidePopup.bind(this)}>
                                 {this.state.Error.length?<span className="popuptext3" id="myPopup">{this.state.Error}</span>:""}
@@ -452,14 +473,14 @@ class LoginBlock extends Component {
                         </div>
                     </div>
                     <div className="newUserHint">
-                        {this.state.newUser?<div>Для начала работы проверьте письмо по адресу <b>{this.state.newEmail}</b>,
-                            чтобы подтвердить электронный адрес</div>:""}
-                        {this.state.newProviderReg.length?<div>Вы успешно зарегистрированы через <b>{this.state.newProviderReg}</b></div>:""}
+                        {this.state.newUser?<div>{langLibrary.registerOne} <b>{this.state.newEmail}</b>,
+                            {langLibrary.registerTwo}</div>:""}
+                        {this.state.newProviderReg.length?<div>{langLibrary.registerSuccess} <b>{this.state.newProviderReg}</b></div>:""}
                     </div>
                     <div className="inputBlockBtns">
-                        <div><b>...или с помощью:</b></div>
+                        <div><b>{langLibrary.registerElse}</b></div>
                             <FacebookLogin
-                                appId="2330660220490285"
+                                appId={appIdFB}
                                 // autoLoad={true}
                                 fields="name,email,picture"
                                 onClick={this.componentClicked}
@@ -502,15 +523,16 @@ class LoginBlock extends Component {
                 {/*</div>*/}
             </div>
             <div>
-                <b>После регистрации появится возможность:</b>
+                <b>{langLibrary.afterReg1}</b>
                     <ol type="1">
-                        <li>разослать приглашения для родителей и учеников класса</li>
-                        <li>установить для учеников нужные имена или ники</li>
-                        <li>следить за динамикой успеваемости</li>
-                        <li>экспортировать и импортировать оценки из файла Excel</li>
-                        <li>просматривать диаграммы успеваемости</li>
-                        <li>отсылать родителям письма с оценками</li>
-                        <li>использовать чат для обмена домашним заданием</li>
+                        <li>{langLibrary.afterReg2}</li>
+                        <li>{langLibrary.afterReg3}</li>
+                        <li>{langLibrary.afterReg4}</li>
+                        <li>{langLibrary.afterReg5}</li>
+                        <li>{langLibrary.afterReg6}</li>
+                        <li>{langLibrary.afterReg7}</li>
+                        <li>{langLibrary.afterReg8}</li>
+                        <li className="infoMsgAndroid">{langLibrary.afterReg9}</li>
                     </ol>
             </div>
         </div>

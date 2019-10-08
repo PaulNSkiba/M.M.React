@@ -25,7 +25,6 @@ import { AUTH_URL, API_URL, EXCEL_URL, UPDATESETUP_URL, SUBJECTS_GET_URL, STUDEN
         arrLangs, defLang}        from '../config/config'
 import {numberToLang, msgTimeOut, instanceAxios, mapStateToProps, getLangLibrary,
         toYYYYMMDD, getLangByCountry, waitCursorBlock, getDefLangLibrary} from '../js/helpers'
-
 import LoginBlock from '../components/LoginBlock/loginblock'
 import LoginBlockLight from '../components/LoginBlockLight/loginblocklight'
 import Menu from '../components/Menu/menu'
@@ -37,6 +36,7 @@ import { store } from '../store/configureStore'
 import ReactFlagsSelect from 'react-flags-select';
 import 'react-flags-select/css/react-flags-select.css';
 import Logo from '../img/LogoMyMsmall.png'
+import ReactPlayer from 'react-player'
 
 // import Chart from "react-google-charts/dist/ReactGoogleCharts.d";
 // import {CSSTransitionGroup, CSSTransition, TransitionGroup } from 'react-transition-group/CSSTransitionGroup';
@@ -80,7 +80,7 @@ class App extends Component {
         this.onSelectLang = this.onSelectLang.bind(this)
         this.langBlock = this.langBlock.bind(this)
         this.loginBlock = this.loginBlock.bind(this)
-        this.initLangLibrary = this.initLangLibrary.bind(this)
+        // this.initLangLibrary = this.initLangLibrary.bind(this)
         this.clickClassButton = this.clickClassButton.bind(this)
     }
 
@@ -88,12 +88,18 @@ class App extends Component {
     }
 
     componentWillMount(){
+        // console.log("componentWillMount1", this.props.userSetup, window.localStorage.getItem("myMarks.data"), this.props.userSetup.langLibrary)
+        // console.log("componentWillMount1")
         (async()=>{
             this.getSessionID();
             // await getLangLibrary(localStorage.getItem("langCode")?localStorage.getItem("langCode"):defLang)
             await this.getGeo();
             await this.getStats();
+            await this.getAsync(localStorage.getItem("langCode")?localStorage.getItem("langCode"):defLang)
+            //await console.log("componentWillMount.2", this.props.userSetup, window.localStorage.getItem("myMarks.data"), this.props.userSetup.langLibrary)
+            this.loading = false
         })();
+        // console.log("componentWillMount.2", this.props.userSetup, window.localStorage.getItem("myMarks.data"), this.props.userSetup.langLibrary)
     }
     getAsync =  async (lang)=> {
         if(
@@ -102,7 +108,7 @@ class App extends Component {
         lang = localStorage.getItem("langCode") ? localStorage.getItem("langCode") : defLang
         }
         let langObj = {}
-        // console.log("getLangLibrary:start")
+        console.log("getLangLibrary:start", lang)
         let {token} = store.getState().user
 
         const  headers = {
@@ -112,33 +118,52 @@ class App extends Component {
             'Access-Control-Allow-Origin' : '*',
             'Access-Control-Allow-Methods' : 'GET, POST, PUT, DELETE, OPTIONS',
         }
-        await axios.get(AUTH_URL + ('/api/langs/get' + (lang ? ('/' + lang) : '')), {}, headers)
+        await axios.get(AUTH_URL + ('/api/langs/get' + (lang ? ('/' + lang) : '')),null, headers)
             .then(res=> {
+
                     res.data.forEach(item => langObj[item.alias] = item.word)
-                    this.setState({langLibray: langObj});
+                    console.log("langDone", langObj)
+
                     // console.log("getLangLibrary:end")
                     this.props.onReduxUpdate("LANG_LIBRARY", langObj)
                     this.props.onStopLoading()
+                    this.loading = false
+                    this.setState({langLibrary: langObj});
+                    console.log("langDone2")
+
                 }
                 )
+            .catch(res=>{
+                console.log("ERROR_LANG", res)
+            })
+        document.body.style.cursor = 'default';
+        // console.log("getLangLibrary:stop")
      }
     componentDidMount(){
         this.props.onStartLoading()
         // console.log("start")
-        let lb = this.getAsync(localStorage.getItem("langCode")?localStorage.getItem("langCode"):defLang)//getLangLibrary(localStorage.getItem("langCode")?localStorage.getItem("langCode"):defLang)
+        // let lb = this.getAsync(localStorage.getItem("langCode")?localStorage.getItem("langCode"):defLang)//getLangLibrary(localStorage.getItem("langCode")?localStorage.getItem("langCode"):defLang)
         // console.log("end");
+        // console.log("componentDidMount0")
 
-        let {langLibrary} = this.state//this.props.userSetup
+        let {langLibrary} = this.state //this.props.userSetup//this.state//this.props.userSetup
+        if (localStorage.getItem("langLibrary"))
+            langLibrary = localStorage.getItem("langLibrary")
+        // if (!langLibrary)
+        //     this.setState( {langLibrary : getDefLangLibrary()})
 
-        // console.log("componentDidMount")
+        // console.log("componentDidMount", langLibrary, this.props.userSetup, localStorage.getItem("langLibrary"))
 
-        if (!(window.localStorage.getItem("myMarks.data") === null)&&!(window.localStorage.getItem("userSetup")&&window.localStorage.getItem("userSetupDate")===toYYYYMMDD(new Date()))) {
+        // && (Object.keys(this.state.langLibrary).length)
+
+        if (!(window.localStorage.getItem("myMarks.data") === null) &&!(window.localStorage.getItem("userSetup")&&window.localStorage.getItem("userSetupDate")===toYYYYMMDD(new Date()))) {
             // console.log("componentDidMount.1", langLibrary)
 
             let localstorage = JSON.parse(window.localStorage.getItem("myMarks.data"))
             let {email, token, class_id : classID} = localstorage
 
-            this.props.onUserLoggingByToken(email, token, null, langLibrary);
+            // this.props.onUserLoggingByToken(email, token, null, langLibrary);
+
             // this.props.onStopLoading()
         }
         else if (window.localStorage.getItem("userSetup")&&window.localStorage.getItem("userSetupDate")===toYYYYMMDD(new Date())) {
@@ -153,36 +178,49 @@ class App extends Component {
         }
         this.props.onReduxUpdate("IS_MOBILE", this.state.isMobile)
         this.props.onChangeStepsQty(this.isSaveEnabled())
+
+        this.props.onStopLoading()
+        document.body.style.cursor = 'default';
     }
 
     shouldComponentUpdate(nextProps, nextState) {
-        // console.log("shouldComponentUpdate", this.props.userSetup.langLibrary, nextProps.userSetup.langLibrary)
-        if ((this.props.userSetup.chatSessionID !== nextProps.userSetup.chatSessionID))
-             return false
+        // console.log("shouldComponentUpdate", this.state.langLibrary, Object.keys(this.state.langLibrary).length, this.props.userSetup.langLibrary, nextProps.userSetup.langLibrary)
+        // console.log("shouldComponentUpdate", this.loading, this.props.userSetup.langLibrary)
+        if (this.loading)
+            return false
+
+
+        // console.log("shouldComponentUpdate1")
+        if ((this.props.userSetup.chatSessionID !== nextProps.userSetup.chatSessionID)) {
+            // console.log("shouldComponentUpdate2")
+            return false
+        }
             // return this.props.userSetup.chatSessionID !== nextProps.userSetup.chatSessionID
         else
-        // if ((!this.state.langLibrary)||(this.props.userSetup.langLibrary=={}))
-        if (!this.state.langLibrary)
-            return false
-        else {
-            // this.props.onStopLoading()
-            return true
-        }
+            if (!Object.keys(this.props.userSetup.langLibrary).length) {
+                // console.log("shouldComponentUpdate3")
+
+                return false
+            }
+            else {
+                // this.props.onStopLoading()
+                return true
+            }
     }
 
-    initLangLibrary=(langLibrary, setRedux)=>{
-        console.log("initLangLibrary", langLibrary)
-        if ((!langLibrary)||langLibrary===undefined||langLibrary==="undefined"||JSON.stringify(langLibrary)===JSON.stringify({})) {
-            // console.log("initLangLibrary.2", langLibrary, setRedux, this.state.myCountryCode)
-
-            langLibrary = getLangLibrary(localStorage.getItem("langCode")?localStorage.getItem("langCode"):defLang)
-            // console.log("initLangLibrary.3", langLibrary, setRedux, this.state.myCountryCode, this.props.userSetup)
-            if (setRedux) this.props.onReduxUpdate("LANG_LIBRARY", langLibrary)
-
-            // console.log("initLangLibrary.4", langLibrary, setRedux, this.state.myCountryCode, this.props.userSetup)
-        }
-        return langLibrary //getLangLibrary(localStorage.getItem("langCode")?localStorage.getItem("langCode"):defLang)
-    }
+    // initLangLibrary=(langLibrary, setRedux)=>{
+    //     console.log("initLangLibrary", langLibrary)
+    //     if ((!langLibrary)||langLibrary===undefined||langLibrary==="undefined"||JSON.stringify(langLibrary)===JSON.stringify({})) {
+    //         // console.log("initLangLibrary.2", langLibrary, setRedux, this.state.myCountryCode)
+    //
+    //         langLibrary = getLangLibrary(localStorage.getItem("langCode")?localStorage.getItem("langCode"):defLang)
+    //         // console.log("initLangLibrary.3", langLibrary, setRedux, this.state.myCountryCode, this.props.userSetup)
+    //         if (setRedux) this.props.onReduxUpdate("LANG_LIBRARY", langLibrary)
+    //
+    //         // console.log("initLangLibrary.4", langLibrary, setRedux, this.state.myCountryCode, this.props.userSetup)
+    //     }
+    //     return langLibrary //getLangLibrary(localStorage.getItem("langCode")?localStorage.getItem("langCode"):defLang)
+    // }
     onSelectLang=async countryCode=>{
         this.props.onStartLoading()
         let lb = this.getAsync(countryCode)//getLangLibrary(localStorage.getItem("langCode")?localStorage.getItem("langCode"):defLang)
@@ -278,13 +316,104 @@ class App extends Component {
         }
     }
 
+  getGeo2=()=>{
+      let countryCode = "UA"
+      // if (this.state.myCountryCode!==defLang&&this.state.myCountryCode)
+      console.log("getGeo2", countryCode, defLang);
+      if (!(localStorage.getItem("statsDate") === (new Date().toLocaleDateString())) ||!(localStorage.getItem("langCode") === localStorage.getItem("myCountryCode"))) {
+          axios.get("http://gd.geobytes.com/GetCityDetails")
+              .then(response=>{
+                  console.log("getGeo2", response.data);
+                  axios.get("http://api.ipapi.com/"+response.data.geobytesremoteip+"?access_key=db04ca03c9aac62c6b107e089e5acba1")
+                      .then(response=> {
+                          if (!(response.data.city === localStorage.getItem("city"))) {
+                              countryCode = response.data.country_code
+                              this.setState(
+                                  {
+                                      myCity: response.data.city,
+                                      myCountry: response.data.country_name,
+                                      myCountryCode: response.data.country_code,
+                                  }
+                              )
+                              localStorage.setItem("myCity", response.data.city)
+                              localStorage.setItem("myCountry", response.data.country_name)
+                              localStorage.setItem("myCountryCode", response.data.country_code)
+                              localStorage.setItem("langCode", arrLangs.includes(response.data.country_code) ? response.data.country_code : defLang)
+
+                          }
+                      })
+                      .catch(response => {
+                          this.setState(
+                              {
+                                  myCity: "Kyiv",
+                                  myCountry: "Ukraine",
+                                  myCountryCode: "UA",
+                                  // langCode: "UA"
+                              }
+                          )
+                          localStorage.setItem("myCity", "Kyiv")
+                          localStorage.setItem("myCountry", "Ukraine")
+                          localStorage.setItem("myCountryCode", "UA")
+                          localStorage.setItem("langCode", defLang)
+                      })
+              })
+              .catch(response => {
+                  this.setState(
+                      {
+                          myCity: "Kyiv",
+                          myCountry: "Ukraine",
+                          myCountryCode: "UA",
+                      }
+                  )
+                  localStorage.setItem("myCity", "Kyiv")
+                  localStorage.setItem("myCountry", "Ukraine")
+                  localStorage.setItem("myCountryCode", "UA")
+                  localStorage.setItem("langCode", defLang)
+              })
+      }
+      else {
+          // console.log("getGEO", this.state.myCountryCode, this.state.myCountryCode===undefined, this.state.myCountryCode==="undefined")
+          if ((!this.state.myCountryCode)||this.state.myCountryCode==="undefined") {
+              this.setState(
+                  {
+                      myCity: "Kyiv",
+                      myCountry: "Ukraine",
+                      myCountryCode: "UA",
+                  }
+              )
+              localStorage.setItem("myCity", "Kyiv")
+              localStorage.setItem("myCountry", "Ukraine")
+              localStorage.setItem("myCountryCode", "UA")
+              if (!localStorage.getItem("langCode")) localStorage.setItem("langCode", defLang)
+          }
+      }
+
+  }
   getGeo=()=>{
       let countryCode = "UA"
       // console.log("getGEO")
       // instanceAxios().get("http://ip-api.com/json", [])
       // axios.get("http://ip-api.com/json")
+
+      console.log("getGeo", localStorage.getItem("langCode"))
+
       if (!(localStorage.getItem("statsDate") === (new Date().toLocaleDateString()))) {
-      axios.get("https://ipapi.co/json/")
+      // axios.get("https://ipapi.co/json/")
+/*
+          {
+              "ip": "159.224.177.71",
+              "hostname": "71.177.224.159.triolan.net",
+              "city": "Kyiv",
+              "region": "Kyiv City",
+              "country": "UA",
+              "loc": "50.4547,30.5238",
+              "org": "AS13188 CONTENT DELIVERY NETWORK LTD",
+              "postal": "03027",
+              "timezone": "Europe/Kiev",
+              "readme": "https://ipinfo.io/missingauth"
+          }
+  */
+          axios.get("https://ipinfo.io/json")
           .then(response=>{
               console.log("getGeo", response.data);
               if (!(response.data.city===localStorage.getItem("city"))) {
@@ -292,14 +421,14 @@ class App extends Component {
                   this.setState(
                       {
                           myCity: response.data.city,
-                          myCountry: response.data.country_name,
+                          myCountry: response.data.country,
                           myCountryCode: response.data.country,
                       }
                   )
                   localStorage.setItem("myCity", response.data.city)
-                  localStorage.setItem("myCountry", response.data.country_name)
+                  localStorage.setItem("myCountry", response.data.country)
                   localStorage.setItem("myCountryCode", response.data.country)
-                  localStorage.setItem("langCode", arrLangs.includes(response.data.country)?response.data.country:defLang)
+                  if (!localStorage.getItem("langCode")) localStorage.setItem("langCode", arrLangs.includes(response.data.country)?response.data.country:defLang)
 
               }
           })
@@ -315,7 +444,7 @@ class App extends Component {
               localStorage.setItem("myCity", "Kyiv")
               localStorage.setItem("myCountry", "Ukraine")
               localStorage.setItem("myCountryCode", "UA")
-              localStorage.setItem("langCode", defLang)
+              if (!localStorage.getItem("langCode")) localStorage.setItem("langCode", defLang)
           })
       }
       else {
@@ -520,7 +649,7 @@ class App extends Component {
         let map = new Map()
         let {subjects_list : subjlist} = this.props.userSetup
         map.clear()
-        // console.log("onStudSubjChanged", key, subjlist, name)
+        console.log("onStudSubjChanged", key, subjlist, name)
         name = subjlist.filter(value=>(value.subj_key===key))[0].subj_name_ua
 
         map.set(key, name)
@@ -599,7 +728,7 @@ class App extends Component {
         const {myCountryCode} = this.state
         console.log('URL', url, namelen, arr.slice(-namelen), arr.substring(6).replace(arr.slice(-namelen), ''))
         // console.log(name, pwd)
-        this.props.onUserLogging(name, pwd, '', '', getLangLibrary(myCountryCode?myCountryCode:defLang));
+        this.props.onUserLogging(name, pwd, null, null, getLangLibrary(myCountryCode?myCountryCode:defLang));
         this.props.history.push('/');
     }
     userLogin() {
@@ -607,15 +736,16 @@ class App extends Component {
         this.setState({ "showLoginLight" : !this.state.showLoginLight })
     }
     userLogout() {
-        // console.log('userLOGOUT')
+        console.log('userLOGOUT', this.props.userSetup.langLibrary)
         const {myCountryCode} = this.state
         window.localStorage.removeItem("myMarks.data");
         window.localStorage.removeItem("userSetup")
         window.localStorage.removeItem("userSetupDate")
         this.hideSteps();
-        this.props.onUserLoggingOut(this.props.userSetup.token, getLangLibrary(myCountryCode?myCountryCode:defLang))
+        this.props.onUserLoggingOut(this.props.userSetup.token, this.props.userSetup.langLibrary)
     }
     langBlock=()=>{
+        // console.log("langBlock", localStorage.getItem("langCode"), defLang, localStorage.getItem("langCode")?localStorage.getItem("langCode"):defLang)
         return <div style={{"width" : "80px"}}>
             <ReactFlagsSelect
             defaultCountry={localStorage.getItem("langCode")?localStorage.getItem("langCode"):defLang}
@@ -647,7 +777,7 @@ class App extends Component {
                 </div>
             </div>
             <div>
-                {userID>0?<button className="logoutbtn" onClick={this.userLogout}><div className="mym-app-button-name">{userName}</div><div className="mym-app-button-exit">{langLibrary.exit}</div></button>:null}
+                {userID>0?<button className="logoutbtn" onClick={this.userLogout}><div className={userName.length>10?"mym-app-button-name-small":"mym-app-button-name"}>{userName}</div><div className="mym-app-button-exit">{langLibrary.exit}</div></button>:null}
             </div>
             {this.langBlock()}
         </div>
@@ -684,13 +814,14 @@ class App extends Component {
             subjects_list, studentId, studentName, classID, isadmin, loading} = this.props.userSetup;
 
         // console.log("LANGLIBRARY", langLibrary, this.state.myCountryCode)
-
-        // let langLibrary = this.state.langLibrary
         // console.log("LANGLIBRARY_AFTER", this.props.userSetup.langLibrary)
-        let langLibrary = getDefLangLibrary()
+        let langLibrary = {}//getLangLibrary()
         if (this.props.userSetup.langLibrary) {
             if (Object.keys(this.props.userSetup.langLibrary).length) {
                 langLibrary = this.props.userSetup.langLibrary
+            }
+            else {
+                langLibrary = getDefLangLibrary()
             }
         }
         let {isMobile} = this.state;
@@ -708,11 +839,17 @@ class App extends Component {
         };
         let data = this.prepDataForChart([])
 
-        // console.log("APP_RENDER", loading, langLibrary, this.state.langLibrary)
-
+        // console.log("APP_RENDER", loading, langLibrary, this.loading)
+        // return <div></div>
         // *************************
         // Если идёт загрузка
         // *************************
+        if (loading||loading===-1||this.loading)
+            return (
+                <div className="App">
+                    {loading?this.waitCursorBlock():null}
+                </div>)
+
         if (loading||loading===-1)
             return (
             <div className="App">
@@ -730,7 +867,7 @@ class App extends Component {
                                       isadmin={isadmin}
                                       withtomain={true}
                                       langlibrary={langLibrary}/>:null}
-                        {this.loginBlock(userID, userName, getDefLangLibrary())}
+                        {this.loginBlock(userID, userName, langLibrary)}
                     </div>
                 </div>
                 <div className="navbar-shadow"></div>
@@ -876,7 +1013,6 @@ class App extends Component {
                                 </div>
                                 :null
                             }
-                            {/*<div className="descrAndAnnounceMobile">*/}
                             {   studentId === 0&&userID===0?<div className="description-main"><span>{descrFirst}</span></div>:
                                 studentName?
                                     <div className="descrHeaderNotMobile">
@@ -1017,7 +1153,7 @@ class App extends Component {
                 <div>
                     <TitleBlock title={!isMobile?`${langLibrary.step} ${!this.isShortList()?7:6}${langLibrary.step6Descr}`:`${!this.isShortList()?7:6}${langLibrary.step6DescrMob}`}
                                         done={currentPeriodDateCount>0}
-                                        caption={!isMobile?(currentPeriodDateCount.toString()+"дн,").concat(withoutholidays?"Б/вых-х,":"",titlekind==="NICK"?"+НИК":(titlekind==="EMAIL"?"+EMAIL":"+ИМЯ")):langLibrary.yes}
+                                        caption={!isMobile?(currentPeriodDateCount.toString()+`${langLibrary.daysAcronim},`).concat(withoutholidays?`${langLibrary.withOutHolidays},`:"",titlekind==="NICK"?`+${langLibrary.wordNick}`:(titlekind==="EMAIL"?"+EMAIL":`+${langLibrary.wordName}`)):langLibrary.yes}
                                         onclick={this.stepClick.bind(this)} step={!this.isShortList()?7:6} hide={!this.isShortList()?step7:step6}/>
                 </div>
                 {!(!this.isShortList()?step7:step6)?
