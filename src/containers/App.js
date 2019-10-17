@@ -69,8 +69,10 @@ class App extends Component {
             chatMessages : [],
             newChatMessages : 0,
             newHomeworkMessages : 0,
-            langLibrary : {}
+            langLibrary : {},
+
         }
+        this.classCount = []
         this.userGot = false
         this.loading = true
         // this.getChatMessages = this.getChatMessages.bind(this)
@@ -94,12 +96,32 @@ class App extends Component {
             this.getSessionID();
             // await getLangLibrary(localStorage.getItem("langCode")?localStorage.getItem("langCode"):defLang)
             await this.getGeo();
+            await this.getClasses();
             await this.getStats();
             await this.getAsync(localStorage.getItem("langCode")?localStorage.getItem("langCode"):defLang)
             //await console.log("componentWillMount.2", this.props.userSetup, window.localStorage.getItem("myMarks.data"), this.props.userSetup.langLibrary)
             this.loading = false
         })();
         // console.log("componentWillMount.2", this.props.userSetup, window.localStorage.getItem("myMarks.data"), this.props.userSetup.langLibrary)
+    }
+    getClasses=async ()=>{
+        const lang = localStorage.getItem("myCountryCode")?localStorage.getItem("myCountryCode") : defLang
+        let {token} = store.getState().user
+        const  headers = {
+            Authorization: `Bearer ${token}`,
+            Accept: 'application/json',
+            'Content-Type': 'application/json',
+            'Access-Control-Allow-Origin' : '*',
+            'Access-Control-Allow-Methods' : 'GET, POST, PUT, DELETE, OPTIONS',
+        }
+        await axios.get(API_URL + ('subjects/bycountry' + (lang ? ('/' + lang) : '')),null, headers)
+            .then(res=> {
+                this.classCount = res.data
+                console.log('GET_CLASSES', res)
+            })
+            .catch(res=>{
+
+            })
     }
     getAsync =  async (lang)=> {
         if(
@@ -874,7 +896,7 @@ class App extends Component {
             </div>);
 
 
-        // console.log("this.props.USERSETUP: ", this.props.userSetup);
+        console.log("this.props.USERSETUP: ", this.props.userSetup);
         // return (<div>111</div>)
 
         let descrFirst = `${langLibrary.introBegin} ${this.isShortList()?"7":"10"} ${langLibrary.introEnd}:`
@@ -1066,9 +1088,9 @@ class App extends Component {
 
                     {!step1&&!this.props.user.logging&&studentId === 0?
                     <div className="block-1">
-                    <ClassList classtype="primary-school school" click={this.clickClassButton} classnumber={classNumber} classlabel={`${langLibrary.schoolPrimary} `} buttons={[1, 2, 3, 4]}/>
-                    <ClassList classtype="secondary-school school" click={this.clickClassButton} classnumber={classNumber} classlabel={`${langLibrary.schoolMain} `} buttons={[5, 6, 7, 8, 9]}/>
-                    <ClassList classtype="high-school school" click={this.clickClassButton} classnumber={classNumber} classlabel={`${langLibrary.schoolHigh} `} buttons={[10, 11]}/>
+                        <ClassList classtype="primary-school school" classcount={this.classCount} click={this.clickClassButton} classnumber={classNumber} classlabel={`${langLibrary.schoolPrimary} `} buttons={[1, 2, 3, 4]}/>
+                        <ClassList classtype="secondary-school school" classcount={this.classCount} click={this.clickClassButton} classnumber={classNumber} classlabel={`${langLibrary.schoolMain} `} buttons={[5, 6, 7, 8, 9]}/>
+                        <ClassList classtype="high-school school" classcount={this.classCount} click={this.clickClassButton} classnumber={classNumber} classlabel={`${langLibrary.schoolHigh} `} buttons={[10, 11]}/>
                     </div>
                     :""}
 
@@ -1334,6 +1356,8 @@ const mapDispatchToProps = dispatch => {
                     dispatch({type: 'UPDATE_SETUP_LOCALLY', payload: data})
                     if (Object.keys(data)[0]==="class_number") {
                         document.body.style.cursor = 'progress';
+
+                        console.log("CLASS_NUMBER", SUBJECTS_GET_URL + '/' + Object.values(data)[0])
 
                         instanceAxios().get(SUBJECTS_GET_URL + '/' + Object.values(data)[0])
                             .then(response => {

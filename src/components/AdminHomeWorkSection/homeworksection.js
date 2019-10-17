@@ -432,8 +432,18 @@ class HomeWorkSection extends Component {
 
                 {!this.props.hasOwnProperty("withouthead")?
                     <div>
-                        <h3 style={{color : "#2F75B5"}}>1. Обучение работе с Android-приложением:</h3>
-                        <ReactPlayer url='https://mymarks.info/download/1.Android-Studing.mp4' controls/>
+                        <div style={{marginBottom : "70px"}}>
+                            <h3 style={{color : "#2F75B5"}}>1. Создание нового класса:</h3>
+                            <ReactPlayer url='https://mymarks.info/download/1.Class-register.mp4' controls/>
+                        </div>
+                        <div style={{marginBottom : "70px"}}>
+                            <h3 style={{color : "#2F75B5"}}>2. Добавление ученика к созданному классу:</h3>
+                            <ReactPlayer url='https://mymarks.info/download/1.Student-Register.mp4' controls/>
+                        </div>
+                        <div style={{marginBottom : "70px"}}>
+                            <h3 style={{color : "#2F75B5"}}>3. Обучение работе с Android-приложением:</h3>
+                            <ReactPlayer url='https://mymarks.info/download/1.Android-Studing.mp4' controls/>
+                        </div>
                     </div>
                     :null}
 

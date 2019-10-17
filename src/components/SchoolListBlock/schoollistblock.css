@@ -1,0 +1,11 @@
+.schoolSelectedBlock {
+    margin : 10px 5%;
+    border-radius: 10px;
+    border: 1px solid var(--selected-item);
+
+}
+.schoolFilters {
+    display: flex;
+    justify-content: space-between;
+    padding : 10px;
+}

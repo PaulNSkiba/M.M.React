@@ -19,6 +19,7 @@ import ReactFlagsSelect from 'react-flags-select';
 import 'react-flags-select/css/react-flags-select.css';
 import { MARKS_URL } from '../../config/config'
 import Logo from '../../img/LogoMyMsmall.png'
+import SchoolListBlock from '../SchoolListBlock/schoollistblock'
 
 class AdminPageTeacher extends Component {
     constructor(props) {
@@ -28,6 +29,7 @@ class AdminPageTeacher extends Component {
             isMobile : this.props.userSetup.isMobile,
             stats : [],
             curStudent : 0,
+            showList : false,
         }
         this.headArray = [
             {name: "№ п/п", width : "5%"} ,
@@ -226,7 +228,6 @@ class AdminPageTeacher extends Component {
     onSelectStudent=(e, id)=>{
         if (this.props.userSetup.isadmin=1) {
 
-
             this.setState({curStudent: id})
             const student_from = e.target.value.split("#")[0], student_to = e.target.value.split("#")[1]
 
@@ -287,10 +288,11 @@ class AdminPageTeacher extends Component {
                 <div className="descrAndAnnounce">
                     <div className="descrAndAnnounceNotMobile">
                         <div className="mym-adminpageteacher-description">
-                            {/*This's Teacher's admin page of User: {this.props.user.name}*/}
-                            Учительская страница: {userName}
+                            <div>Учительская страница: {userName}</div>
+                            <div className={"addToSchool"} onClick={()=>{this.setState({showList:!this.state.showList})}}>Присоединиться к учебному заведению</div>
                         </div>
                     </div>
+                    {this.state.showList?<SchoolListBlock/>:null}
                 </div>
                 <div className={"mym-adminpageteacher-tableblock"}>
                     <UniversalTable head={this.headArray} rows={this.state.rowArray} createTableRows={this.createTableRows} classNameOfTD={this.classNameOfTD}
