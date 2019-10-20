@@ -1,0 +1,30 @@
+.insAndOutsBlock {
+    display: flex;
+    width : 90%;
+    margin : 10px 5%;
+}
+.insAndOutsFactBlock {
+    display: flex;
+    width : 90%;
+    margin : 10px 5%;
+}
+.insBlock{
+    border : 1px solid #2f75b5;
+    display: inline-block;
+    width : 50%;
+}
+.outsBlock{
+    border : 1px solid #588f62;
+    display: inline-block;
+    width : 50%;
+}
+.insFactBlock{
+    border : 1px solid #2f75b5;
+    /*display: inline-block;*/
+    width : 100%;
+}
+.outsFactBlock{
+    border : 1px solid #588f62;
+    display: inline-block;
+    width : 10%;
+}

@@ -4,8 +4,8 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux'
 import { userLoggedOut } from '../../actions/userAuthActions'
-import { AUTH_URL, STUDENTS_UPDATE_URL } from '../../config/config'
-import { instanceAxios, mapStateToProps } from '../../js/helpers'
+import { AUTH_URL, API_URL, STUDENTS_UPDATE_URL } from '../../config/config'
+import { instanceAxios, mapStateToProps, toYYYYMMDD } from '../../js/helpers'
 import '../../containers/App.css'
 import './universaltable.css'
 
@@ -33,21 +33,40 @@ class UniversalTable extends Component {
         this.onAddNewRow = this.onAddNewRow.bind(this)
         this.updateSource = this.updateSource.bind(this)
         this.onSelectStudent = this.props.onstudentclick
+        this.handleDate = this.handleDate.bind(this)
     }
     componentDidMount() {
         // console.log("UniversalTable.DidMount")
         const {classNameOfTD} = this.props
         const {arrRows : rows, row : row_state, column : column_state, checkedMap} = this.state
 
+        // console.log("HEAD", this.props.head)
         this.setState ( {
             head : this.createTableHead(this.props.head),
             rows : this.createTableRows(this.props.initrows(this.props.userSetup.aliasesLang), this.onInputChange, true, row_state, column_state, classNameOfTD, checkedMap)
         })
     }
+    componentWillReceiveProps(props) {
+
+        const { year, head } = this.props;
+        // console.log("HEAD2", props.year, year, props.head, head)
+        if (props.year !== year || props.head.lenght !== head.length) {
+            // this.fetchShoes(id)
+            //     .then(this.refreshShoeList)
+            const {classNameOfTD} = this.props
+            const {arrRows : rows, row : row_state, column : column_state, checkedMap} = this.state
+
+            // console.log("HEAD3", this.props.head)
+            this.setState ( {
+                head : this.createTableHead(this.props.head),
+                rows : this.createTableRows(this.props.initrows(this.props.userSetup.aliasesLang), this.onInputChange, true, row_state, column_state, classNameOfTD, checkedMap)
+            })
+        }
+    }
     fillMap=()=>{
         let {rows} = this.props
         let map = new Map()
-        console.log('fillMap', rows)
+        // console.log('fillMap', rows)
         if (rows) {
             for (let i = 0; i < rows.length; i++) {
                 if (rows[i].isout === 1) map.set((i + 1) + "#6_1#" + rows[i].id, rows[i].isout === 1)
@@ -56,13 +75,15 @@ class UniversalTable extends Component {
         }
         return map;
     }
-    // columnClassName=key=> {
-    //     return "col-" + key;
-    // }
     createTableHead=(head)=>(
+
         <tr id="row-1" key={"r0"}>{head.map((val, index)=>
-            <th className={"col-" + index}
-                style={{"width" : val.width, "paddingLeft" : "5px", "paddingRight" : "5px"}} key={index}>{val.name}</th>)}</tr>
+            <th className={(val.isvert===true?' rotate':'')}
+                style={{width : val.width, paddingLeft : "2px", paddingRight : "2px"}} key={index}>
+                <div>
+                    {val.name}
+                    </div>
+            </th>)}</tr>
     )
     onInputChange(text, id) {
         // console.log("onInputChange", text, id)
@@ -70,12 +91,8 @@ class UniversalTable extends Component {
         this.currentEditedCellId = id
         // console.log("onInputChange", e.target)
     }
-    // classNameOfTDOld=(email, verified)=> {
-    //     return email ? (verified ? "left-text verified" : "left-text verification") : "left-text"
-    // }
     updateSource=(column, id, value, key)=>{
         // console.log("updateSource", column, id, value, key)
-        // return
         const {classNameOfTD} = this.props
         const {arrRows : rows, row : row_state, column : column_state, checkedMap} = this.state
 
@@ -283,20 +300,67 @@ class UniversalTable extends Component {
                         })
         // // alert('addAlias')
     }
-    // emptyNew=()=>{
-    //     this.setState({addNew:!this.state.addNew})
-    // }
+    handleDate = (type, id, date) => {
+        console.log(type, id, date)
+        let url, json
+        // let arr = this.state.planIns;
+        switch (type) {
+            case 'start':
+                break;
+            case 'end':
+                break;
+            case 'datein':
+                console.log("datein", type, id, date)
+                switch (this.props.kind) {
+                    case 'budget' :
+                        url = AUTH_URL + `/api/student/update/${id}`
+                        json = `{"datein":"${toYYYYMMDD(date)}", "id":${id}}`;
+                        break;
+                    default :
+                        break;
+                }
+                break;
+            default :
+                break;
+        }
+    if (json) {
+        // let data = JSON.parse(json);
+        console.log(json)
+        instanceAxios().post(url, json)
+            .then(response => {
+                // arr = this.props.userSetup.aliasesList
+                console.log("RESPONSE", response.data)
+                let arr = this.props.userSetup.students
+                arr = arr.map(item=>{
+                    if (item.id===id) item.datein = toYYYYMMDD(date)
+                    return item
+                })
+                console.log("onStudentUpdate", arr)
+                this.props.onStudentUpdate(arr)
+                //console.log('UPDATE_ALIAS_REMOTE', response.data)
+            })
+            .catch(response => {
+                console.log(response);
+            })
+        }
+    };
     render(){
         // let {head, row, column} = this.state
         const {classNameOfTD, objblank} = this.props
         const {head, row : row_state, column : column_state, checkedMap} = this.state
-        let reduxrows = []
+        let reduxrows = [], rows = []
         switch (this.props.kind) {
             case 'students' :
                 reduxrows = this.props.userSetup.students;
+                rows = this.createTableRows(reduxrows, this.onInputChange, true, row_state, column_state, classNameOfTD, checkedMap)
+                break;
+            case 'budget' :
+                reduxrows = this.props.userSetup.students;
+                rows = this.createTableRows(reduxrows, this.onInputChange, true, row_state, column_state, classNameOfTD, checkedMap, this.props.headex, this.props.year)
                 break;
             case 'aliases' :
                 reduxrows = this.props.userSetup.aliasesList;
+                rows = this.createTableRows(reduxrows, this.onInputChange, true, row_state, column_state, classNameOfTD, checkedMap)
                 break;
             default :
                 break;
@@ -305,21 +369,35 @@ class UniversalTable extends Component {
             reduxrows.push(objblank);
             this.addNewRowFlag = false
         }
-        // console.log("UniversalTable: RENDER", reduxrows)
-        let rows = this.createTableRows(reduxrows, this.onInputChange, true, row_state, column_state, classNameOfTD, checkedMap)
+
+
+        console.log("UniversalTable: RENDER")
+
         return(
             <div className="mym-universaltable-container">
                 <div className="row">
-                    <div className="col s12 board">
-                        <div className="mym-btn-add-lang-alias" onClick={this.onAddNewRow}>{this.props.btncaption}</div>
-                        <table id="simple-board">
-                            <thead className="marktable">
+                    <div className="board">
+                        {this.props.btncaption.length?<div className="mym-btn-add-lang-alias" onClick={this.onAddNewRow}>{this.props.btncaption}</div>:null}
+                        <table id="simple-board" style={{overflowY: "scroll"}}>
+                            <thead style={{display: "block"}}>
                                 {head}
                             </thead>
-                            <tbody>
-                                {rows}
-                            </tbody>
                         </table>
+                        <div style={{maxHeight: "500px", overflowY: "scroll"}}>
+                            <table>
+                                <tbody>
+                                    {rows}
+                                </tbody>
+                            </table>
+                        </div>
+                        {/*<table id="simple-board" style={{display: "block", overflowX: "auto"}}>*/}
+                            {/*<thead style={{display: "block"}}>*/}
+                                {/*{head}*/}
+                            {/*</thead>*/}
+                            {/*<tbody style={{overflow: "auto", height: "100px"}}>*/}
+                                {/*{rows}*/}
+                            {/*</tbody>*/}
+                        {/*</table>*/}
                     </div>
                 </div>
             </div>

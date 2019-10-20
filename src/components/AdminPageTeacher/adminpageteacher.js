@@ -32,16 +32,23 @@ class AdminPageTeacher extends Component {
             showList : false,
         }
         this.headArray = [
-            {name: "№ п/п", width : "5%"} ,
+            {name: "№ п/п", width : "30px"} ,
             {name: "Ник", width : "150px"},
             {name: "Имя", width : "300px"},
             {name: "Email", width : "200px"},
-            {name: "Скрыть", width : "30px"},
-            {name: "Реальный без Email", width : "30px"},
-            {name: "Оценок", width : "30px"},
-            {name: "Другой студент...", width : "100px"},
-            {name: "Привязать", width : "50px"},
-            {name: "Примечание", width : "100%"},
+            {name: "Скрыть", width : "30px", isvert: true},
+            {name: "Реал. без Email", width : "30px"},
+            {name: "Оценок", width : "30px", isvert: true},
+            {name: "Смена студента", width : "100px"},
+            {name: "Админ", width : "30px", isvert: true},
+            {name: "Учитель", width : "30px", isvert: true},
+            {name: "Ученик", width : "30px", isvert: true},
+            {name: "Родком", width : "30px", isvert: true},
+            {name: "Подписка", width : "30px", isvert: true},
+            {name: "Перевод", width : "30px", isvert: true},
+            {name: "Адм-ция", width : "30px", isvert: true},
+            {name: "Партнер", width : "30px", isvert: true},
+            {name: "Примечание", width : "200px"},
         ]
         this.head = this.createTableHead([
             {name: "Предмет", width : "10%"} ,
@@ -55,13 +62,31 @@ class AdminPageTeacher extends Component {
         ])
         this.renderStudents=this.renderStudents.bind(this)
     }
+
+    // Админ
+    // 1
+    // Учитель
+    // 2
+    // Студент/Ученик
+    // 4
+    // Родком
+    // 8
+    // Подписчик на рассылку
+    // 16
+    // Переводчик
+    // 32
+    // Администрация
+    // 64
+    // Партнер
+    // 128
+
     createTableHead=(head)=>(
         <tr id="row-1" key={"r0"}>{head.map((val, index)=><th style={{width:`${val.width}`}} key={index}>{val.name}</th>)}</tr>
     )
     // className={this.columnClassName(index)}
-    columnClassName=key=> {
-        return "colstat-" + key;
-    }
+    // columnClassName=key=> {
+    //     return "colstat-" + key;
+    // }
     btnLoginClassName=()=>(
         this.props.userSetup.userID > 0?"loginbtn loggedbtn":"loginbtn"
     )
@@ -140,14 +165,14 @@ class AdminPageTeacher extends Component {
         if (rowsArr) {
         for (let i = 0; i < rowsArr.length; i++) {
             cell = []
-            cell.push(<th style={{"width" : "5%"}} key={"r" + (i + 1) + "c1"}>{i + 1}</th>)
-            cell.push(<td className="left-text" style={{"paddingLeft": "5px", "paddingRight": "5px"}}
+            cell.push(<th style={{paddingLeft: "2px", paddingRight: "2px", width : "30px"}} key={"r" + (i + 1) + "c1"}>{i + 1}</th>)
+            cell.push(<td className="left-text" style={{paddingLeft: "2px", paddingRight: "2px", width : "150px"}}
                           id={(i + 1) + "#2#" + rowsArr[i].id} key={"r" + (i + 1) + "c2"}
                           onClick={this.onClick}>{rowsArr[i].student_nick} {(row === (i + 1) && column === 2 && withInput) ?
                 <input type="text" id={(i + 1) + "#2#" + rowsArr[i].id} className="inputEditor"
                        onChange={e=>this.onInputChange(e.target.value, rowsArr[i].id)} onKeyPress={this.onInputKeyPress}
                        defaultValue={rowsArr[i].student_nick}/> : ""}</td>) //this.isActive(i, 2, rowsArr[i].student_nick)
-            cell.push(<td className="left-text" style={{"paddingLeft": "5px", "paddingRight": "5px"}}
+            cell.push(<td className="left-text" style={{paddingLeft: "2px", paddingRight: "2px", width : "300px"}}
                           id={(i + 1) + "#3#" + rowsArr[i].id} key={"r" + (i + 1) + "c3"}
                           onClick={this.onClick}>{rowsArr[i].student_name} {(row === (i + 1) && column === 3 && withInput) ?
                 <input type="text" id={(i + 1) + "#3#" + rowsArr[i].id} className="inputEditor"
@@ -157,7 +182,7 @@ class AdminPageTeacher extends Component {
                        defaultValue={rowsArr[i].student_name}/> : ""}</td>)
             cell.push(<td
                 className={classNameOfTD(!(rowsArr[i].email === null), !(rowsArr[i].email_verified_at === null))}
-                style={{"paddingLeft": "5px", "paddingRight": "5px", "fontSize": "0.8em"}}
+                style={{paddingLeft: "2px", paddingRight: "2px", width : "200px", "fontSize": "0.8em"}}
                 id={(i + 1) + "#4#" + rowsArr[i].id} key={"r" + (i + 1) + "c4"}
                 onBlur={this.onBlur}
                 onClick={this.onClick}>{rowsArr[i].email}{(row === (i + 1) && column === 4 && withInput) ?
@@ -169,22 +194,22 @@ class AdminPageTeacher extends Component {
                 : null}
             </td>)
             // Галочка скрыть студента из списка
-            cell.push(<td className="center-text" id={(i + 1) + "#6#" + rowsArr[i].id} key={"r" + (i + 1) + "c6"}>
+            cell.push(<td style={{paddingLeft: "2px", paddingRight: "2px", width : "30px", "fontSize": "0.8em"}} className="center-text" id={(i + 1) + "#6#" + rowsArr[i].id} key={"r" + (i + 1) + "c6"}>
                 <input type="checkbox" onChange={this.changeState} id={(i + 1) + "#6_1#" + rowsArr[i].id}
                        checked={checkedMap.has((i + 1) + "#6_1#" + rowsArr[i].id)}/>
             </td>)
             // Реальный без Email
-            cell.push(<td className="center-text" id={(i + 1) + "#7#" + rowsArr[i].id} key={"r" + (i + 1) + "c7"}>
+            cell.push(<td style={{paddingLeft: "2px", paddingRight: "2px", width : "30px", "fontSize": "0.8em"}} className="center-text" id={(i + 1) + "#7#" + rowsArr[i].id} key={"r" + (i + 1) + "c7"}>
                 <input type="checkbox" onChange={this.changeState} id={(i + 1) + "#7_1#" + rowsArr[i].id}
                        checked={checkedMap.has((i + 1) + "#7_1#" + rowsArr[i].id)}/>
             </td>)
             // Оценок
-            cell.push(<td className="center-text" id={(i + 1) + "#8#" + rowsArr[i].id} key={"r" + (i + 1) + "c8"}>
+            cell.push(<td style={{paddingLeft: "2px", paddingRight: "2px", width : "30px", "fontSize": "0.8em", textAlign : "center"}} id={(i + 1) + "#8#" + rowsArr[i].id} key={"r" + (i + 1) + "c8"}>
                 {rowsArr[i].marks_count}
             </td>)
-            // Выбрать
-            cell.push(<td className="center-text" id={(i + 1) + "#9#" + rowsArr[i].id} key={"r" + (i + 1) + "c9"}>
-                <select name="students" defaultValue={-1} onClick={this.onSelectStudent}>
+            // Другой студент
+            cell.push(<td style={{paddingLeft: "2px", paddingRight: "2px", width : "100px", "fontSize": "0.8em", textAlign : "center"}} className="center-text" id={(i + 1) + "#9#" + rowsArr[i].id} key={"r" + (i + 1) + "c9"}>
+                <select name="students" style={{width : "100px"}} defaultValue={-1} onClick={this.onSelectStudent}>
                     <option key={"key"} value={'-1#-1'}>
                         { ""}
                     </option>
@@ -197,13 +222,50 @@ class AdminPageTeacher extends Component {
                                         </option>})}
                 </select>
             </td>)
-            // Привязать данные к пользователю
-            cell.push(<td className="center-text" id={(i + 1) + "#10#" + rowsArr[i].id} key={"r" + (i + 1) + "c10"}>
-                <button key={"btn"+rowsArr[i].id} onClick={this.onResetStudent}>Привязать</button>
+            // Админ
+            cell.push(<td style={{paddingLeft: "2px", paddingRight: "2px", width : "30px", "fontSize": "0.8em", textAlign : "center"}} valign="bottom" className="center-text" id={(i + 1) + "#10#" + rowsArr[i].id} key={"r" + (i + 1) + "c10"}>
+                <input type="checkbox" onChange={this.changeState} id={(i + 1) + "#10#" + rowsArr[i].id}
+                       disabled="disabled" checked={checkedMap.has((i + 1) + "#10#" + rowsArr[i].id)}/>
+                {/*<button key={"btn"+rowsArr[i].id} onClick={this.onResetStudent}>Привязать</button>*/}
+            </td>)
+            // Учитель
+            cell.push(<td style={{paddingLeft: "2px", paddingRight: "2px", width : "30px", "fontSize": "0.8em", textAlign : "center"}} valign="bottom" className="center-text" id={(i + 1) + "#12#" + rowsArr[i].id} key={"r" + (i + 1) + "c11"}>
+                <input type="checkbox" onChange={this.changeState} id={(i + 1) + "#12#" + rowsArr[i].id}
+                       disabled="disabled" checked={checkedMap.has((i + 1) + "#12#" + rowsArr[i].id)}/>
+            </td>)
+            // Ученик
+            cell.push(<td style={{paddingLeft: "2px", paddingRight: "2px", width : "30px", "fontSize": "0.8em", textAlign : "center"}} valign="bottom" className="center-text" id={(i + 1) + "#13#" + rowsArr[i].id} key={"r" + (i + 1) + "c12"}>
+                <input type="checkbox" onChange={this.changeState} id={(i + 1) + "#13#" + rowsArr[i].id}
+                       disabled="disabled" checked={checkedMap.has((i + 1) + "#13#" + rowsArr[i].id)}/>
+            </td>)
+            // Родком
+            cell.push(<td style={{paddingLeft: "2px", paddingRight: "2px", width : "30px", "fontSize": "0.8em", textAlign : "center"}} valign="bottom" className="center-text" id={(i + 1) + "#14#" + rowsArr[i].id} key={"r" + (i + 1) + "c13"}>
+                <input type="checkbox" onChange={this.changeState} id={(i + 1) + "#14#" + rowsArr[i].id}
+                       disabled="disabled" checked={checkedMap.has((i + 1) + "#14#" + rowsArr[i].id)}/>
+            </td>)
+            // Подписка
+            cell.push(<td style={{paddingLeft: "2px", paddingRight: "2px", width : "30px", "fontSize": "0.8em", textAlign : "center"}} valign="bottom" className="center-text" id={(i + 1) + "#15#" + rowsArr[i].id} key={"r" + (i + 1) + "c14"}>
+                <input type="checkbox" onChange={this.changeState} id={(i + 1) + "#15#" + rowsArr[i].id}
+                       disabled="disabled" checked={checkedMap.has((i + 1) + "#15#" + rowsArr[i].id)}/>
+            </td>)
+            // Перевод
+            cell.push(<td style={{paddingLeft: "2px", paddingRight: "2px", width : "30px", "fontSize": "0.8em", textAlign : "center"}} valign="bottom" className="center-text" id={(i + 1) + "#16#" + rowsArr[i].id} key={"r" + (i + 1) + "c15"}>
+                <input type="checkbox" onChange={this.changeState} id={(i + 1) + "#16#" + rowsArr[i].id}
+                       disabled="disabled" checked={checkedMap.has((i + 1) + "#16#" + rowsArr[i].id)}/>
+            </td>)
+            // Админ-ция
+            cell.push(<td style={{paddingLeft: "2px", paddingRight: "2px", width : "30px", "fontSize": "0.8em", textAlign : "center"}} valign="bottom" className="center-text" id={(i + 1) + "#17#" + rowsArr[i].id} key={"r" + (i + 1) + "c16"}>
+                <input type="checkbox" onChange={this.changeState} id={(i + 1) + "#17#" + rowsArr[i].id}
+                       disabled="disabled" checked={checkedMap.has((i + 1) + "#17#" + rowsArr[i].id)}/>
+            </td>)
+            // Партнер
+            cell.push(<td style={{paddingLeft: "2px", paddingRight: "2px", width : "30px", "fontSize": "0.8em", textAlign : "center"}} valign="bottom" className="center-text" id={(i + 1) + "#18#" + rowsArr[i].id} key={"r" + (i + 1) + "c17"}>
+                <input type="checkbox" onChange={this.changeState} id={(i + 1) + "#18#" + rowsArr[i].id}
+                       disabled="disabled" checked={checkedMap.has((i + 1) + "#18#" + rowsArr[i].id)}/>
             </td>)
             // Примечание
             cell.push(<td className="left-text"
-                          style={{"paddingLeft": "5px", "paddingRight": "5px", "fontSize": "0.8em"}}
+                          style={{width : "200px", paddingLeft: "5px", paddingRight: "5px", "fontSize": "0.8em"}}
                           id={(i + 1) + "#5#" + rowsArr[i].id} key={"r" + (i + 1) + "c5"}
                           onClick={this.onClick}>{rowsArr[i].memo}{(row === (i + 1) && column === 5 && withInput) ?
                 <input type="text" id={(i + 1) + "#5#" + rowsArr[i].id} className="inputEditor"

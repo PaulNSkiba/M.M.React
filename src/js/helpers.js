@@ -1016,6 +1016,21 @@ export const echoClient = (token, chatSSL) => {
         }
     )
 }
+export const addMonths= (dateObject, numberMonths) => {
+    var day = dateObject.getDate(); // returns day of the month number
+
+    // avoid date calculation errors
+    dateObject.setHours(20);
+
+    // add months and set date to last day of the correct month
+    dateObject.setMonth(dateObject.getMonth() + numberMonths + 1, 0);
+
+    // set day number to min of either the original one or last day of month
+    dateObject.setDate(Math.min(day, dateObject.getDate()));
+
+    return dateObject;
+};
+
 export const pusherClient = (token, chatSSL) => {
     const pusher = new Pusher(LOCALPUSHERPWD,
         {

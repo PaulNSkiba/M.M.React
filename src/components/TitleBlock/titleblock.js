@@ -7,8 +7,7 @@ import arrow_down from '../../img/ARROW_DOWN.png'
 import arrow_up from '../../img/ARROW_UP.png'
 import ReactCountryFlag from "react-country-flag";
 import { connect } from 'react-redux'
-import {mapStateToProps, getLangLibrary, getDefLangLibrary} from '../../js/helpers'
-import {defLang} from '../../config/config'
+import {mapStateToProps, getDefLangLibrary} from '../../js/helpers'
 
 class TitleBlock extends Component {
     classNames=(curclass, hide)=>{

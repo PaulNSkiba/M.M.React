@@ -4,7 +4,7 @@
     font-size : 0.9em;
 }
 .menuItem a:hover{
-    color : #52aee6;
+    color : #375c9e;
     text-decoration: underline;
 }
 .menuItemHw a {
@@ -27,6 +27,14 @@
     min-width: 360px;
     max-width: 600px;
     font-size: .9em;
+}
+.activeItem a {
+    -webkit-box-shadow: 0 0 4px 7px #7DA8E6;
+    -moz-box-shadow: 0 0 4px 7px #7DA8E6;
+    box-shadow: 0 0 4px 7px #7DA8E6;
+    background-color: #7DA8E6;
+    color : white;
+    border-radius: 2px;
 }
 .mym-menuitem-workflow a {
     font-weight: 700;

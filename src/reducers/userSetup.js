@@ -35,7 +35,8 @@ const initialState = (check)=>{
                     newMsgCount: 0, countryCode: defLang,
                     langLibrary: {}, //(localStorage.getItem("langLibrary")!==null)&&localStorage.getItem("langLibrary")?JSON.parse(localStorage.getItem("langLibrary")):getLangLibrary(),
                     chatSSL: isSSLChat, localChatMessages: [],
-                    isMobile: false, aliasesList: [], aliasesLang: ""
+                    isMobile: false, aliasesList: [], aliasesLang: "", menuItem : "",
+                    budget : [], budgetpays : [],
                 }
         }
     return obj
@@ -188,6 +189,8 @@ export function userSetupReducer(state = initialState(true), action) {
             return{...state, students: action.payload}
         }
         case 'UPDATE_STUDENTS_LOCALLY' : {
+            saveToLocalStorageOnDate("userSetup",
+                JSON.stringify({...state, students: action.payload}))
             return{...state, students: action.payload}
         }
         case 'UPDATE_STUDENT_CHART_SUBJECT' : {
@@ -234,6 +237,12 @@ export function userSetupReducer(state = initialState(true), action) {
         // case "ADD_CHAT_MESSAGES" : {
         //     return{...state, localChatMessages: action.payload}
         // }
+        case 'MENU_CLICK' :
+            return{...state, menuItem: action.payload}
+        case 'BUDGET_UPDATE' :
+            return{...state, budget: action.payload}
+        case 'BUDGETPAYS_UPDATE' :
+            return{...state, budgetpays: action.payload}
         case 'USER_LOGGEDOUT' :
 
             let initState = initialState(false)

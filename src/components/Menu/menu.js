@@ -20,7 +20,7 @@ class Menu extends Component {
     }
     render() {
 
-        console.log("MENU_FROM_REDUX", this.props.userSetup)
+        // console.log("MENU_FROM_REDUX", this.props.userSetup)
 
         let langLibrary = {}
         if (Object.keys(this.props.userSetup.langLibrary).length) {
@@ -30,32 +30,27 @@ class Menu extends Component {
         else {
             langLibrary = getDefLangLibrary()
         }
-        // else
-        //     console.log("MENU_FROM_REDUX", false, this.props.userSetup.langLibrary)
-
-        // console.log("menuRender",
-        //             this.props.userSetup.langLibrary,
-        //             Object.keys(this.props.userSetup.langLibrary).length,
-        //             this.props.langlibrary, langLibrary)
-
-        // if (this.props.langlibrary) langLibrary = this.props.langlibrary
-
-        // if (!this.props.userSetup.langLibrary)
-        //     return null
 
         return (
             <div className="menuBlock">
                 {Object.keys(langLibrary).length?
                 <div className="menuItems">
-                    {this.props.withtomain&&<div className="menuItem"><Link to="/">{`${langLibrary.mainSite.toString().concat(' |')}`}</Link></div>}
-                    {this.props.isadmin>0&&this.props.userid>0&&<div className="menuItem"><Link to="/admin">{`${langLibrary.adminSite.toString().concat('\u205F|')}`}</Link></div>}
-                    {this.props.isadmin>0&&this.props.userid>0&&<div className="menuItem"><Link to="/adminteacher">{`${langLibrary.adminSiteClass.toString().replace(' ', '\u205F').concat('\u205F|')}`}</Link></div>}
-                    <div className="menuItemHw"><Link to="/hw">{`${langLibrary.homework}/${langLibrary.studying}`}</Link></div>
-                    {this.props.isadmin === 1?<div className="mym-menuitem-workflow"><Link to="/workflow">{`${'|\u205F'.concat(langLibrary.project.toString())}`}</Link></div>:null}
+                    {this.props.withtomain&&<div className={`menuItem ${this.props.userSetup.menuItem==="main"?"activeItem":""}`}><Link onClick={()=>this.props.onReduxUpdate("MENU_CLICK", "main")} to="/">{`${langLibrary.mainSite.toString().concat(' |')}`}</Link></div>}
+                    {this.props.isadmin>0&&this.props.userid>0&&<div className={`menuItem ${this.props.userSetup.menuItem==="admin"?"activeItem":""}`}><Link onClick={()=>this.props.onReduxUpdate("MENU_CLICK", "admin")} to="/admin">{`${langLibrary.adminSite.toString().concat('\u205F|')}`}</Link></div>}
+                    {this.props.isadmin>0&&this.props.userid>0&&<div className={`menuItem ${this.props.userSetup.menuItem==="adminteacher"?"activeItem":""}`}><Link onClick={()=>this.props.onReduxUpdate("MENU_CLICK", "adminteacher")} to="/adminteacher">{`${langLibrary.adminSiteClass.toString().replace(' ', '\u205F').concat('\u205F|')}`}</Link></div>}
+                    <div className={`menuItemHw ${this.props.userSetup.menuItem==="homework"?"activeItem":""}`}><Link onClick={()=>this.props.onReduxUpdate("MENU_CLICK", "homework")} to="/hw">{`${langLibrary.homework}/${langLibrary.studying}`}</Link></div>
+                    {this.props.isadmin===1||this.props.isadmin===8?<div className={`menuItem ${this.props.userSetup.menuItem==="budget"?"activeItem":""}`}><Link onClick={()=>this.props.onReduxUpdate("MENU_CLICK", "budget")} to="/budget">{`${'|\u205F'.concat("Бюджет")}`}</Link></div>:null}
+                    {this.props.isadmin === 1?<div className={`mym-menuitem-workflow ${this.props.userSetup.menuItem==="workflow"?"activeItem":""}`}><Link onClick={()=>this.props.onReduxUpdate("MENU_CLICK", "workflow")} to="/workflow">{`${'|\u205F'.concat(langLibrary.project.toString())}`}</Link></div>:null}
                 </div>:null}
             </div>
         );
     }
 }
-
-export default connect(mapStateToProps)(Menu)
+const mapDispatchToProps = dispatch => {
+    return ({
+        onReduxUpdate : (key, payload) => dispatch({type: key, payload: payload}),
+        onStopLoading : ()=> dispatch({type: 'APP_LOADED'}),
+        onStartLoading : ()=> dispatch({type: 'APP_LOADING'}),
+    })
+}
+export default connect(mapStateToProps, mapDispatchToProps)(Menu)

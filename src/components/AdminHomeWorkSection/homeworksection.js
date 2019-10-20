@@ -184,11 +184,6 @@ class HomeWorkSection extends Component {
                    .then(response => {
                        console.log(response.data)
                        this.props.onHomeWorkChanged(response.data)
-                       // this.setState({
-                       //     emails : response.data//response.data.map((item, i) => (<div className="itemInEmailList" key={item.id}>{item.email}<button id={item.id} onClick={this.deleteItemInList.bind(this)}>-</button></div>))
-                       // })
-                       // dispatch({type: 'UPDATE_SETUP_REMOTE', payload: response.data})
-                       // this.props.onInitState(response.data.subjects_list, response.data.subjects_count);
                    })
                    .catch(response => {
                        console.log(response);
@@ -456,7 +451,6 @@ class HomeWorkSection extends Component {
 
 const mapDispatchToProps = dispatch => {
     return ({
-        onInitState: () => dispatch([]),
         onUserLoggingByToken : (email, token, kind)=>{
             const asyncLoggedInByToken = (email, token, kind) =>{
                 return dispatch => {

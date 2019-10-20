@@ -64,7 +64,7 @@ class EmailList extends Component {
             "name": this.props.userSetup.userName+'[v'+i+']',
             "student_nick" : this.props.userSetup.userName+'[v'+i+']',
             "notwebadding" : true,
-            "isadmin" : 3,
+            "isadmin" : 16,
             "isout" : true
         };
         ISDEBUG&&console.log(JSON.stringify(data))
