@@ -48,9 +48,9 @@ class UniversalTable extends Component {
     }
     componentWillReceiveProps(props) {
 
-        const { year, head } = this.props;
-        // console.log("HEAD2", props.year, year, props.head, head)
-        if (props.year !== year || props.head.lenght !== head.length) {
+        const { year, head, render, initrows, rows } = this.props;
+        console.log("HEAD2", props.rows.length, rows.length)
+        if (props.year !== year || props.head.lenght !== head.length || props.render !== render || props.rows.length !== rows.length) {
             // this.fetchShoes(id)
             //     .then(this.refreshShoeList)
             const {classNameOfTD} = this.props
@@ -221,7 +221,7 @@ class UniversalTable extends Component {
         const {classNameOfTD} = this.props
         const {arrRows : rows, row : row_state, column : column_state, checkedMap} = this.state
 
-        // console.log("onClick", this.state.arrRows, this.state.rows)
+        console.log("onClick", this.state.arrRows, this.state.rows)
         if (e.target.nodeName === "TD") {
             let row = Number(e.target.id.split('#')[0]),
                 column = Number(e.target.id.split('#')[1])
@@ -244,7 +244,6 @@ class UniversalTable extends Component {
                 }
             )
         }
-        // console.log("onClick.2", this.state.arrRows, this.state.rows)
     }
     onBlur(e) {
         const {classNameOfTD} = this.props
@@ -362,6 +361,14 @@ class UniversalTable extends Component {
                 reduxrows = this.props.userSetup.aliasesList;
                 rows = this.createTableRows(reduxrows, this.onInputChange, true, row_state, column_state, classNameOfTD, checkedMap)
                 break;
+            case 'budgetpaysin' :
+                reduxrows = this.props.userSetup.budgetpays.filter(item=>item.debet===1);
+                rows = this.createTableRows(reduxrows, this.onInputChange, true, row_state, column_state, classNameOfTD, checkedMap)
+                break;
+            case 'budgetpaysout' :
+                reduxrows = this.props.userSetup.budgetpays.filter(item=>item.debet===null);
+                rows = this.createTableRows(reduxrows, this.onInputChange, true, row_state, column_state, classNameOfTD, checkedMap)
+                break;
             default :
                 break;
         }
@@ -371,19 +378,19 @@ class UniversalTable extends Component {
         }
 
 
-        console.log("UniversalTable: RENDER")
+        // console.log("UniversalTable: RENDER")
 
         return(
-            <div className="mym-universaltable-container">
+            <div className="mym-universaltable-container" height={this.props.height}>
                 <div className="row">
                     <div className="board">
-                        {this.props.btncaption.length?<div className="mym-btn-add-lang-alias" onClick={this.onAddNewRow}>{this.props.btncaption}</div>:null}
+                            {this.props.btncaption.length?<div className="mym-btn-add-lang-alias" onClick={this.onAddNewRow}>{this.props.btncaption}</div>:null}
                         <table id="simple-board" style={{overflowY: "scroll"}}>
                             <thead style={{display: "block"}}>
                                 {head}
                             </thead>
                         </table>
-                        <div style={{maxHeight: "500px", overflowY: "scroll"}}>
+                         <div style={{maxHeight: "500px", overflowY: "scroll"}}>
                             <table>
                                 <tbody>
                                     {rows}

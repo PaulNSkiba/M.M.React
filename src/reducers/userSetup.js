@@ -1,7 +1,7 @@
 /**
  * Created by Paul on 20.01.2019.
  */
-import {saveToLocalStorageOnDate, toYYYYMMDD, getLangLibrary} from '../js/helpers'
+import {saveToLocalStorageOnDate, toYYYYMMDD } from '../js/helpers'
 import {defLang} from '../config/config'
 import {isSSLChat} from '../config/config'
 
@@ -37,6 +37,7 @@ const initialState = (check)=>{
                     chatSSL: isSSLChat, localChatMessages: [],
                     isMobile: false, aliasesList: [], aliasesLang: "", menuItem : "",
                     budget : [], budgetpays : [],
+                    renderBudget : 1,
                 }
         }
     return obj
@@ -243,8 +244,9 @@ export function userSetupReducer(state = initialState(true), action) {
             return{...state, budget: action.payload}
         case 'BUDGETPAYS_UPDATE' :
             return{...state, budgetpays: action.payload}
+        case 'RENDER_BUDGET' :
+            return{...state, renderBudget: action.payload}
         case 'USER_LOGGEDOUT' :
-
             let initState = initialState(false)
             initState.langLibrary = action.langLibrary //action.langLibray?action.langLibray:(localStorage.getItem("langLibrary")?JSON.parse(localStorage.getItem("langLibrary")):null)
             console.log("userSetupReducer", 'USER_LOGGEDOUT', initState)

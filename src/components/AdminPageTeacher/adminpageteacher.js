@@ -13,7 +13,7 @@ import './adminpageteacher.css'
 import '../Menu/menu.css'
 import { Link } from 'react-router-dom';
 import MobileMenu from '../MobileMenu/mobilemenu'
-import { instanceAxios, mapStateToProps, getLangByCountry, waitCursorBlock } from '../../js/helpers'
+import { instanceAxios, mapStateToProps, getLangByCountry } from '../../js/helpers'
 import { arrLangs, defLang, STUDENTS_GET_URL } from '../../config/config'
 import ReactFlagsSelect from 'react-flags-select';
 import 'react-flags-select/css/react-flags-select.css';
@@ -211,15 +211,15 @@ class AdminPageTeacher extends Component {
             cell.push(<td style={{paddingLeft: "2px", paddingRight: "2px", width : "100px", "fontSize": "0.8em", textAlign : "center"}} className="center-text" id={(i + 1) + "#9#" + rowsArr[i].id} key={"r" + (i + 1) + "c9"}>
                 <select name="students" style={{width : "100px"}} defaultValue={-1} onClick={this.onSelectStudent}>
                     <option key={"key"} value={'-1#-1'}>
-                        { ""}
+                        {""}
                     </option>
                     {
                         rowsArr.map((value, key)=>{
-                        // console.log("students", value)
                         if (value.id!==rowsArr[i].id&&value.email!==null&&value.email.length)
                             return      <option key={key} value={rowsArr[i].id+'#'+value.id}>
                                             { value.student_name + `[${value.student_nick}]` }
-                                        </option>})}
+                                        </option>})
+                    }
                 </select>
             </td>)
             // Админ

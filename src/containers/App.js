@@ -36,7 +36,7 @@ import { store } from '../store/configureStore'
 import ReactFlagsSelect from 'react-flags-select';
 import 'react-flags-select/css/react-flags-select.css';
 import Logo from '../img/LogoMyMsmall.png'
-import ReactPlayer from 'react-player'
+// import ReactPlayer from 'react-player'
 
 // import Chart from "react-google-charts/dist/ReactGoogleCharts.d";
 // import {CSSTransitionGroup, CSSTransition, TransitionGroup } from 'react-transition-group/CSSTransitionGroup';
@@ -182,7 +182,7 @@ class App extends Component {
             // console.log("componentDidMount.1", langLibrary)
 
             let localstorage = JSON.parse(window.localStorage.getItem("myMarks.data"))
-            let {email, token, class_id : classID} = localstorage
+            // let {email, token, class_id : classID} = localstorage
 
             // this.props.onUserLoggingByToken(email, token, null, langLibrary);
 
@@ -759,7 +759,7 @@ class App extends Component {
     }
     userLogout() {
         console.log('userLOGOUT', this.props.userSetup.langLibrary)
-        const {myCountryCode} = this.state
+        // const {myCountryCode} = this.state
         window.localStorage.removeItem("myMarks.data");
         window.localStorage.removeItem("userSetup")
         window.localStorage.removeItem("userSetupDate")

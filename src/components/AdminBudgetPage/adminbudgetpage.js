@@ -55,12 +55,40 @@ class AdminBudgetPage extends Component {
             isMobile: this.props.userSetup.isMobile,
             factInsHeader: [],
             factInsHeaderEx: [],
-            curYear: (new Date().getFullYear())
+            curYear: (new Date().getFullYear()),
+            renderRows : 1,
+            curInRow : null,
+            curInColumn : null,
+            curOutRow : null,
+            curOutColumn : null,
         }
         this.headArray = [
             {name: "№ п/п", width: "20px"},
             {name: "Имя", width: "300px"},
             {name: "Нач.учёбы", width: "85px"},
+        ]
+        this.headInArray = [
+            {name: "№ п/п", width: "20px"},
+            {name: "ВЗНОС", width: "200px"},
+            {name: "Сокр.", width: "50px"},
+            {name: "Сумма", width: "50px"},
+            {name: "Регуляр- ный (раз в месяц)", width: "60px"},
+            {name: "Дата оплаты", width: "95px"},
+            {name: "Дата окончания оплаты", width: "95px"},
+            {name: "День месяца (для регул-х)", width: "50px"},
+            {name: "Нач. сальдо", width: "40px"},
+            {name: "-", width: "20px"},
+        ]
+       this.headOutArray = [
+           {name: "№ п/п", width: "20px"},
+           {name: "РАСХОД", width: "200px"},
+           {name: "Сокр.", width: "50px"},
+           {name: "Сумма", width: "50px"},
+           {name: "Регуляр- ный (раз в месяц)", width: "60px"},
+           {name: "Дата оплаты", width: "95px"},
+           {name: "Дата окончания оплаты", width: "95px"},
+           {name: "День месяца (для регул-х)", width: "50px"},
+           {name: "-", width: "20px"},
         ]
     }
     initData() {
@@ -94,109 +122,6 @@ class AdminBudgetPage extends Component {
             .catch(res=>{
                 console.log("getbudgetError", res)
             })
-
-        // const planIns = [
-        //     {
-        //         id: 5,
-        //         name: "Долг",
-        //         short: "Долг",
-        //         sum: 0,
-        //         start: "20180901",
-        //         regular: false,
-        //         end: null,
-        //         dayOfPayment: null,
-        //         income: true,
-        //     },
-        //     {
-        //         id: 3,
-        //         name: "Разовый взнос (2018)",
-        //         short: "РВ(18)",
-        //         sum: 1500,
-        //         start: "20180901",
-        //         regular: false,
-        //         end: null,
-        //         dayOfPayment: null,
-        //         income: false,
-        //     },
-        //     {
-        //         id: 4,
-        //         name: "Разовый взнос (2019)",
-        //         short: "РВ(19)",
-        //         sum: 1500,
-        //         start: "20190901",
-        //         regular: false,
-        //         end: null,
-        //         dayOfPayment: null,
-        //         income: false,
-        //     },
-        //     {
-        //         id: 1,
-        //         name: "Ежемесячный платёж (класс) 2018",
-        //         short: "ЕП(к) 2018",
-        //         sum: 250,
-        //         start: "20180901",
-        //         regular: true,
-        //         end: null,
-        //         dayOfPayment: 1,
-        //         income: false,
-        //     },
-        //     {
-        //         id: 2,
-        //         name: "Ежемесячный платёж (школа)",
-        //         short: "ЕП(ш) 2018",
-        //         sum: 0,
-        //         start: "20180901",
-        //         regular: true,
-        //         end: null,
-        //         dayOfPayment: 1,
-        //         income: false,
-        //     },
-        //     {
-        //         id: 6,
-        //         name: "Ежемесячный платёж (класс) 2019",
-        //         short: "ЕП(к) 2019",
-        //         sum: 250,
-        //         start: "20190901",
-        //         regular: true,
-        //         end: null,
-        //         dayOfPayment: 1,
-        //         income: false,
-        //     },
-        //
-        // ]
-        // const planOuts = [
-        //     {
-        //         id: 6,
-        //         name: "Подарки учителям",
-        //         sum: 300,
-        //         start: "20190901",
-        //         regular: false,
-        //         end: null,
-        //         dayOfPayment: 1,
-        //         income: false,
-        //     },
-        //     {
-        //         id: 7,
-        //         name: "Экскурсия",
-        //         sum: 4000,
-        //         start: "20191001",
-        //         regular: false,
-        //         end: null,
-        //         dayOfPayment: 1,
-        //         income: false,
-        //     },
-        //     {
-        //         id: 8,
-        //         name: "Подарки мальчикам",
-        //         sum: 1500,
-        //         start: "20191002",
-        //         regular: false,
-        //         end: null,
-        //         dayOfPayment: null,
-        //         income: false,
-        //     },
-        // ]
-
     }
 
     componentWillMount() {
@@ -273,36 +198,47 @@ class AdminBudgetPage extends Component {
             }
             return arr
         })()
+        const {curInRow : row, curInColumn : column} = this.state
         return <div>
-            <table height="300px" style={{margin: "5px", width: "98%"}}>
-                <thead style={{backgroundColor: "#C6EFCE"}}>
+            <table style={{marginTop: "5px", width: "98%", overflowY: "scroll"}}>
+                <thead style={{backgroundColor: "#C6EFCE", display: "block"}}>
                 <tr>
-                    <th style={{width: "30px", padding: "5px"}}>№ п/п</th>
-                    <th style={{width: "100%", padding: "5px"}}>Наименование</th>
+                    <th style={{width: "20px", padding: "5px"}}>№ п/п</th>
+                    <th style={{width: "200px", padding: "5px"}}>Наименование</th>
                     <th style={{width: "50px", padding: "5px"}}>Сокр.</th>
                     <th style={{width: "50px", padding: "5px"}}>Сумма</th>
-                    <th style={{width: "30px", padding: "5px"}}>Регуляр- ный (раз в месяц)</th>
-                    <th style={{width: "80px", padding: "5px"}}>Дата оплаты</th>
-                    <th style={{width: "80px", padding: "5px"}}>Дата окончания оплаты</th>
+                    <th style={{width: "60px", padding: "5px"}}>Регуляр- ный (раз в месяц)</th>
+                    <th style={{width: "95px", padding: "5px"}}>Дата оплаты</th>
+                    <th style={{width: "95px", padding: "5px"}}>Дата окончания оплаты</th>
                     <th style={{width: "50px", padding: "5px"}}>День месяца (для регул-х)</th>
-                    <th style={{width: "30px", padding: "5px"}}>Нач. сальдо</th>
+                    <th style={{width: "40px", padding: "5px"}}>Нач. сальдо</th>
                     <th style={{width: "20px", padding: "5px"}}>-</th>
                 </tr>
                 </thead>
+            </table>
+            <div style={{maxHeight: "250px", overflowY: "scroll"}}>
+                <table>
                 <tbody>
                 {this.state.planIns.map((item, key) =>
                     <tr key={"r" + key}>
-                        <td style={{width: "30px", textAlign: "center"}}>{key + 1}</td>
-                        <td style={{width: "100%"}}>{item.name}</td>
-                        <td style={{width: "50px", textAlign: "center"}}>{item.short}</td>
-                        <td style={{width: "30px", textAlign: "center"}}>{item.sum}</td>
-                        <td style={{width: "30px", textAlign: "center"}}>
+                        <td style={{width: "20px", padding: "5px", textAlign: "center"}}>{key + 1}</td>
+                        <td style={{width: "200px", padding: "5px"}} onClick={()=>this.setState({curInRow : key + 1, curInColumn : 2})}>{item.name}
+                            {(row === (key + 1) && column === 2) ?
+                                <input type="text" id={(key + 1) + "#2#" + item.id} className="inputEditor"
+                                       onChange={e=>this.onInputChange(e.target.value, item.id)}
+                                       onKeyPress={this.onInputKeyPress}
+                                       onBlur={this.onBlur}
+                                       defaultValue={item.name}/> : ""}
+                        </td>
+                        <td style={{width: "50px", padding: "5px", textAlign: "center"}}>{item.short}</td>
+                        <td style={{width: "50px", padding: "5px", textAlign: "center"}}>{item.sum}</td>
+                        <td style={{width: "60px", padding: "5px", textAlign: "center"}}>
                             <input type="checkbox" onChange={(e) => {
                                 console.log(e.target.value);
                                 this.changeState(e, item.id, 4)
                             }} id={(key + 1) + "#7_1#" + key} checked={item.isregular===1}/>
                         </td>
-                        <td style={{width: "80px", textAlign: "center"}}>
+                        <td style={{width: "95px", padding: "5px", textAlign: "center"}}>
                             <DatePicker
                                 // showMonthYearDropdown
                                 fixedHeight
@@ -320,7 +256,7 @@ class AdminBudgetPage extends Component {
 
                             />
                         </td>
-                        <td style={{width: "80px", textAlign: "center"}}>
+                        <td style={{width: "95px", padding: "5px", textAlign: "center"}}>
                             <DatePicker
                                 // showMonthYearDropdown
                                 fixedHeight
@@ -337,7 +273,7 @@ class AdminBudgetPage extends Component {
                                 }}/>}
                             />
                         </td>
-                        <td style={{width: "30px", textAlign: "center"}}>
+                        <td style={{width: "50px", padding: "5px", textAlign: "center"}}>
                             <select name="days" onClick={this.onLangClick} defaultValue={item.dayOfPayment}>
                                 {daysArr.map((item, key) => {
                                     return <option key={key}>
@@ -346,17 +282,18 @@ class AdminBudgetPage extends Component {
                                 })}
                             </select>
                         </td>
-                        <td style={{width: "30px", textAlign: "center"}}>
+                        <td style={{width: "40px", padding: "5px", textAlign: "center"}}>
                             <input type="checkbox" onChange={(e) => {
                                 console.log(e.target.value);
                                 this.changeState(e, item.id, 8)
                             }} id={(key + 1) + "#7_1#" + key} checked={item.issaldo}/>
                         </td>
-                        <td><button onClick={()=>{console.log("Удалить?")}}>-</button></td>
+                        <td style={{width: "20px", padding: "5px", textAlign: "center"}}><button onClick={()=>{console.log("Удалить?")}}>-</button></td>
                     </tr>
                 )}
                 </tbody>
             </table>
+            </div>
         </div>
     }
     fillOutTable = () => {
@@ -451,9 +388,181 @@ class AdminBudgetPage extends Component {
     onDayOfPaymentClick=e=>{
 
     }
-    createTableRows(rowsArr, onInputChange, withInput, row, column, classNameOfTD, checkedMap, headex, year) {
-        // let {row, column} = this.state
-        console.log("createTableRows", headex, this.props.userSetup.budget)
+    createInTableRows(rowsArr, onInputChange, withInput, row, column, classNameOfTD, checkedMap, headex, year) {
+        let cell = [],
+            rows = []
+        const daysArr = (() => {
+            let arr = [];
+            for (let i = 1; i < 32; i++) {
+                arr.push(i)
+            }
+            return arr
+        })()
+        console.log("rowsArrInTable", rowsArr)
+        let key, item
+        if (rowsArr) {
+            for (let i = 0; i < rowsArr.length; i++) {
+                cell = []
+                key = i
+                item = rowsArr[i]
+                cell.push(<td key={"bbr" + (i + 1) + "c1"} style={{width: "20px", padding: "2px", textAlign: "center"}}>{i + 1}</td>)
+                cell.push(<td key={"bbr" + (i + 1) + "c2"} style={{width: "200px", padding: "2px"}} onClick={()=>this.setState({curInRow : key + 1, curInColumn : 2})}>{item.name}
+                        {(row === (i + 1) && column === 2) ?
+                            <input type="text" id={(i + 1) + "#2#" + item.id} className="inputEditor"
+                                   onChange={e=>this.onInputChange(e.target.value, item.id)}
+                                   onKeyPress={this.onInputKeyPress}
+                                   onBlur={this.onBlur}
+                                   defaultValue={item.name}/> : ""}
+                        </td>)
+                cell.push(<td key={"bbr" + (i + 1) + "c3"} style={{width: "50px", padding: "2px", textAlign: "center"}}>{item.short}</td>)
+                cell.push(<td key={"bbr" + (i + 1) + "c4"} style={{width: "50px", padding: "2px", textAlign: "center"}}>{item.sum}</td>)
+                cell.push(<td key={"bbr" + (i + 1) + "c5"} style={{width: "60px", padding: "2px", textAlign: "center"}}>
+                        <input type="checkbox" onChange={(e) => {
+                            console.log(e.target.value);
+                            this.changeState(e, item.id, 4)
+                        }} id={(key + 1) + "#7_1#" + key} checked={item.isregular===1}/>
+                        </td>)
+                cell.push(<td key={"bbr" + (i + 1) + "c6"} style={{width: "95px", padding: "2px", textAlign: "center"}}>
+                                <DatePicker
+                                // showMonthYearDropdown
+                                fixedHeight
+                                dateFormat="dd/MM/yyyy"
+                                withPortal
+                                locale="ru"
+                                selected={item.paydate === null ? null : item.paydate.length===8?dateFromYYYYMMDD(item.paydate):new Date(item.paydate)}
+                                onChange={date => this.handleDate('start', item.id, date)}
+                                customInput={<input style={{
+                                    width: "80px",
+                                    textAlign: "center",
+                                    backgroundColor: "#7DA8E6",
+                                    color: "#fff"
+                                }}/>}
+                                />
+                             </td>)
+                cell.push(<td key={"bbr" + (i + 1) + "c7"} style={{width: "95px", padding: "2px", textAlign: "center"}}>
+                                <DatePicker
+                                // showMonthYearDropdown
+                                fixedHeight
+                                dateFormat="dd/MM/yyyy"
+                                withPortal
+                                locale="ru"
+                                selected={item.payend === null ? null : item.payend.length===8?dateFromYYYYMMDD(item.payend):new Date(item.payend)}
+                                onChange={date => this.handleDate('end', item.id, date)}
+                                customInput={<input style={{
+                                    width: "80px",
+                                    textAlign: "center",
+                                    backgroundColor: "#7DA8E6",
+                                    color: "#fff"
+                                }}/>}
+                                />
+                             </td>)
+                cell.push(<td key={"bbr" + (i + 1) + "c8"} style={{width: "50px", padding: "2px", textAlign: "center"}}>
+                                <select name="days" onClick={this.onLangClick} defaultValue={item.dayOfPayment}>
+                                {daysArr.map((item, key) => {
+                                    return <option key={key}>
+                                        {item}
+                                    </option>
+                                })}
+                                </select>
+                                </td>)
+                cell.push(<td key={"bbr" + (i + 1) + "c9"} style={{width: "40px", padding: "2px", textAlign: "center"}}>
+                                <input type="checkbox" onChange={(e) => {
+                                    console.log(e.target.value);
+                                    this.changeState(e, item.id, 8)
+                                }} id={(key + 1) + "#7_1#" + key} checked={item.issaldo}/>
+                            </td>)
+                cell.push(<td key={"bbr" + (i + 1) + "c10"} style={{width: "20px", padding: "2px", textAlign: "center"}}><button onClick={()=>{console.log("Удалить?")}}>-</button></td>)
+                rows.push(<tr key={i}>{cell}</tr>)
+            }
+        }
+        console.log("rows", rows)
+        return rows;
+    }
+    createOutTableRows(rowsArr, onInputChange, withInput, row, column, classNameOfTD, checkedMap, headex, year) {
+        let cell = [],
+            rows = []
+        const daysArr = (() => {
+            let arr = [];
+            for (let i = 1; i < 32; i++) {
+                arr.push(i)
+            }
+            return arr
+        })()
+        console.log("rowsArrInTable", rowsArr)
+        let key, item
+        if (rowsArr) {
+            for (let i = 0; i < rowsArr.length; i++) {
+                cell = []
+                key = i
+                item = rowsArr[i]
+                cell.push(<td key={"bbr" + (i + 1) + "c1"} style={{width: "20px", padding: "2px", textAlign: "center"}}>{i + 1}</td>)
+                cell.push(<td key={"bbr" + (i + 1) + "c2"} style={{width: "200px", padding: "2px"}} onClick={()=>this.setState({curInRow : key + 1, curInColumn : 2})}>{item.name}
+                    {(row === (i + 1) && column === 2) ?
+                        <input type="text" id={(i + 1) + "#2#" + item.id} className="inputEditor"
+                               onChange={e=>this.onInputChange(e.target.value, item.id)}
+                               onKeyPress={this.onInputKeyPress}
+                               onBlur={this.onBlur}
+                               defaultValue={item.name}/> : ""}
+                </td>)
+                cell.push(<td key={"bbr" + (i + 1) + "c3"} style={{width: "50px", padding: "2px", textAlign: "center"}}>{item.short}</td>)
+                cell.push(<td key={"bbr" + (i + 1) + "c4"} style={{width: "50px", padding: "2px", textAlign: "center"}}>{item.sum}</td>)
+                cell.push(<td key={"bbr" + (i + 1) + "c5"} style={{width: "60px", padding: "2px", textAlign: "center"}}>
+                    <input type="checkbox" onChange={(e) => {
+                        console.log(e.target.value);
+                        this.changeState(e, item.id, 4)
+                    }} id={(key + 1) + "#7_1#" + key} checked={item.isregular===1}/>
+                </td>)
+                cell.push(<td key={"bbr" + (i + 1) + "c6"} style={{width: "95px", padding: "2px", textAlign: "center"}}>
+                    <DatePicker
+                        // showMonthYearDropdown
+                        fixedHeight
+                        dateFormat="dd/MM/yyyy"
+                        withPortal
+                        locale="ru"
+                        selected={item.paydate === null ? null : item.paydate.length===8?dateFromYYYYMMDD(item.paydate):new Date(item.paydate)}
+                        onChange={date => this.handleDate('start', item.id, date)}
+                        customInput={<input style={{
+                            width: "80px",
+                            textAlign: "center",
+                            backgroundColor: "#7DA8E6",
+                            color: "#fff"
+                        }}/>}
+                    />
+                </td>)
+                cell.push(<td key={"bbr" + (i + 1) + "c7"} style={{width: "95px", padding: "2px", textAlign: "center"}}>
+                    <DatePicker
+                        // showMonthYearDropdown
+                        fixedHeight
+                        dateFormat="dd/MM/yyyy"
+                        withPortal
+                        locale="ru"
+                        selected={item.payend === null ? null : item.payend.length===8?dateFromYYYYMMDD(item.payend):new Date(item.payend)}
+                        onChange={date => this.handleDate('end', item.id, date)}
+                        customInput={<input style={{
+                            width: "80px",
+                            textAlign: "center",
+                            backgroundColor: "#7DA8E6",
+                            color: "#fff"
+                        }}/>}
+                    />
+                </td>)
+                cell.push(<td key={"bbr" + (i + 1) + "c8"} style={{width: "50px", padding: "2px", textAlign: "center"}}>
+                    <select name="days" onClick={this.onLangClick} defaultValue={item.dayOfPayment}>
+                        {daysArr.map((item, key) => {
+                            return <option key={key}>
+                                {item}
+                            </option>
+                        })}
+                    </select>
+                </td>)
+                cell.push(<td key={"bbr" + (i + 1) + "c10"} style={{width: "20px", padding: "2px", textAlign: "center"}}><button onClick={()=>{console.log("Удалить?")}}>-</button></td>)
+                rows.push(<tr key={i}>{cell}</tr>)
+            }
+        }
+        console.log("rows", rows)
+        return rows;
+    }
+        createTableRows(rowsArr, onInputChange, withInput, row, column, classNameOfTD, checkedMap, headex, year) {
         let cell = [],
             rows = []
             rowsArr = rowsArr.filter(item=>item.isout!==1)
@@ -490,119 +599,57 @@ class AdminBudgetPage extends Component {
 
                 if (headex!==undefined)
                     for (let j = 0; j < headex.length; j++) {
-                        let curSum = null
+                        let curSum = null, id = 0
                         if (this.props.userSetup.budget!==undefined&&this.props.userSetup.budget.length) {
                             const arr = this.props.userSetup.budget.filter(item => {
                                 // console.log("FILTER", headex[j], item)
                                 return item.student_id === rowsArr[i].id
                             && item.payment_id === headex[j].item.id
-                            && (headex[j].item.isregular === 1?toYYYYMMDD(new Date(item.paydate)) === toYYYYMMDD(new Date(headex[j].realdate)):toYYYYMMDD(new Date(item.paydate)) === toYYYYMMDD(new Date(headex[j].item.paydate)))
+                            && (headex[j].item.isregular === 1?(item.paydate.length===8?item.paydate:toYYYYMMDD(new Date(item.paydate))) === toYYYYMMDD(new Date(headex[j].realdate)):(item.paydate.length===8?item.paydate:toYYYYMMDD(new Date(item.paydate))) === toYYYYMMDD(new Date(headex[j].item.paydate)))
                             && (headex[j].item.isregular === 1?j === item.payment_offset:true)
                         }
                             )
 
-                            if (arr.length)
+                            if (arr.length) {
+
+                                id = arr[0].id
                                 curSum = arr[0].sum
+                                // console.log("CURSUM", id, curSum)
+                            }
                         }
                         cell.push(<td key={"bbr" + j + (i + 1) + "c3"}
                                       id={headex[j].item.id + '#' + rowsArr[i].id + "#" + headex[j].item.sum}
                                       onClick={() => {
-                                          const budgetID = 0
+                                          const budgetID = id
                                           const json = `{"id":${budgetID},
                                                         "class_id":${this.props.userSetup.classID},
                                                         "user_id":${this.props.userSetup.userID},
                                                         "student_id":${rowsArr[i].id},
-                                                        "paydate":"${toYYYYMMDD(new Date(headex[j].realdate))}",
-                                                        "sum":${headex[j].item.sum.toString().replace(",",".")},
+                                                        "paydate":"${headex[j].item.isregular!==1?headex[j].item.paydate:toYYYYMMDD(new Date(headex[j].realdate))}",
+                                                        "sum":${id>0&&curSum!==null&&headex[j].item.isregular?null:headex[j].item.sum.toString().replace(",",".")},
                                                         "payment_id":${headex[j].item.id},
                                                         "payment_offset":${j},
                                                         "isregular":${headex[j].item.isregular}}`
                                           console.log("JSON", json)
                                           instanceAxios().post(`${API_URL}budget/update/${budgetID}`,json)
-                                              .then(res=>console.log("UPDATED", res))
+                                              .then(res=>{
+                                                  // console.log("UPDATED", res)
+                                                  let newarr = this.props.userSetup.budget
+                                                  if (id)
+                                                     newarr = newarr.filter(item=>item.id!=id)
+                                                  newarr.push(res.data)
+                                                  this.props.onReduxUpdate("BUDGET_UPDATE", newarr)
+                                                  this.props.onReduxUpdate("RENDER_BUDGET", ++this.props.userSetup.renderBudget)
+                                                  this.setState({renderRows : ++this.state.renderRows})
+
+                                              })
                                               .catch(res=>console.log("ERROR", res))
-                                          console.log(headex[j].item.id + '#' + rowsArr[i].id + "#" + headex[j].item.sum)
+                                          // console.log(headex[j].item.id + '#' + rowsArr[i].id + "#" + headex[j].item.sum)
                                       }}
-                                      style={{width: "54px", textAlign: "center", backgroundColor : curSum!==null?"#C6EFCE":"#fff"}}>
+                                      style={{width: "54px", textAlign: "center", backgroundColor : curSum!==null?"#C6EFCE":"#fff", cursor : "pointer"}}>
                             {curSum}
                         </td>)
                     }
-                // // Галочка скрыть студента из списка
-                // cell.push(<td className="center-text" id={(i + 1) + "#6#" + rowsArr[i].id} key={"r" + (i + 1) + "c6"}>
-                //     <input type="checkbox" onChange={this.changeState} id={(i + 1) + "#6_1#" + rowsArr[i].id}
-                //            checked={checkedMap.has((i + 1) + "#6_1#" + rowsArr[i].id)}/>
-                // </td>)
-                // // Реальный без Email
-                // cell.push(<td className="center-text" id={(i + 1) + "#7#" + rowsArr[i].id} key={"r" + (i + 1) + "c7"}>
-                //     <input type="checkbox" onChange={this.changeState} id={(i + 1) + "#7_1#" + rowsArr[i].id}
-                //            checked={checkedMap.has((i + 1) + "#7_1#" + rowsArr[i].id)}/>
-                // </td>)
-                // // Оценок
-                // cell.push(<td style={{textAlign : "center"}} id={(i + 1) + "#8#" + rowsArr[i].id} key={"r" + (i + 1) + "c8"}>
-                //     {rowsArr[i].marks_count}
-                // </td>)
-                // // Другой студент
-                // cell.push(<td className="center-text" id={(i + 1) + "#9#" + rowsArr[i].id} key={"r" + (i + 1) + "c9"}>
-                //     <select name="students" style={{width : "80px"}} defaultValue={-1} onClick={this.onSelectStudent}>
-                //         <option key={"key"} value={'-1#-1'}>
-                //             { ""}
-                //         </option>
-                //         {
-                //             rowsArr.map((value, key)=>{
-                //                 if (value.id!==rowsArr[i].id&&value.email!==null&&value.email.length)
-                //                     return      <option key={key} value={rowsArr[i].id+'#'+value.id}>
-                //                         { value.student_name + `[${value.student_nick}]` }
-                //                     </option>})}
-                //     </select>
-                // </td>)
-                // // Админ
-                // cell.push(<td valign="bottom" className="center-text" id={(i + 1) + "#10#" + rowsArr[i].id} key={"r" + (i + 1) + "c10"}>
-                //     <input type="checkbox" onChange={this.changeState} id={(i + 1) + "#10#" + rowsArr[i].id}
-                //            disabled="disabled" checked={checkedMap.has((i + 1) + "#10#" + rowsArr[i].id)}/>
-                // </td>)
-                // // Учитель
-                // cell.push(<td valign="bottom" className="center-text" id={(i + 1) + "#12#" + rowsArr[i].id} key={"r" + (i + 1) + "c10"}>
-                //     <input type="checkbox" onChange={this.changeState} id={(i + 1) + "#12#" + rowsArr[i].id}
-                //            disabled="disabled" checked={checkedMap.has((i + 1) + "#12#" + rowsArr[i].id)}/>
-                // </td>)
-                // // Ученик
-                // cell.push(<td valign="bottom" className="center-text" id={(i + 1) + "#13#" + rowsArr[i].id} key={"r" + (i + 1) + "c10"}>
-                //     <input type="checkbox" onChange={this.changeState} id={(i + 1) + "#13#" + rowsArr[i].id}
-                //            disabled="disabled" checked={checkedMap.has((i + 1) + "#13#" + rowsArr[i].id)}/>
-                // </td>)
-                // // Родком
-                // cell.push(<td valign="bottom" className="center-text" id={(i + 1) + "#14#" + rowsArr[i].id} key={"r" + (i + 1) + "c10"}>
-                //     <input type="checkbox" onChange={this.changeState} id={(i + 1) + "#14#" + rowsArr[i].id}
-                //            disabled="disabled" checked={checkedMap.has((i + 1) + "#14#" + rowsArr[i].id)}/>
-                // </td>)
-                // // Подписка
-                // cell.push(<td valign="bottom" className="center-text" id={(i + 1) + "#15#" + rowsArr[i].id} key={"r" + (i + 1) + "c10"}>
-                //     <input type="checkbox" onChange={this.changeState} id={(i + 1) + "#15#" + rowsArr[i].id}
-                //            disabled="disabled" checked={checkedMap.has((i + 1) + "#15#" + rowsArr[i].id)}/>
-                // </td>)
-                // // Перевод
-                // cell.push(<td valign="bottom" className="center-text" id={(i + 1) + "#16#" + rowsArr[i].id} key={"r" + (i + 1) + "c10"}>
-                //     <input type="checkbox" onChange={this.changeState} id={(i + 1) + "#16#" + rowsArr[i].id}
-                //            disabled="disabled" checked={checkedMap.has((i + 1) + "#16#" + rowsArr[i].id)}/>
-                // </td>)
-                // // Админ-ция
-                // cell.push(<td valign="bottom" className="center-text" id={(i + 1) + "#17#" + rowsArr[i].id} key={"r" + (i + 1) + "c10"}>
-                //     <input type="checkbox" onChange={this.changeState} id={(i + 1) + "#17#" + rowsArr[i].id}
-                //            disabled="disabled" checked={checkedMap.has((i + 1) + "#17#" + rowsArr[i].id)}/>
-                // </td>)
-                // // Партнер
-                // cell.push(<td valign="bottom" className="center-text" id={(i + 1) + "#18#" + rowsArr[i].id} key={"r" + (i + 1) + "c10"}>
-                //     <input type="checkbox" onChange={this.changeState} id={(i + 1) + "#18#" + rowsArr[i].id}
-                //            disabled="disabled" checked={checkedMap.has((i + 1) + "#18#" + rowsArr[i].id)}/>
-                // </td>)
-                // // Примечание
-                // cell.push(<td className="left-text"
-                //               style={{"paddingLeft": "5px", "paddingRight": "5px", "fontSize": "0.8em"}}
-                //               id={(i + 1) + "#5#" + rowsArr[i].id} key={"r" + (i + 1) + "c5"}
-                //               onClick={this.onClick}>{rowsArr[i].memo}{(row === (i + 1) && column === 5 && withInput) ?
-                //     <input type="text" id={(i + 1) + "#5#" + rowsArr[i].id} className="inputEditor"
-                //            onChange={e=>this.onInputChange(e.target.value, rowsArr[i].id)} onKeyPress={this.onInputKeyPress}
-                //            defaultValue={rowsArr[i].memo}/> : ""}</td>)
                 rows.push(<tr key={i}>{cell}</tr>)
             }
         }
@@ -662,7 +709,7 @@ class AdminBudgetPage extends Component {
     loginBlock = (userID, userName, langLibrary) => {
         let {loading} = this.props.userSetup
         let {showLoginLight} = this.state
-        console.log("loginBlock", loading, userID)
+        // console.log("loginBlock", loading, userID)
         return <div className="logBtnsBlock">
             <div>
                 {!loading && !userID ?
@@ -713,9 +760,37 @@ class AdminBudgetPage extends Component {
             }
             return arr
         })()
-        let {userID, userName, isadmin, loading, showLoginLight, langLibrary} = this.props.userSetup;
+        const objInBlank = {
+            id : 0,
+            user_id : this.props.userSetup.userID,
+            class_id : this.props.userSetup.classID,
+            name : "введите название",
+            short : "короткое",
+            isregular : null,
+            paydate : null,
+            payend : null,
+            sum : null,
+            issaldo : null,
+            debet : 1,
+            monthday : null
+        }
+        const objOutBlank = {
+            id : 0,
+            user_id : this.props.userSetup.userID,
+            class_id : this.props.userSetup.classID,
+            name : "введите название",
+            short : "короткое",
+            isregular : null,
+            paydate : null,
+            payend : null,
+            sum : null,
+            issaldo : null,
+            debet : null,
+            monthday : null
+        }
+        let {userID, userName, isadmin, langLibrary} = this.props.userSetup;
         let {isMobile} = this.state
-        console.log("RENDER_BUDGET")
+        // console.log("RENDER_BUDGET", this.props.userSetup)
         const objBlank = {}
         return (
             <div className="AdminPage">
@@ -755,28 +830,58 @@ class AdminBudgetPage extends Component {
                 <div className="navbar-shadow"></div>
                 <div className="insAndOutsFactBlock">
                     <div className={"insBlock"}>
-                        <div style={{
-                            display: "flex",
-                            justifyContent: "space-between",
-                            height: "30px",
-                            margin: "5px 5%"
-                        }}>
-                            <div style={{fontWeight: "600", fontSize: "1em"}}>Взносы</div>
-                            <button>Добавить взнос</button>
-                        </div>
-                        {this.fillInTable()}
+                        {/*<div style={{*/}
+                            {/*display: "flex",*/}
+                            {/*justifyContent: "space-between",*/}
+                            {/*height: "30px",*/}
+                            {/*margin: "5px 5%"*/}
+                        {/*}}>*/}
+                            {/*<div style={{fontWeight: "600", fontSize: "1em"}}>Взносы</div>*/}
+                            {/*<button>Добавить взнос</button>*/}
+                        {/*</div>*/}
+                        {/*{this.fillInTable()}*/}
+                        <UniversalTable head={this.headInArray}
+                                        rows={this.state.planIns}
+                                        createTableRows={this.createInTableRows}
+                                        classNameOfTD={this.classNameOfTD}
+                                        onstudentclick={this.onSelectStudent}
+                                        selectedstudent={this.state.curStudent}
+                                        btncaption={"+Взнос"}
+                                        objblank={objInBlank}
+                                        initrows={() => {
+                                            return this.props.userSetup.budgetpays
+                                        }}
+                                        height={"300px"}
+                                        kind={"budgetpaysin"}
+                                        year={this.state.curYear}
+                        />
                     </div>
                     <div className={"outsBlock"}>
-                        <div style={{
-                            display: "flex",
-                            justifyContent: "space-between",
-                            height: "30px",
-                            margin: "5px 5%"
-                        }}>
-                            <div style={{fontWeight: "600", fontSize: "1em"}}>Расходы</div>
-                            <button>Добавить затраты</button>
-                        </div>
-                        {this.fillOutTable()}
+                        {/*<div style={{*/}
+                            {/*display: "flex",*/}
+                            {/*justifyContent: "space-between",*/}
+                            {/*height: "30px",*/}
+                            {/*margin: "5px 5%"*/}
+                        {/*}}>*/}
+                            {/*<div style={{fontWeight: "600", fontSize: "1em"}}>Расходы</div>*/}
+                            {/*<button>Добавить затраты</button>*/}
+                        {/*</div>*/}
+                        {/*{this.fillOutTable()}*/}
+                        <UniversalTable head={this.headOutArray}
+                                        rows={this.state.planOuts}
+                                        createTableRows={this.createOutTableRows}
+                                        classNameOfTD={this.classNameOfTD}
+                                        onstudentclick={this.onSelectStudent}
+                                        selectedstudent={this.state.curStudent}
+                                        btncaption={"+Расход"}
+                                        objblank={objOutBlank}
+                                        initrows={() => {
+                                            return this.props.userSetup.budgetpays
+                                        }}
+                                        height={"300px"}
+                                        kind={"budgetpaysout"}
+                                        year={this.state.curYear}
+                        />
                     </div>
                 </div>
                 <div className="insAndOutsFactBlock">
@@ -800,15 +905,19 @@ class AdminBudgetPage extends Component {
                             </div>
                             {/*<YearPicker onChange={this.handleYear} />;*/}
                         </div>
-                        <UniversalTable head={this.state.factInsHeader} rows={this.state.rowArray}
-                                        createTableRows={this.createTableRows} classNameOfTD={this.classNameOfTD}
+                        <UniversalTable head={this.state.factInsHeader}
+                                        rows={this.state.rowArray}
+                                        createTableRows={this.createTableRows}
+                                        classNameOfTD={this.classNameOfTD}
                                         onstudentclick={this.onSelectStudent}
                                         selectedstudent={this.state.curStudent}
                                         btncaption={""}
+                                        render={this.props.userSetup.renderBudget}
                                         objblank={objBlank} initrows={() => {
-                            return this.props.userSetup.students
-                        }}
+                                            return this.props.userSetup.students
+                                        }}
                                         kind={"budget"}
+                                        height={"500px"}
                                         headex={ this.state.factInsHeaderEx}
                                         year={this.state.curYear}
                         />

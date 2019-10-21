@@ -2,7 +2,7 @@
  * Created by Paul on 22.01.2019.
  */
 import { LOGOUTUSER_URL, LOGINUSER_URL } from '../config/config'
-import { instanceAxios, getLangLibrary } from '../js/helpers'
+import { instanceAxios } from '../js/helpers'
 
 export const userLoggedIn = (email, pwd, provider, provider_id, langLibrary) => {
     return dispatch => {

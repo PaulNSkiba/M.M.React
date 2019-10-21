@@ -4,8 +4,14 @@
     font-size : 0.9em;
 }
 .menuItem a:hover{
-    color : #375c9e;
+    /*color : #375c9e;*/
     text-decoration: underline;
+    -webkit-box-shadow: 0 0 4px 7px #7DA8E6;
+    -moz-box-shadow: 0 0 4px 7px #7DA8E6;
+    box-shadow: 0 0 4px 7px #7DA8E6;
+    background-color: #7DA8E6;
+    color : white;
+    border-radius: 2px;
 }
 .menuItemHw a {
     color : var(--menu-homework);
@@ -13,8 +19,14 @@
     font-size : 0.9em;
 }
 .menuItemHw a:hover{
-    color : rgb(233, 190, 73);
+    color : rgb(249, 247, 140);
     text-decoration: underline;
+    -webkit-box-shadow: 0 0 4px 7px #7DA8E6;
+    -moz-box-shadow: 0 0 4px 7px #7DA8E6;
+    box-shadow: 0 0 4px 7px #7DA8E6;
+    background-color: #7DA8E6;
+    /*color : white;*/
+    border-radius: 2px;
 }
 .menuBlock{
     margin : 5px;
@@ -43,4 +55,10 @@
 }
 .mym-menuitem-workflow a:hover{
     text-decoration: underline;
+    -webkit-box-shadow: 0 0 4px 7px #7DA8E6;
+    -moz-box-shadow: 0 0 4px 7px #7DA8E6;
+    box-shadow: 0 0 4px 7px #7DA8E6;
+    background-color: #7DA8E6;
+    color : white;
+    border-radius: 2px;
 }

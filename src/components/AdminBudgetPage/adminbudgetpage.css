@@ -1,6 +1,7 @@
 .insAndOutsBlock {
     display: flex;
     width : 90%;
+    height : 20%;
     margin : 10px 5%;
 }
 .insAndOutsFactBlock {

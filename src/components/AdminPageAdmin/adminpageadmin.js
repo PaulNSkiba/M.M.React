@@ -34,10 +34,10 @@ class AdminPageAdmin extends Component {
             {name: "Сек/оценку", width : "100%"},
         ])
         this.headArray = [
-            {name: "№ п/п", width : "5%"} ,
-            {name: "Алиас", width : "20%"},
-            {name: "Базовая фраза", width : "40%"},
-            {name: "Перевод", width : "100%"}
+            {name: "№ п/п", width : "20px"} ,
+            {name: "Алиас", width : "200px"},
+            {name: "Базовая фраза", width : "200px"},
+            {name: "Перевод", width : "400px"}
         ]
         this.onLoad = this.props.onStartLoading
         this.onLoaded = this.props.onStopLoading
@@ -228,21 +228,21 @@ class AdminPageAdmin extends Component {
             for (let i = 0; i < rowsArr.length; i++) {
                 cell = []
                 // console.log("createTableRows", rowsArr[i])
-                cell.push(<th key={"r" + (i + 1) + "c1"}>{i + 1}</th>)
-                cell.push(<td className="left-text" style={{"paddingLeft": "5px", "paddingRight": "5px"}}
+                cell.push(<th key={"r" + (i + 1) + "c1"} style={{paddingLeft: "2px", paddingRight: "2px", width : "20px"}}>{i + 1}</th>)
+                cell.push(<td className="left-text" style={{paddingLeft: "2px", paddingRight: "2px", width : "200px"}}
                               id={(i + 1) + "#2#" + rowsArr[i].id} key={"r" + (i + 1) + "c2" }
                               onClick={this.onClick}>{rowsArr[i].alias} {(row === (i + 1) && column === 2 && withInput) ?
                     <input type="text"
                            id={(i + 1) + "#2#" + rowsArr[i].id + "#" + rowsArr[i].alias + "#" + (rowsArr[i].llw_id||rowsArr[i].llw_id===null?0:rowsArr[i].llw_id)} className="inputEditor"
                            onChange={e=>this.onInputChange(e.target.value, rowsArr[i].id)} onKeyPress={this.onInputKeyPress} onBlur={this.onBlur}
                            defaultValue={rowsArr[i].alias}/> : ""}</td>)
-                cell.push(<td className="left-text" style={{"paddingLeft": "5px", "paddingRight": "5px"}}
+                cell.push(<td className="left-text" style={{paddingLeft: "2px", paddingRight: "2px", width : "200px"}}
                               id={(i + 1) + "#3#" + rowsArr[i].id} key={"r" + (i + 1) + "c3"}
                               onClick={this.onClick}>{rowsArr[i].baseLangValue} {(row === (i + 1) && column === 3 && withInput) ?
                     <input type="text" id={(i + 1) + "#3#" + rowsArr[i].id + "#" + rowsArr[i].alias + "#" + (rowsArr[i].llw_id||rowsArr[i].llw_id===null?0:rowsArr[i].llw_id)} className="inputEditor"
                            onChange={e=>this.onInputChange(e.target.value, rowsArr[i].id)} onKeyPress={this.onInputKeyPress}  onBlur={this.onBlur}
                            defaultValue={rowsArr[i].baseLangValue}/> : ""}</td>)
-                cell.push(<td className="left-text" style={{"paddingLeft": "5px", "paddingRight": "5px"}}
+                cell.push(<td className="left-text" style={{paddingLeft: "2px", paddingRight: "2px", width : "400px"}}
                               id={(i + 1) + "#4#" + rowsArr[i].id} key={"r" + (i + 1) + "c4"}
                               onClick={this.onClick}>{rowsArr[i].word} {(row === (i + 1) && column === 4 && withInput) ?
                     <input type="text" id={(i + 1) + "#4#" + rowsArr[i].id + "#" + rowsArr[i].alias + "#" + (rowsArr[i].llw_id||rowsArr[i].llw_id===null?0:rowsArr[i].llw_id)} className="inputEditor"
@@ -296,7 +296,7 @@ class AdminPageAdmin extends Component {
             llw_id : 0,
             uniqid : localStorage.getItem("langCode") ? localStorage.getItem("langCode") : defLang,
         }
-        console.log("adminPareAdmin:Render", this.props.userSetup)
+        // console.log("adminPareAdmin:Render", this.props.userSetup)
         return (
             <div className="mym-adminpage-container">
                 <div><Checkbox onclick={this.props.onReduxUpdate.bind(this)} bold={true} name={"CHAT_SSL"} defelem={this.props.userSetup.chatSSL} label=" работа Чата по SSL"/></div>

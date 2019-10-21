@@ -34,22 +34,27 @@ tr#row-1, tr#row-2{
 }
 .mym-universaltable-container {
     position : relative;
-    overflow : auto;
-    height: 500px;
+    overflow : hidden;
+    /*overflow : overflox-x;*/
+    /*height: 500px;*/
 }
 .mym-btn-add-lang-alias {
-    position: fixed;
-    right : 7%;
-    /*top : 2px;*/
+    /*position: fixed;*/
+    position : absolute;
+     /*opacity: 0.7;*/
+    left : 3%;
+    top : -4px;
     border: 2px solid var(--selected-item-hard);
     text-align: center;
     border-radius: 5px;
-    background-color: lightgrey;
+    background-color: var(--selected-item);
     width : auto;
     padding : 0 10px;
-    height : 22px;
+    height : 20px;
     margin : 3px;
+    font-size: .9em;
     z-index : 2;
+    color : white;
 }
 .mym-btn-add-lang-alias:hover {
     background-color: var(--erase-mark);
