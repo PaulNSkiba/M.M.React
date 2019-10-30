@@ -65,16 +65,16 @@ class AdminBudgetPage extends Component {
         this.headArray = [
             {name: "№ п/п", width: "20px"},
             {name: "Имя", width: "300px"},
-            {name: "Нач.учёбы", width: "85px"},
+            {name: "Нач. учёбы", width: "70px"},
         ]
         this.headInArray = [
             {name: "№ п/п", width: "20px"},
             {name: "ВЗНОС", width: "200px"},
-            {name: "Сокр.", width: "50px"},
+            {name: "Сокр", width: "50px"},
             {name: "Сумма", width: "50px"},
-            {name: "Регуляр- ный (раз в месяц)", width: "60px"},
-            {name: "Дата оплаты", width: "95px"},
-            {name: "Дата окончания оплаты", width: "95px"},
+            {name: "Регул- ный (раз в месяц)", width: "60px"},
+            {name: "Дата оплаты", width: "70px"},
+            {name: "Дата оконч-я оплаты", width: "70px"},
             {name: "День месяца (для регул-х)", width: "50px"},
             {name: "Нач. сальдо", width: "40px"},
             {name: "-", width: "20px"},
@@ -82,14 +82,16 @@ class AdminBudgetPage extends Component {
        this.headOutArray = [
            {name: "№ п/п", width: "20px"},
            {name: "РАСХОД", width: "200px"},
-           {name: "Сокр.", width: "50px"},
+           {name: "Сокр", width: "50px"},
            {name: "Сумма", width: "50px"},
-           {name: "Регуляр- ный (раз в месяц)", width: "60px"},
-           {name: "Дата оплаты", width: "95px"},
-           {name: "Дата окончания оплаты", width: "95px"},
+           {name: "Регул- ный (раз в месяц)", width: "60px"},
+           {name: "Дата оплаты", width: "70px"},
+           {name: "Дата оконч-я оплаты", width: "70px"},
            {name: "День месяца (для регул-х)", width: "50px"},
+           {name: "Нач. сальдо", width: "40px"},
            {name: "-", width: "20px"},
         ]
+        this.onClick = this.onClick.bind(this)
     }
     initData() {
         instanceAxios().get(`${API_URL}budgetpays/get/${this.props.userSetup.classID}`)
@@ -127,7 +129,9 @@ class AdminBudgetPage extends Component {
     componentWillMount() {
         this.initData()
     }
-
+    onClick=(e)=>{
+        // console.log(e.target.id)
+    }
     changeState = (e, id, number) => {
         console.log(e.target.value, id, number)
         let arr = this.state.planIns;
@@ -208,8 +212,8 @@ class AdminBudgetPage extends Component {
                     <th style={{width: "50px", padding: "5px"}}>Сокр.</th>
                     <th style={{width: "50px", padding: "5px"}}>Сумма</th>
                     <th style={{width: "60px", padding: "5px"}}>Регуляр- ный (раз в месяц)</th>
-                    <th style={{width: "95px", padding: "5px"}}>Дата оплаты</th>
-                    <th style={{width: "95px", padding: "5px"}}>Дата окончания оплаты</th>
+                    <th style={{width: "70px", padding: "5px"}}>Дата оплаты</th>
+                    <th style={{width: "70px", padding: "5px"}}>Дата окончания оплаты</th>
                     <th style={{width: "50px", padding: "5px"}}>День месяца (для регул-х)</th>
                     <th style={{width: "40px", padding: "5px"}}>Нач. сальдо</th>
                     <th style={{width: "20px", padding: "5px"}}>-</th>
@@ -238,38 +242,38 @@ class AdminBudgetPage extends Component {
                                 this.changeState(e, item.id, 4)
                             }} id={(key + 1) + "#7_1#" + key} checked={item.isregular===1}/>
                         </td>
-                        <td style={{width: "95px", padding: "5px", textAlign: "center"}}>
+                        <td style={{width: "70px", padding: "5px", textAlign: "center"}}>
                             <DatePicker
                                 // showMonthYearDropdown
                                 fixedHeight
-                                dateFormat="dd/MM/yyyy"
+                                dateFormat="dd/MM/yy"
                                 withPortal
                                 locale="ru"
                                 selected={item.paydate === null ? null : item.paydate.length===8?dateFromYYYYMMDD(item.paydate):new Date(item.paydate)}
                                 onChange={date => this.handleDate('start', item.id, date)}
                                 customInput={<input style={{
-                                    width: "80px",
+                                    width: "55px",
                                     textAlign: "center",
                                     backgroundColor: "#7DA8E6",
-                                    color: "#fff"
+                                    color: "#fff", fontSize : "0.9em"
                                 }}/>}
 
                             />
                         </td>
-                        <td style={{width: "95px", padding: "5px", textAlign: "center"}}>
+                        <td style={{width: "70px", padding: "5px", textAlign: "center"}}>
                             <DatePicker
                                 // showMonthYearDropdown
                                 fixedHeight
-                                dateFormat="dd/MM/yyyy"
+                                dateFormat="dd/MM/yy"
                                 withPortal
                                 locale="ru"
                                 selected={item.payend === null ? null : item.payend.length===8?dateFromYYYYMMDD(item.payend):new Date(item.payend)}
                                 onChange={date => this.handleDate('end', item.id, date)}
                                 customInput={<input style={{
-                                    width: "80px",
+                                    width: "55px",
                                     textAlign: "center",
                                     backgroundColor: "#7DA8E6",
-                                    color: "#fff"
+                                    color: "#fff", fontSize : "0.9em"
                                 }}/>}
                             />
                         </td>
@@ -313,8 +317,8 @@ class AdminBudgetPage extends Component {
                     <th style={{width: "100%", padding: "5px"}}>Наименование</th>
                     <th style={{width: "50px", padding: "5px"}}>Сумма</th>
                     <th style={{width: "30px", padding: "5px"}}>Регуляр- ный (раз в месяц)</th>
-                    <th style={{width: "80px", padding: "5px"}}>Дата оплаты</th>
-                    <th style={{width: "80px", padding: "5px"}}>Дата окончания оплаты</th>
+                    <th style={{width: "70px", padding: "5px"}}>Дата оплаты</th>
+                    <th style={{width: "70px", padding: "5px"}}>Дата окончания оплаты</th>
                     <th style={{width: "50px", padding: "5px"}}>День месяца (для регул-х)</th>
                     <th style={{width: "20px", padding: "5px"}}>-</th>
                 </tr>
@@ -331,38 +335,38 @@ class AdminBudgetPage extends Component {
                                 this.changeState(e, item.id, 4)
                             }} id={(key + 1) + "#7_1#" + key} checked={item.isregular===1}/>
                         </td>
-                        <td style={{width: "80px", textAlign: "center"}}>
+                        <td style={{width: "70px", textAlign: "center"}}>
                             <DatePicker
                                 // showMonthYearDropdown
                                 fixedHeight
-                                dateFormat="dd/MM/yyyy"
+                                dateFormat="dd/MM/yy"
                                 withPortal
                                 locale="ru"
                                 selected={item.start === null ? null : item.paydate.length===8?dateFromYYYYMMDD(item.paydate):new Date(item.paydate)}
                                 onChange={date => this.handleDate('start', item.id, date)}
                                 customInput={<input style={{
-                                    width: "80px",
+                                    width: "70px",
                                     textAlign: "center",
                                     backgroundColor: "#7DA8E6",
-                                    color: "#fff"
+                                    color: "#fff", fontSize : "0.9em"
                                 }}/>}
 
                             />
                         </td>
-                        <td style={{width: "80px", textAlign: "center"}}>
+                        <td style={{width: "70px", textAlign: "center"}}>
                             <DatePicker
                                 // showMonthYearDropdown
                                 fixedHeight
-                                dateFormat="dd/MM/yyyy"
+                                dateFormat="dd/MM/yy"
                                 withPortal
                                 locale="ru"
                                 selected={item.payend === null ? null : item.payend.length===8?dateFromYYYYMMDD(item.payend):new Date(item.payend)}
                                 onChange={date => this.handleDate('end', item.id, date)}
                                 customInput={<input style={{
-                                    width: "80px",
+                                    width: "70px",
                                     textAlign: "center",
                                     backgroundColor: "#7DA8E6",
-                                    color: "#fff"
+                                    color: "#fff", fontSize : "0.9em"
                                 }}/>}
                             />
                         </td>
@@ -398,15 +402,21 @@ class AdminBudgetPage extends Component {
             }
             return arr
         })()
-        console.log("rowsArrInTable", rowsArr)
+        console.log("createInTableRows", rowsArr)
+        rowsArr = this.props.userSetup.budgetpays.filter(item=>item.debet===1)
         let key, item
         if (rowsArr) {
             for (let i = 0; i < rowsArr.length; i++) {
                 cell = []
                 key = i
                 item = rowsArr[i]
-                cell.push(<td key={"bbr" + (i + 1) + "c1"} style={{width: "20px", padding: "2px", textAlign: "center"}}>{i + 1}</td>)
-                cell.push(<td key={"bbr" + (i + 1) + "c2"} style={{width: "200px", padding: "2px"}} onClick={()=>this.setState({curInRow : key + 1, curInColumn : 2})}>{item.name}
+                cell.push(<td key={"bbr" + (i + 1) + "c1"} style={{width: "20px", padding: "2px", textAlign: "center", fontSize : "0.8em"}}>{i + 1}</td>)
+                cell.push(<td key={"bbr" + (i + 1) + "c2"} style={{width: "200px", padding: "2px", fontSize : "0.8em"}}
+                              // onClick={()=>this.setState({curInRow : key + 1, curInColumn : 2})}
+                              id={(i + 1) + "#2#" + rowsArr[i].id}
+                              onClick={this.onClick}
+                >
+                    {item.name}
                         {(row === (i + 1) && column === 2) ?
                             <input type="text" id={(i + 1) + "#2#" + item.id} className="inputEditor"
                                    onChange={e=>this.onInputChange(e.target.value, item.id)}
@@ -414,45 +424,45 @@ class AdminBudgetPage extends Component {
                                    onBlur={this.onBlur}
                                    defaultValue={item.name}/> : ""}
                         </td>)
-                cell.push(<td key={"bbr" + (i + 1) + "c3"} style={{width: "50px", padding: "2px", textAlign: "center"}}>{item.short}</td>)
-                cell.push(<td key={"bbr" + (i + 1) + "c4"} style={{width: "50px", padding: "2px", textAlign: "center"}}>{item.sum}</td>)
+                cell.push(<td key={"bbr" + (i + 1) + "c3"} style={{width: "50px", padding: "2px", textAlign: "center", fontSize : "0.8em"}}>{item.short}</td>)
+                cell.push(<td key={"bbr" + (i + 1) + "c4"} style={{width: "50px", padding: "2px", textAlign: "center", fontSize : "0.8em"}}>{item.sum}</td>)
                 cell.push(<td key={"bbr" + (i + 1) + "c5"} style={{width: "60px", padding: "2px", textAlign: "center"}}>
                         <input type="checkbox" onChange={(e) => {
                             console.log(e.target.value);
                             this.changeState(e, item.id, 4)
                         }} id={(key + 1) + "#7_1#" + key} checked={item.isregular===1}/>
                         </td>)
-                cell.push(<td key={"bbr" + (i + 1) + "c6"} style={{width: "95px", padding: "2px", textAlign: "center"}}>
+                cell.push(<td key={"bbr" + (i + 1) + "c6"} style={{width: "70px", padding: "2px", textAlign: "center", fontSize : "0.9em"}}>
                                 <DatePicker
                                 // showMonthYearDropdown
                                 fixedHeight
-                                dateFormat="dd/MM/yyyy"
+                                dateFormat="dd/MM/yy"
                                 withPortal
                                 locale="ru"
                                 selected={item.paydate === null ? null : item.paydate.length===8?dateFromYYYYMMDD(item.paydate):new Date(item.paydate)}
                                 onChange={date => this.handleDate('start', item.id, date)}
                                 customInput={<input style={{
-                                    width: "80px",
+                                    width: "55px",
                                     textAlign: "center",
                                     backgroundColor: "#7DA8E6",
-                                    color: "#fff"
+                                    color: "#fff", fontSize : "0.9em"
                                 }}/>}
                                 />
                              </td>)
-                cell.push(<td key={"bbr" + (i + 1) + "c7"} style={{width: "95px", padding: "2px", textAlign: "center"}}>
+                cell.push(<td key={"bbr" + (i + 1) + "c7"} style={{width: "70px", padding: "2px", textAlign: "center", fontSize : "0.9em"}}>
                                 <DatePicker
                                 // showMonthYearDropdown
                                 fixedHeight
-                                dateFormat="dd/MM/yyyy"
+                                dateFormat="dd/MM/yy"
                                 withPortal
                                 locale="ru"
                                 selected={item.payend === null ? null : item.payend.length===8?dateFromYYYYMMDD(item.payend):new Date(item.payend)}
                                 onChange={date => this.handleDate('end', item.id, date)}
                                 customInput={<input style={{
-                                    width: "80px",
+                                    width: "55px",
                                     textAlign: "center",
                                     backgroundColor: "#7DA8E6",
-                                    color: "#fff"
+                                    color: "#fff", fontSize : "0.9em"
                                 }}/>}
                                 />
                              </td>)
@@ -469,10 +479,10 @@ class AdminBudgetPage extends Component {
                                 <input type="checkbox" onChange={(e) => {
                                     console.log(e.target.value);
                                     this.changeState(e, item.id, 8)
-                                }} id={(key + 1) + "#7_1#" + key} checked={item.issaldo}/>
+                                }} id={(key + 1) + "#9#" + key} checked={item.issaldo}/>
                             </td>)
                 cell.push(<td key={"bbr" + (i + 1) + "c10"} style={{width: "20px", padding: "2px", textAlign: "center"}}><button onClick={()=>{console.log("Удалить?")}}>-</button></td>)
-                rows.push(<tr key={i}>{cell}</tr>)
+                rows.push(<tr style={{backgroundColor : rowsArr[i].id===0?"rgba(64, 155, 230, 0.25)":"#fff"}} key={i}>{cell}</tr>)
             }
         }
         console.log("rows", rows)
@@ -488,15 +498,21 @@ class AdminBudgetPage extends Component {
             }
             return arr
         })()
-        console.log("rowsArrInTable", rowsArr)
+        rowsArr = this.props.userSetup.budgetpays.filter(item=>item.debet===null)
+        console.log("createOutTableRows", rowsArr)
         let key, item
         if (rowsArr) {
             for (let i = 0; i < rowsArr.length; i++) {
                 cell = []
                 key = i
                 item = rowsArr[i]
-                cell.push(<td key={"bbr" + (i + 1) + "c1"} style={{width: "20px", padding: "2px", textAlign: "center"}}>{i + 1}</td>)
-                cell.push(<td key={"bbr" + (i + 1) + "c2"} style={{width: "200px", padding: "2px"}} onClick={()=>this.setState({curInRow : key + 1, curInColumn : 2})}>{item.name}
+                cell.push(<td key={"bbr" + (i + 1) + "c1"} style={{width: "20px", padding: "2px", textAlign: "center", fontSize : "0.8em"}}>{i + 1}</td>)
+                cell.push(<td key={"bbr" + (i + 1) + "c2"}
+                              style={{width: "200px", padding: "2px", fontSize : "0.8em"}}
+                              // onClick={()=>this.setState({curInRow : key + 1, curInColumn : 2})}
+                              id={(i + 1) + "#2#" + rowsArr[i].id}
+                              onClick={this.onClick}>
+                    {item.name}
                     {(row === (i + 1) && column === 2) ?
                         <input type="text" id={(i + 1) + "#2#" + item.id} className="inputEditor"
                                onChange={e=>this.onInputChange(e.target.value, item.id)}
@@ -504,50 +520,66 @@ class AdminBudgetPage extends Component {
                                onBlur={this.onBlur}
                                defaultValue={item.name}/> : ""}
                 </td>)
-                cell.push(<td key={"bbr" + (i + 1) + "c3"} style={{width: "50px", padding: "2px", textAlign: "center"}}>{item.short}</td>)
-                cell.push(<td key={"bbr" + (i + 1) + "c4"} style={{width: "50px", padding: "2px", textAlign: "center"}}>{item.sum}</td>)
+                cell.push(<td key={"bbr" + (i + 1) + "c3"} style={{width: "50px", padding: "2px", textAlign: "center", fontSize : "0.8em"}}>
+                    {item.short}
+                    {(row === (i + 1) && column === 3) ?
+                        <input type="text" id={(i + 1) + "#3#" + item.id} className="inputEditor"
+                               onChange={e=>this.onInputChange(e.target.value, item.id)}
+                               onKeyPress={this.onInputKeyPress}
+                               onBlur={this.onBlur}
+                               defaultValue={item.short}/> : ""}
+                </td>)
+                cell.push(<td key={"bbr" + (i + 1) + "c4"} style={{width: "50px", padding: "2px", textAlign: "center", fontSize : "0.8em"}}>
+                    {item.sum}
+                    {(row === (i + 1) && column === 4) ?
+                        <input type="text" id={(i + 1) + "#4#" + item.id} className="inputEditor"
+                               onChange={e=>this.onInputChange(e.target.value, item.id)}
+                               onKeyPress={this.onInputKeyPress}
+                               onBlur={this.onBlur}
+                               defaultValue={item.sum}/> : ""}
+                </td>)
                 cell.push(<td key={"bbr" + (i + 1) + "c5"} style={{width: "60px", padding: "2px", textAlign: "center"}}>
                     <input type="checkbox" onChange={(e) => {
                         console.log(e.target.value);
-                        this.changeState(e, item.id, 4)
-                    }} id={(key + 1) + "#7_1#" + key} checked={item.isregular===1}/>
+                        this.changeState(e, item.id, 5)
+                    }} id={(key + 1) + "#5#" + key} checked={item.isregular===1}/>
                 </td>)
-                cell.push(<td key={"bbr" + (i + 1) + "c6"} style={{width: "95px", padding: "2px", textAlign: "center"}}>
+                cell.push(<td key={"bbr" + (i + 1) + "c6"} style={{width: "70px", padding: "2px", textAlign: "center", fontSize : "0.9em"}}>
                     <DatePicker
                         // showMonthYearDropdown
                         fixedHeight
-                        dateFormat="dd/MM/yyyy"
+                        dateFormat="dd/MM/yy"
                         withPortal
                         locale="ru"
                         selected={item.paydate === null ? null : item.paydate.length===8?dateFromYYYYMMDD(item.paydate):new Date(item.paydate)}
                         onChange={date => this.handleDate('start', item.id, date)}
                         customInput={<input style={{
-                            width: "80px",
+                            width: "55px",
                             textAlign: "center",
                             backgroundColor: "#7DA8E6",
-                            color: "#fff"
+                            color: "#fff", fontSize : "0.9em"
                         }}/>}
                     />
                 </td>)
-                cell.push(<td key={"bbr" + (i + 1) + "c7"} style={{width: "95px", padding: "2px", textAlign: "center"}}>
+                cell.push(<td key={"bbr" + (i + 1) + "c7"} style={{width: "70px", padding: "2px", textAlign: "center", fontSize : "0.9em"}}>
                     <DatePicker
                         // showMonthYearDropdown
                         fixedHeight
-                        dateFormat="dd/MM/yyyy"
+                        dateFormat="dd/MM/yy"
                         withPortal
                         locale="ru"
                         selected={item.payend === null ? null : item.payend.length===8?dateFromYYYYMMDD(item.payend):new Date(item.payend)}
                         onChange={date => this.handleDate('end', item.id, date)}
                         customInput={<input style={{
-                            width: "80px",
+                            width: "55px",
                             textAlign: "center",
                             backgroundColor: "#7DA8E6",
-                            color: "#fff"
+                            color: "#fff", fontSize : "0.9em"
                         }}/>}
                     />
                 </td>)
                 cell.push(<td key={"bbr" + (i + 1) + "c8"} style={{width: "50px", padding: "2px", textAlign: "center"}}>
-                    <select name="days" onClick={this.onLangClick} defaultValue={item.dayOfPayment}>
+                    <select name="days" onClick={this.onSelectDateClick} defaultValue={item.dayOfPayment}>
                         {daysArr.map((item, key) => {
                             return <option key={key}>
                                 {item}
@@ -555,32 +587,39 @@ class AdminBudgetPage extends Component {
                         })}
                     </select>
                 </td>)
-                cell.push(<td key={"bbr" + (i + 1) + "c10"} style={{width: "20px", padding: "2px", textAlign: "center"}}><button onClick={()=>{console.log("Удалить?")}}>-</button></td>)
-                rows.push(<tr key={i}>{cell}</tr>)
+                cell.push(<td key={"bbr" + (i + 1) + "c9"} style={{width: "40px", padding: "2px", textAlign: "center"}}>
+                    <input type="checkbox" onChange={(e) => {
+                        console.log(e.target.value);
+                        this.changeState(e, item.id, 8)
+                    }} id={(key + 1) + "#9#" + key} checked={item.issaldo}/>
+                </td>)
+                cell.push(<td key={"bbr" + (i + 1) + "c10"} style={{width: "20px", padding: "2px", textAlign: "center"}}><button onClick={()=>{this.onDelClick("out", item.id)}}>-</button></td>)
+                rows.push(<tr style={{backgroundColor : rowsArr[i].id===0?"rgba(64, 155, 230, 0.25)":"#fff"}} key={i}>{cell}</tr>)
             }
         }
-        console.log("rows", rows)
+        // console.log("rows", rows)
         return rows;
     }
         createTableRows(rowsArr, onInputChange, withInput, row, column, classNameOfTD, checkedMap, headex, year) {
         let cell = [],
             rows = []
             rowsArr = rowsArr.filter(item=>item.isout!==1)
+            console.log("createTableRows", rowsArr)
         if (rowsArr) {
             for (let i = 0; i < rowsArr.length; i++) {
                 cell = []
-                cell.push(<td style={{width: "25px"}} key={"bbr" + (i + 1) + "c1"}>{i + 1}</td>)
-                cell.push(<td className="left-text" style={{width: "300px", paddingLeft: "2px", paddingRight: "2px"}}
+                cell.push(<td style={{width: "25px", fontSize : "0.8em"}} key={"bbr" + (i + 1) + "c1"}>{i + 1}</td>)
+                cell.push(<td className="left-text" style={{width: "300px", paddingLeft: "2px", paddingRight: "2px", fontSize : "0.9em"}}
                               id={(i + 1) + "#2#" + rowsArr[i].id} key={"bbr" + (i + 1) + "c2"}>
                     {rowsArr[i].student_name} {(row === (i + 1) && column === 2 && withInput) ? rowsArr[i].student_name : null}
                 </td>)
                 // console.log("datein", rowsArr[i], i, (rowsArr[i].datein===null)?null:((rowsArr[i].datein.length===8)?dateFromYYYYMMDD(rowsArr[i].datein):(new Date(rowsArr[i].datein))))
                 cell.push(
-                    <td key={"bbr" + (i + 1) + "c3"} style={{width: "85px", textAlign: "center"}}>
+                    <td key={"bbr" + (i + 1) + "c3"} style={{width: "70px", textAlign: "center", fontSize : "0.9em"}}>
                         <DatePicker
                             // showMonthYearDropdown
                             fixedHeight
-                            dateFormat="dd/MM/yyyy"
+                            dateFormat="dd/MM/yy"
                             withPortal
                             locale="ru"
                             scrollableYearDropdown
@@ -588,10 +627,10 @@ class AdminBudgetPage extends Component {
                             selected={rowsArr[i].datein === null ? null : ((rowsArr[i].datein.length === 8) ? dateFromYYYYMMDD(rowsArr[i].datein) : (new Date(rowsArr[i].datein)))}
                             onChange={date => this.handleDate('datein', rowsArr[i].id, date)}
                             customInput={<input style={{
-                                width: "85px",
+                                width: "70px",
                                 textAlign: "center",
                                 backgroundColor: "#7DA8E6",
-                                color: "#fff"
+                                color: "#fff", fontSize : "0.9em"
                             }}/>}
                         />
                     </td>)
@@ -683,7 +722,7 @@ class AdminBudgetPage extends Component {
                         // console.log("newStart", toYYYYMMDD(newStart), item, i)
                         let shortdate = ((newStart).getMonth() + 1) + '.' + (newStart).getFullYear().toString().slice(-2)
                         if (Number(year) === Number(newStart.getFullYear())) {
-                            if ((item.payend !== null && ((new Date(newStart)) < (new Date(item.payend)))) || item.payend == null) {
+                            if ((item.payend !== null && ((new Date(newStart)) < (new Date(item.payend)))) || item.payend === null) {
                                 arr.push({
                                     numb: i + 1,
                                     item: item,
@@ -769,7 +808,7 @@ class AdminBudgetPage extends Component {
             isregular : null,
             paydate : null,
             payend : null,
-            sum : null,
+            sum : 1,
             issaldo : null,
             debet : 1,
             monthday : null
@@ -783,14 +822,17 @@ class AdminBudgetPage extends Component {
             isregular : null,
             paydate : null,
             payend : null,
-            sum : null,
+            sum : 1,
             issaldo : null,
             debet : null,
-            monthday : null
+            monthday : null,
+            created_at: null,
+            updated_at: null
         }
+
         let {userID, userName, isadmin, langLibrary} = this.props.userSetup;
         let {isMobile} = this.state
-        // console.log("RENDER_BUDGET", this.props.userSetup)
+        console.log("RENDER_BUDGET", this.props.userSetup)
         const objBlank = {}
         return (
             <div className="AdminPage">
@@ -913,7 +955,8 @@ class AdminBudgetPage extends Component {
                                         selectedstudent={this.state.curStudent}
                                         btncaption={""}
                                         render={this.props.userSetup.renderBudget}
-                                        objblank={objBlank} initrows={() => {
+                                        objblank={objBlank}
+                                        initrows={() => {
                                             return this.props.userSetup.students
                                         }}
                                         kind={"budget"}

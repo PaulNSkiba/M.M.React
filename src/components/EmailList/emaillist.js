@@ -65,9 +65,10 @@ class EmailList extends Component {
             "student_nick" : this.props.userSetup.userName+'[v'+i+']',
             "notwebadding" : true,
             "isadmin" : 16,
-            "isout" : true
+            "isout" : true,
+            "student_id" :  this.props.userSetup.studentID
         };
-        ISDEBUG&&console.log(JSON.stringify(data))
+        console.log(JSON.stringify(data))
         document.body.style.cursor = 'progress';
         instanceAxios().post(STUDENTS_ADD_URL+'/add/'+this.props.userSetup.addUserToken, JSON.stringify(data))
             .then(resp=>{

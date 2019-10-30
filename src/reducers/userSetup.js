@@ -25,7 +25,7 @@ const initialState = (check)=>{
                     subjects_list: [], markBlank: {id: "", alias: "", pk: 1},
                     currentPeriodDateCount: 5, marks: [], direction: "UPDOWN", titlekind: "NICK",
                     withoutholidays: true, token: "", userName: "",
-                    isadmin: 0, studentName: "", studentId: 0,
+                    isadmin: 0, studentName: "", studentID: 0,
                     studSubj: new Map(), mark_dates: [], best_lines: [], avg_lines: [], avg_marks: [],
                     addUserToken: "", cnt_marks: 0, stud_cnt: 0, subj_cnt: 0,
                     lastmarkssent: "", emails: [], homework: [],
@@ -60,9 +60,9 @@ export function userSetupReducer(state = initialState(true), action) {
             let {   class_number, pupil_count, year_name, perioddayscount,
                     markblank_id, markblank_alias, selected_marker, titlekind,
                     direction, class_id } = action.payload.usersetup;
-            let {   id : studentId, student_name : studentName} = action.payload.student;
+            let {   id : studentID, student_name : studentName} = action.payload.student;
             let {   cnt_marks, stud_cnt, subj_cnt } = action.payload.stats[0];
-            studentId = studentId?studentId:0;
+            studentID = studentID?studentID:0;
 
             setup = {...state, userName, userID, token,
                 curClass: class_number, classNumber : class_number, classID : class_id, pupilCount: pupil_count,
@@ -71,7 +71,7 @@ export function userSetupReducer(state = initialState(true), action) {
                 titlekind: titlekind, direction : direction,
                 subjCount: subj_count, subjects_list: subjects_list, selectedSubjects : selected_subjects,
                 selectedSubj : selected_subj, students : students?students:[], classObj,
-                isadmin, studentName, studentId, marks, mark_dates, best_lines, avg_lines, avg_marks, addUserToken,
+                isadmin, studentName, studentID, marks, mark_dates, best_lines, avg_lines, avg_marks, addUserToken,
                 cnt_marks, stud_cnt, subj_cnt, lastmarkssent, emails, homework, stats2 : stats2[0], stats3 : stats3[0],
                 mark_date, avgclassmarks, langLibrary : action.langLibrary, localChatMessages : chatrows
                 }
@@ -227,9 +227,11 @@ export function userSetupReducer(state = initialState(true), action) {
             return{...state, chatSSL: action.payload}
         }
         case 'ALIASES_LIST' : {
+            console.log("ALIASES_LIST")
             return{...state, aliasesList: action.payload}
         }
         case 'ALIASES_LANG' : {
+            console.log("ALIASES_LANG")
             return{...state, aliasesLang: action.payload}
         }
         // case "INIT_CHAT_MESSAGES" : {

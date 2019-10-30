@@ -301,7 +301,7 @@ class Chat extends Component {
     }
 
     prepareJSON=()=>{
-        let {classID, userName, userID, studentId, studentName} = this.props.userSetup
+        let {classID, userName, userID, studentID, studentName} = this.props.userSetup
         let obj = {}
         switch (this.props.isnew) {
             case true :
@@ -318,7 +318,7 @@ class Chat extends Component {
                 }
                 obj.user_id = userID
                 obj.user_name = userName
-                obj.student_id = studentId
+                obj.student_id = studentID
                 obj.student_name = studentName
                 obj.uniqid = new Date().getTime() + this.props.userSetup.userName// uniqid()
                 this.setState({messagesNew : [...this.state.messagesNew, obj.uniqid]})
@@ -435,7 +435,7 @@ class Chat extends Component {
         }
     }
     addHomeWork=(txt)=>{
-        let {classID, userID, studentId} = this.props.userSetup
+        let {classID, userID, studentID} = this.props.userSetup
         // let {userName} = this.props.userSetup
         // let {homework : homeworkarray} = this.props //this.state;
         // let id = this.props.homeworkarray.reduce((max, current)=>(current.id > max?current.id:max), 0) + 1;
@@ -450,7 +450,7 @@ class Chat extends Component {
         // console.log(json)
         // json = JSON.parse(json);
 
-        let json = `{"subj_key":"${subj_key}", "subj_name_ua": "${subj_name_ua}", "homework": "${txt}", "ondate": "${toYYYYMMDD(ondate)}", "user_id": "${userID}", "student_id":"${studentId}"}`;
+        let json = `{"subj_key":"${subj_key}", "subj_name_ua": "${subj_name_ua}", "homework": "${txt}", "ondate": "${toYYYYMMDD(ondate)}", "user_id": "${userID}", "student_id":"${studentID}"}`;
         console.log(json);
         instanceAxios().post(HOMEWORK_ADD_URL + '/' + classID + '/hw/' + 0, json)
             .then(response => {

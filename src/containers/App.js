@@ -36,6 +36,7 @@ import { store } from '../store/configureStore'
 import ReactFlagsSelect from 'react-flags-select';
 import 'react-flags-select/css/react-flags-select.css';
 import Logo from '../img/LogoMyMsmall.png'
+import GooglePlay from '../img/GooglePlay2.png'
 // import ReactPlayer from 'react-player'
 
 // import Chart from "react-google-charts/dist/ReactGoogleCharts.d";
@@ -833,7 +834,7 @@ class App extends Component {
 
         let {userID, userName, pupilCount, currentYear, subjCount, currentPeriodDateCount, markBlank,
             direction, titlekind, withoutholidays, classNumber, selectedSubjects, selectedSubj,
-            subjects_list, studentId, studentName, classID, isadmin, loading} = this.props.userSetup;
+            subjects_list, studentID, studentName, classID, isadmin, loading} = this.props.userSetup;
 
         // console.log("LANGLIBRARY", langLibrary, this.state.myCountryCode)
         // console.log("LANGLIBRARY_AFTER", this.props.userSetup.langLibrary)
@@ -1005,7 +1006,7 @@ class App extends Component {
                                     Android-приложение</a>
                             </div>
                         </div>:null}
-                        {   studentId === 0&&userID===0?
+                        {   studentID === 0&&userID===0?
                             <div className="description-main"><span>{descrFirst}</span></div>:
 
                             studentName?<div className="descrHeader">
@@ -1017,7 +1018,7 @@ class App extends Component {
                                                     {"Последние [" + (new Date(this.props.userSetup.stats3.max)).toLocaleDateString() + ' ' +  (new Date(this.props.userSetup.stats3.max)).toLocaleTimeString() + ']: Оценок:' + this.props.userSetup.stats3.cnt}
                                                 </div>:null}
                                         </div>:null}
-                        {studentId?
+                        {studentID?
                             <div className="app-homeWorkSection">
                                 <HomeWorkSection withoutshadow={true} withouthead={true}/>
                             </div>
@@ -1029,23 +1030,26 @@ class App extends Component {
                             :""
                         }
                         <div className="descrAndAnnounceNotMobile">
-                            {studentId?
+                            {studentID?
                                 <div className="app-homeWorkSection">
                                     <HomeWorkSection withoutshadow={true} withouthead={true}/>
                                 </div>
                                 :null
                             }
-                            {   studentId === 0&&userID===0?<div className="description-main"><span>{descrFirst}</span></div>:
+                            {   studentID === 0&&userID===0?<div className="description-main"><span>{descrFirst}</span></div>:
                                 studentName?
                                     <div className="descrHeaderNotMobile">
                                         <div className={"downloadAdnroid"}>
-                                            <div>
-                                                <img style={{left : "30px"}} height={"20px"} src={AndroidBtn} alt=""/></div>
-                                            <div>
-                                                <span style={{color: "#707070"}}> Скачать </span>
+                                            {/*<div>*/}
+
+                                            {/*</div>*/}
+                                            {/*<div>*/}
+                                                {/*<span style={{color: "#707070"}}> Скачать </span>*/}
                                                 <a className="infoMsgAndroid" href={API_URL +"android"} target="_blank" rel="noopener noreferrer">
-                                                Android-приложение</a>
-                                            </div>
+                                                {"Android-приложение   "}<img style={{left : "30px"}} height={"20px"} src={AndroidBtn} alt=""/></a>
+                                                {/*<span className="infoMsgAndroid"> + </span>*/}
+                                                <a href="https://play.google.com/store/apps/details?id=com.mymv2"><img src={GooglePlay} style={{width: "103", height: "34px", marginTop: "3px"}} title="Google Play" alt="Google Play"/></a>
+                                            {/*</div>*/}
                                         </div>
                                         <div className="studentName">
                                             <b>{studentName}</b>
@@ -1059,7 +1063,7 @@ class App extends Component {
                         </div>
 
                     </div>}
-                    {   studentId === 0?
+                    {   studentID === 0?
                         <div>
                             {/*<CSSTransition*/}
                                 {/*key={"title-a-1"}*/}
@@ -1086,7 +1090,7 @@ class App extends Component {
                         </div>
                         :""}
 
-                    {!step1&&!this.props.user.logging&&studentId === 0?
+                    {!step1&&!this.props.user.logging&&studentID === 0?
                     <div className="block-1">
                         <ClassList classtype="primary-school school" classcount={this.classCount} click={this.clickClassButton} classnumber={classNumber} classlabel={`${langLibrary.schoolPrimary} `} buttons={[1, 2, 3, 4]}/>
                         <ClassList classtype="secondary-school school" classcount={this.classCount} click={this.clickClassButton} classnumber={classNumber} classlabel={`${langLibrary.schoolMain} `} buttons={[5, 6, 7, 8, 9]}/>
@@ -1094,7 +1098,7 @@ class App extends Component {
                     </div>
                     :""}
 
-                {   studentId === 0 ?
+                {   studentID === 0 ?
                     <div>
                         <TitleBlock title={!isMobile?`${langLibrary.step} ${2}${langLibrary.step2Descr}`:`${2}${langLibrary.step2DescrMob}`} caption={pupilCount === 0 ? "" : pupilCount}
                                     done={!(Number(pupilCount) === 0)} onclick={this.stepClick.bind(this)} step={2}
@@ -1103,14 +1107,14 @@ class App extends Component {
                     :""
                 }
 
-                {!step2&&studentId === 0?
+                {!step2&&studentID === 0?
                     <div  className={!step2?("block-2 fadeout"): "block-2"}>
                         <RSlider id="rslider1" statename="pupilCount" onclick={this.changeState.bind(this)} values={!isMobile?[10,15,20,25,26,27,28,29,30,31,32,33,34,35,40]:[0,10,15,20,25,30,35,40]} set={[pupilCount]} range={false}/>
                     </div>
                 :""}
 
 
-                { !this.isShortList()&&studentId === 0 ?
+                { !this.isShortList()&&studentID === 0 ?
                     <div>
                         <TitleBlock title={!isMobile?`${langLibrary.step} ${3}${langLibrary.step3Descr}`:`${3}${langLibrary.step3DescrMob}`} caption={currentYear === 0 ? "" : currentYear}
                                     done={!(currentYear === "")} onclick={this.stepClick.bind(this)} step={3}
@@ -1118,7 +1122,7 @@ class App extends Component {
                     </div>
                 :""
                 }
-                {!this.isShortList()&& !step3 &&studentId === 0?
+                {!this.isShortList()&& !step3 &&studentID === 0?
                     <RSlider id="rslider2" statename="currentYear" onclick={this.changeState.bind(this)} values={['', '2017/18', '2018/19', '2019/20']} set={[currentYear]} range={false}/>
                 :""}
 
@@ -1135,18 +1139,18 @@ class App extends Component {
                                                              selectedsubject={selectedSubj}
                                                              isnewmech={true}
                                                              subjects_list={subjects_list}
-                                                             studentid ={studentId}
+                                                             studentid ={studentID}
                     />
                         :<div className="descrAndAnnounce"><span className="infoMsg">{`${langLibrary.toChoosClassHelp}`}</span></div>
                 :""}
 
-                {studentId === 0?
+                {studentID === 0?
                 <div>
                     <TitleBlock title={!isMobile?`${langLibrary.step} ${!this.isShortList()?5:4}${langLibrary.step4Descr}`:`${!this.isShortList()?5:4}${langLibrary.step4DescrMob}`} caption={!isMobile?selectedSubj.subj_name_ua:(selectedSubj.id > 0?langLibrary.yes:"")}
                                 done={selectedSubj.id} onclick={this.stepClick.bind(this)} step={!this.isShortList()?5:4} hide={!this.isShortList()?step5:step4} />
                 </div>
                     :""}
-                {!(!this.isShortList()?step5:step4)&&studentId === 0?
+                {!(!this.isShortList()?step5:step4)&&studentID === 0?
                     selectedSubjects.length > 0?<SubjectList classnumber={classNumber}
                                                              changestate={this.changeState.bind(this)}
                                                              step={5}
@@ -1155,7 +1159,7 @@ class App extends Component {
                                                              isnewmech={true}/>
                         :<div className="descrAndAnnounce"><span className="infoMsg">{`${langLibrary.toChooseSubjectHelp}`}</span></div>
                     :""}
-                {studentId === 0 ?
+                {studentID === 0 ?
                     <div>
                         <TitleBlock title={!isMobile?`${langLibrary.step} ${!this.isShortList()?6:5}${langLibrary.step5Descr}`:`${!this.isShortList()?6:5}${langLibrary.step5DescrMob}`}
                                     caption={!isMobile?this.markBlankAlias(markBlank.pk, langLibrary):(markBlank.alias.length?langLibrary.yes:"")}
@@ -1164,7 +1168,7 @@ class App extends Component {
                     </div>
                     :""
                 }
-                {!(!this.isShortList()?step6:step5)&&studentId === 0?
+                {!(!this.isShortList()?step6:step5)&&studentID === 0?
                     <div className="markBlanks">
                         <div id="markblank-1"><MarkBlank kind={1} withborder={true} nohover={true} onclick={this.changeState.bind(this)} selected={markBlank.id==="markblank_twelve"}/></div>
                         <div id="markblank-2"><MarkBlank kind={2} withborder={true} nohover={true} onclick={this.changeState.bind(this)} selected={markBlank.id==="markblank_five"}/></div>
@@ -1181,13 +1185,13 @@ class App extends Component {
                 {!(!this.isShortList()?step7:step6)?
                     <div className="additionalSection">
                         <div><RadioGroup onclick={this.changeState.bind(this)} title={langLibrary.addSettings1} name={"rangedays"} defelem={currentPeriodDateCount} values={[{id:5, alias:5},{id:10, alias:10},{id:14, alias:14},{id:20, alias:20}]} addinput={true}/></div>
-                        {studentId===0?<div><RadioGroup onclick={this.changeState.bind(this)} title={langLibrary.addSettings2} name={"listnames"} defelem={titlekind} values={[{id:"NAME", alias:`${langLibrary.wordName}`},{id:"NICK", alias:`${langLibrary.wordNick}`}, {id:"EMAIL", alias:"EMAIL"}]}/></div>:""}
-                        {studentId===0?<div><RadioGroup onclick={this.changeState.bind(this)} title={langLibrary.addSettins3} name={"rangedirection"} defelem={direction} values={[{id:"UPDOWN", alias:`${langLibrary.directionUpDown}`},{id:"LEFTRIGHT", alias:`${langLibrary.directionLeftRight}`}]}/></div>:""}
+                        {studentID===0?<div><RadioGroup onclick={this.changeState.bind(this)} title={langLibrary.addSettings2} name={"listnames"} defelem={titlekind} values={[{id:"NAME", alias:`${langLibrary.wordName}`},{id:"NICK", alias:`${langLibrary.wordNick}`}, {id:"EMAIL", alias:"EMAIL"}]}/></div>:""}
+                        {studentID===0?<div><RadioGroup onclick={this.changeState.bind(this)} title={langLibrary.addSettins3} name={"rangedirection"} defelem={direction} values={[{id:"UPDOWN", alias:`${langLibrary.directionUpDown}`},{id:"LEFTRIGHT", alias:`${langLibrary.directionLeftRight}`}]}/></div>:""}
                         <div><Checkbox onclick={this.changeState.bind(this)} bold={true} name={"withoutholidays"} defelem={withoutholidays} label={` ${langLibrary.addSettings4}`}/></div>
-                        {studentId>0&&<EmailList studentID={studentId}  studentName={studentName}  userID={userID}/>}
+                        {studentID>0&&<EmailList studentId={studentID}  studentName={studentName}  userID={userID}/>}
                     </div>
                     :""}
-                {studentId === 0?
+                {studentID === 0?
                 <div>
                     <TitleBlock title={!isMobile?`${langLibrary.step} ${!this.isShortList()?8:7}${langLibrary.step7Descr}`:`${!this.isShortList()?8:7}${langLibrary.step7DescrMob}`} done={this.state.isJournalClicked}
                                 caption={this.state.stats.hasOwnProperty('diff')&&this.state.stats.tomark} //+ dateDiff((new Date(this.state.stats.dd)), (new Date()))+'дн. назад '
@@ -1195,9 +1199,9 @@ class App extends Component {
                                 onclick={this.stepClick.bind(this)} step={!this.isShortList()?8:7} hide={!this.isShortList()?step8:step7}/>
                 </div>
                     :""}
-                {!(!this.isShortList()?step8:step7)||studentId > 0?
+                {!(!this.isShortList()?step8:step7)||studentID > 0?
                     <div className="tableSection">
-                        {studentId === 0?
+                        {studentID === 0?
                             <Table  onclick={this.changeCell.bind(this)}
                                 markblank={markBlank.pk}
                                 dayscount={currentPeriodDateCount}
@@ -1221,13 +1225,13 @@ class App extends Component {
                             />}
                     </div>
                     :""}
-                {studentId === 0 && isadmin?
+                {studentID === 0 && isadmin?
                 <div>
                     <TitleBlock title={!isMobile?`${langLibrary.step} ${!this.isShortList()?9:8}${langLibrary.step8Descr}`:`${!this.isShortList()?9:8}${langLibrary.step8DescrMob}`} done={false}
                                 onclick={this.stepClick.bind(this)} step={!this.isShortList()?9:8} hide={!this.isShortList()?step9:step8}/>
                 </div>
                     :""}
-                {!(!this.isShortList()?step9:step8)&&studentId === 0?
+                {!(!this.isShortList()?step9:step8)&&studentID === 0?
                     <div className="additionalSection">
                         <button>
                             <a className="infoMsg" href={EXCEL_URL+"/"+this.props.userSetup.classID+'/20190401'} target="_blank" rel="noopener noreferrer">
@@ -1241,18 +1245,18 @@ class App extends Component {
                     </div>
                 :""}
 
-                {studentId === 0 && isadmin?
+                {studentID === 0 && isadmin?
                 <div>
                     <TitleBlock title={!isMobile?`${langLibrary.step} ${!this.isShortList()?10:9}${langLibrary.step9Descr}`:`${!this.isShortList()?10:9}${langLibrary.step9DescrMob}`} done={false} onclick={this.stepClick.bind(this)}
                                 step={!this.isShortList()?10:9} hide={!this.isShortList()?step10:step9}/>
                 </div>
                     :""}
-                {(!(!this.isShortList()?step10:step9)||studentId > 0)&&this.props.userSetup.marks.length?
+                {(!(!this.isShortList()?step10:step9)||studentID > 0)&&this.props.userSetup.marks.length?
                     <div className="additionalSection">
                         <Charts studSubj={this.state.studSubj}/>
                     </div>
                     :""}
-                {((!(!this.isShortList()?step10:step9)&&classID > 0)||studentId > 0)?
+                {((!(!this.isShortList()?step10:step9)&&classID > 0)||studentID > 0)?
                     <div className="additionalSection">
                         {this.props.userSetup.avgclassmarks.length?
                         <Chart

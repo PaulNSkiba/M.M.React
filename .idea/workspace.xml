@@ -15,11 +15,9 @@
       <file leaf-file-name="App.js" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/containers/App.js">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="884">
-              <caret line="186" column="80" lean-forward="false" selection-start-line="186" selection-start-column="80" selection-end-line="186" selection-end-column="80" />
-              <folding>
-                <element signature="e#0#41#0" expanded="true" />
-              </folding>
+            <state relative-caret-position="289">
+              <caret line="1190" column="57" lean-forward="false" selection-start-line="1190" selection-start-column="57" selection-end-line="1190" selection-end-column="57" />
+              <folding />
             </state>
           </provider>
         </entry>
@@ -27,54 +25,21 @@
       <file leaf-file-name="adminpageteacher.js" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/components/AdminPageTeacher/adminpageteacher.js">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="280">
-              <caret line="126" column="119" lean-forward="false" selection-start-line="126" selection-start-column="112" selection-end-line="126" selection-end-column="119" />
+            <state relative-caret-position="552">
+              <caret line="182" column="25" lean-forward="false" selection-start-line="182" selection-start-column="25" selection-end-line="182" selection-end-column="25" />
               <folding>
-                <element signature="e#42#83#0" expanded="true" />
-                <marker date="1571649843183" expanded="true" signature="2764:2987" ph="..." />
+                <marker date="1572126742221" expanded="true" signature="2761:2984" ph="..." />
               </folding>
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="colors.css" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/css/colors.css">
+      <file leaf-file-name="emaillist.js" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/components/EmailList/emaillist.js">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="153">
-              <caret line="9" column="19" lean-forward="false" selection-start-line="9" selection-start-column="4" selection-end-line="9" selection-end-column="19" />
+            <state relative-caret-position="332">
+              <caret line="62" column="27" lean-forward="false" selection-start-line="62" selection-start-column="27" selection-end-line="62" selection-end-column="27" />
               <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="userSetup.js" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/reducers/userSetup.js">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="17">
-              <caret line="3" column="45" lean-forward="false" selection-start-line="3" selection-start-column="45" selection-end-line="3" selection-end-column="45" />
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="adminbudgetpage.css" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/components/AdminBudgetPage/adminbudgetpage.css">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="51">
-              <caret line="3" column="17" lean-forward="false" selection-start-line="3" selection-start-column="17" selection-end-line="3" selection-end-column="17" />
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="adminbudgetpage.js" pinned="false" current-in-tab="true">
-        <entry file="file://$PROJECT_DIR$/src/components/AdminBudgetPage/adminbudgetpage.js">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="399">
-              <caret line="622" column="61" lean-forward="true" selection-start-line="622" selection-start-column="61" selection-end-line="622" selection-end-column="61" />
-              <folding>
-                <element signature="e#43#81#0" expanded="true" />
-              </folding>
             </state>
           </provider>
         </entry>
@@ -82,28 +47,38 @@
       <file leaf-file-name="adminpageadmin.js" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/components/AdminPageAdmin/adminpageadmin.js">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="386">
-              <caret line="36" column="45" lean-forward="false" selection-start-line="36" selection-start-column="45" selection-end-line="36" selection-end-column="45" />
+            <state relative-caret-position="412">
+              <caret line="229" column="96" lean-forward="false" selection-start-line="229" selection-start-column="96" selection-end-line="229" selection-end-column="96" />
               <folding />
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="menu.css" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/components/Menu/menu.css">
+      <file leaf-file-name="adminpageteacher.css" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/components/AdminPageTeacher/adminpageteacher.css">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="367">
-              <caret line="36" column="22" lean-forward="true" selection-start-line="36" selection-start-column="22" selection-end-line="36" selection-end-column="22" />
+            <state relative-caret-position="119">
+              <caret line="7" column="35" lean-forward="false" selection-start-line="7" selection-start-column="35" selection-end-line="7" selection-end-column="35" />
               <folding />
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="universaltable.js" pinned="false" current-in-tab="false">
+      <file leaf-file-name="studenttable.css" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/components/StudentTable/studenttable.css">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="34">
+              <caret line="2" column="1" lean-forward="false" selection-start-line="2" selection-start-column="1" selection-end-line="2" selection-end-column="1" />
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="universaltable.js" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/src/components/UniversalTable/universaltable.js">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="587">
-              <caret line="392" column="80" lean-forward="false" selection-start-line="392" selection-start-column="80" selection-end-line="392" selection-end-column="80" />
+            <state relative-caret-position="274">
+              <caret line="602" column="29" lean-forward="true" selection-start-line="602" selection-start-column="29" selection-end-line="602" selection-end-column="29" />
               <folding>
                 <element signature="e#42#83#0" expanded="true" />
               </folding>
@@ -114,8 +89,28 @@
       <file leaf-file-name="universaltable.css" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/components/UniversalTable/universaltable.css">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="180">
-              <caret line="29" column="39" lean-forward="false" selection-start-line="29" selection-start-column="39" selection-end-line="29" selection-end-column="39" />
+            <state relative-caret-position="299">
+              <caret line="46" column="48" lean-forward="false" selection-start-line="46" selection-start-column="48" selection-end-line="46" selection-end-column="48" />
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="userSetup.js" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/reducers/userSetup.js">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="581">
+              <caret line="246" column="24" lean-forward="false" selection-start-line="246" selection-start-column="14" selection-end-line="246" selection-end-column="31" />
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="adminbudgetpage.js" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/components/AdminBudgetPage/adminbudgetpage.js">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="352">
+              <caret line="835" column="27" lean-forward="true" selection-start-line="835" selection-start-column="27" selection-end-line="835" selection-end-column="27" />
               <folding />
             </state>
           </provider>
@@ -133,36 +128,36 @@
   </component>
   <component name="FindInProjectRecents">
     <findStrings>
-      <find>.amr</find>
-      <find>.am</find>
-      <find>.a</find>
-      <find>.ma</find>
-      <find>.mar</find>
-      <find>.markta</find>
-      <find>.marktab</find>
-      <find>.marktabl</find>
-      <find>insFactBlock</find>
-      <find>marktable</find>
-      <find>s12</find>
-      <find>497</find>
-      <find>prepPaymentsHeaderAndRowArray</find>
-      <find>factInsHeader</find>
-      <find>createTableHead</find>
       <find>rowArray</find>
-      <find>headArray</find>
-      <find>initData</find>
-      <find>ins</find>
-      <find>addMo</find>
-      <find>HEAD</find>
-      <find>key</find>
-      <find>.marktable</find>
-      <find>onAddNewRow</find>
-      <find>renderBu</find>
+      <find>addMon</find>
+      <find>initrows</find>
+      <find>rowsArrInTable</find>
+      <find>.verification</find>
+      <find>addNewRowFlag</find>
+      <find>notwebadding</find>
+      <find>s</find>
+      <find>stude</find>
+      <find>addEmail</find>
+      <find>classNameOfTD</find>
+      <find>studentI</find>
+      <find>alias</find>
       <find>onClick</find>
-      <find>insAndOutsFactBlock</find>
-      <find>renderBudget</find>
-      <find>this.onAddNewRow</find>
-      <find>objBlank</find>
+      <find>onDoubleClick</find>
+      <find>aliasesList</find>
+      <find>updateSource</find>
+      <find>onReduxUpdate</find>
+      <find>onAddNewRow</find>
+      <find>onstudentclick</find>
+      <find>onSelectStudent</find>
+      <find>setState</find>
+      <find>arrRows</find>
+      <find>initAliasArray</find>
+      <find>budgetpaysout</find>
+      <find>onInputChange</find>
+      <find>changeState</find>
+      <find>initAliasArray</find>
+      <find>handleDate</find>
+      <find>budgetpaysout</find>
     </findStrings>
     <replaceStrings>
       <replace>2019-04-15</replace>
@@ -182,8 +177,8 @@
       <dir>C:\MyProjects\sch-journal\node_modules</dir>
       <dir>C:\MyProjects\sch-journal\node_modules\styled-components</dir>
       <dir>C:\MyProjects\sch-journal\src\components</dir>
-      <dir>C:\MyProjects\sch-journal</dir>
       <dir>C:\MyProjects\sch-journal\src</dir>
+      <dir>C:\MyProjects\sch-journal</dir>
     </dirStrings>
   </component>
   <component name="Git.Settings">
@@ -192,7 +187,6 @@
   <component name="IdeDocumentHistory">
     <option name="CHANGED_PATHS">
       <list>
-        <option value="$PROJECT_DIR$/src/js/render.js" />
         <option value="$PROJECT_DIR$/src/components/CheckBox/checkbox.js" />
         <option value="$PROJECT_DIR$/src/store/configureStore.js" />
         <option value="$PROJECT_DIR$/src/reducers/chat.js" />
@@ -201,7 +195,6 @@
         <option value="$PROJECT_DIR$/src/css/colors.css" />
         <option value="$PROJECT_DIR$/src/components/AdminPageWorkFlow/adminpageworkflow.css" />
         <option value="$PROJECT_DIR$/src/components/AdminPageWorkFlow/adminpageworkflow.js" />
-        <option value="$PROJECT_DIR$/src/components/AdminPageAdmin/adminpageadmin.css" />
         <option value="$PROJECT_DIR$/node_modules/react-flags-select/css/react-flags-select.css" />
         <option value="$PROJECT_DIR$/src/components/AdminPage/adminpage.js" />
         <option value="$PROJECT_DIR$/src/components/RadioGroup/radiogroup.js" />
@@ -220,29 +213,31 @@
         <option value="$PROJECT_DIR$/../React-Native/MyMv2/components/OfflineNotice/offlinenotice.js" />
         <option value="$PROJECT_DIR$/src/config/config.js" />
         <option value="$PROJECT_DIR$/src/components/LoginBlock/loginblock.js" />
-        <option value="$PROJECT_DIR$/src/containers/App.css" />
         <option value="$PROJECT_DIR$/src/components/ClassList/classlist.js" />
         <option value="$PROJECT_DIR$/src/components/ClassList/classlist.css" />
         <option value="$PROJECT_DIR$/src/components/SchoolListBlock/schoollistblock.css" />
         <option value="$PROJECT_DIR$/src/components/SchoolListBlock/schoollistblock.js" />
-        <option value="$PROJECT_DIR$/src/components/EmailList/emaillist.js" />
-        <option value="$PROJECT_DIR$/src/components/AdminPageTeacher/adminpageteacher.css" />
         <option value="$PROJECT_DIR$/src/components/AdminStudyingPage/adminstudyingpage.js" />
         <option value="$PROJECT_DIR$/src/components/AdminHomeWorkSection/homeworksection.js" />
         <option value="$PROJECT_DIR$/src/index.js" />
         <option value="$PROJECT_DIR$/src/js/helpers.js" />
         <option value="$PROJECT_DIR$/src/components/TitleBlock/titleblock.js" />
         <option value="$PROJECT_DIR$/src/components/Menu/menu.js" />
-        <option value="$PROJECT_DIR$/src/reducers/userSetup.js" />
         <option value="$PROJECT_DIR$/src/actions/userAuthActions.js" />
+        <option value="$PROJECT_DIR$/src/components/Menu/menu.css" />
+        <option value="$PROJECT_DIR$/src/containers/App.css" />
+        <option value="$PROJECT_DIR$/src/components/StudentTable/studenttable.css" />
+        <option value="$PROJECT_DIR$/src/components/AdminBudgetPage/adminbudgetpage.css" />
+        <option value="$PROJECT_DIR$/src/components/AdminPageTeacher/adminpageteacher.css" />
+        <option value="$PROJECT_DIR$/src/components/AdminPageAdmin/adminpageadmin.css" />
+        <option value="$PROJECT_DIR$/src/components/UniversalTable/universaltable.css" />
         <option value="$PROJECT_DIR$/src/components/AdminPageTeacher/adminpageteacher.js" />
         <option value="$PROJECT_DIR$/src/containers/App.js" />
-        <option value="$PROJECT_DIR$/src/components/AdminBudgetPage/adminbudgetpage.css" />
-        <option value="$PROJECT_DIR$/src/components/UniversalTable/universaltable.js" />
-        <option value="$PROJECT_DIR$/src/components/UniversalTable/universaltable.css" />
+        <option value="$PROJECT_DIR$/src/components/EmailList/emaillist.js" />
+        <option value="$PROJECT_DIR$/src/reducers/userSetup.js" />
         <option value="$PROJECT_DIR$/src/components/AdminPageAdmin/adminpageadmin.js" />
-        <option value="$PROJECT_DIR$/src/components/Menu/menu.css" />
         <option value="$PROJECT_DIR$/src/components/AdminBudgetPage/adminbudgetpage.js" />
+        <option value="$PROJECT_DIR$/src/components/UniversalTable/universaltable.js" />
       </list>
     </option>
   </component>
@@ -1052,18 +1047,18 @@
       <workItem from="1568228697977" duration="14098000" />
       <workItem from="1568728108700" duration="46334000" />
       <workItem from="1569742409936" duration="43995000" />
-      <workItem from="1570384985794" duration="171453000" />
+      <workItem from="1570384985794" duration="227231000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="2393720000" />
+    <option name="totallyTimeSpent" value="2449498000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="-8" y="-8" width="1936" height="1056" extended-state="6" />
     <editor active="true" />
     <layout>
-      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.14658849" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
+      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.12260128" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
       <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
       <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.034559645" sideWeight="0.5043243" order="7" side_tool="true" content_ui="tabs" />
       <window_info id="Database" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
@@ -1118,20 +1113,6 @@
     <watches-manager />
   </component>
   <component name="editorHistoryManager">
-    <entry file="file://$PROJECT_DIR$/node_modules/laravel-echo/src/echo.ts">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-1969">
-          <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/node_modules/laravel-echo/src/channel/pusher-private-channel.ts">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="0">
-          <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/node_modules/laravel-echo/src/connector/connector.ts">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="525">
@@ -1244,14 +1225,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/components/AdminPageAdmin/adminpageadmin.css">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-127">
-          <caret line="42" column="4" lean-forward="false" selection-start-line="42" selection-start-column="1" selection-end-line="42" selection-end-column="20" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/src/components/Chart/chart.js">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="0">
@@ -1318,14 +1291,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/containers/App.css">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="367">
-          <caret line="535" column="10" lean-forward="false" selection-start-line="535" selection-start-column="10" selection-end-line="535" selection-end-column="10" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/src/components/ClassList/classlist.css">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="546">
@@ -1352,38 +1317,10 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/components/EmailList/emaillist.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="494">
-          <caret line="66" column="27" lean-forward="true" selection-start-line="66" selection-start-column="27" selection-end-line="66" selection-end-column="27" />
-          <folding>
-            <element signature="n#!!doc" expanded="false" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/components/AdminHomeWorkSection/homeworksection.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="423">
-          <caret line="451" column="0" lean-forward="false" selection-start-line="451" selection-start-column="0" selection-end-line="467" selection-end-column="88" />
-          <folding>
-            <element signature="e#42#82#0" expanded="false" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/src/index.js">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="204">
           <caret line="12" column="80" lean-forward="false" selection-start-line="12" selection-start-column="80" selection-end-line="12" selection-end-column="80" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/components/AdminPageTeacher/adminpageteacher.css">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="391">
-          <caret line="23" column="0" lean-forward="false" selection-start-line="23" selection-start-column="0" selection-end-line="23" selection-end-column="0" />
           <folding />
         </state>
       </provider>
@@ -1424,26 +1361,10 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/js/helpers.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="17153">
-          <caret line="1018" column="16" lean-forward="false" selection-start-line="1018" selection-start-column="13" selection-end-line="1018" selection-end-column="22" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/src/components/Menu/menu.js">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="272">
           <caret line="24" column="28" lean-forward="false" selection-start-line="24" selection-start-column="28" selection-end-line="24" selection-end-column="28" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/components/StudentTable/studenttable.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="83">
-          <caret line="178" column="48" lean-forward="false" selection-start-line="178" selection-start-column="48" selection-end-line="178" selection-end-column="48" />
           <folding />
         </state>
       </provider>
@@ -1456,91 +1377,160 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/reducers/userSetup.js">
+    <entry file="file://$PROJECT_DIR$/src/components/AdminHomeWorkSection/homeworksection.js">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="17">
-          <caret line="3" column="45" lean-forward="false" selection-start-line="3" selection-start-column="45" selection-end-line="3" selection-end-column="45" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/containers/App.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="884">
-          <caret line="186" column="80" lean-forward="false" selection-start-line="186" selection-start-column="80" selection-end-line="186" selection-end-column="80" />
+        <state relative-caret-position="5325">
+          <caret line="439" column="47" lean-forward="false" selection-start-line="439" selection-start-column="46" selection-end-line="439" selection-end-column="97" />
           <folding>
-            <element signature="e#0#41#0" expanded="true" />
+            <element signature="e#42#82#0" expanded="false" />
           </folding>
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/components/AdminPageTeacher/adminpageteacher.js">
+    <entry file="file://$PROJECT_DIR$/src/reducers/user.js">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="280">
-          <caret line="126" column="119" lean-forward="false" selection-start-line="126" selection-start-column="112" selection-end-line="126" selection-end-column="119" />
-          <folding>
-            <element signature="e#42#83#0" expanded="true" />
-            <marker date="1571649843183" expanded="true" signature="2764:2987" ph="..." />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/components/AdminBudgetPage/adminbudgetpage.css">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="51">
-          <caret line="3" column="17" lean-forward="false" selection-start-line="3" selection-start-column="17" selection-end-line="3" selection-end-column="17" />
+        <state relative-caret-position="170">
+          <caret line="10" column="24" lean-forward="false" selection-start-line="10" selection-start-column="24" selection-end-line="10" selection-end-column="24" />
           <folding />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/css/colors.css">
+    <entry file="file://$PROJECT_DIR$/src/js/helpers.js">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="153">
-          <caret line="9" column="19" lean-forward="false" selection-start-line="9" selection-start-column="4" selection-end-line="9" selection-end-column="19" />
+        <state relative-caret-position="682">
+          <caret line="1042" column="58" lean-forward="false" selection-start-line="1042" selection-start-column="58" selection-end-line="1042" selection-end-column="58" />
           <folding />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/components/UniversalTable/universaltable.css">
+    <entry file="file://$PROJECT_DIR$/src/containers/App.css">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="180">
-          <caret line="29" column="39" lean-forward="false" selection-start-line="29" selection-start-column="39" selection-end-line="29" selection-end-column="39" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/components/UniversalTable/universaltable.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="587">
-          <caret line="392" column="80" lean-forward="false" selection-start-line="392" selection-start-column="80" selection-end-line="392" selection-end-column="80" />
-          <folding>
-            <element signature="e#42#83#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/components/AdminPageAdmin/adminpageadmin.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="386">
-          <caret line="36" column="45" lean-forward="false" selection-start-line="36" selection-start-column="45" selection-end-line="36" selection-end-column="45" />
+        <state relative-caret-position="357">
+          <caret line="200" column="22" lean-forward="true" selection-start-line="200" selection-start-column="22" selection-end-line="200" selection-end-column="22" />
           <folding />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/src/components/Menu/menu.css">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="367">
-          <caret line="36" column="22" lean-forward="true" selection-start-line="36" selection-start-column="22" selection-end-line="36" selection-end-column="22" />
+        <state relative-caret-position="549">
+          <caret line="36" column="22" lean-forward="false" selection-start-line="36" selection-start-column="22" selection-end-line="36" selection-end-column="22" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/components/AdminBudgetPage/adminbudgetpage.css">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="119">
+          <caret line="7" column="18" lean-forward="true" selection-start-line="7" selection-start-column="18" selection-end-line="7" selection-end-column="18" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/css/colors.css">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="187">
+          <caret line="11" column="55" lean-forward="false" selection-start-line="11" selection-start-column="33" selection-end-line="11" selection-end-column="57" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/components/StudentTable/studenttable.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="-5593">
+          <caret line="178" column="48" lean-forward="false" selection-start-line="178" selection-start-column="48" selection-end-line="178" selection-end-column="48" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/components/AdminPageAdmin/adminpageadmin.css">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="408">
+          <caret line="24" column="20" lean-forward="false" selection-start-line="24" selection-start-column="20" selection-end-line="24" selection-end-column="20" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/components/AdminPageTeacher/adminpageteacher.css">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="119">
+          <caret line="7" column="35" lean-forward="false" selection-start-line="7" selection-start-column="35" selection-end-line="7" selection-end-column="35" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/containers/App.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="289">
+          <caret line="1190" column="57" lean-forward="false" selection-start-line="1190" selection-start-column="57" selection-end-line="1190" selection-end-column="57" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/components/EmailList/emaillist.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="332">
+          <caret line="62" column="27" lean-forward="false" selection-start-line="62" selection-start-column="27" selection-end-line="62" selection-end-column="27" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/components/AdminPageTeacher/adminpageteacher.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="552">
+          <caret line="182" column="25" lean-forward="false" selection-start-line="182" selection-start-column="25" selection-end-line="182" selection-end-column="25" />
+          <folding>
+            <marker date="1572126742221" expanded="true" signature="2761:2984" ph="..." />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/components/StudentTable/studenttable.css">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="34">
+          <caret line="2" column="1" lean-forward="false" selection-start-line="2" selection-start-column="1" selection-end-line="2" selection-end-column="1" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/components/AdminPageAdmin/adminpageadmin.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="412">
+          <caret line="229" column="96" lean-forward="false" selection-start-line="229" selection-start-column="96" selection-end-line="229" selection-end-column="96" />
           <folding />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/src/components/AdminBudgetPage/adminbudgetpage.js">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="399">
-          <caret line="622" column="61" lean-forward="true" selection-start-line="622" selection-start-column="61" selection-end-line="622" selection-end-column="61" />
+        <state relative-caret-position="352">
+          <caret line="835" column="27" lean-forward="true" selection-start-line="835" selection-start-column="27" selection-end-line="835" selection-end-column="27" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/components/UniversalTable/universaltable.css">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="299">
+          <caret line="46" column="48" lean-forward="false" selection-start-line="46" selection-start-column="48" selection-end-line="46" selection-end-column="48" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/reducers/userSetup.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="581">
+          <caret line="246" column="24" lean-forward="false" selection-start-line="246" selection-start-column="14" selection-end-line="246" selection-end-column="31" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/components/UniversalTable/universaltable.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="274">
+          <caret line="602" column="29" lean-forward="true" selection-start-line="602" selection-start-column="29" selection-end-line="602" selection-end-column="29" />
           <folding>
-            <element signature="e#43#81#0" expanded="true" />
+            <element signature="e#42#83#0" expanded="true" />
           </folding>
         </state>
       </provider>

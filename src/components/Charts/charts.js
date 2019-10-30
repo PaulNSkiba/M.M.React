@@ -210,7 +210,7 @@ class Charts extends Component {
             if (Object(tempArr[0]).myplace) {
                 place = Object(tempArr[0]).myplace.length
                 MyPlace = Object(tempArr[0]).myplace.filter((value) => (
-                    (subj_key === value.subj_key) && (value.stud_id === this.props.userSetup.studentId)
+                    (subj_key === value.subj_key) && (value.stud_id === this.props.userSetup.studentID)
                 ))
             }
         }

@@ -1,6 +1,6 @@
 .subjFromSelector, .subjToSelector {
     width : 170px;
-    height : 500px;
+    height : 530px;
 }
 .subBlocks {
     display: flex;
@@ -10,7 +10,7 @@
     /*margin: 10px 10%;*/
     border : 1px lightgrey solid;
     padding : 2px;
-    height : 550px;
+    height : 580px;
 }
 .subBlocks > div{
     margin: 2px;

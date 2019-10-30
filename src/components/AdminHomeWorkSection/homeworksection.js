@@ -161,7 +161,7 @@ class HomeWorkSection extends Component {
        //
        // }
        addHomeWork=()=>{
-           let {selectedSubjects, classID, userName, userID, studentId} = this.props.userSetup
+           let {selectedSubjects, classID, userName, userID, studentID} = this.props.userSetup
             // alert(this.homeWorkTxt.value)
            // if (this.state.editId===0) {
                let {homework : homeWorkArray} = this.props.userSetup //this.state;
@@ -175,7 +175,7 @@ class HomeWorkSection extends Component {
                let json = `{"id":${id}, "subj_key":"${subj_key}", "subj_name_ua": "${subj_name_ua}", "homework": "${this.homeWorkTxt.value}", "ondate": "${ondate}", "author": "${author}", "instime" : "${instime}"}`;
 
                json = JSON.parse(json);
-               json = `{"subj_key":"${subj_key}", "subj_name_ua": "${subj_name_ua}", "homework": "${this.homeWorkTxt.value}", "ondate": "${toYYYYMMDD(ondate)}", "user_id": "${userID}", "student_id":"${studentId}"}`;
+               json = `{"subj_key":"${subj_key}", "subj_name_ua": "${subj_name_ua}", "homework": "${this.homeWorkTxt.value}", "ondate": "${toYYYYMMDD(ondate)}", "user_id": "${userID}", "student_id":"${studentID}"}`;
                // homeWorkArray.push(json)
                // console.log("homeWorkArray", homeWorkArray);
                // this.props.onHomeWorkChanged(homeWorkArray)

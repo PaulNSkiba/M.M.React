@@ -1,13 +1,13 @@
 .insAndOutsBlock {
     display: flex;
-    width : 90%;
+    width : 96%;
     height : 20%;
-    margin : 10px 5%;
+    margin : 10px 2%;
 }
 .insAndOutsFactBlock {
     display: flex;
-    width : 90%;
-    margin : 10px 5%;
+    width : 96%;
+    margin : 10px 2%;
 }
 .insBlock{
     border : 1px solid #2f75b5;

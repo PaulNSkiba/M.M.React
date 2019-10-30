@@ -52,7 +52,7 @@ class StudentTable extends Component {
         let selectedSubjs = new Map();
         // let arr = []
 
-        let {userID, curClass, selectedSubj,studentId,classID,marks:marksredux} = this.props.userSetup;
+        let {userID, curClass, selectedSubj,studentID,classID,marks:marksredux} = this.props.userSetup;
 
         if (marksredux.length>0) {
             marks.clear()
@@ -77,7 +77,7 @@ class StudentTable extends Component {
         else
         instanceAxios().get(MARKS_URL + '/'+userID+'/class/'+classID+'/subject/0'+
             '/subjkey/null'+
-            '/periodstart/'+toYYYYMMDD(dStart)+'/periodend/'+toYYYYMMDD(dEnd)+'/student/'+studentId)
+            '/periodstart/'+toYYYYMMDD(dStart)+'/periodend/'+toYYYYMMDD(dEnd)+'/student/'+studentID)
             .then(response => {
                 console.log('GET_MARKS_REMOTE', response.data, userID)
                 marks.clear()
@@ -307,7 +307,7 @@ class StudentTable extends Component {
                  let year = new Date().getFullYear();
                 let month = new Date().getMonth()
                 year = (month < 9)?(year-1):year
-                instanceAxios().get(TABLE_GET_URL + '/' + this.props.userSetup.studentId + '/table/' + (year+'0901'), [])
+                instanceAxios().get(TABLE_GET_URL + '/' + this.props.userSetup.studentID + '/table/' + (year+'0901'), [])
                     .then(response => {
                         this.setState({tableMarks:response.data.table})
                         console.log('TABLE_GET_URL', response.data)
@@ -407,7 +407,7 @@ class StudentTable extends Component {
         head.push(<tr key={"row-2"} id={"row-2"}>{cell2}</tr>)
 
         let rows = [], subjArr = [];
-        let {selectedSubjects, students, studentId} = this.props.userSetup;
+        let {selectedSubjects, students, studentID} = this.props.userSetup;
 
         // Отфильтруем только для предметов с оценками
         // console.log("RENDER", selectedSubjects, this.state.markSubjs)
@@ -479,11 +479,11 @@ class StudentTable extends Component {
                         default:
                             if ((AddDay(this.state.dateStart, idx-2).getDay() > 0 && AddDay(this.state.dateStart, idx-2).getDay() < 6 && this.props.withoutholidays) || (!this.props.withoutholidays)) {
 
-                                let markTypes = this.getMarkHashType(selectedSubjects[i].subj_key.replace('#','')+"#"+studentId+"#"+mapDays.get(idx));
+                                let markTypes = this.getMarkHashType(selectedSubjects[i].subj_key.replace('#','')+"#"+studentID+"#"+mapDays.get(idx));
                                 if (!(markTypes==="A")&&!(markTypes==="S1")&&!(markTypes==="S2")) {
-                                    let mark = this.getMarkHash(selectedSubjects[i].subj_key.replace('#', '') + "#" + studentId + "#" + mapDays.get(idx));
+                                    let mark = this.getMarkHash(selectedSubjects[i].subj_key.replace('#', '') + "#" + studentID + "#" + mapDays.get(idx));
 
-                                    let markBefore = this.getMarkHashBefore(selectedSubjects[i].subj_key.replace('#', '') + "#" + studentId + "#" + mapDays.get(idx));
+                                    let markBefore = this.getMarkHashBefore(selectedSubjects[i].subj_key.replace('#', '') + "#" + studentID + "#" + mapDays.get(idx));
 
 
                                     // console.log('Render MarkTypes', markTypes)

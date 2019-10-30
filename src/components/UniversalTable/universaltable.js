@@ -16,7 +16,7 @@ class UniversalTable extends Component {
             row : -1,
             column: -1,
             head : [],
-            rows : [], //this.props.rowsArr,
+            rows : [],
             checkedMap : this.fillMap(),
             arrRows : [],
             addNew : false,
@@ -39,28 +39,68 @@ class UniversalTable extends Component {
         // console.log("UniversalTable.DidMount")
         const {classNameOfTD} = this.props
         const {arrRows : rows, row : row_state, column : column_state, checkedMap} = this.state
-
-        // console.log("HEAD", this.props.head)
+        let reduxrows = []
+        console.log("HEAD", this.props.head)
+        switch (this.props.kind) {
+            case 'students' :
+                reduxrows = this.props.userSetup.students;
+                break;
+            case 'budget' :
+                reduxrows = this.props.userSetup.students;
+                break;
+            case 'aliases' :
+                reduxrows = this.props.userSetup.aliasesList;
+                break;
+            case 'budgetpaysin' :
+                reduxrows = this.props.userSetup.budgetpays.filter(item=>item.debet===1);
+                break;
+            case 'budgetpaysout' :
+                reduxrows = this.props.userSetup.budgetpays.filter(item=>item.debet===null);
+                break;
+            default :
+                break;
+        }
         this.setState ( {
             head : this.createTableHead(this.props.head),
-            rows : this.createTableRows(this.props.initrows(this.props.userSetup.aliasesLang), this.onInputChange, true, row_state, column_state, classNameOfTD, checkedMap)
+            rows : this.createTableRows(this.props.initrows(reduxrows), this.onInputChange, true, row_state, column_state, classNameOfTD, checkedMap)
         })
+        this.scrollToBottom();
     }
+    componentDidUpdate() {
+        this.scrollToBottom();
+    }
+
     componentWillReceiveProps(props) {
 
         const { year, head, render, initrows, rows } = this.props;
-        console.log("HEAD2", props.rows.length, rows.length)
-        if (props.year !== year || props.head.lenght !== head.length || props.render !== render || props.rows.length !== rows.length) {
-            // this.fetchShoes(id)
-            //     .then(this.refreshShoeList)
-            const {classNameOfTD} = this.props
-            const {arrRows : rows, row : row_state, column : column_state, checkedMap} = this.state
+        console.log("componentWillReceiveProps", props.rows.length, rows.length)
+        if (!(this.props.kind === "aliases")) {
 
-            // console.log("HEAD3", this.props.head)
-            this.setState ( {
-                head : this.createTableHead(this.props.head),
-                rows : this.createTableRows(this.props.initrows(this.props.userSetup.aliasesLang), this.onInputChange, true, row_state, column_state, classNameOfTD, checkedMap)
-            })
+            if (props.year !== year || props.head.lenght !== head.length || props.render !== render || props.rows.length !== rows.length) {
+
+                const {classNameOfTD} = this.props
+                const {arrRows: rows, row: row_state, column: column_state, checkedMap} = this.state
+
+                console.log("componentWillReceiveProps:HEAD3", props.rows.length, rows.length, props.head.lenght, head.length, props.render, render)
+                this.setState({
+                    head: this.createTableHead(this.props.head),
+                    rows: this.createTableRows(this.props.initrows(this.props.userSetup.aliasesLang), this.onInputChange, true, row_state, column_state, classNameOfTD, checkedMap)
+                })
+            }
+        }
+        else {
+            // console.log("HEAD3", props.rows.length, rows.length, rows === undefined, rows)
+            if ( (props.rows.length !== rows.length) || rows === undefined) {
+
+                const {classNameOfTD} = this.props
+                const {arrRows: rows, row: row_state, column: column_state, checkedMap} = this.state
+
+                console.log("componentWillReceiveProps:HEAD4", props.rows.length, rows.length, props.head.lenght, head.length, props.render, render)
+                this.setState({
+                    head: this.createTableHead(this.props.head),
+                    rows: this.createTableRows(this.props.initrows(this.props.userSetup.aliasesLang), this.onInputChange, true, row_state, column_state, classNameOfTD, checkedMap)
+                })
+            }
         }
     }
     fillMap=()=>{
@@ -92,10 +132,10 @@ class UniversalTable extends Component {
         // console.log("onInputChange", e.target)
     }
     updateSource=(column, id, value, key)=>{
-        // console.log("updateSource", column, id, value, key)
+        console.log("updateSource", column, id, value, key)
         const {classNameOfTD} = this.props
         const {arrRows : rows, row : row_state, column : column_state, checkedMap} = this.state
-
+        let url, uniqid, arr, newarr
         let json = "", data = "", isCheckBox = false;
         switch (this.props.kind) {
             case 'students' :
@@ -149,10 +189,10 @@ class UniversalTable extends Component {
             case "aliases" :
                 const   alias =  String(key.split('#')[3]),
                         llw_id = Number(key.split('#')[4])
-                let url = ''
-                const uniqid = new Date().getTime() + this.props.userSetup.userName
-                let arr = this.props.userSetup.aliasesList
-                let newarr = arr.map(item=>{
+                url = ''
+                uniqid = new Date().getTime() + this.props.userSetup.userName
+                arr = this.props.userSetup.aliasesList
+                newarr = arr.map(item=>{
                     if (item.id === id) {
                         item.uniqid = uniqid;
                     }
@@ -200,7 +240,7 @@ class UniversalTable extends Component {
                                 }
                                 return item
                             })
-                            // console.log('ALIASES_LIST', newarr)
+                            console.log('ALIASES_LIST', newarr)
                             this.props.onReduxUpdate('ALIASES_LIST', newarr)
                             this.setState({ row : -1, column :-1, rows: this.createTableRows(newarr, this.onInputChange, isCheckBox, row_state, column_state, classNameOfTD, checkedMap)})
 
@@ -211,22 +251,160 @@ class UniversalTable extends Component {
                         })
                 }
                 break;
+            case "budgetpaysin" :
+                url = `${AUTH_URL}/api/budgetpays/update/${id}`
+                uniqid = new Date().getTime() + this.props.userSetup.userName
+                arr = this.props.userSetup.budgetpays
+                newarr = arr.map(item=>{
+                    if (item.id === id) {
+                        item.uniqid = uniqid;
+                    }
+                    return item
+                })
+                switch (column) {
+                    case 2 :
+                        // Наименование
+                        json = `{"name":"${value}", "debet":1, "user_id":${this.props.userSetup.userID},"class_id":${this.props.userSetup.classID},"uniqid":"${uniqid}"}`;
+                        break;
+                    case 3 :
+                        // Короткое
+                        json = `{"short":"${value}", "debet":1, "user_id":${this.props.userSetup.userID},"class_id":${this.props.userSetup.classID},"uniqid":"${uniqid}"}`;
+                        break;
+                    case 4 :
+                        // Сумма
+                        json = `{"sum":${value}, "debet":1, "user_id":${this.props.userSetup.userID},"class_id":${this.props.userSetup.classID},"uniqid":"${uniqid}"}`;
+                        break;
+                    case 5 :
+                        // Регулярный
+                        json = `{"isregular":${value}, "debet":1, "user_id":${this.props.userSetup.userID},"class_id":${this.props.userSetup.classID},"uniqid":"${uniqid}"}`;
+                        break;
+                    case 6 :
+                        // Дата оплаты
+                        json = `{"paydate":"${value}", "debet":1, "user_id":${this.props.userSetup.userID},"class_id":${this.props.userSetup.classID},"uniqid":"${uniqid}"}`;
+                        break;
+                    case 7 :
+                        // Дата окончания оплаты
+                        json = `{"payend":"${toYYYYMMDD(new Date(value))}", "debet":1, "user_id":${this.props.userSetup.userID},"class_id":${this.props.userSetup.classID},"uniqid":"${uniqid}"}`;
+                        break;
+                    case 8 :
+                        // День месяца
+                        json = `{"monthday":${toYYYYMMDD(new Date(value))}, "debet":1, "user_id":${this.props.userSetup.userID},"class_id":${this.props.userSetup.classID},"uniqid":"${uniqid}"}`;
+                        break;
+                    case 9 :
+                        // День месяца
+                        json = `{"issaldo":${value}, "debet":1, "user_id":${this.props.userSetup.userID},"class_id":${this.props.userSetup.classID},"uniqid":"${uniqid}"}`;
+                        break;
+                    default :
+                        break;
+                }
+                if (json) {
+                    data = JSON.parse(json);
+                    // console.log("UPDATE_URL", url, json)
+                    instanceAxios().post(url, JSON.stringify(data))
+                        .then(response => {
+                            // arr = this.props.userSetup.aliasesList
+                            // console.log("RESPONSE", response.data)
+                            newarr = arr.map(item=>{
+                                if (item.uniqid === response.data.uniqid) {
+                                   item = response.data
+                                }
+                                return item
+                            })
+                            console.log('BUDGETPAYS_UPDATE', newarr)
+                            this.props.onReduxUpdate('BUDGETPAYS_UPDATE', newarr)
+                            this.setState({ row : -1, column :-1, rows: this.createTableRows(newarr, this.onInputChange, isCheckBox, row_state, column_state, classNameOfTD, checkedMap)})
+
+                        })
+                        .catch(response => {
+                            console.log(response);
+                        })
+                }
+                break;
+            case "budgetpaysout" :
+                url =  `${AUTH_URL}/api/budgetpays/update/${id}`
+                uniqid = new Date().getTime() + this.props.userSetup.userName
+                arr = this.props.userSetup.budgetpays
+                newarr = arr.map(item=>{
+                    if (item.id === id) {
+                        item.uniqid = uniqid;
+                    }
+                    return item
+                })
+                switch (column) {
+                    case 2 :
+                        // Наименование
+                        json = `{"name":"${value}", "debet":null, "user_id":${this.props.userSetup.userID},"class_id":${this.props.userSetup.classID},"uniqid":"${uniqid}"}`;
+                        break;
+                    case 3 :
+                        // Короткое
+                        json = `{"short":"${value}", "debet":null, "user_id":${this.props.userSetup.userID},"class_id":${this.props.userSetup.classID},"uniqid":"${uniqid}"}`;
+                        break;
+                    case 4 :
+                        // Сумма
+                        json = `{"sum":${value}, "debet":null, "user_id":${this.props.userSetup.userID},"class_id":${this.props.userSetup.classID},"uniqid":"${uniqid}"}`;
+                        break;
+                    case 5 :
+                        // Регулярный
+                        json = `{"isregular":${value}, "debet":null, "user_id":${this.props.userSetup.userID},"class_id":${this.props.userSetup.classID},"uniqid":"${uniqid}"}`;
+                        break;
+                    case 6 :
+                        // Дата оплаты
+                        json = `{"paydate":"${toYYYYMMDD(new Date(value))}", "debet":null, "user_id":${this.props.userSetup.userID},"class_id":${this.props.userSetup.classID},"uniqid":"${uniqid}"}`;
+                        break;
+                    case 7 :
+                        // Дата окончания оплаты
+                        json = `{"payend":"${toYYYYMMDD(new Date(value))}", "debet":null, "user_id":${this.props.userSetup.userID},"class_id":${this.props.userSetup.classID},"uniqid":"${uniqid}"}`;
+                        break;
+                    case 8 :
+                        // День месяца
+                        json = `{"monthday":${value}, "debet":null, "user_id":${this.props.userSetup.userID},"class_id":${this.props.userSetup.classID},"uniqid":"${uniqid}"}`;
+                        break;
+                    case 9 :
+                    //     // День месяца
+                        json = `{"issaldo":${value}, "debet":null, "user_id":${this.props.userSetup.userID},"class_id":${this.props.userSetup.classID},"uniqid":"${uniqid}"}`;
+                        break;
+                    default :
+                        break;
+                }
+                if (json) {
+                    data = JSON.parse(json);
+                    console.log("UPDATE_URL", url, json)
+                    instanceAxios().post(url, JSON.stringify(data))
+                        .then(response => {
+                            // arr = this.props.userSetup.aliasesList
+                            console.log("RESPONSE", response.data)
+                            newarr = arr.map(item=>{
+                                if (item.uniqid === response.data.uniqid) {
+                                    item = response.data
+                                }
+                                return item
+                            })
+                            console.log('BUDGETPAYS_UPDATE', newarr)
+                            this.props.onReduxUpdate('BUDGETPAYS_UPDATE', newarr)
+                            this.setState({ row : -1, column :-1, rows: this.createTableRows(newarr, this.onInputChange, isCheckBox, row_state, column_state, classNameOfTD, checkedMap)})
+
+                        })
+                        .catch(response => {
+                            console.log(response);
+                        })
+                }
+                break;
             default:
 
                 break;
         }
-        // this.setState({ row : -1, column :-1, rows: this.createTableRows(rows, this.onInputChange, isCheckBox, row_state, column_state, classNameOfTD, checkedMap)})
-    }
+     }
     onClick(e) {
         const {classNameOfTD} = this.props
         const {arrRows : rows, row : row_state, column : column_state, checkedMap} = this.state
 
-        console.log("onClick", this.state.arrRows, this.state.rows)
+        console.log("onClick.1", this.state.arrRows, this.state.rows, row_state, column_state)
+
         if (e.target.nodeName === "TD") {
             let row = Number(e.target.id.split('#')[0]),
                 column = Number(e.target.id.split('#')[1])
 
-            // console.log("onClick", row, column)
+            console.log("onClick.2", row, column)
             if (this.currentEditedCellId>0) {
                 if ((Math.abs(row - this.state.row) + Math.abs(column - this.state.column)) && (this.state.row > 0) && (this.state.column > 0)) {
                     // alert(`${this.state.row} and ${this.state.column} was edited. And now: ${row} and ${column}`, this.currentEditedCellValue)
@@ -249,7 +427,7 @@ class UniversalTable extends Component {
         const {classNameOfTD} = this.props
         const {arrRows : rows, row : row_state, column : column_state, checkedMap} = this.state
 
-        // console.log("onBlur", e.target, e.target.nodeName, e.target.innerHTML, e.target.getAttribute('id2'), e.target.value)
+        console.log("onBlur", e.target, e.target.nodeName, e.target.innerHTML, e.target.getAttribute('id2'), e.target.value)
         if (true) {//(e.target.nodeName === "TD") {
             // let row = Number(e.target.id.split('#')[0]),
             //     column = Number(e.target.id.split('#')[1])
@@ -270,7 +448,7 @@ class UniversalTable extends Component {
         }
     }
     onInputKeyPress=(e)=>{
-        // console.log('onInputKeyPress', e.target, e.target.id, e.target.value);
+        console.log('onInputKeyPress', e.target, e.target.id, e.target.value);
         if (e.key === 'Enter') {
             const   column = Number(e.target.id.split('#')[1]),
                     id = Number(e.target.id.split('#')[2]),
@@ -284,18 +462,61 @@ class UniversalTable extends Component {
         console.log("changeState", e.target.id, column.split('_')[0])
         this.updateSource(Number(column.split('_')[0]), id, e.target.id, e.target.id)
     }
-    onAddNewRow=()=>{
-        const {classNameOfTD, objblank} = this.props
+    onAddNewRow=(objblank)=>{
+        const {classNameOfTD} = this.props
         const {arrRows, row : row_state, column : column_state, checkedMap} = this.state
-        let arr = arrRows;
-        // console.log("onAddNewRow", arr)
-        arr.push(objblank);
+        // let arr = arrRows;
+        console.log("onAddNewRow", objblank)
+        let arr = [], rows = []
+        switch (this.props.kind) {
+            case 'students' :
+                arr = this.props.userSetup.students;
+                arr.push(objblank);
+                rows = this.createTableRows(arr, this.onInputChange, true, row_state, column_state, classNameOfTD, checkedMap)
+                break;
+            case 'budget' :
+                arr = this.props.userSetup.budget;
+                // arr = arr.filter(item=>item.id!==0)
+                arr.push(objblank);
+                rows = this.createTableRows(arr, this.onInputChange, true, row_state, column_state, classNameOfTD, checkedMap, this.props.headex, this.props.year)
+                break;
+            case 'aliases' :
+                arr = this.props.userSetup.aliasesList;
+                // arr = arr.filter(item=>item.id!==0)
+                arr.push(objblank);
+                this.props.onReduxUpdate("ALIASES_LIST", arr)
+                rows = this.createTableRows(arr, this.onInputChange, true, row_state, column_state, classNameOfTD, checkedMap)
+                break;
+            case 'budgetpaysin' :
+                // console.log('budgetpaysin', objblank)
+                arr = this.props.userSetup.budgetpays;
+                arr.push(objblank);
+                this.props.onReduxUpdate("BUDGETPAYS_UPDATE", arr)
+                arr = this.props.userSetup.budgetpays.filter(item=>item.debet===1);
+                arr.push(objblank);
+                rows = this.createTableRows(arr, this.onInputChange, true, row_state, column_state, classNameOfTD, checkedMap)
+                break;
+            case 'budgetpaysout' :
+                arr = this.props.userSetup.budgetpays;
+                arr.push(objblank);
+                this.props.onReduxUpdate("BUDGETPAYS_UPDATE", arr)
+                arr = this.props.userSetup.budgetpays.filter(item=>item.debet===null);
+                arr.push(objblank);
+                rows = this.createTableRows(arr, this.onInputChange, true, row_state, column_state, classNameOfTD, checkedMap)
+                break;
+            default :
+                break;
+        }
+
+        console.log("onAddNewRow", objblank)
+        // arr.push(objblank);
         this.addNewRowFlag = true
         // this.forceUpdate()
         this.setState({
                             arrRows : arr,
+                            rows
                             // addNew : true,
-                            rows : this.createTableRows(arr, this.onInputChange, true, row_state, column_state, classNameOfTD, checkedMap)
+                            // rows : this.createTableRows(arr, this.onInputChange, true, row_state, column_state, classNameOfTD, checkedMap)
                         })
         // // alert('addAlias')
     }
@@ -305,8 +526,32 @@ class UniversalTable extends Component {
         // let arr = this.state.planIns;
         switch (type) {
             case 'start':
+                switch (this.props.kind) {
+                    case 'budgetpaysin' :
+                        url = AUTH_URL + `/api/budgetpays/update/${id}`
+                        json = `{"paydate":"${toYYYYMMDD(date)}", "id":${id}}`;
+                        break;
+                    case 'budgetpaysout' :
+                        url = AUTH_URL + `/api/budgetpays/update/${id}`
+                        json = `{"paydate":"${toYYYYMMDD(date)}", "id":${id}}`;
+                        break;
+                    default :
+                        break;
+                }
                 break;
             case 'end':
+                switch (this.props.kind) {
+                    case 'budgetpaysin' :
+                        url = AUTH_URL + `/api/budgetpays/update/${id}`
+                        json = `{"payend":"${toYYYYMMDD(date)}", "id":${id}}`;
+                        break;
+                    case 'budgetpaysout' :
+                        url = AUTH_URL + `/api/budgetpays/update/${id}`
+                        json = `{"payend":"${toYYYYMMDD(date)}", "id":${id}}`;
+                        break;
+                    default :
+                        break;
+                }
                 break;
             case 'datein':
                 console.log("datein", type, id, date)
@@ -324,18 +569,40 @@ class UniversalTable extends Component {
         }
     if (json) {
         // let data = JSON.parse(json);
+        let arr = []
         console.log(json)
         instanceAxios().post(url, json)
             .then(response => {
                 // arr = this.props.userSetup.aliasesList
                 console.log("RESPONSE", response.data)
-                let arr = this.props.userSetup.students
-                arr = arr.map(item=>{
-                    if (item.id===id) item.datein = toYYYYMMDD(date)
-                    return item
-                })
-                console.log("onStudentUpdate", arr)
-                this.props.onStudentUpdate(arr)
+                switch (type) {
+                    case 'datein' :
+                        arr = this.props.userSetup.students.map(item => {
+                            if (item.id === id) item.datein = toYYYYMMDD(date)
+                            return item
+                        });
+                        console.log("onStudentUpdate", arr)
+                        this.props.onStudentUpdate(arr)
+                    break;
+                    case 'start' :
+                        arr = this.props.userSetup.budgetpays.map(item => {
+                            if (item.id === id) item.paydate = toYYYYMMDD(date)
+                            return item
+                        });
+                        // console.log("onStudentUpdate", arr)
+                        this.props.onReduxUpdate("BUDGETPAYS_UPDATE", arr)
+                        break;
+                    case 'end' :
+                        arr = this.props.userSetup.budgetpays.map(item => {
+                            if (item.id === id) item.payend = toYYYYMMDD(date)
+                            return item
+                        });
+                        // console.log("onStudentUpdate", arr)
+                        this.props.onReduxUpdate("BUDGETPAYS_UPDATE", arr)
+                        break;
+                    default :
+                        break;
+                }
                 //console.log('UPDATE_ALIAS_REMOTE', response.data)
             })
             .catch(response => {
@@ -343,6 +610,16 @@ class UniversalTable extends Component {
             })
         }
     };
+    onSelectDateClick=()=>{
+
+    }
+    scrollToBottom() {
+        const scrollHeight = this.tablerows.scrollHeight;
+        const height = this.tablerows.clientHeight;
+        const maxScrollTop = scrollHeight - height;
+        this.tablerows.scrollTop = maxScrollTop > 0 ? maxScrollTop : 0;
+    }
+
     render(){
         // let {head, row, column} = this.state
         const {classNameOfTD, objblank} = this.props
@@ -351,6 +628,10 @@ class UniversalTable extends Component {
         switch (this.props.kind) {
             case 'students' :
                 reduxrows = this.props.userSetup.students;
+                if (this.addNewRowFlag ) {
+                    reduxrows.push(objblank);
+                    this.addNewRowFlag = false
+                }
                 rows = this.createTableRows(reduxrows, this.onInputChange, true, row_state, column_state, classNameOfTD, checkedMap)
                 break;
             case 'budget' :
@@ -363,40 +644,43 @@ class UniversalTable extends Component {
                 break;
             case 'budgetpaysin' :
                 reduxrows = this.props.userSetup.budgetpays.filter(item=>item.debet===1);
+                if (this.addNewRowFlag ) {
+                    reduxrows.push(objblank);
+                    this.addNewRowFlag = false
+                }
                 rows = this.createTableRows(reduxrows, this.onInputChange, true, row_state, column_state, classNameOfTD, checkedMap)
                 break;
             case 'budgetpaysout' :
                 reduxrows = this.props.userSetup.budgetpays.filter(item=>item.debet===null);
+                if (this.addNewRowFlag ) {
+                    reduxrows.push(objblank);
+                    this.addNewRowFlag = false
+                }
                 rows = this.createTableRows(reduxrows, this.onInputChange, true, row_state, column_state, classNameOfTD, checkedMap)
                 break;
             default :
                 break;
         }
-        if (this.addNewRowFlag ) {
-            reduxrows.push(objblank);
-            this.addNewRowFlag = false
-        }
-
-
-        // console.log("UniversalTable: RENDER")
+        // console.log("UniversalTable: RENDER", this.addNewRowFlag, reduxrows, rows)
 
         return(
             <div className="mym-universaltable-container" height={this.props.height}>
                 <div className="row">
                     <div className="board">
-                            {this.props.btncaption.length?<div className="mym-btn-add-lang-alias" onClick={this.onAddNewRow}>{this.props.btncaption}</div>:null}
+                        {this.props.btncaption.length?<div className="mym-btn-add-lang-alias" onClick={()=>this.onAddNewRow(this.props.objblank)}>{this.props.btncaption}</div>:null}
                         <table id="simple-board" style={{overflowY: "scroll"}}>
                             <thead style={{display: "block"}}>
                                 {head}
                             </thead>
                         </table>
-                         <div style={{maxHeight: "500px", overflowY: "scroll"}}>
+                         <div  ref={(div) => { this.tablerows = div; }} style={{maxHeight: "500px", overflowY: "scroll"}}>
                             <table>
                                 <tbody>
                                     {rows}
                                 </tbody>
                             </table>
                         </div>
+                        {/*{window.scroll(0, window.pageYOffset - this.props.scrollStepInPx)}*/}
                         {/*<table id="simple-board" style={{display: "block", overflowX: "auto"}}>*/}
                             {/*<thead style={{display: "block"}}>*/}
                                 {/*{head}*/}
