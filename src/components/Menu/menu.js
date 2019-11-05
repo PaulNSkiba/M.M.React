@@ -20,8 +20,9 @@ class Menu extends Component {
     }
     render() {
 
-        // console.log("MENU_FROM_REDUX", this.props.userSetup)
 
+        const {isadmin, userID} = this.props.userSetup
+        console.log("MENU_FROM_REDUX", isadmin, Number(isadmin)&8, (isadmin&8)===8)
         let langLibrary = {}
         if (Object.keys(this.props.userSetup.langLibrary).length) {
             langLibrary = this.props.userSetup.langLibrary
@@ -35,12 +36,12 @@ class Menu extends Component {
             <div className="menuBlock">
                 {Object.keys(langLibrary).length?
                 <div className="menuItems">
-                    {this.props.withtomain&&<div className={`menuItem ${this.props.userSetup.menuItem==="main"?"activeItem":""}`}><Link onClick={()=>this.props.onReduxUpdate("MENU_CLICK", "main")} to="/">{`${langLibrary.mainSite.toString().concat(' |')}`}</Link></div>}
-                    {this.props.isadmin>0&&this.props.userid>0&&<div className={`menuItem ${this.props.userSetup.menuItem==="admin"?"activeItem":""}`}><Link onClick={()=>this.props.onReduxUpdate("MENU_CLICK", "admin")} to="/admin">{`${langLibrary.adminSite.toString().concat('\u205F|')}`}</Link></div>}
-                    {this.props.isadmin>0&&this.props.userid>0&&<div className={`menuItem ${this.props.userSetup.menuItem==="adminteacher"?"activeItem":""}`}><Link onClick={()=>this.props.onReduxUpdate("MENU_CLICK", "adminteacher")} to="/adminteacher">{`${langLibrary.adminSiteClass.toString().replace(' ', '\u205F').concat('\u205F|')}`}</Link></div>}
+                    {this.props.withtomain?<div className={`menuItem ${this.props.userSetup.menuItem==="main"?"activeItem":""}`}><Link onClick={()=>this.props.onReduxUpdate("MENU_CLICK", "main")} to="/">{`${langLibrary.mainSite.toString().concat(' |')}`}</Link></div>:null}
+                    {((isadmin&1)===1&&userID>0)?<div className={`menuItem ${this.props.userSetup.menuItem==="admin"?"activeItem":""}`}><Link onClick={()=>this.props.onReduxUpdate("MENU_CLICK", "admin")} to="/admin">{`${langLibrary.adminSite.toString().concat('\u205F|')}`}</Link></div>:null}
+                    {((isadmin&1)===1||(isadmin&2)===2)&&this.props.userid>0?<div className={`menuItem ${this.props.userSetup.menuItem==="adminteacher"?"activeItem":""}`}><Link onClick={()=>this.props.onReduxUpdate("MENU_CLICK", "adminteacher")} to="/adminteacher">{`${langLibrary.adminSiteClass.toString().replace(' ', '\u205F').concat('\u205F|')}`}</Link></div>:null}
                     <div className={`menuItemHw ${this.props.userSetup.menuItem==="homework"?"activeItem":""}`}><Link onClick={()=>this.props.onReduxUpdate("MENU_CLICK", "homework")} to="/hw">{`${langLibrary.homework}/${langLibrary.studying}`}</Link></div>
-                    {this.props.isadmin===1||this.props.isadmin===8?<div className={`menuItem ${this.props.userSetup.menuItem==="budget"?"activeItem":""}`}><Link onClick={()=>this.props.onReduxUpdate("MENU_CLICK", "budget")} to="/budget">{`${'|\u205F'.concat("Бюджет")}`}</Link></div>:null}
-                    {this.props.isadmin === 1?<div className={`mym-menuitem-workflow ${this.props.userSetup.menuItem==="workflow"?"activeItem":""}`}><Link onClick={()=>this.props.onReduxUpdate("MENU_CLICK", "workflow")} to="/workflow">{`${'|\u205F'.concat(langLibrary.project.toString())}`}</Link></div>:null}
+                    {((isadmin&1)===1)||((isadmin&8)===8)?<div className={`menuItem ${this.props.userSetup.menuItem==="budget"?"activeItem":""}`}><Link onClick={()=>this.props.onReduxUpdate("MENU_CLICK", "budget")} to="/budget">{`${'|\u205F'.concat("Бюджет")}`}</Link></div>:null}
+                    {(isadmin&1)===1?<div className={`mym-menuitem-workflow ${this.props.userSetup.menuItem==="workflow"?"activeItem":""}`}><Link onClick={()=>this.props.onReduxUpdate("MENU_CLICK", "workflow")} to="/workflow">{`${'|\u205F'.concat(langLibrary.project.toString())}`}</Link></div>:null}
                 </div>:null}
             </div>
         );

@@ -897,7 +897,7 @@ class App extends Component {
             </div>);
 
 
-        console.log("this.props.USERSETUP: ", this.props.userSetup);
+        // console.log("this.props.USERSETUP: ", this.props.userSetup);
         // return (<div>111</div>)
 
         let descrFirst = `${langLibrary.introBegin} ${this.isShortList()?"7":"10"} ${langLibrary.introEnd}:`

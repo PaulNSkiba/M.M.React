@@ -38,16 +38,12 @@ tr#row-1, tr#row-2{
     /*overflow : overflox-x;*/
     /*height: 500px;*/
 }
-.mym-btn-add-lang-alias {
-    /*position: fixed;*/
+.mym-btn-add-lang-alias, .mym-show-saldo {
     position : absolute;
-     /*opacity: 0.7;*/
-    left : 3%;
-    top : -4px;
+    top : -3px;
     border: 2px solid var(--selected-item-hard);
     text-align: center;
     border-radius: 5px;
-    background-color: var(--selected-item);
     width : auto;
     padding : 0 10px;
     height : 20px;
@@ -55,6 +51,14 @@ tr#row-1, tr#row-2{
     font-size: .9em;
     z-index : 2;
     color : white;
+}
+.mym-btn-add-lang-alias{
+    left : 3%;
+    background-color: var(--selected-item);
+}
+.mym-show-saldo{
+    left : 120px;
+    background-color: var(--menu-item);
 }
 .mym-btn-add-lang-alias:hover {
     background-color: var(--erase-mark);
@@ -76,4 +80,25 @@ tr#row-1, tr#row-2{
     margin-left: -1em;
     margin-right: -1em;
     padding : 25px 0;
+}
+.plusSaldo {
+    position : absolute;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    right : 1px;
+    top : -3px;
+    border-radius : 9px;
+    height : 15px;
+    width : 15px;
+    /*text-align: center;*/
+    /*font-weight: 800;*/
+    font-size: 1em;
+    color : white;
+    border : 0;
+    line-height: 200px;
+    /*white-space: nowrap;*/
+    /*vertical-align: middle;*/
+    /*padding-top: -5px;*/
+    background-color: #55b162;
 }

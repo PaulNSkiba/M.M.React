@@ -267,7 +267,7 @@ class AdminPageWorkFlow extends Component {
                 }
             </div>
             <div>
-                {userID>0?<button className="logoutbtn" onClick={this.userLogout}><div className="mym-app-button-name">{userName}</div><div className="mym-app-button-exit">{langLibrary.exit}</div></button>:null}
+                {userID>0?<button className="logoutbtn" onClick={this.userLogout}><div className={userName.length>10?"mym-app-button-name-small":"mym-app-button-name"}>{userName}</div><div className="mym-app-button-exit">{langLibrary.exit}</div></button>:null}
             </div>
             {this.langBlock()}
         </div>
@@ -287,7 +287,7 @@ class AdminPageWorkFlow extends Component {
             // console.log(workflowitems)
             cnt = '['+workflowitems.length+'/'+cnt+']'
         }
-        let {userID, userName, isadmin, loading, showLoginLight, langLibrary} = this.props.userSetup;
+        let {userID, userName, isadmin, langLibrary} = this.props.userSetup;
         let {isMobile} = this.state
         return (
 

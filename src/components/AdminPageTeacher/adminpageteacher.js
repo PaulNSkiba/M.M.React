@@ -131,7 +131,7 @@ class AdminPageTeacher extends Component {
                 }
             </div>
             <div>
-                {userID>0?<button className="logoutbtn" onClick={this.userLogout.bind(this)}><div className="mym-app-button-name">{userName}</div><div className="mym-app-button-exit">{langLibrary.exit}</div></button>:null}
+                {userID>0?<button className="logoutbtn" onClick={this.userLogout.bind(this)}><div className={userName.length>10?"mym-app-button-name-small":"mym-app-button-name"}>{userName}</div><div className="mym-app-button-exit">{langLibrary.exit}</div></button>:null}
             </div>
             {this.langBlock()}
         </div>
@@ -224,8 +224,8 @@ class AdminPageTeacher extends Component {
             </td>)
             // Админ
             cell.push(<td style={{paddingLeft: "2px", paddingRight: "2px", width : "25px", fontSize: "0.8em", textAlign : "center"}}  id={(i + 1) + "#10#" + rowsArr[i].id} key={"r" + (i + 1) + "c10"}>
-                <input type="checkbox" onChange={this.changeState} id={(i + 1) + "#10#" + rowsArr[i].id}
-                       disabled="disabled" checked={checkedMap.has((i + 1) + "#10#" + rowsArr[i].id)}/>
+                <input type="checkbox" onChange={this.changeState} id={(i + 1) + "#11#" + rowsArr[i].id}
+                       disabled="disabled" checked={checkedMap.has((i + 1) + "#11#" + rowsArr[i].id)}/>
                 {/*<button key={"btn"+rowsArr[i].id} onClick={this.onResetStudent}>Привязать</button>*/}
             </td>)
             // Учитель

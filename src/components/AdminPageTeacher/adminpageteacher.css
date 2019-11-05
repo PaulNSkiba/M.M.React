@@ -11,7 +11,7 @@
 .addToSchool {
     border : 1px solid var(--selected-item-background);
     padding : 5px;
-    background-color: var(--selected-item-hard);
+    background-color: var(--menu-item);
     color : var(--msg-left-side);
     font-weight: 600;
     border-radius: 5px;
