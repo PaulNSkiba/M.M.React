@@ -35,6 +35,7 @@ class UniversalTable extends Component {
         this.updateSource = this.updateSource.bind(this)
         this.onSelectStudent = this.props.onstudentclick
         this.handleDate = this.handleDate.bind(this)
+        this.onUserCreate = this.onUserCreate.bind(this)
     }
     componentDidMount() {
         // console.log("UniversalTable.DidMount")
@@ -103,6 +104,30 @@ class UniversalTable extends Component {
                 })
             }
         }
+    }
+    onUserCreate=(classID, studID, email, studName)=>{
+        console.log(classID, studID, email, studName)
+        const json = `{"class_id":${classID}, "name":"${studName}", "email":"${email}","student_id":${studID}}`;
+        if (json) {
+            // const data = JSON.parse(json);
+            // this.props.onStudentUpdate(this.props.rows)
+            console.log(json)
+            instanceAxios().post(`${API_URL}user/bystudent`, json)
+                .then(response => {
+                    console.log('AddedUser', response.data)
+                    let students = this.props.userSetup.students
+                    students = students.map(item=>{
+                        if (item.email===response.data.email)
+                            item.subuser_id = item.id
+                        return item
+                    })
+                    this.props.onReduxUpdate('UPDATE_STUDENTS', students)
+                })
+                .catch(response => {
+                    console.log(response);
+                })
+        }
+
     }
     fillMap=()=>{
         // let {rows} = this.props

@@ -174,6 +174,8 @@ export function userSetupReducer(state = initialState(true), action) {
                     return state
             }
         }
+        case "UPDATE_STUDENTS" :
+            return {...state, students: action.payload }
         case 'UPDATE_SETUP_LOCALLY_SUBJLIST' : {
             return{...state, subjects_list: action.payload}
         }

@@ -39,7 +39,7 @@ class AdminPageTeacher extends Component {
             {name: "Скрыть", width : "25px", isvert: true},
             {name: "Реал без email", width : "40px"},
             {name: "Оценок", width : "40px", isvert: true},
-            {name: "Смена студента", width : "80px"},
+            {name: "Переброс оценок на другого", width : "80px"},
             {name: "Админ", width : "25px", isvert: true},
             {name: "Учитель", width : "25px", isvert: true},
             {name: "Ученик", width : "25px", isvert: true},
@@ -155,7 +155,7 @@ class AdminPageTeacher extends Component {
     }
 
     classNameOfTD=(email, verified)=> {
-        return email ? (verified ? "left-text verified" : "left-text verification") : "left-text"
+        return email ? (verified ? "left-text verified flexTD" : "left-text verification flexTD") : "left-text flexTD"
     }
     createTableRows(rowsArr, onInputChange, withInput, row, column, classNameOfTD, checkedMap) {
         // let {row, column} = this.state
@@ -179,7 +179,8 @@ class AdminPageTeacher extends Component {
                        onChange={e=>this.onInputChange(e.target.value, rowsArr[i].id)}
                        onKeyPress={this.onInputKeyPress}
                        onBlur={this.onBlur}
-                       defaultValue={rowsArr[i].student_name}/> : ""}</td>)
+                       defaultValue={rowsArr[i].student_name}/> :
+                null}</td>)
             cell.push(<td
                 className={classNameOfTD(!(rowsArr[i].email === null), !(rowsArr[i].email_verified_at === null))}
                 style={{paddingLeft: "2px", paddingRight: "2px", width : "250px", "fontSize": "0.8em"}}
@@ -191,7 +192,7 @@ class AdminPageTeacher extends Component {
                        onKeyPress={this.onInputKeyPress}
                        onBlur={this.onBlur}
                        defaultValue={rowsArr[i].email}/>
-                : null}
+                : false&&rowsArr[i].subuser_id===null&&rowsArr[i].email!==null&&rowsArr[i].email.length?<div className={"addUserButton"} onClick={()=>this.onUserCreate(this.props.userSetup.classID, rowsArr[i].id, rowsArr[i].email, rowsArr[i].student_name===null?rowsArr[i].student_nick:rowsArr[i].student_name)}>+Новый Логин</div>:null}
             </td>)
             // Галочка скрыть студента из списка
             cell.push(<td style={{paddingLeft: "2px", paddingRight: "2px", width : "25px", fontSize: "0.8em", textAlign : "center"}} id={(i + 1) + "#6#" + rowsArr[i].id} key={"r" + (i + 1) + "c6"}>

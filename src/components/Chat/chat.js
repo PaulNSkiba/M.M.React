@@ -48,10 +48,10 @@ class Chat extends Component {
             showEmojiPicker : false,
             newMessage: '',
             messagesNew : [],
-            Echo : {},
             typingUsers : new Map(),
             localChatMessages : [],
         }
+        this.Echo = null
         this.now = new Date()
         this.roomId = this.props.chatroomID //this.props.userSetup.classObj.chatroom_id
         this.initLocalPusher = this.initLocalPusher.bind(this)
@@ -68,14 +68,39 @@ class Chat extends Component {
     componentWillMount(){
         // console.log("this.props.isnew", this.props.isnew)
     }
+    shouldComponentUpdate(nextProps, nextState) {
+        let render = false
+        if (nextProps.userSetup.userID&&this.Echo===null) {
+            if (this.props.isnew) {
+                console.log("shoulUpdateEcho", nextProps.userSetup.userID, this.Echo)
+                this.initLocalPusher()
+                return true
+            }
+            else {
+                // this.initNetPusher()
+                return true
+            }
+        }
+        else {
+            render = true
+            if ((!nextProps.userSetup.userID) && this.Echo!==null) {
+                    this.Echo.disconnect()
+                    this.Echo = null
+            }
+        }
+        return render
+    }
+
     componentDidMount(){
         // console.log("this.props.isnew", this.props.isnew)
-        if (this.props.isnew)
-            this.initLocalPusher()
-        else {
-            this.initNetPusher()
+        if (this.props.userSetup.userID) {
+            if (this.props.isnew)
+                if (this.Echo === null) this.initLocalPusher()
+            else {
+                    // this.initNetPusher()
+                }
+            this.initChatMessages()
         }
-        this.initChatMessages()
         // if (this.typingTimer) clearTimeout(this.typingTimer)
         this.typingTimer = setInterval(()=>{
             // console.log("setInterval-tag")
@@ -114,65 +139,79 @@ class Chat extends Component {
         // const channel = larasocket.subcribe('private'-channelName)
         // channel.bind('ChatMessageSSL', data => {             console.log('larasocket-message', data.message);         });
 
-        this.setState({Echo: echo})
+        // this.setState({Echo: echo})
+        this.Echo = echo
         // console.log("SOCKET", larasocket, larasocket.allChannels())
         console.log('websocket', echo, channelName)
-        if (chatSSL)
-        echo.private(channelName)
-            .listen('ChatMessageSSLHomework', (e) => {
-                console.log("FILTER-SSL-HOMEWORK")
-            })
-            .listen('ChatMessageSSLUpdated', (e) => {
-                console.log("FILTER-SSL-UPDATED")
-            })
-            .listen('ChatMessageSSL', (e) => {
-                console.log("FILTER-SSL")
-                let msg = prepareMessageToFormat(e.message), msgorig = e.message, isSideMsg = true
-                let localChat =   this.state.localChatMessages,
-                    arrChat = []
-                // console.log("FILTER-NOT-SSL", this.state.localChatMessages)
-                arrChat = localChat.map(
-                    item=>
-                    {
-                        // console.log("map", item, JSON.parse(msg))
-                        if (this.state.messagesNew.includes(item.uniqid)) {
-                            // Для своих новых
-                            if (JSON.parse(msg).uniqid === item.uniqid) {
-                                // console.log("MSGORIG", msgorig, msgorig.id)
-                                isSideMsg = false
-                                let obj = item
-                                obj.id = msgorig.id
-                                return obj
+        if (chatSSL) {
+            echo.join(channelName)
+                .listen('ChatMessageSSLHomework', (e) => {
+                    console.log("FILTER-SSL-HOMEWORK")
+                })
+                .listen('ChatMessageSSLUpdated', (e) => {
+                    console.log("FILTER-SSL-UPDATED")
+                })
+                .listen('ChatMessageSSL', (e) => {
+                    console.log("FILTER-SSL")
+                    let msg = prepareMessageToFormat(e.message), msgorig = e.message, isSideMsg = true
+                    let localChat = this.state.localChatMessages,
+                        arrChat = []
+                    // console.log("FILTER-NOT-SSL", this.state.localChatMessages)
+                    arrChat = localChat.map(
+                        item => {
+                            // console.log("map", item, JSON.parse(msg))
+                            if (this.state.messagesNew.includes(item.uniqid)) {
+                                // Для своих новых
+                                if (JSON.parse(msg).uniqid === item.uniqid) {
+                                    // console.log("MSGORIG", msgorig, msgorig.id)
+                                    isSideMsg = false
+                                    let obj = item
+                                    obj.id = msgorig.id
+                                    return obj
+                                }
+                                else {
+                                    return item
+                                }
                             }
                             else {
                                 return item
                             }
                         }
-                        else {
-                            return item
-                        }
-                    }
-                )
-                 // Если новое и стороннее!!!
-                if  (isSideMsg) arrChat.push(msgorig)
+                    )
+                    // Если новое и стороннее!!!
+                    if (isSideMsg) arrChat.push(msgorig)
 
-                this.setState({
-                    localChatMessages : arrChat,
-                    messages: [...arrChat, msg],
-                    messagesNew : this.state.messagesNew.filter(item=>!(item.uniqid===JSON.parse(msg).uniqid))
+                    this.setState({
+                        localChatMessages: arrChat,
+                        messages: [...arrChat, msg],
+                        messagesNew: this.state.messagesNew.filter(item => !(item.uniqid === JSON.parse(msg).uniqid))
+                    })
+                    // this.props.onReduxUpdate("ADD_CHAT_MESSAGES", arrChat)
+                    this.props.updatemessage(msg)
                 })
-                // this.props.onReduxUpdate("ADD_CHAT_MESSAGES", arrChat)
-                this.props.updatemessage(msg)
-            })
-            .listenForWhisper('typing', (e) => {
-                if (!this.state.typingUsers.has(e.name)) {
-                    let mp = this.state.typingUsers
-                    mp.set(e.name, new Date())
-                    console.log('SetTypingState', e.name);
-                    this.setState({typingUsers: mp})
-                }
-                console.log('typing', e.name);
-            })
+                .listenForWhisper('typing', (e) => {
+                    if (!this.state.typingUsers.has(e.name)) {
+                        let mp = this.state.typingUsers
+                        mp.set(e.name, new Date())
+                        console.log('SetTypingState', e.name);
+                        this.setState({typingUsers: mp})
+                    }
+                    console.log('typing', e.name);
+                })
+                .here((users) => {
+                    this.setState({users: users});
+                    console.log("USERS", users)
+                })
+                .joining((user) => {
+                    console.log("USERS.JOIN", this.state.users, user)
+                    this.setState({users : [...this.state.users, user]})
+                })
+                .leaving((person) => {
+                    // this.users = this.users.filter(item=>item !== person);
+                    this.setState({users: this.state.users.filter(item => item !== person)})
+                    console.log("USERS.LEAVE", person)
+                });
+        }
         else
             echo.channel(channelName)
                 .listen('ChatMessage', (e) => {
@@ -377,10 +416,10 @@ class Chat extends Component {
         this.addHomeWork(this.props.isnew?JSON.parse(obj).message:JSON.parse(obj).text)
     }
     _handleKeyDown = (e) => {
-        // console.log("_handleKeyDown", this.state.Echo)
+        // console.log("_handleKeyDown", this.Echo)
         if (this.props.isnew) {
             let channelName = 'class.'+this.props.userSetup.classID
-            this.state.Echo.private(channelName)
+            this.Echo.join(channelName)
                 .whisper('typing', {
                         name: this.props.userSetup.userName
                     })

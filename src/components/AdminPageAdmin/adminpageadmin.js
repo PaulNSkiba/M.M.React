@@ -42,6 +42,8 @@ class AdminPageAdmin extends Component {
         this.onLoad = this.props.onStartLoading
         this.onLoaded = this.props.onStopLoading
         this.onClassClick = this.onClassClick.bind(this)
+        this.onClick = this.onClick.bind(this)
+        this.onDoubleClick = this.onDoubleClick.bind(this)
         this.onLangClick = this.onLangClick.bind(this)
         this.renderLangs = this.renderLangs.bind(this)
         this.renderClasses = this.renderClasses.bind(this)
@@ -121,6 +123,7 @@ class AdminPageAdmin extends Component {
         }
         let json = `{
             "class_id" : ${this.state.curClass},
+            "class_number" : ${this.state.curClass},
             "subj_id" : ${e.target.id},
             "subj_key" : "${e.target.getAttribute('subj_key')}",
             "subj_name_ua": "${e.target.text}"
@@ -314,12 +317,12 @@ class AdminPageAdmin extends Component {
                         </div>
                         <div className={"mym-adminpage-subjblock-selectors"}>
                             <div>
-                                <select className="subjFromSelector" multiple onClick={this.onClick.bind(this)} onDoubleClick={this.onDoubleClick.bind(this)} name="subjs">
+                                <select className="subjFromSelector" multiple onClick={this.onClick} onDoubleClick={this.onDoubleClick} name="subjs">
                                     {subjects.length&&this.renderSubjects()}
                                 </select>
                             </div>
                             <div>
-                                <select className="subjToSelector" multiple onClick={this.onClick.bind(this)} onDoubleClick={this.onDoubleClick.bind(this)} name="subjs">
+                                <select className="subjToSelector" multiple onClick={this.onClick} onDoubleClick={this.onDoubleClick} name="subjs">
                                     {subjectsSelected.length&&this.renderSubjectsSelected()}
                                 </select>
                             </div>
