@@ -22,16 +22,6 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="colors.css" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/css/colors.css">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="153">
-              <caret line="9" column="5" lean-forward="false" selection-start-line="9" selection-start-column="4" selection-end-line="9" selection-end-column="19" />
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
       <file leaf-file-name="adminpageteacher.js" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/components/AdminPageTeacher/adminpageteacher.js">
           <provider selected="true" editor-type-id="text-editor">
@@ -74,16 +64,6 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="adminpage.js" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/components/AdminPage/adminpage.js">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="306">
-              <caret line="34" column="74" lean-forward="false" selection-start-line="34" selection-start-column="74" selection-end-line="34" selection-end-column="74" />
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
       <file leaf-file-name="universaltable.css" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/components/UniversalTable/universaltable.css">
           <provider selected="true" editor-type-id="text-editor">
@@ -104,11 +84,33 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="adminbudgetpage.js" pinned="false" current-in-tab="true">
+      <file leaf-file-name="adminbudgetpage.js" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/components/AdminBudgetPage/adminbudgetpage.js">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="396">
-              <caret line="938" column="41" lean-forward="false" selection-start-line="938" selection-start-column="41" selection-end-line="938" selection-end-column="41" />
+            <state relative-caret-position="362">
+              <caret line="936" column="62" lean-forward="false" selection-start-line="936" selection-start-column="62" selection-end-line="936" selection-end-column="62" />
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="App.js" pinned="false" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/src/containers/App.js">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="365">
+              <caret line="1246" column="173" lean-forward="false" selection-start-line="1246" selection-start-column="173" selection-end-line="1246" selection-end-column="173" />
+              <folding>
+                <element signature="e#0#41#0" expanded="true" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="App.css" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/containers/App.css">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="331">
+              <caret line="199" column="29" lean-forward="true" selection-start-line="199" selection-start-column="29" selection-end-line="199" selection-end-column="29" />
               <folding />
             </state>
           </provider>
@@ -136,19 +138,6 @@
   </component>
   <component name="FindInProjectRecents">
     <findStrings>
-      <find>studentI</find>
-      <find>.mym-app-button-name</find>
-      <find>mym-app-button-name</find>
-      <find>changeState</find>
-      <find>mym-btn-add-lang-alias</find>
-      <find>onAdd</find>
-      <find>fillMap</find>
-      <find>сохрани</find>
-      <find>header</find>
-      <find>users</find>
-      <find>whisper</find>
-      <find>subjects_list</find>
-      <find>initChatMessages</find>
       <find>Echo</find>
       <find>Echo = null</find>
       <find>shoulUpdate</find>
@@ -166,6 +155,19 @@
       <find>LastRecords</find>
       <find>classNameOfTD</find>
       <find>stats3</find>
+      <find>introBegin</find>
+      <find>GooglePlay</find>
+      <find>descrFirst</find>
+      <find>descrAndAnnounce</find>
+      <find>GoogleAppleLogo</find>
+      <find>column</find>
+      <find>justifyCon</find>
+      <find>description</find>
+      <find>description-main</find>
+      <find>descrand</find>
+      <find>descrAndAnnounceNotMobile</find>
+      <find>GooglePlayLog</find>
+      <find>downloadAdnroid</find>
     </findStrings>
     <replaceStrings>
       <replace>2019-04-15</replace>
@@ -230,12 +232,10 @@
         <option value="$PROJECT_DIR$/src/components/TitleBlock/titleblock.js" />
         <option value="$PROJECT_DIR$/src/actions/userAuthActions.js" />
         <option value="$PROJECT_DIR$/src/components/Menu/menu.css" />
-        <option value="$PROJECT_DIR$/src/containers/App.css" />
         <option value="$PROJECT_DIR$/src/components/StudentTable/studenttable.css" />
         <option value="$PROJECT_DIR$/src/components/AdminBudgetPage/adminbudgetpage.css" />
         <option value="$PROJECT_DIR$/src/components/AdminPageAdmin/adminpageadmin.css" />
         <option value="$PROJECT_DIR$/src/components/EmailList/emaillist.js" />
-        <option value="$PROJECT_DIR$/src/containers/App.js" />
         <option value="$PROJECT_DIR$/src/components/AdminPageWorkFlow/adminpageworkflow.js" />
         <option value="$PROJECT_DIR$/src/components/UniversalTable/universaltable.css" />
         <option value="$PROJECT_DIR$/src/components/Menu/menu.js" />
@@ -246,6 +246,8 @@
         <option value="$PROJECT_DIR$/src/components/AdminPageTeacher/adminpageteacher.css" />
         <option value="$PROJECT_DIR$/src/components/UniversalTable/universaltable.js" />
         <option value="$PROJECT_DIR$/src/components/AdminPageTeacher/adminpageteacher.js" />
+        <option value="$PROJECT_DIR$/src/containers/App.js" />
+        <option value="$PROJECT_DIR$/src/containers/App.css" />
       </list>
     </option>
   </component>
@@ -1100,12 +1102,12 @@
       <workItem from="1568728108700" duration="46334000" />
       <workItem from="1569742409936" duration="43995000" />
       <workItem from="1570384985794" duration="254357000" />
-      <workItem from="1573065159015" duration="28724000" />
+      <workItem from="1573065159015" duration="35185000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="2505348000" />
+    <option name="totallyTimeSpent" value="2511809000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="-8" y="-8" width="1936" height="1056" extended-state="6" />
@@ -1371,14 +1373,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/containers/App.css">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="357">
-          <caret line="200" column="22" lean-forward="true" selection-start-line="200" selection-start-column="22" selection-end-line="200" selection-end-column="22" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/src/components/Menu/menu.css">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="549">
@@ -1463,14 +1457,6 @@
           <folding>
             <element signature="e#42#106#0" expanded="false" />
           </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/containers/App.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="614">
-          <caret line="213" column="0" lean-forward="false" selection-start-line="213" selection-start-column="0" selection-end-line="213" selection-end-column="0" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -1580,9 +1566,27 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/src/components/AdminBudgetPage/adminbudgetpage.js">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="396">
-          <caret line="938" column="41" lean-forward="false" selection-start-line="938" selection-start-column="41" selection-end-line="938" selection-end-column="41" />
+        <state relative-caret-position="362">
+          <caret line="936" column="62" lean-forward="false" selection-start-line="936" selection-start-column="62" selection-end-line="936" selection-end-column="62" />
           <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/containers/App.css">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="331">
+          <caret line="199" column="29" lean-forward="true" selection-start-line="199" selection-start-column="29" selection-end-line="199" selection-end-column="29" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/containers/App.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="365">
+          <caret line="1246" column="173" lean-forward="false" selection-start-line="1246" selection-start-column="173" selection-end-line="1246" selection-end-column="173" />
+          <folding>
+            <element signature="e#0#41#0" expanded="true" />
+          </folding>
         </state>
       </provider>
     </entry>

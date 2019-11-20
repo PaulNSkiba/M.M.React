@@ -37,6 +37,10 @@ import ReactFlagsSelect from 'react-flags-select';
 import 'react-flags-select/css/react-flags-select.css';
 import Logo from '../img/LogoMyMsmall.png'
 import GooglePlay from '../img/GooglePlay2.png'
+import GoogleAppleLogo from '../img/GoogleAppleLogo.png'
+import GooglePlayLogo from '../img/GooglePlayLogo.png'
+import AppStoreLogo from '../img/AppStoreLogo.png'
+
 // import ReactPlayer from 'react-player'
 
 // import Chart from "react-google-charts/dist/ReactGoogleCharts.d";
@@ -901,6 +905,7 @@ class App extends Component {
         // return (<div>111</div>)
 
         let descrFirst = `${langLibrary.introBegin} ${this.isShortList()?"7":"10"} ${langLibrary.introEnd}:`
+
         // this.props.history.push('/');
 
         // const transitionOptions = {
@@ -1007,8 +1012,12 @@ class App extends Component {
                             </div>
                         </div>:null}
                         {   studentID === 0&&userID===0?
-                            <div className="description-main"><span>{descrFirst}</span></div>:
-
+                            <div style={{display : "flex", width : "100%"}}>
+                                <div style={isMobile?{width : "70%", paddingLeft : "5%"}:{width : "90%"}} className="description-main"><span>{descrFirst}</span></div>
+                                <div style={isMobile?{width : "30%", display : "flex", flexDirection : "column", justifyContent : "flex-end" }:{width : "10%", display : "flex", flexDirection : "column", justifyContent : "flex-end"}}>
+                                    <div><a href="https://play.google.com/store/apps/details?id=com.mymv2"  target="_blank"><img src={GooglePlayLogo} style={{height: "30px", marginTop: "6px"}} title="Google" alt="Google&&Apple"/></a></div>
+                                    <div><a href="https://apps.apple.com/us/app/my-marks/id1488084527?l=uk&ls=1"  target="_blank"><img src={AppStoreLogo} style={{height: "30px"}} title="Apple" alt="Google&&Apple"/></a></div>                                </div>
+                            </div>:
                             studentName?<div className="descrHeader">
                                                 <div className="studentName">
                                                     <b>{studentName}</b>
@@ -1036,20 +1045,28 @@ class App extends Component {
                                 </div>
                                 :null
                             }
-                            {   studentID === 0&&userID===0?<div className="description-main"><span>{descrFirst}</span></div>:
+                            {   studentID === 0&&userID===0?
+                                <div style={{display : "flex", width : "100%"}}>
+                                    <div style={{width : "90%"}}className="description-main"><span>{descrFirst}</span></div>
+                                    <div style={{display : "flex", flexDirection : "column", width : "10%", justifyContent : "flex-end"}}>
+                                        <div><a href="https://play.google.com/store/apps/details?id=com.mymv2"  target="_blank"><img src={GooglePlayLogo} style={{height: "30px", marginTop: "6px"}} title="Google" alt="Google&&Apple"/></a></div>
+                                        <div><a href="https://apps.apple.com/us/app/my-marks/id1488084527?l=uk&ls=1"  target="_blank"><img src={AppStoreLogo} style={{height: "30px"}} title="Apple" alt="Google&&Apple"/></a></div>
+                                    </div>                                </div> :
                                 studentName?
                                     <div className="descrHeaderNotMobile">
                                         <div className={"downloadAdnroid"}>
-                                            {/*<div>*/}
-
-                                            {/*</div>*/}
-                                            {/*<div>*/}
-                                                {/*<span style={{color: "#707070"}}> Скачать </span>*/}
                                                 <a className="infoMsgAndroid" href={API_URL +"android"} target="_blank" rel="noopener noreferrer">
-                                                {"Android-приложение   "}<img style={{left : "30px"}} height={"20px"} src={AndroidBtn} alt=""/></a>
-                                                {/*<span className="infoMsgAndroid"> + </span>*/}
-                                                <a href="https://play.google.com/store/apps/details?id=com.mymv2"><img src={GooglePlay} style={{width: "103", height: "34px", marginTop: "3px"}} title="Google Play" alt="Google Play"/></a>
-                                            {/*</div>*/}
+                                                {"Android-приложение   "}
+                                                {/*<img style={{left : "30px"}} height={"20px"} src={AndroidBtn} alt=""/>*/}
+                                                </a>
+                                                <a href="https://play.google.com/store/apps/details?id=com.mymv2"  target="_blank"><img src={GooglePlayLogo} style={{width: "103", height: "34px", marginTop: "3px"}} title="Google Play" alt="Google Play"/></a>
+                                        </div>
+                                        <div className={"downloadIphone"}>
+                                            <a className="" href={""} target="_blank" rel="noopener noreferrer">
+                                                {"iPhone-приложение   "}
+                                                {/*<img style={{left : "30px"}} height={"20px"} src={AndroidBtn} alt=""/>*/}
+                                            </a>
+                                            <a href="https://apps.apple.com/us/app/my-marks/id1488084527?l=uk&ls=1"  target="_blank"><img src={AppStoreLogo} style={{width: "103", height: "34px", marginTop: "3px"}} title="Google Play" alt="Google Play"/></a>
                                         </div>
                                         <div className="studentName">
                                             <b>{studentName}</b>

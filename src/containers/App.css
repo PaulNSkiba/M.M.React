@@ -8,7 +8,7 @@
     width : 100%;
   }
   .description, .description-main {
-    margin : 15px 0;
+    margin : 10px 0;
   }
 }
 @media only screen and (max-width: 400px) {
@@ -57,9 +57,9 @@
   }
 }
 .description-main {
-  margin: 15px;
+  margin: 10px 0;
   text-align: left;
-  width : 90%;
+  /*width : 90%;*/
 }
 .description {
   margin: 15px 10%;
@@ -198,6 +198,15 @@ button.logoutbtn:hover {
   align-items: center;
   justify-content: space-between;
   border : solid 2px #a4c639;
+  border-radius: 10px;
+  padding : 5px 5%;
+  margin: 10px 5%;
+}
+.downloadIphone {
+  display : flex;
+  align-items: center;
+  justify-content: space-between;
+  border : solid 2px #000;
   border-radius: 10px;
   padding : 5px 5%;
   margin: 10px 5%;
@@ -435,8 +444,9 @@ button.loggedbtn:hover{
 .descrAndAnnounceNotMobile {
   text-align: center;
   display:flex;
-  width : 90%;
-  margin : 0 10%;
+  /*width : 100%;*/
+  /*margin : 0 10%;*/
+  padding : 0 10%;
   justify-content: space-between;
 }
 
