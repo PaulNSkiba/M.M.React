@@ -55,16 +55,6 @@ class SchoolListBlock extends Component {
                 console.log("error", res)
             })
     }
-    // renderSubjectsSelected() {
-    //     // console.log("renderSubjectsSelected", this.state.subjects, this.state.subjectsSelected )
-    //     return this.state.subjectsSelected.map(subj=>{
-    //         return (
-    //             <option key={subj.id} id={subj.subj_key}>
-    //                 { subj.subj_name_ua }
-    //             </option>
-    //         );
-    //     })
-    // }
     getOptions=(array, kind)=>{
         let arr = array
         const types = this.state.schools.filter(item=>item.city===this.state.curCity&&item.district===this.state.curDistrict)

@@ -4,7 +4,7 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux'
 import './loginblock.css'
-import {numberToLang, msgTimeOut, instanceAxios, mapStateToProps, getDefLangLibrary, getLangLibrary} from '../../js/helpers'
+import {numberToLang, msgTimeOut, instanceAxios, mapStateToProps, getDefLangLibrary, getLangLibrary, getSubjFieldName} from '../../js/helpers'
 import { FACEBOOK_URL, CREATEUSER_URL, UPDATESETUP_URL, SUBJECTS_GET_URL, UPDATECLASS_URL, STUDENTS_ADD_URL, instanceLocator, testToken, chatUserName, appIdFB } from '../../config/config'
 import emailPropType from 'email-prop-type';
 import { ChatManager, TokenProvider } from '@pusher/chatkit-client'
@@ -198,7 +198,8 @@ class LoginBlock extends Component {
     setSetup = async (usersetup, userID, classID)=>{
 //        console.log("setSetup", usersetup);
 //         this.changeState("curClass",usersetup.curClass, userID);
-        let {classNumber, subjects_list, pupilCount, currentYear, selectedSubj, selectedSubjects, markBlank, titlekind, currentPeriodDateCount, direction, withoutholidays} = this.props.userSetup;
+
+        const {classNumber, subjects_list, pupilCount, currentYear, selectedSubj, selectedSubjects, markBlank, titlekind, currentPeriodDateCount, direction, withoutholidays, langCode} = this.props.userSetup;
         // let res = true;
         //
         let data = {}
@@ -210,7 +211,7 @@ class LoginBlock extends Component {
         data.direction=direction
         data.withoutholidays=withoutholidays
         data.subjects_count=subjects_list.length.toString()+'/'+ (selectedSubjects[0]===""?0:selectedSubjects.length).toString()
-        data.selected_subject = typeof selectedSubj === "object"? selectedSubj.subj_key+','+selectedSubj.subj_name_ua+','+selectedSubj.id.toString():null
+        data.selected_subject = typeof selectedSubj === "object"? selectedSubj.subj_key+','+selectedSubj[getSubjFieldName(langCode)]+','+selectedSubj.id.toString():null
         data.selected_marker = markBlank.pk
         data.markblank_alias = markBlank.alias.toString().replace(/[/]/g, '\\/')
         data.markblank_id = markBlank.id
@@ -228,7 +229,7 @@ class LoginBlock extends Component {
     changeState(name, value, userID, classID) {
         // let {curClass} = this.state
         let json, data, arr=[];
-        let {students : studs, subjects_list, selectedSubjects, langLibrary} = this.props.usersetup;
+        let {students : studs, subjects_list, selectedSubjects, langLibrary, langCode} = this.props.userSetup;
         console.log("changeState", name, value, userID)
         switch (name) {
             // case 'userId' : { this.setState({ userID : userID }); break;}
@@ -280,9 +281,7 @@ class LoginBlock extends Component {
             case "selectedSubj" :
                 console.log("selectedSubj", value);
                 if (typeof value === "object") {
-                    // let key1 = JSON.stringify(`"subj_key":"${value.subj_key}"`)
-                    // let key2 = JSON.stringify(`"subj_name_ua":"${value.subj_name_ua}"`)
-                    json = `{"selected_subject":"${value.subj_key},${value.subj_name_ua}"}`
+                    json = `{"selected_subject":"${value.subj_key},${value[getSubjFieldName(langCode)]}"}`
                     // console.log(json, JSON.stringify(json))
                 }
                 else
@@ -291,7 +290,7 @@ class LoginBlock extends Component {
                 console.log("selectedSubjsArray", selectedSubjects);
                 json = `{"subjects_count":"${subjects_list.length+'/'+ selectedSubjects[0]===""?0:selectedSubjects.length}"}`; break;
             case "selectedSubjects" : // Количество выбранных для отслеживания оценок
-                json = `{"selected_subjects":[${value.map(val=>`{"subj_key":"${val.subj_key}","subj_name_ua":"${val.subj_name_ua}"}`)}]}`;
+                json = `{"selected_subjects":[${value.map(val=>`{"subj_key":"${val.subj_key}","${getSubjFieldName(langCode)}":"${val[getSubjFieldName(langCode)]}"}`)}]}`;
                 data = JSON.parse(json);
                 console.log("selected_subjects", value, json);
                 this.props.onSetSetup(data, userID, classID);
@@ -312,11 +311,8 @@ class LoginBlock extends Component {
                 }
                 let key1, key2, key3;
                 json = `{"markblank_id":"${value}"}`; data = JSON.parse(json); key1 = data;
-                // this.props.onSetSetup(data, this.props.userSetup.userID, this.props.userSetup.curClass)
                 json = `{"markblank_alias":"${alias.toString().replace(/[/]/g, '\\/')}"}`; data = JSON.parse(json); key2 = data
-                // this.props.onSetSetup(data, this.props.userSetup.userID, this.props.userSetup.curClass)
                 json = `{"selected_marker":${pk}}`; data = JSON.parse(json); key3 = data;
-                // this.props.onSetSetup(data, this.props.userSetup.userID, this.props.userSetup.curClass)
                 json = `{"markblank":[${JSON.stringify(key1)},${JSON.stringify(key2)},${JSON.stringify(key3)}]}`; break;
             case "listnames" :
                 json = `{"titlekind":"${value}"}`; break;

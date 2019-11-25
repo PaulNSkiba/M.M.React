@@ -13,7 +13,7 @@ import './adminpageteacher.css'
 import '../Menu/menu.css'
 import { Link } from 'react-router-dom';
 import MobileMenu from '../MobileMenu/mobilemenu'
-import { instanceAxios, mapStateToProps, getLangByCountry } from '../../js/helpers'
+import { instanceAxios, mapStateToProps, getLangByCountry, getSubjFieldName } from '../../js/helpers'
 import { arrLangs, defLang, STUDENTS_GET_URL } from '../../config/config'
 import ReactFlagsSelect from 'react-flags-select';
 import 'react-flags-select/css/react-flags-select.css';
@@ -50,16 +50,26 @@ class AdminPageTeacher extends Component {
             {name: "Партнер", width : "25px", isvert: true},
             {name: "Примечание", width : "200px"},
         ]
-        this.head = this.createTableHead([
-            {name: "Предмет", width : "10%"} ,
-            {name: "Автор", width : "10%"},
-            {name: "Дата", width : "5%"},
-            {name: "Начало", width : "5%"},
-            {name: "Конец", width : "5%"},
-            {name: "С даты", width : "5%"},
-            {name: "По дату", width : "5%"},
-            {name: "Оценок", width : "5%"},
-        ])
+        this.headStat = [
+            {name: "Предмет", width : "150px"} ,
+            {name: "Автор", width : "150px"},
+            {name: "Дата заполнения", width : "100px"},
+            {name: "Начало", width : "100px"},
+            {name: "Конец", width : "100px"},
+            {name: "Оценки с даты ", width : "100px"},
+            {name: "Оценки по дату", width : "100px"},
+            {name: "Оценок", width : "40px"},
+        ]
+        // this.head = this.createTableHead([
+        //     {name: "Предмет", width : "10%"} ,
+        //     {name: "Автор", width : "10%"},
+        //     {name: "Дата", width : "5%"},
+        //     {name: "Начало", width : "5%"},
+        //     {name: "Конец", width : "5%"},
+        //     {name: "С даты", width : "5%"},
+        //     {name: "По дату", width : "5%"},
+        //     {name: "Оценок", width : "5%"},
+        // ])
         this.renderStudents=this.renderStudents.bind(this)
     }
 
@@ -145,11 +155,9 @@ class AdminPageTeacher extends Component {
                 this.setState({
                     stats: response.data,
                 })
-                // this.props.onStopLoading()
             })
             .catch(response => {
                 console.log(response.data);
-                // this.props.onStopLoading()
             })
         return <table>{rows}</table>
     }
@@ -165,7 +173,7 @@ class AdminPageTeacher extends Component {
         if (rowsArr) {
         for (let i = 0; i < rowsArr.length; i++) {
             cell = []
-            cell.push(<th style={{paddingLeft: "2px", paddingRight: "2px", width : "30px", fontSize : "0.8em"}} key={"r" + (i + 1) + "c1"}>{i + 1}</th>)
+            cell.push(<th style={{paddingLeft: "2px", paddingRight: "2px", width : "30px", fontSize : "0.8em", backgroundColor : rowsArr[i].inList===1?"rgba(64, 155, 230, 0.25)":"fff"}} key={"r" + (i + 1) + "c1"}>{i + 1}</th>)
             cell.push(<td style={{paddingLeft: "2px", paddingRight: "2px", width : "120px", fontSize : "0.8em"}}
                           id={(i + 1) + "#2#" + rowsArr[i].id} key={"r" + (i + 1) + "c2"}
                           onClick={this.onClick}>{rowsArr[i].student_nick} {(row === (i + 1) && column === 2 && withInput) ?
@@ -278,6 +286,72 @@ class AdminPageTeacher extends Component {
         return rows;
     }
 
+    createStatTableRows(rowsArr, onInputChange, withInput, row, column, classNameOfTD, checkedMap) {
+        console.log("createStatTableRows", row, column, rowsArr)
+        const {langCode} = this.props.userSetup
+
+        let cell = [],
+            rows = [],
+            mp = new Map(),
+            isNewDate = false
+        if (rowsArr) {
+            for (let i = 0; i < rowsArr.length; i++) {
+                cell = []
+                isNewDate = !mp.has(rowsArr[i].ondate)
+                mp.set(rowsArr[i].ondate, true)
+                cell.push(<td style={{paddingLeft: "2px", paddingRight: "2px", width : "150px", fontSize : "0.8em"}}
+                              id={(i + 1) + "#2#" + rowsArr[i].id}
+                              key={"r" + (i + 1) + "c2"}>
+                                {rowsArr[i][getSubjFieldName(langCode)]}
+                        </td>)
+                cell.push(<td style={{paddingLeft: "2px", paddingRight: "2px", width : "150px", fontSize : "0.8em"}}
+                              id={(i + 1) + "#3#" + rowsArr[i].id}
+                              key={"r" + (i + 1) + "c3"}>
+                                {rowsArr[i].name}
+                        </td>)
+                cell.push(<td
+                              style={{backgroundColor : isNewDate?"rgba(64, 155, 230, 0.25)":"#fff", fontWeight : isNewDate?"800":"200", paddingLeft: "2px", paddingRight: "2px", textAlign: isNewDate?"center":"right", width : "100px", fontSize: "0.8em"}}
+                              id={(i + 1) + "#4#" + rowsArr[i].id}
+                              key={"r" + (i + 1) + "c4"}>
+                                {`${rowsArr[i].ondate}  `}
+                        </td>)
+                cell.push(<td
+                                style={{paddingLeft: "2px", paddingRight: "2px", textAlign: "center", width : "100px", "fontSize": "0.8em"}}
+                                id={(i + 1) + "#5#" + rowsArr[i].id}
+                                key={"r" + (i + 1) + "c5"}>
+                                {(new Date(rowsArr[i].create_min)).toLocaleTimeString()}
+                </td>)
+                cell.push(<td
+                                style={{paddingLeft: "2px", paddingRight: "2px", textAlign: "center", width : "100px", "fontSize": "0.8em"}}
+                                id={(i + 1) + "#6#" + rowsArr[i].id}
+                                key={"r" + (i + 1) + "c6"}>
+                                {(new Date(rowsArr[i].create_max)).toLocaleTimeString()}
+                </td>)
+                cell.push(<td
+                                style={{paddingLeft: "2px", paddingRight: "2px", textAlign: "center", width : "100px", "fontSize": "0.8em"}}
+                                id={(i + 1) + "#7#" + rowsArr[i].id}
+                                key={"r" + (i + 1) + "c7"}>
+                    {(new Date(rowsArr[i].min_date)).toLocaleDateString()}
+                </td>)
+                cell.push(<td
+                                style={{paddingLeft: "2px", paddingRight: "2px", textAlign: "center", width : "100px", "fontSize": "0.8em"}}
+                                id={(i + 1) + "#8#" + rowsArr[i].id}
+                                key={"r" + (i + 1) + "c8"}>
+                    {(new Date(rowsArr[i].max_date)).toLocaleDateString()}
+                </td>)
+                cell.push(<td
+                    style={{paddingLeft: "2px", paddingRight: "2px", textAlign: "right", width : "40px", fontSize: "0.8em"}}
+                    id={(i + 1) + "#9#" + rowsArr[i].id}
+                    key={"r" + (i + 1) + "c9"}>
+                    {rowsArr[i].mark_cnt}
+                </td>)
+                rows.push(<tr key={i}>{cell}</tr>)
+            }
+        }
+        return rows;
+    }
+
+
     renderStudents=(myID)=>
         this.state.rowsArr.map((value, key)=>{
         if (value.id!==myID&&value.email.length)
@@ -313,7 +387,7 @@ class AdminPageTeacher extends Component {
         }
     }
     render() {
-        let {userID, userName, isadmin, loading, showLoginLight, langLibrary} = this.props.userSetup;
+        let {userID, userName, isadmin, langLibrary} = this.props.userSetup;
         let {isMobile} = this.state
         console.log("RENDER_TEACHER")
         const objBlank = {}
@@ -358,33 +432,52 @@ class AdminPageTeacher extends Component {
                     {this.state.showList?<SchoolListBlock/>:null}
                 </div>
                 <div className={"mym-adminpageteacher-tableblock"}>
-                    <UniversalTable head={this.headArray} rows={this.state.rowArray} createTableRows={this.createTableRows} classNameOfTD={this.classNameOfTD}
-                                    btncaption={"+ Новый студент (в разработке)"}
+                    <UniversalTable head={this.headArray}
+                                    rows={this.state.rowArray}
+                                    createTableRows={this.createTableRows}
+                                    classNameOfTD={this.classNameOfTD}
+                                    btncaption={"+ Новый студент"}
                                     onstudentclick={this.onSelectStudent}
                                     selectedstudent={this.state.curStudent}
-                                    objblank={objBlank} initrows={()=>{return this.props.userSetup.students}} kind={"students"}/>
+                                    objblank={objBlank}
+                                    initrows={()=>{return this.props.userSetup.students}}
+                                    kind={"students"}/>
                 </div>
                 <div className="mym-adminpageteacher-tableblock">
                     <div className="h4">Статистика</div>
-                    <table>
-                        <thead>
-                        {this.head}
-                        </thead>
-                        <tbody>
-                        {this.state.stats.map((item, i)=>(
-                            <tr key={"tr"+i}>
-                                <td>{item.subj_name_ua}</td>
-                                <td>{item.name}</td>
-                                <td>{item.ondate}</td>
-                                <td>{(new Date(item.create_min)).toLocaleTimeString()}</td>
-                                <td>{(new Date(item.create_max)).toLocaleTimeString()}</td>
-                                <td>{(new Date(item.min_date)).toLocaleDateString()}</td>
-                                <td>{(new Date(item.max_date)).toLocaleDateString()}</td>
-                                <td>{item.mark_cnt}</td>
-                            </tr>))}
-                        </tbody>
-                    </table>
+                    <UniversalTable head={this.headStat}
+                                    rows={this.state.stats}
+                                    createTableRows={this.createStatTableRows}
+                                    classNameOfTD={this.classNameOfTD}
+                                    btncaption={""}
+                                    onstudentclick={null}
+                                    selectedstudent={null}
+                                    objblank={null}
+                                    initrows={()=>{return this.state.stats}}
+                                    kind={""}/>
                 </div>
+
+                {/*<div className="mym-adminpageteacher-tableblock">*/}
+                    {/*<div className="h4">Статистика</div>*/}
+                    {/*<table>*/}
+                        {/*<thead>*/}
+                        {/*{this.head}*/}
+                        {/*</thead>*/}
+                        {/*<tbody>*/}
+                        {/*{this.state.stats.map((item, i)=>(*/}
+                            {/*<tr key={"tr"+i}>*/}
+                                {/*<td>{item.subj_name_ua}</td>*/}
+                                {/*<td>{item.name}</td>*/}
+                                {/*<td>{item.ondate}</td>*/}
+                                {/*<td>{(new Date(item.create_min)).toLocaleTimeString()}</td>*/}
+                                {/*<td>{(new Date(item.create_max)).toLocaleTimeString()}</td>*/}
+                                {/*<td>{(new Date(item.min_date)).toLocaleDateString()}</td>*/}
+                                {/*<td>{(new Date(item.max_date)).toLocaleDateString()}</td>*/}
+                                {/*<td>{item.mark_cnt}</td>*/}
+                            {/*</tr>))}*/}
+                        {/*</tbody>*/}
+                    {/*</table>*/}
+                {/*</div>*/}
              </div>
         )
     }

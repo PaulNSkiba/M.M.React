@@ -791,6 +791,12 @@ class UniversalTable extends Component {
                 rows = this.createTableRows(reduxrows, this.onInputChange, true, row_state, column_state, classNameOfTD, checkedMap)
                 break;
             default :
+                reduxrows = this.props.rows;
+                if (this.addNewRowFlag ) {
+                    reduxrows.push(objblank);
+                    this.addNewRowFlag = false
+                }
+                rows = this.createTableRows(reduxrows, this.onInputChange, true, row_state, column_state, classNameOfTD, checkedMap)
                 break;
         }
         // console.log("UniversalTable: RENDER", this.addNewRowFlag, reduxrows, rows)

@@ -4,7 +4,7 @@
 /* eslint-disable */
 import React, { Component } from 'react'
 import MarkBlank from '../MarkBlank/markblank'
-import { AddDay, getSpanCount, toYYYYMMDD, consoleLog, instanceAxios, mapStateToProps} from '../../js/helpers'
+import { AddDay, getSpanCount, toYYYYMMDD, consoleLog, instanceAxios, mapStateToProps, getSubjFieldName} from '../../js/helpers'
 import Select from '../Select/select'
 import { connect } from 'react-redux'
 import { MARKS_URL, ISDEBUG, markType } from '../../config/config'
@@ -12,7 +12,7 @@ import Checkbox from '../CheckBox/checkbox'
 import './markstable.css'
 
 
-class Table extends Component {
+class MarksTable extends Component {
     constructor(props){
         super(props);
         this.state = {
@@ -341,6 +341,7 @@ class Table extends Component {
             ,doneFirst = false
         mapDays.clear()
 
+        const {students} = this.props.userSetup
         // console.log('mark_date', this.props.userSetup.mark_date.date, this.state.dateStart, this.state.dateEnd, this.state.marks)
         // console.log(this.props)
 
@@ -404,13 +405,16 @@ class Table extends Component {
             let rowID = `row${i}`
             let cell = []
             // console.log(this.props.userSetup.students, this.props.userSetup.students[i])
-            if (this.state.onlywithmailstudents && !(this.props.userSetup.students[i].isout===1) && (this.props.userSetup.students[i].email===null?"":this.props.userSetup.students[i].email).length || (!this.state.onlywithmailstudents  && !(this.props.userSetup.students[i].isout===1)) || ((this.props.userSetup.students[i].isRealName===1))) {
+            if ((!(students[i].isout===1)) &&
+                (   ( this.state.onlywithmailstudents && (students[i].email===null?"":students[i].email).length)
+                    || (!this.state.onlywithmailstudents)
+                    || (students[i].isRealName===1))) {
                 for (var idx = 0; idx < (this.props.dayscount + 2); idx++) {
-                    let cellID = i + "#" + idx + "#" + this.props.userSetup.students[i].id + "#" + mapDays.get(idx)
+                    let cellID = i + "#" + idx + "#" + students[i].id + "#" + mapDays.get(idx)
 
                     switch (idx) {
                         case 0 :
-                            cell.push(<th key={cellID} id={cellID} className="numbercol">
+                            cell.push(<th key={cellID} id={cellID} className={"numbercol"}>
                                 {i + 1}
                             </th>)
                             break;
@@ -418,15 +422,15 @@ class Table extends Component {
                             cell.push(<th key={cellID} id={cellID}
                                           className={this.classNameForSelection(i === this.state.row)}>
                                 {/*{numberToLang(i + 1, " ", "rus")}*/}
-                                {this.props.titlekind === "NICK" ? this.props.userSetup.students[i].student_nick : (this.props.titlekind === "NAME" ? this.props.userSetup.students[i].student_name : this.props.userSetup.students[i].email)}
+                                {this.props.titlekind === "NICK" ? students[i].student_nick : (this.props.titlekind === "NAME" ? students[i].student_name : students[i].email)}
                             </th>)
                             break
                         default:
                             // console.log("Current Rows", i, (this.state.row), idx, this.state.column, AddDay(this.state.dateStart, idx - 2), AddDay(this.state.dateStart, idx - 2).getDay())
                             if ((AddDay(this.state.dateStart, idx - 2).getDay() > 0 && AddDay(this.state.dateStart, idx - 2).getDay() < 6 && this.props.withoutholidays) || (!this.props.withoutholidays)) {
-                                let mark = this.getMarkHash(this.props.userSetup.selectedSubj.subj_key.replace('#', '') + "#" + this.props.userSetup.students[i].id + "#" + mapDays.get(idx));
-                                let markBefore = this.getMarkHashBefore(this.props.userSetup.selectedSubj.subj_key.replace('#', '') + "#" + this.props.userSetup.students[i].id + "#" + mapDays.get(idx));
-                                let markTypes = this.getMarkHashType(this.props.userSetup.selectedSubj.subj_key.replace('#', '') + "#" + this.props.userSetup.students[i].id + "#" + mapDays.get(idx));
+                                let mark = this.getMarkHash(this.props.userSetup.selectedSubj.subj_key.replace('#', '') + "#" + students[i].id + "#" + mapDays.get(idx));
+                                let markBefore = this.getMarkHashBefore(this.props.userSetup.selectedSubj.subj_key.replace('#', '') + "#" + students[i].id + "#" + mapDays.get(idx));
+                                let markTypes = this.getMarkHashType(this.props.userSetup.selectedSubj.subj_key.replace('#', '') + "#" + students[i].id + "#" + mapDays.get(idx));
 
                                 let badmark =   (this.props.userSetup.markBlank.id==="markblank_twelve"&&(mark==='1'||mark==='2'||mark==='3'))||
                                                 (this.props.userSetup.markBlank.id==="markblank_five"&&(mark==='1'||mark==='2'))||
@@ -450,7 +454,22 @@ class Table extends Component {
             }
         }
         // console.log("this.props.user.id", this.props.user.id)
-        let {userID} = this.props.userSetup;
+        const {userID, langCode} = this.props.userSetup;
+        // let field_name = "ua"
+        // switch (langCode) {
+        //     case "RU" :
+        //         field_name = "ru"
+        //         break
+        //     case "EN" :
+        //         field_name = "en"
+        //         break
+        //     case "GB" :
+        //         field_name = "gb"
+        //         break
+        //     default :
+        //         break;
+        // }
+        // field_name = "subj_name_"+field_name
         return(
 
             <div className="containertable">
@@ -467,7 +486,7 @@ class Table extends Component {
                                 {userID>0&&<Select  list={this.props.userSetup.selectedSubjects}
                                                     selected={this.props.userSetup.selectedSubj.subj_key}
                                                     key={"subj_key"}
-                                                    valuename={"subj_name_ua"}
+                                                    valuename={getSubjFieldName(langCode)}
                                                     name={"selectedSubj"}
                                                     caption="Предмет:"
                                                     value={"subj_key"}
@@ -524,5 +543,5 @@ class Table extends Component {
     }
 }
 
-export default  connect(mapStateToProps)(Table)
+export default  connect(mapStateToProps)(MarksTable)
 /* eslint-disable */

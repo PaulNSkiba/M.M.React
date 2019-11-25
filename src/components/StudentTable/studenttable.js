@@ -5,7 +5,7 @@
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
 import MarkBlank from '../MarkBlank/markblank'
-import {numberToLang, AddDay, getSpanCount, toYYYYMMDD, instanceAxios, mapStateToProps} from '../../js/helpers'
+import {numberToLang, AddDay, getSpanCount, toYYYYMMDD, instanceAxios, mapStateToProps, getSubjFieldName} from '../../js/helpers'
 import Select from '../Select/select'
 import Checkbox from '../CheckBox/checkbox'
 import { MARKS_URL, TABLE_GET_URL } from '../../config/config'
@@ -52,7 +52,7 @@ class StudentTable extends Component {
         let selectedSubjs = new Map();
         // let arr = []
 
-        let {userID, curClass, selectedSubj,studentID,classID,marks:marksredux} = this.props.userSetup;
+        let {userID, curClass, selectedSubj,studentID,classID,marks:marksredux, langCode} = this.props.userSetup;
 
         if (marksredux.length>0) {
             marks.clear()
@@ -61,7 +61,7 @@ class StudentTable extends Component {
 
             for (let i = 0; i < marksredux.length; i++) {
                 marks.set(marksredux[i].subj_key.replace('#', '')+"#"+marksredux[i].stud_id+"#"+toYYYYMMDD(new Date(marksredux[i].mark_date)), marksredux[i].mark)
-                selectedSubjs.set(marksredux[i].subj_key, marksredux[i].subj_name_ua) // Number(selectedSubjs.has(marksredux[i].subj_key)?selectedSubjs.get(marksredux[i].subj_key):0) + 1
+                selectedSubjs.set(marksredux[i].subj_key, marksredux[i][getSubjFieldName(langCode)]) // Number(selectedSubjs.has(marksredux[i].subj_key)?selectedSubjs.get(marksredux[i].subj_key):0) + 1
 
                 if (!(marksredux[i].mark_before===null)) {
                     marksBefore.set(marksredux[i].subj_key.replace('#', '')+"#"+marksredux[i].stud_id+"#"+toYYYYMMDD(new Date(marksredux[i].mark_date)), marksredux[i].mark_before)
@@ -86,7 +86,7 @@ class StudentTable extends Component {
                 for (let i = 0; i < response.data.length; i++) {
                     // console.log("MARKS_MAP", response.data[i])
                     marks.set(response.data[i].subj_key.replace('#', '')+"#"+response.data[i].stud_id+"#"+toYYYYMMDD(new Date(response.data[i].mark_date)), response.data[i].mark)
-                    selectedSubjs.set(marksredux[i].subj_key, marksredux[i].subj_name_ua) // Number(selectedSubjs.has(marksredux[i].subj_key)?selectedSubjs.get(marksredux[i].subj_key):0) + 1
+                    selectedSubjs.set(marksredux[i].subj_key, marksredux[i][getSubjFieldName(langCode)]) // Number(selectedSubjs.has(marksredux[i].subj_key)?selectedSubjs.get(marksredux[i].subj_key):0) + 1
                     if (!(response.data[i].mark_before===null)) {
                         marksBefore.set(response.data[i].subj_key.replace('#', '')+"#"+response.data[i].stud_id+"#"+toYYYYMMDD(new Date(response.data[i].mark_date)), response.data[i].mark_before)
                     }
@@ -121,7 +121,7 @@ class StudentTable extends Component {
         else {
             const {subjects_list} = this.props.userSetup
 
-            this.props.onStudSubjChanged(subjects_list[0].subj_key, subjects_list[0].subj_name_ua)
+            this.props.onStudSubjChanged(subjects_list[0].subj_key, subjects_list[0][getSubjFieldName(langCode)])
         }// {"#mathem" => "Математика"}
         return marks
     }
@@ -407,7 +407,7 @@ class StudentTable extends Component {
         head.push(<tr key={"row-2"} id={"row-2"}>{cell2}</tr>)
 
         let rows = [], subjArr = [];
-        let {selectedSubjects, students, studentID} = this.props.userSetup;
+        let {selectedSubjects, students, studentID, langCode} = this.props.userSetup;
 
         // Отфильтруем только для предметов с оценками
         // console.log("RENDER", selectedSubjects, this.state.markSubjs)
@@ -434,7 +434,7 @@ class StudentTable extends Component {
                                 {/*{numberToLang(i + 1, " ", "rus")}*/}
                                 <div    id={selectedSubjects[i].subj_key}
                                         className={this.classNameSubjButton(selectedSubjects[i].subj_key)}
-                                        onClick={this.onSubjClick.bind(this)}>{selectedSubjects[i].subj_name_ua}</div>
+                                        onClick={this.onSubjClick.bind(this)}>{selectedSubjects[i][getSubjFieldName(langCode)]}</div>
                             </th>)
                             break
                         default:
@@ -473,7 +473,7 @@ class StudentTable extends Component {
                                 {/*{numberToLang(i + 1, " ", "rus")}*/}
                                 <div    id={selectedSubjects[i].subj_key}
                                         className={this.classNameSubjButton(selectedSubjects[i].subj_key)}
-                                        onClick={this.onSubjClick.bind(this)}>{selectedSubjects[i].subj_name_ua}</div>
+                                        onClick={this.onSubjClick.bind(this)}>{selectedSubjects[i][getSubjFieldName(langCode)]}</div>
                                 </th>)
                             break
                         default:
@@ -536,7 +536,7 @@ class StudentTable extends Component {
                                 {this.props.user.id>0&&<Select  list={this.props.userSetup.selectedSubjects}
                                                                 selected={this.props.userSetup.selectedSubj.subj_key}
                                                                 key={"subj_key"}
-                                                                valuename={"subj_name_ua"}
+                                                                valuename={getSubjFieldName(langCode)}
                                                                 name={"selectedSubj"}
                                                                 caption="Предмет:"
                                                                 value={"subj_key"}

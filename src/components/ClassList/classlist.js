@@ -21,7 +21,7 @@ class ClassList extends Component {
                         <button className={this.classNames(classnumber===number)} onClick={arr.length?click:null} id={"btn-class-"+number} key={number}>
                             {number}
                         </button>
-                        {console.log(arr, number, classcount)}
+                        {/*{console.log(arr, number, classcount)}*/}
                         {arr.length?<div className="classCount">{arr[0].cnt}</div>:null}
                     </div>})}
                 </div>

@@ -1,7 +1,7 @@
 /**
  * Created by Paul on 22.01.2019.
  */
-import { LOGOUTUSER_URL, LOGINUSER_URL } from '../config/config'
+import { LOGOUTUSER_URL, LOGINUSER_URL, AUTH_URL } from '../config/config'
 import { instanceAxios } from '../js/helpers'
 
 export const userLoggedIn = (email, pwd, provider, provider_id, langLibrary) => {
@@ -47,7 +47,7 @@ export const userLoggedInByToken = (email, token, kind, langLibrary) => {
         };
         console.log("userLoggedInByToken", data, langLibrary);
         document.body.style.cursor = 'progress';
-        instanceAxios().post(LOGINUSER_URL, data, null)
+        instanceAxios().post(`${AUTH_URL}user`, data)
             .then(response => {
                 // dispatch({type: 'USER_LOGGEDIN', payload: response.data, langLibrary : langLibrary?langLibrary:getLangLibrary(localStorage.getItem("myCountryCode")?localStorage.getItem("myCountryCode"):"EN")});
 
@@ -82,14 +82,14 @@ export const userLoggedInByToken = (email, token, kind, langLibrary) => {
 
 export const userLoggedOut = (token, langLibrary) => {
     return dispatch => {
-            console.log("userLoggedOut", langLibrary)
+            // console.log("userLoggedOut", langLibrary)
             document.body.style.cursor = 'progress';
             window.localStorage.removeItem("myMarks.data");
             window.localStorage.removeItem("userSetup")
             window.localStorage.removeItem("userSetupDate")
             window.localStorage.removeItem("localChatMessages")
 
-
+            // console.log("LOGOUT_TOKEN", token)
             dispatch({type: 'APP_LOADING'})
             instanceAxios().get(LOGOUTUSER_URL)
                 .then(response => {

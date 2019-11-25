@@ -1,20 +1,33 @@
 /**
  * Created by Paul on 13.05.2019.
  */
-import React, { Component } from 'react'
+import React, {Component} from 'react'
 import MessageList from '../MessageList/messagelist'
-import { store } from '../../store/configureStore'
+import {store} from '../../store/configureStore'
 import emailPropType from 'email-prop-type';
-import { ChatManager, TokenProvider } from '@pusher/chatkit-client'
+import {ChatManager, TokenProvider} from '@pusher/chatkit-client'
 import arrow_down from '../../img/ARROW_DOWN.png'
 import arrow_up from '../../img/ARROW_UP.png'
-import { API_URL, HOMEWORK_ADD_URL,
-        instanceLocator, testToken, chatUserName } from '../../config/config'
-import {AddDay, arrOfWeekDays, dateDiff, toYYYYMMDD, instanceAxios, mapStateToProps, prepareMessageToFormat, echoClient, pusherClient} from '../../js/helpers'
+import {
+    API_URL, HOMEWORK_ADD_URL,
+    instanceLocator, testToken, chatUserName
+} from '../../config/config'
+import {
+    AddDay,
+    arrOfWeekDays,
+    dateDiff,
+    toYYYYMMDD,
+    instanceAxios,
+    mapStateToProps,
+    prepareMessageToFormat,
+    echoClient,
+    pusherClient,
+    getSubjFieldName
+} from '../../js/helpers'
 import addMsg from '../../img/addMsg.svg'
-import { Smile } from 'react-feather';
-import { Picker, emojiIndex } from 'emoji-mart';
-import { connect } from 'react-redux'
+import {Smile} from 'react-feather';
+import {Picker, emojiIndex} from 'emoji-mart';
+import {connect} from 'react-redux'
 // import Echo from 'laravel-echo'
 // import {Pusher} from 'pusher-js'
 // import {Pusher} from 'pusher-js'
@@ -30,26 +43,26 @@ class Chat extends Component {
         this.state = {
             curDate: AddDay(new Date(), 1),
             currentUser: null,
-            currentRoom: {users:[]},
+            currentRoom: {users: []},
             messages: [],
             users: [],
-            selSubject : false,
-            selSubjkey : null,
-            selSubjname : null,
-            selDate : false,
-            selUser : false,
-            dayUp : true,
-            subjUp : true,
-            userUp : true,
-            hwPlus : true,
-            servicePlus : true,
-            addMsgs : [],
-            isServiceChat : this.props.isservice,
-            showEmojiPicker : false,
+            selSubject: false,
+            selSubjkey: null,
+            selSubjname: null,
+            selDate: false,
+            selUser: false,
+            dayUp: true,
+            subjUp: true,
+            userUp: true,
+            hwPlus: true,
+            servicePlus: true,
+            addMsgs: [],
+            isServiceChat: this.props.isservice,
+            showEmojiPicker: false,
             newMessage: '',
-            messagesNew : [],
-            typingUsers : new Map(),
-            localChatMessages : [],
+            messagesNew: [],
+            typingUsers: new Map(),
+            localChatMessages: [],
         }
         this.Echo = null
         this.now = new Date()
@@ -65,12 +78,13 @@ class Chat extends Component {
         this.sendMessage = this.sendMessage.bind(this)
     }
 
-    componentWillMount(){
+    componentWillMount() {
         // console.log("this.props.isnew", this.props.isnew)
     }
+
     shouldComponentUpdate(nextProps, nextState) {
         let render = false
-        if (nextProps.userSetup.userID&&this.Echo===null) {
+        if (nextProps.userSetup.userID && this.Echo === null) {
             if (this.props.isnew) {
                 console.log("shoulUpdateEcho", nextProps.userSetup.userID, this.Echo)
                 this.initLocalPusher()
@@ -83,26 +97,26 @@ class Chat extends Component {
         }
         else {
             render = true
-            if ((!nextProps.userSetup.userID) && this.Echo!==null) {
-                    this.Echo.disconnect()
-                    this.Echo = null
+            if ((!nextProps.userSetup.userID) && this.Echo !== null) {
+                this.Echo.disconnect()
+                this.Echo = null
             }
         }
         return render
     }
 
-    componentDidMount(){
+    componentDidMount() {
         // console.log("this.props.isnew", this.props.isnew)
         if (this.props.userSetup.userID) {
             if (this.props.isnew)
                 if (this.Echo === null) this.initLocalPusher()
-            else {
+                else {
                     // this.initNetPusher()
                 }
             this.initChatMessages()
         }
         // if (this.typingTimer) clearTimeout(this.typingTimer)
-        this.typingTimer = setInterval(()=>{
+        this.typingTimer = setInterval(() => {
             // console.log("setInterval-tag")
             let mp = this.state.typingUsers,
                 now = (new Date())
@@ -119,22 +133,26 @@ class Chat extends Component {
             }
         }, 2000)
     }
+
     componentWillUnmount() {
         if (this.typingTimer) clearInterval(this.typingTimer)
     }
-    initLocalPusher=()=>{
+
+    initLocalPusher = () => {
         const {chatSSL} = this.props.userSetup
 
         // const larasocket = pusherClient(store.getState().user.token, chatSSL)
         const echo = echoClient(store.getState().user.token, chatSSL)
 
         echo.connector.pusher.logToConsole = true
-        echo.connector.pusher.log = (msg) => {console.log(msg);};
+        echo.connector.pusher.log = (msg) => {
+            console.log(msg);
+        };
         echo.connect()
         console.log('echo.pusher', echo.connector.pusher)
         // larasocket.connect()
 
-        const channelName = 'class.'+this.props.userSetup.classID
+        const channelName = 'class.' + this.props.userSetup.classID
 
         // const channel = larasocket.subcribe('private'-channelName)
         // channel.bind('ChatMessageSSL', data => {             console.log('larasocket-message', data.message);         });
@@ -204,7 +222,7 @@ class Chat extends Component {
                 })
                 .joining((user) => {
                     console.log("USERS.JOIN", this.state.users, user)
-                    this.setState({users : [...this.state.users, user]})
+                    this.setState({users: [...this.state.users, user]})
                 })
                 .leaving((person) => {
                     // this.users = this.users.filter(item=>item !== person);
@@ -215,49 +233,48 @@ class Chat extends Component {
         else
             echo.channel(channelName)
                 .listen('ChatMessage', (e) => {
-                let msg = prepareMessageToFormat(e.message), msgorig = e.message, isSideMsg = true
-                let arr =   this.state.localChatMessages,
-                            newArr = []
+                    let msg = prepareMessageToFormat(e.message), msgorig = e.message, isSideMsg = true
+                    let arr = this.state.localChatMessages,
+                        newArr = []
                     console.log("FILTER-NOT-SSL")
                     // console.log("FILTER-NOT-SSL: this.props", this.props)
                     newArr = arr.map(
-                    item=>
-                    {
-                        // console.log("map", item, JSON.parse(msg))
+                        item => {
+                            // console.log("map", item, JSON.parse(msg))
 
-                        if (this.state.messagesNew.includes(item.uniqid)) {
-                            // Для своих новых
-                            if (JSON.parse(msg).uniqid === item.uniqid) {
-                                // console.log("MSGORIG", msgorig, msgorig.id)
-                                isSideMsg = false
-                                let obj = item
-                                obj.id = msgorig.id
-                                return obj
+                            if (this.state.messagesNew.includes(item.uniqid)) {
+                                // Для своих новых
+                                if (JSON.parse(msg).uniqid === item.uniqid) {
+                                    // console.log("MSGORIG", msgorig, msgorig.id)
+                                    isSideMsg = false
+                                    let obj = item
+                                    obj.id = msgorig.id
+                                    return obj
+                                }
+                                else {
+                                    return item
+                                }
                             }
                             else {
                                 return item
                             }
                         }
-                        else {
-                            return item
-                        }
-                    }
-                )
-                // console.log("FILTER-NOT-SSL: stateArr", newArr, JSON.parse(msg), "isSideMsg: " + isSideMsg, this.state.messagesNew)
-                // Если новое и стороннее!!!
-                if  (isSideMsg) newArr.push(msgorig)
+                    )
+                    // console.log("FILTER-NOT-SSL: stateArr", newArr, JSON.parse(msg), "isSideMsg: " + isSideMsg, this.state.messagesNew)
+                    // Если новое и стороннее!!!
+                    if (isSideMsg) newArr.push(msgorig)
 
-                this.setState({
-                    localChatMessages : newArr,
-                    messages: [...arr, msg],
-                    messagesNew : this.state.messagesNew.filter(item=>!(item.uniqid===JSON.parse(msg).uniqid))
-                })
+                    this.setState({
+                        localChatMessages: newArr,
+                        messages: [...arr, msg],
+                        messagesNew: this.state.messagesNew.filter(item => !(item.uniqid === JSON.parse(msg).uniqid))
+                    })
                     // this.props.onReduxUpdate("ADD_CHAT_MESSAGES", newArr)
                     this.props.updatemessage(msg)
-            })
-        }
+                })
+    }
 
-    initNetPusher=()=>{
+    initNetPusher = () => {
         // console.log("initNetPusher:roomId", this.roomId)
         if (this.roomId) {
             const chatManager = new ChatManager({
@@ -303,21 +320,21 @@ class Chat extends Component {
         }
     }
 
-    toggleEmojiPicker=()=>{
-        this.setState({            showEmojiPicker: !this.state.showEmojiPicker,        });
+    toggleEmojiPicker = () => {
+        this.setState({showEmojiPicker: !this.state.showEmojiPicker,});
     }
-    getChatMessages=(classID)=>{
+    getChatMessages = (classID) => {
         // console.log('getChatMessages', this.props.userSetup.classID, classID)
-        instanceAxios().get(API_URL +`chat/get/${classID}`, [], null)
+        instanceAxios().get(API_URL + `chat/get/${classID}`)
             .then(resp => {
-                this.setState({localChatMessages : resp.data})
+                this.setState({localChatMessages: resp.data})
                 // this.props.onReduxUpdate("ADD_CHAT_MESSAGES", resp.data)
             })
             .catch(error => {
                 console.log('getChatMessagesError', error)
             })
     }
-    initChatMessages=async ()=>{
+    initChatMessages = async () => {
         // console.log("initChatMessages", this.props.userSetup.localChatMessages, this.props.userSetup.classID)
         if (this.props.isnew) {
             if (this.props.userSetup.classID)
@@ -329,8 +346,8 @@ class Chat extends Component {
             return []
         }
     }
-    addEmoji=(emoji)=>{
-        const { newMessage } = this.state;
+    addEmoji = (emoji) => {
+        const {newMessage} = this.state;
         const text = `${newMessage}${emoji.native}`;
         this.setState({
             newMessage: text,
@@ -339,7 +356,7 @@ class Chat extends Component {
         this.inputMessage.value = this.inputMessage.value + emoji.native
     }
 
-    prepareJSON=()=>{
+    prepareJSON = () => {
         let {classID, userName, userID, studentID, studentName} = this.props.userSetup
         let obj = {}
         switch (this.props.isnew) {
@@ -360,7 +377,7 @@ class Chat extends Component {
                 obj.student_id = studentID
                 obj.student_name = studentName
                 obj.uniqid = new Date().getTime() + this.props.userSetup.userName// uniqid()
-                this.setState({messagesNew : [...this.state.messagesNew, obj.uniqid]})
+                this.setState({messagesNew: [...this.state.messagesNew, obj.uniqid]})
                 break;
             default :
                 obj.senderId = chatUserName
@@ -384,7 +401,7 @@ class Chat extends Component {
         })
         return JSON.stringify(obj)
     }
-    prepareMessageToState=(objFrom)=>{
+    prepareMessageToState = (objFrom) => {
         objFrom = JSON.parse(objFrom)
         let obj = {}
         obj.senderId = objFrom.user_name
@@ -405,7 +422,7 @@ class Chat extends Component {
         // console.log('obj', JSON.stringify(obj))
         return JSON.stringify(obj)
     }
-    addMessage=()=>{
+    addMessage = () => {
         let obj = this.prepareJSON()
         let objForState = this.prepareMessageToState(obj)
         if (this.props.isnew) {
@@ -413,16 +430,16 @@ class Chat extends Component {
         }
         this.sendMessage(obj, 0)
         if (!(this.state.selSubjkey === null))
-        this.addHomeWork(this.props.isnew?JSON.parse(obj).message:JSON.parse(obj).text)
+            this.addHomeWork(this.props.isnew ? JSON.parse(obj).message : JSON.parse(obj).text)
     }
     _handleKeyDown = (e) => {
         // console.log("_handleKeyDown", this.Echo)
         if (this.props.isnew) {
-            let channelName = 'class.'+this.props.userSetup.classID
+            let channelName = 'class.' + this.props.userSetup.classID
             this.Echo.join(channelName)
                 .whisper('typing', {
-                        name: this.props.userSetup.userName
-                    })
+                    name: this.props.userSetup.userName
+                })
         }
         if (e.key === 'Enter') {
             e.preventDefault();
@@ -430,26 +447,26 @@ class Chat extends Component {
             let objForState = this.prepareMessageToState(obj)
 
             if (this.props.isnew)
-            this.setState({messages : [...this.state.messages, objForState]})
+                this.setState({messages: [...this.state.messages, objForState]})
             // console.log("handleKeyDown", obj, this.state.selSubjkey)
 
             this.sendMessage(obj, 0)
         }
         else {
             // console.log('e', e.target.value, e.target.value.slice(-1), e.key)
-            if ((e.target.value.slice(-1) === ':' && (e.key.trim().length)) || e.key===')' || e.key==='(') {
+            if ((e.target.value.slice(-1) === ':' && (e.key.trim().length)) || e.key === ')' || e.key === '(') {
                 console.log('emojiIndex',
-                emojiIndex
-                    .search(e.target.value.slice(-1)+e.key)
-                    .filter(item=>item.emoticons.indexOf(e.target.value.slice(-1)+e.key)>=0)
-                    .map(o => ({
-                        colons: o.colons,
-                        native: o.native,
+                    emojiIndex
+                        .search(e.target.value.slice(-1) + e.key)
+                        .filter(item => item.emoticons.indexOf(e.target.value.slice(-1) + e.key) >= 0)
+                        .map(o => ({
+                            colons: o.colons,
+                            native: o.native,
                         }))
                 )
                 let smile = emojiIndex
-                    .search(e.target.value.slice(-1)+e.key)
-                    .filter(item=>item.emoticons.indexOf(e.target.value.slice(-1)+e.key)>=0)
+                    .search(e.target.value.slice(-1) + e.key)
+                    .filter(item => item.emoticons.indexOf(e.target.value.slice(-1) + e.key) >= 0)
                     .map(o => ({
                         colons: o.colons,
                         native: o.native,
@@ -473,23 +490,16 @@ class Chat extends Component {
 
         }
     }
-    addHomeWork=(txt)=>{
-        let {classID, userID, studentID} = this.props.userSetup
+    addHomeWork = (txt) => {
+        let {classID, userID, studentID, langCode} = this.props.userSetup
         // let {userName} = this.props.userSetup
         // let {homework : homeworkarray} = this.props //this.state;
         // let id = this.props.homeworkarray.reduce((max, current)=>(current.id > max?current.id:max), 0) + 1;
-        let subj_key = this.state.selSubjkey //selectedSubjects[this.state.curSubjIndex].subj_key
-        let subj_name_ua = this.state.selSubjname //selectedSubjects[this.state.curSubjIndex].subj_name_ua
+        let subj_key = this.state.selSubjkey
+        let subj_name_ua = this.state.selSubjname
         let ondate = this.state.curDate //new Date("2019-04-09");
-        // let author = userName //userName
-        // let instime = new Date() //"16:10"
-        // instime = ('0'+instime.getHours()).slice(-2) + ':' + ('0'+instime.getMinutes()).slice(-2)
 
-        // let json = `{"id":${id}, "subj_key":"${subj_key}", "subj_name_ua": "${subj_name_ua}", "homework": "${txt}", "ondate": "${ondate}", "author": "${author}", "instime" : "${instime}"}`;
-        // console.log(json)
-        // json = JSON.parse(json);
-
-        let json = `{"subj_key":"${subj_key}", "subj_name_ua": "${subj_name_ua}", "homework": "${txt}", "ondate": "${toYYYYMMDD(ondate)}", "user_id": "${userID}", "student_id":"${studentID}"}`;
+        let json = `{"subj_key":"${subj_key}", "${getSubjFieldName(langCode)}": "${subj_name_ua}", "homework": "${txt}", "ondate": "${toYYYYMMDD(ondate)}", "user_id": "${userID}", "student_id":"${studentID}"}`;
         console.log(json);
         instanceAxios().post(HOMEWORK_ADD_URL + '/' + classID + '/hw/' + 0, json)
             .then(response => {
@@ -504,14 +514,14 @@ class Chat extends Component {
             .catch(response => {
                 console.log(response);
             })
-        this.setState({sideListLeft: true, editId : 0})
+        this.setState({sideListLeft: true, editId: 0})
     }
     /*
-    * Отправляем электронного письмо
-    * (в данном случае в службу техподдержки
-    * ToDO: Создать событие на добавлении данных в таблицу техподдержки и уже оттуда отправлять письмо
-    * */
-    sendMail=(mail, text)=>{
+     * Отправляем электронного письмо
+     * (в данном случае в службу техподдержки
+     * ToDO: Создать событие на добавлении данных в таблицу техподдержки и уже оттуда отправлять письмо
+     * */
+    sendMail = (mail, text) => {
         // let header = {
         //     headers: {
         //         'Content-Type': "application/json",
@@ -519,8 +529,8 @@ class Chat extends Component {
         //         'Access-Control-Allow-Methods' : 'POST',
         //     }
         // }
-        let author = !this.inputName===undefined?this.inputName.value:"",
-            mailAuthor = !this.inputEmail===undefined?this.inputEmail.value:""
+        let author = !this.inputName === undefined ? this.inputName.value : "",
+            mailAuthor = !this.inputEmail === undefined ? this.inputEmail.value : ""
         let json = `{   "session_id":"${this.props.session_id}",
                         "mailService":"${mail}",
                         "author":"${author}",
@@ -530,7 +540,7 @@ class Chat extends Component {
                         "userID":${this.props.userID}}`
         // console.log(json)
         let data = JSON.parse(json);
-         if (true) {
+        if (true) {
             instanceAxios().post(API_URL + 'mail', JSON.stringify(data))
                 .then(response => {
                     console.log('SEND_MAIL', response)
@@ -543,14 +553,14 @@ class Chat extends Component {
         }
     }
     /*
-    * Отправляем сообщение на сервер Pusher
-    * или же просто в state в случае письма в техподдержку
-    * ToDo: Вывести сообщение (сделать умный input) в случае незаполнения полей имени и электронки
-    * */
+     * Отправляем сообщение на сервер Pusher
+     * или же просто в state в случае письма в техподдержку
+     * ToDo: Вывести сообщение (сделать умный input) в случае незаполнения полей имени и электронки
+     * */
     sendMessage(text, id) {
         // console.log("sendMessage", this.state.currentUser, text)
         let arr = this.state.addMsgs
-        if (this.state.isServiceChat||!this.state.servicePlus) {
+        if (this.state.isServiceChat || !this.state.servicePlus) {
             console.log('Отправим электронку', this.state.addMsgs)
             if (!this.props.userID) {
                 if (!this.inputName.value.toString().length) {
@@ -564,7 +574,7 @@ class Chat extends Component {
             }
             arr.push(JSON.parse(text).text)
             this.sendMail('paul.n.skiba@gmail.com', JSON.parse(text).text)
-            this.setState({addMsgs : arr})
+            this.setState({addMsgs: arr})
             return
         }
         // console.log("Next message!", text)
@@ -585,30 +595,30 @@ class Chat extends Component {
                     })
                 }
                 else {
-                   arrChat.push(JSON.parse(text))
+                    arrChat.push(JSON.parse(text))
                 }
                 console.log("Send message to server.2", "arr.after: ", arr, text)
                 this.setState({messages: arrChat})
                 // this.props.onReduxUpdate("ADD_CHAT_MESSAGES", arrChat)
-                instanceAxios().post(API_URL + 'chat/add' + (id?`/${id}`:''), text)
+                instanceAxios().post(API_URL + 'chat/add' + (id ? `/${id}` : ''), text)
                     .then(response => {
                         console.log('ADD_MSG', response)
                     })
-                    .catch(response=>
+                    .catch(response =>
                         console.log("AXIOUS_ERROR", response)
                     )
                 break;
             default :
-            this.state.currentUser.sendMessage({
+                this.state.currentUser.sendMessage({
                     text,
                     roomId: this.roomId.toString()
                 })
                     .catch(error => console.error('error Sending message', error));
-            break;
+                break;
         }
     }
 
-    daysList=()=>{
+    daysList = () => {
         let daysArr = []
         for (let i = -2; i < 8; i++) {
             let obj = {}
@@ -617,21 +627,22 @@ class Chat extends Component {
             daysArr.push(obj)
         }
         console.log("daysArr", daysArr)
-        return daysArr.map((item, i)=>(<div key={i} onClick={()=>{this.setState({curDate : AddDay(this.now, item.id), selDate : true, dayUp: !this.state.dayUp})}} className="add-msg-homework-day" id={item.id}>{item.name}</div>))
+        return daysArr.map((item, i) => (<div key={i} onClick={() => {
+            this.setState({curDate: AddDay(this.now, item.id), selDate: true, dayUp: !this.state.dayUp})
+        }} className="add-msg-homework-day" id={item.id}>{item.name}</div>))
     }
-    dateString=(curDate)=>{
-        let datediff = dateDiff(this.now, curDate)+2;
-        let daysArr = ["Позавчера","Вчера","Сегодня","Завтра","Послезавтра"]
-        Date.prototype.getWeek = function() {
-            let onejan = new Date(this.getFullYear(),0,1);
-            return Math.ceil((((this - onejan) / 86400000) + onejan.getDay())/7);
+    dateString = (curDate) => {
+        let datediff = dateDiff(this.now, curDate) + 2;
+        let daysArr = ["Позавчера", "Вчера", "Сегодня", "Завтра", "Послезавтра"]
+        Date.prototype.getWeek = function () {
+            let onejan = new Date(this.getFullYear(), 0, 1);
+            return Math.ceil((((this - onejan) / 86400000) + onejan.getDay()) / 7);
         }
         // console.log("datediff", datediff, curDate);
-        if (datediff>=0&&datediff<5)
+        if (datediff >= 0 && datediff < 5)
             return daysArr[datediff].toUpperCase();
         else {
-            if ((curDate.getWeek() - this.now.getWeek())>=0)
-            {
+            if ((curDate.getWeek() - this.now.getWeek()) >= 0) {
                 if (this.now.getWeek() === curDate.getWeek()) {
                     return arrOfWeekDays[curDate.getDay()] + '[эта.неделя]'
                 }
@@ -640,37 +651,45 @@ class Chat extends Component {
                         return arrOfWeekDays[curDate.getDay()] + '[след.неделя]'
                     }
                     else {
-                        return arrOfWeekDays[curDate.getDay()] + '  +' + (curDate.getWeek() - this.now.getWeek()) +'нед.'
+                        return arrOfWeekDays[curDate.getDay()] + '  +' + (curDate.getWeek() - this.now.getWeek()) + 'нед.'
                     }
                 }
             }
             else {
-                return arrOfWeekDays[curDate.getDay()] + '  ' + (curDate.getWeek() - this.now.getWeek()) +'нед.'
+                return arrOfWeekDays[curDate.getDay()] + '  ' + (curDate.getWeek() - this.now.getWeek()) + 'нед.'
             }
         }
         // return ""
         // return "След. Вторник"
     }
-    subjList=()=>{
+    subjList = () => {
+        const {langCode} = this.props.userSetup
         console.log(this.props.subjs)
-        return this.props.subjs.map((item, i)=><div key={i} onClick={()=>{this.setState({selSubjname : item.subj_name_ua, selSubjkey : item.subj_key, selSubject : true, subjUp: !this.state.subjUp})}} className="add-msg-homework-subject" id={item.subj_key}>{item.subj_name_ua}</div>)
+        return this.props.subjs.map((item, i) => <div key={i} onClick={() => {
+            this.setState({
+                selSubjname: item[getSubjFieldName(langCode)],
+                selSubjkey: item.subj_key,
+                selSubject: true,
+                subjUp: !this.state.subjUp
+            })
+        }} className="add-msg-homework-subject" id={item.subj_key}>{item[getSubjFieldName(langCode)]}</div>)
     }
 
-    handleKeyPress=(event)=> {
+    handleKeyPress = (event) => {
         if (event.key === 'Enter') {
             event.preventDefault();
             this.sendMessageTextArea();
         }
     }
-    handleInput=(event) =>{
-        const { value, name } = event.target;
+    handleInput = (event) => {
+        const {value, name} = event.target;
 
         this.setState({
             [name]: value,
         });
     }
-    sendMessageTextArea=()=> {
-        const { newMessage } = this.state;
+    sendMessageTextArea = () => {
+        const {newMessage} = this.state;
 
         if (newMessage.trim() === '') return;
 
@@ -678,9 +697,10 @@ class Chat extends Component {
             newMessage: '',
         });
     }
-    btnCloseOwn=()=>{
+    btnCloseOwn = () => {
 
     }
+
     render() {
         const {
             showEmojiPicker,
@@ -690,36 +710,41 @@ class Chat extends Component {
         return (
 
 
-            <div className={this.props.isnew?"chat-container-new":"chat-container"} style={this.props.display?{opacity: 1 }:{display:"none"}}>
+            <div className={this.props.isnew ? "chat-container-new" : "chat-container"}
+                 style={this.props.display ? {opacity: 1} : {display: "none"}}>
 
                 {showEmojiPicker ? (
                     <div className="picker-background">
                         <Picker set="emojione"
                                 onSelect={this.addEmoji}
-                                style={{ position: 'absolute', overflow : 'auto',
-                                    zIndex: '30', height : '400px', width : '340px',
-                                    marginTop : '10px', background : 'white'}}
+                                style={{
+                                    position: 'absolute', overflow: 'auto',
+                                    zIndex: '30', height: '400px', width: '340px',
+                                    marginTop: '10px', background: 'white'
+                                }}
                                 emojiSize={20}
                                 include={['people']}
                                 i18n={{
                                     search: 'Поиск',
                                     categories: {
-                                            search: 'Результаты поиска',
-                                            recent: 'Недавние',
-                                            people: 'Смайлы & Люди',
-                                        }
-                                    }}
+                                        search: 'Результаты поиска',
+                                        recent: 'Недавние',
+                                        people: 'Смайлы & Люди',
+                                    }
+                                }}
                         />
                     </div>
-                    ) : null}
+                ) : null}
 
-                <div className={this.props.isnew?"msg-title-new":"msg-title"} onClick={this.props.btnclose}>
-                    <div>{this.state.isServiceChat?"My.Marks CHAT: Вопрос разработчику":"My.Marks CHAT"}</div>
+                <div className={this.props.isnew ? "msg-title-new" : "msg-title"} onClick={this.props.btnclose}>
+                    <div>{this.state.isServiceChat ? "My.Marks CHAT: Вопрос разработчику" : "My.Marks CHAT"}</div>
                     <div className="btn-close-chat" onClick={this.props.btnclose}>X</div>
                 </div>
 
-                {this.props.userSetup.classID?<div className="service-plus" onClick={()=>{this.setState({servicePlus : !this.state.servicePlus})}}>{this.state.servicePlus?"+":"-"} Вопрос разработчику</div>:""}
-                {!this.roomId?
+                {this.props.userSetup.classID ? <div className="service-plus" onClick={() => {
+                    this.setState({servicePlus: !this.state.servicePlus})
+                }}>{this.state.servicePlus ? "+" : "-"} Вопрос разработчику</div> : ""}
+                {!this.roomId ?
                     <div className="msg-title-userdata">
                         <label>Имя</label><input type="text" className="msg-title-userdata-name" ref={input => {
                         this.inputName = input
@@ -728,51 +753,76 @@ class Chat extends Component {
                         this.inputEmail = input
                     }}></input>
                     </div>
-                    :""}
+                    : ""}
 
 
-                <MessageList hwdate={this.state.selDate?this.state.curDate:null}
+                <MessageList hwdate={this.state.selDate ? this.state.curDate : null}
                              messages={this.state.messages}
                              localmessages={this.state.localChatMessages}
                              username={chatUserName}
-                             isshortmsg={this.state.isServiceChat||!this.state.servicePlus}
-                             classID={this.props.classID} addmsgs={this.state.addMsgs} sendmessage={this.sendMessage} isnew={this.props.isnew}/>
+                             isshortmsg={this.state.isServiceChat || !this.state.servicePlus}
+                             classID={this.props.classID} addmsgs={this.state.addMsgs} sendmessage={this.sendMessage}
+                             isnew={this.props.isnew}/>
 
 
                 <div className="who-typing">
-                    {this.state.typingUsers.size > 0?"Сообщение набира" + ((this.state.typingUsers.size===1?"е":"ю") + "т: ") + Array.from(this.state.typingUsers.keys()).join(', '):""}
+                    {this.state.typingUsers.size > 0 ? "Сообщение набира" + ((this.state.typingUsers.size === 1 ? "е" : "ю") + "т: ") + Array.from(this.state.typingUsers.keys()).join(', ') : ""}
                 </div>
                 <div className={"add-msg-container"}>
                     <form className="frm-add-msg">
-                            <div className="input-msg-block">
-                                <button
-                                    type="button"
-                                    className="toggle-emoji"
-                                    onClick={this.toggleEmojiPicker}
-                                >
-                                    <Smile />
-                                </button>
+                        <div className="input-msg-block">
+                            <button
+                                type="button"
+                                className="toggle-emoji"
+                                onClick={this.toggleEmojiPicker}
+                            >
+                                <Smile />
+                            </button>
 
-                                <textarea onKeyDown={this._handleKeyDown} className="msg-add-textarea"
-                                  placeholder="Введите сообщение..."  type="text" ref={input=>{this.inputMessage=input}}
-                                />
+                            <textarea onKeyDown={this._handleKeyDown} className="msg-add-textarea"
+                                      placeholder="Введите сообщение..." type="text" ref={input => {
+                                this.inputMessage = input
+                            }}
+                            />
 
-                                <div className={"btn-add-message"} type="submit" onClick={this.addMessage.bind(this)}><img height="25px" src={addMsg} alt=""/></div>
-                                {!this.state.isServiceChat?<div className="homework-plus" onClick={()=>{this.setState({hwPlus : !this.state.hwPlus})}}>{this.state.hwPlus?"+":"-"} Домашка</div>:""}
-                            </div>
+                            <div className={"btn-add-message"} type="submit" onClick={this.addMessage.bind(this)}><img
+                                height="25px" src={addMsg} alt=""/></div>
+                            {!this.state.isServiceChat ? <div className="homework-plus" onClick={() => {
+                                this.setState({hwPlus: !this.state.hwPlus})
+                            }}>{this.state.hwPlus ? "+" : "-"} Домашка</div> : ""}
+                        </div>
 
-                        {!this.state.hwPlus?
+                        {!this.state.hwPlus ?
                             <div className="add-msg-homework-block">
                                 <div className="add-msg-homework-title">Домашка</div>
-                                <div id={"selDate"} className={!this.state.selDate?"add-msg-homework-day":"add-msg-homework-day active-msg-btn"} onClick={(e)=>{return e.target.nodeName === "DIV"&&e.target.id==="selDate"?this.setState({selDate: !this.state.selDate}):"";}}>
-                                    <div className={"showDaysSection"} style={{opacity: !this.state.dayUp?1:0 }}>{!this.state.dayUp?this.daysList():""}</div>
+                                <div id={"selDate"}
+                                     className={!this.state.selDate ? "add-msg-homework-day" : "add-msg-homework-day active-msg-btn"}
+                                     onClick={(e) => {
+                                         return e.target.nodeName === "DIV" && e.target.id === "selDate" ? this.setState({selDate: !this.state.selDate}) : "";
+                                     }}>
+                                    <div className={"showDaysSection"}
+                                         style={{opacity: !this.state.dayUp ? 1 : 0}}>{!this.state.dayUp ? this.daysList() : ""}</div>
                                     {this.dateString(this.state.curDate)}
-                                    <div className={"msg-btn-up"} onClick={(e)=>{this.setState({dayUp: !this.state.dayUp});console.log(e.target.nodeName);e.preventDefault();}}><img src={this.state.dayUp?arrow_up:arrow_down} alt=""/></div></div>
-                                <div id={"selSubj"} className={!this.state.selSubject?"add-msg-homework-subject":"add-msg-homework-subject active-msg-btn"} onClick={(e)=>{return e.target.nodeName === "DIV"&&e.target.id==="selSubj"?this.setState({selSubject: (!this.state.selSubject) }):""}}>
-                                    <div className={"showSubjSection"} style={{opacity: !this.state.subjUp?1:0 }}>{!this.state.subjUp?this.subjList():""}</div>
-                                    {this.state.selSubjkey===null?"ПРЕДМЕТ?":this.state.selSubjname}
-                                    <div className={"msg-btn-up"} onClick={(e)=>{e.preventDefault(); this.setState({subjUp: !this.state.subjUp})}}><img src={this.state.subjUp?arrow_up:arrow_down} alt=""/></div></div>
-                            </div>:""}
+                                    <div className={"msg-btn-up"} onClick={(e) => {
+                                        this.setState({dayUp: !this.state.dayUp});
+                                        console.log(e.target.nodeName);
+                                        e.preventDefault();
+                                    }}><img src={this.state.dayUp ? arrow_up : arrow_down} alt=""/></div>
+                                </div>
+                                <div id={"selSubj"}
+                                     className={!this.state.selSubject ? "add-msg-homework-subject" : "add-msg-homework-subject active-msg-btn"}
+                                     onClick={(e) => {
+                                         return e.target.nodeName === "DIV" && e.target.id === "selSubj" ? this.setState({selSubject: (!this.state.selSubject)}) : ""
+                                     }}>
+                                    <div className={"showSubjSection"}
+                                         style={{opacity: !this.state.subjUp ? 1 : 0}}>{!this.state.subjUp ? this.subjList() : ""}</div>
+                                    {this.state.selSubjkey === null ? "ПРЕДМЕТ?" : this.state.selSubjname}
+                                    <div className={"msg-btn-up"} onClick={(e) => {
+                                        e.preventDefault();
+                                        this.setState({subjUp: !this.state.subjUp})
+                                    }}><img src={this.state.subjUp ? arrow_up : arrow_down} alt=""/></div>
+                                </div>
+                            </div> : ""}
                     </form>
                 </div>
             </div>
@@ -783,7 +833,7 @@ class Chat extends Component {
 
 export default connect(mapStateToProps,
     dispatch => {
-    return {
-        onReduxUpdate: (key, payload) => dispatch({type: key, payload: payload}),
-    }
+        return {
+            onReduxUpdate: (key, payload) => dispatch({type: key, payload: payload}),
+        }
     })(Chat)

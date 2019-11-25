@@ -37,7 +37,7 @@ const initialState = (check)=>{
                     chatSSL: isSSLChat, localChatMessages: [],
                     isMobile: false, aliasesList: [], aliasesLang: "", menuItem : "",
                     budget : [], budgetpays : [],
-                    renderBudget : 1,
+                    renderBudget : 1, langCode : "",
                 }
         }
     return obj
@@ -127,6 +127,7 @@ export function userSetupReducer(state = initialState(true), action) {
                                                                 "subj_key":"${arr[0]}",
                                                                 "subj_name_ua":"${arr[1]}"}`)};
                 case "selected_subjects" :
+                    console.log("userSetup: selected_subjects", Object.values(action.payload)[0])
                     saveToLocalStorageOnDate("userSetup",
                         JSON.stringify({...state, selectedSubjects: Object.values(action.payload)[0]}))
                     return {...state, selectedSubjects: Object.values(action.payload)[0]};
@@ -213,6 +214,9 @@ export function userSetupReducer(state = initialState(true), action) {
         case 'LANG_LIBRARY' : {
             return{...state, langLibrary: action.payload}
         }
+        case 'LANG_CODE' : {
+            return{...state, langCode: action.payload}
+        }
         case 'CHAT_SESSION_ID' : {
             return{...state, chatSessionID : action.payload}
         }
@@ -254,7 +258,8 @@ export function userSetupReducer(state = initialState(true), action) {
         case 'USER_LOGGEDOUT' :
             let initState = initialState(false)
             initState.langLibrary = action.langLibrary //action.langLibray?action.langLibray:(localStorage.getItem("langLibrary")?JSON.parse(localStorage.getItem("langLibrary")):null)
-            console.log("userSetupReducer", 'USER_LOGGEDOUT', initState)
+            initState.langCode = localStorage.getItem("langCode") ? localStorage.getItem("langCode") : defLang
+            // console.log("userSetupReducer", 'USER_LOGGEDOUT', initState)
             return {...initState};
         default :
             return state

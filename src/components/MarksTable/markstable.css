@@ -27,6 +27,12 @@ th.numbercol{
     text-align: center;
     font-size: 1em;
 }
+/*numbercolinlist{*/
+    /*!*width : 30px;*!*/
+    /*!*text-align: center;*!*/
+    /*!*font-size: 1em;*!*/
+    /*background-color: rgba(64, 155, 230, 0.25);*/
+/*}*/
 th.namescol{
     width : 180px;
     text-align: left;

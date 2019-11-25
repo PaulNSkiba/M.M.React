@@ -2,7 +2,7 @@
  * Created by Paul on 17.08.2019.
  */
 // Global consts
-export const ISDEBUG = false
+export const ISDEBUG = true
 export const isSSLChat = true
 
 // URL's

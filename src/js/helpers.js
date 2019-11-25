@@ -17,7 +17,8 @@ export const mapStateToProps = store => {
     }
 }
 export const instanceAxios=()=>{
-    let {token} = store.getState().user
+    let {token} = store.getState().userSetup //store.getState().user
+    // console.log("instanceAxios", token)
     return (axios.create({
         baseURL: AUTH_URL + '/api/',
         timeout: 0,
@@ -1067,6 +1068,23 @@ export const pusherClient = (token, chatSSL) => {
     return pusher
 }
 
+export const getSubjFieldName=lang=>{
+    let field_name = "ua"
+    switch (lang) {
+        case "RU" :
+            field_name = "ru"
+            break
+        case "EN" :
+            field_name = "en"
+            break
+        case "GB" :
+            field_name = "gb"
+            break
+        default :
+            break;
+    }
+    return "subj_name_"+field_name
+}
 export const waitCursorBlock=()=>
     <div className="lds-ring">
         <div></div>

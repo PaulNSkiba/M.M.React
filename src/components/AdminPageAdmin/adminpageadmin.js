@@ -3,7 +3,7 @@
  */
 import React, { Component } from 'react';
 import { AUTH_URL, SUBJECTS_ADD_URL, SUBJECTS_GET_URL, MARKS_STATS_URL, arrLangs, arrClasses, defLang } from '../../config/config'
-import { instanceAxios, mapStateToProps } from '../../js/helpers'
+import { instanceAxios, mapStateToProps, getSubjFieldName } from '../../js/helpers'
 import { connect } from 'react-redux'
 import '../../containers/App.css'
 import './adminpageadmin.css'
@@ -33,6 +33,15 @@ class AdminPageAdmin extends Component {
             {name: "Оценок", width : "20"},
             {name: "Сек/оценку", width : "100%"},
         ])
+        this.headStat = [
+            {name: "Дата", width : "80px"} ,
+            {name: "Час", width : "50px"},
+            {name: "Начало", width : "80px"},
+            {name: "Конец", width : "80px"},
+            {name: "Минут", width : "80px"},
+            {name: "Оценок", width : "80px"},
+            {name: "Сек/оценку", width : "80px"},
+        ]
         this.headArray = [
             {name: "№ п/п", width : "20px"} ,
             {name: "Алиас", width : "200px"},
@@ -91,10 +100,11 @@ class AdminPageAdmin extends Component {
            })
    }
     renderSubjects() {
+        const {langCode} = this.props.userSetup
         return this.state.subjects.map(subj=>{
             return (
                 <option key={subj.id} subj_key={subj.subj_key} id={subj.id}>
-                    { subj.subj_name_ua }
+                    { subj[getSubjFieldName(langCode)] }
                 </option>
             );
         })
@@ -106,12 +116,20 @@ class AdminPageAdmin extends Component {
         console.log("dbl.click", e.target, e.target.id)
         // return;
         let {subjectsSelected} = this.state
+        const {langCode} = this.props.userSetup
         subjectsSelected = subjectsSelected.filter(function(subj) {
             return subj.id!==e.target.id;
         })
 
-        subjectsSelected.push({id: e.target.id, subj_key : e.target.getAttribute('subj_key'), subj_name_ua: e.target.text })
-         // return
+        let obj = {}
+        obj["id"] = e.target.id
+        obj["subj_key"] = e.target.getAttribute('subj_key')
+        obj[getSubjFieldName(langCode)] = e.target.text
+
+        // {id: e.target.id, subj_key : e.target.getAttribute('subj_key'), subj_name_ua : e.target.text }
+        // subjectsSelected.push({id: e.target.id, subj_key : e.target.getAttribute('subj_key'), subj_name_ua : e.target.text })
+        subjectsSelected.push(obj)
+
         this.setState({
             subjectsSelected
         })
@@ -126,7 +144,7 @@ class AdminPageAdmin extends Component {
             "class_number" : ${this.state.curClass},
             "subj_id" : ${e.target.id},
             "subj_key" : "${e.target.getAttribute('subj_key')}",
-            "subj_name_ua": "${e.target.text}"
+            "${getSubjFieldName(langCode)}": "${e.target.text}"
         }`
         console.log("JSON", json);
         let data = JSON.parse(json);
@@ -204,11 +222,11 @@ class AdminPageAdmin extends Component {
         }
     }
     renderSubjectsSelected() {
-        // console.log("renderSubjectsSelected", this.state.subjects, this.state.subjectsSelected )
+        const {langCode} = this.props.userSetup
         return this.state.subjectsSelected.map(subj=>{
             return (
                 <option key={subj.id} id={subj.subj_key}>
-                    { subj.subj_name_ua }
+                    { subj[getSubjFieldName(langCode)] }
                 </option>
             );
         })
@@ -261,32 +279,77 @@ class AdminPageAdmin extends Component {
     classNameOfTD=(email, verified)=> {
         return email ? (verified ? "left-text verified" : "left-text verification") : "left-text"
     }
-    // createTableRowsOld(rowsArr, onInputChange, withInput, row, column) {
-    //     // let {row, column} = this.state
-    //     console.log("createTableRows", row, column)
-    //     let cell = [],
-    //         rows = [];
-    //     for (let i = 0; i < rowsArr.length; i++) {
-    //         cell = []
-    //         cell.push(<th key={"r"+(i+1)+"c1"}>{i+1}</th>)
-    //         cell.push(<td className="left-text" style={{"paddingLeft" : "5px", "paddingRight" : "5px"}} id={(i+1)+"#2#"+rowsArr[i].id} key={"r"+(i+1)+"c2"} onClick={this.onClick.bind(this)}>{rowsArr[i].student_nick} {(row===(i+1)&&column===2&&withInput)?<input type="text" id={(i+1)+"#2#"+rowsArr[i].id} className="inputEditor" onChange={this.onInputChange} onKeyPress={this.onInputKeyPress} defaultValue={rowsArr[i].student_nick}/>:""}</td>) //this.isActive(i, 2, rowsArr[i].student_nick)
-    //         cell.push(<td className="left-text" style={{"paddingLeft" : "5px", "paddingRight" : "5px"}} id={(i+1)+"#3#"+rowsArr[i].id} key={"r"+(i+1)+"c3"} onClick={this.onClick.bind(this)}>{rowsArr[i].student_name} {(row===(i+1)&&column===3&&withInput)?<input type="text" id={(i+1)+"#3#"+rowsArr[i].id} className="inputEditor" onChange={this.onInputChange} onKeyPress={this.onInputKeyPress} defaultValue={rowsArr[i].student_name}/>:""}</td>)
-    //         cell.push(<td className={this.classNameOfTD(!(rowsArr[i].email===null), !(rowsArr[i].email_verified_at===null))} style={{"paddingLeft" : "5px", "paddingRight" : "5px", "fontSize" : "0.8em"}} id={(i+1)+"#4#"+rowsArr[i].id} key={"r"+(i+1)+"c4"} onBlur={this.onBlur.bind(this)} onClick={this.onClick.bind(this)}>{rowsArr[i].email}{(row===(i+1)&&column===4&&withInput)?<input type="text" id={(i+1)+"#4#"+rowsArr[i].id} className="inputEditor" onChange={this.onInputChange} onKeyPress={this.onInputKeyPress} defaultValue={rowsArr[i].email}/>:""}</td>)
-    //         // Галочка скрыть студента из списка
-    //         cell.push(<td className="center-text" id={(i+1)+"#6#"+rowsArr[i].id} key={"r"+(i+1)+"c6"}>
-    //             {/*<Checkbox onclick={this.changeState.bind(this)} id={(i+1)+"#6_1#"+rowsArr[i].id} onclick2={this.changeState.bind(this)} name={"isout"+(i+1)} defelem={!!rowsArr[i].isout} label=""/>*/}
-    //             <input type="checkbox" onChange={this.changeState.bind(this)} id={(i+1)+"#6_1#"+rowsArr[i].id} checked={this.state.checkedMap.has((i+1)+"#6_1#"+rowsArr[i].id)}/>
-    //         </td>)
-    //         // Реальный без Email
-    //         cell.push(<td className="center-text" id={(i+1)+"#7#"+rowsArr[i].id} key={"r"+(i+1)+"c7"}>
-    //             {/*<Checkbox onclick={this.changeState.bind(this)} id={(i+1)+"#6_1#"+rowsArr[i].id} onclick2={this.changeState.bind(this)} name={"isout"+(i+1)} defelem={!!rowsArr[i].isout} label=""/>*/}
-    //             <input type="checkbox" onChange={this.changeState.bind(this)} id={(i+1)+"#7_1#"+rowsArr[i].id} checked={this.state.checkedMap.has((i+1)+"#7_1#"+rowsArr[i].id)}/>
-    //         </td>)
-    //         cell.push(<td className="left-text" style={{"paddingLeft" : "5px", "paddingRight" : "5px", "fontSize" : "0.8em"}} id={(i+1)+"#5#"+rowsArr[i].id} key={"r"+(i+1)+"c5"} onClick={this.onClick.bind(this)}>{rowsArr[i].memo}{(row===(i+1)&&column===5&&withInput)?<input type="text" id={(i+1)+"#5#"+rowsArr[i].id} className="inputEditor" onChange={this.onInputChange} onKeyPress={this.onInputKeyPress} defaultValue={rowsArr[i].memo}/>:""}</td>)
-    //         rows.push(<tr key={i}>{cell}</tr>)
-    //     }
-    //     return rows;
-    // }
+
+    createStatTableRows(rowsArr, onInputChange, withInput, row, column, classNameOfTD, checkedMap) {
+        console.log("createStatTableRows", row, column, rowsArr)
+        {/*{stats.map((item, i)=>(<tr key={"tr"+i}><td>{(new Date(item.dd)).toLocaleDateString()}</td>*/}
+        {/*<td>{item.hh}</td>*/}
+        {/*<td>{(new Date(item.min)).toLocaleTimeString()}</td>*/}
+        {/*<td>{(new Date(item.max)).toLocaleTimeString()}</td>*/}
+        {/*<td>{item.diff}</td><td>{item.cnt}</td>*/}
+        {/*<td>{item.tomark===null?"":item.tomark}</td></tr>))}*/}
+        // [
+        //     {name: "Дата", width : "80"} ,
+        //     {name: "Час", width : "20"},
+        //     {name: "Начало", width : "180"},
+        //     {name: "Конец", width : "180"},
+        //     {name: "Минут", width : "20"},
+        //     {name: "Оценок", width : "20"},
+        //     {name: "Сек/оценку", width : "40"},
+        // ]
+        let cell = [],
+            rows = []
+        if (rowsArr) {
+            for (let i = 0; i < rowsArr.length; i++) {
+                cell = []
+                // isNewDate = !mp.has(rowsArr[i].ondate)
+                // mp.set(rowsArr[i].ondate, true)
+                cell.push(<td style={{paddingLeft: "2px", paddingRight: "2px", width : "80px", fontSize : "0.8em"}}
+                              id={(i + 1) + "#2#" + rowsArr[i].id}
+                              key={"r" + (i + 1) + "c2"}>
+                    {(new Date(rowsArr[i].dd)).toLocaleDateString()}
+                </td>)
+                cell.push(<td style={{paddingLeft: "2px", paddingRight: "2px", textAlign: "right", width : "50px", fontSize : "0.8em"}}
+                              id={(i + 1) + "#3#" + rowsArr[i].id}
+                              key={"r" + (i + 1) + "c3"}>
+                    {rowsArr[i].hh}
+                </td>)
+                cell.push(<td
+                    style={{paddingLeft: "2px", paddingRight: "2px", textAlign: "center", width : "80px", fontSize: "0.8em"}}
+                    id={(i + 1) + "#4#" + rowsArr[i].id}
+                    key={"r" + (i + 1) + "c4"}>
+                    {(new Date(rowsArr[i].min)).toLocaleTimeString()}
+                </td>)
+                cell.push(<td
+                    style={{paddingLeft: "2px", paddingRight: "2px", textAlign: "center", width : "80px", "fontSize": "0.8em"}}
+                    id={(i + 1) + "#5#" + rowsArr[i].id}
+                    key={"r" + (i + 1) + "c5"}>
+                    {(new Date(rowsArr[i].max)).toLocaleTimeString()}
+                </td>)
+                cell.push(<td
+                    style={{paddingLeft: "2px", paddingRight: "2px", textAlign: "center", width : "80px", "fontSize": "0.8em"}}
+                    id={(i + 1) + "#6#" + rowsArr[i].id}
+                    key={"r" + (i + 1) + "c6"}>
+                    {rowsArr[i].diff}
+                </td>)
+                cell.push(<td
+                    style={{paddingLeft: "2px", paddingRight: "2px", textAlign: "center", width : "80px", "fontSize": "0.8em"}}
+                    id={(i + 1) + "#7#" + rowsArr[i].id}
+                    key={"r" + (i + 1) + "c7"}>
+                    {rowsArr[i].cnt}
+                </td>)
+                cell.push(<td
+                    style={{paddingLeft: "2px", paddingRight: "2px", textAlign: "center", width : "80px", "fontSize": "0.8em"}}
+                    id={(i + 1) + "#8#" + rowsArr[i].id}
+                    key={"r" + (i + 1) + "c8"}>
+                    {rowsArr[i].tomark===null?"":rowsArr[i].tomark}
+                </td>)
+                rows.push(<tr key={i}>{cell}</tr>)
+            }
+        }
+        return rows;
+    }
+
     getLangCounters=()=>{
         return this.props.aliasesList.length + "/" + this.props.aliasesList.filter(item=>true)
     }
@@ -350,20 +413,34 @@ class AdminPageAdmin extends Component {
 
                 <div className="tableStats">
                     <div className="h4">Статистика</div>
-                    <table>
-                        <thead>
-                        {this.head}
-                        </thead>
-                        <tbody>
-                            {stats.map((item, i)=>(<tr key={"tr"+i}><td>{(new Date(item.dd)).toLocaleDateString()}</td>
-                                                                        <td>{item.hh}</td>
-                                                                        <td>{(new Date(item.min)).toLocaleTimeString()}</td>
-                                                                        <td>{(new Date(item.max)).toLocaleTimeString()}</td>
-                                                                        <td>{item.diff}</td><td>{item.cnt}</td>
-                                                                        <td>{item.tomark===null?"":item.tomark}</td></tr>))}
-                        </tbody>
-                     </table>
+                    <UniversalTable head={this.headStat}
+                                    rows={stats}
+                                    createTableRows={this.createStatTableRows}
+                                    classNameOfTD={this.classNameOfTD}
+                                    btncaption={""}
+                                    onstudentclick={null}
+                                    selectedstudent={null}
+                                    objblank={null}
+                                    initrows={()=>{return this.state.stats}}
+                                    kind={""}/>
                 </div>
+
+                {/*<div className="tableStats">*/}
+                    {/*<div className="h4">Статистика</div>*/}
+                    {/*<table>*/}
+                        {/*<thead>*/}
+                        {/*{this.head}*/}
+                        {/*</thead>*/}
+                        {/*<tbody>*/}
+                            {/*{stats.map((item, i)=>(<tr key={"tr"+i}><td>{(new Date(item.dd)).toLocaleDateString()}</td>*/}
+                                                                        {/*<td>{item.hh}</td>*/}
+                                                                        {/*<td>{(new Date(item.min)).toLocaleTimeString()}</td>*/}
+                                                                        {/*<td>{(new Date(item.max)).toLocaleTimeString()}</td>*/}
+                                                                        {/*<td>{item.diff}</td><td>{item.cnt}</td>*/}
+                                                                        {/*<td>{item.tomark===null?"":item.tomark}</td></tr>))}*/}
+                        {/*</tbody>*/}
+                     {/*</table>*/}
+                {/*</div>*/}
             </div>
 
         )

@@ -3,7 +3,7 @@
  */
 import React, { Component } from 'react';
 import './subjectlist.css'
-// import {subjectsforclasses} from '../helpers'
+import {getSubjFieldName} from '../../js/helpers'
 import { connect } from 'react-redux'
 import AddSubject from "../AddSubject/addsubject";
 
@@ -11,12 +11,12 @@ import AddSubject from "../AddSubject/addsubject";
 
 class SubjectList extends Component {
     state = {
-        map : new Map(this.props.selectedsubjects.map(obj=>[obj.subj_key, obj.sub_name_ua])), //new Map()//this.props.selectedsubjects.reduce((map, obj) => (map[obj.key] = obj.val, map), {}),
+        map : new Map(this.props.selectedsubjects.map(obj=>[obj.subj_key, obj[getSubjFieldName(this.props.userSetup.langCode)]])), //new Map()//this.props.selectedsubjects.reduce((map, obj) => (map[obj.key] = obj.val, map), {}),
         showAddSubject: false
     }
 
     componentDidMount(){
-        console.log("componentDidMount", this.state.map, this.props.selectedsubjects)
+        console.log("subjectList: componentDidMount", this.state.map, this.props.selectedsubjects, this.props.userSetup.selectedsubjects, this.props.userSetup)
     }
     addClass(e) {
         // let isActive = false
@@ -65,9 +65,9 @@ class SubjectList extends Component {
         // console.log("subjects",subjects, subjects())
         // const {classnumber, step, selectedsubjects} = this.props;
         const {step} = this.props;
+        const {langCode, classID, userID} = this.props.userSetup
 
         let subjArray = []
-
             switch (step) {
                 case 4:
                      subjArray = this.props.subjects_list;
@@ -81,7 +81,7 @@ class SubjectList extends Component {
             }
         // }
         // console.log("subjArray2", subjArray, "selectedsubjects", selectedsubjects, this.state.map)
-        console.log("this.state.showAddSubject", this.state.showAddSubject)
+        console.log("this.state.showAddSubject", this.state.showAddSubject, langCode, getSubjFieldName(langCode))
         return (
 
             <div id="subjects">
@@ -93,12 +93,12 @@ class SubjectList extends Component {
                          key={key}
                          id={value.subj_key}
                          onClick={this.addClass.bind(this)}>
-                        {value.subj_name_ua}
+                        {value[getSubjFieldName(langCode)]}
                     </div>)
                     }
                     {this.state.showAddSubject?<AddSubject firehide={this.hideAddSubj.bind(this)}
-                                                           classid={this.props.userSetup.classID}
-                                                           userid ={this.props.userSetup.userID}
+                                                           classid={classID}
+                                                           userid ={userID}
                                                            title={"Новый предмет"}
                                                             />:""}
                 </div>

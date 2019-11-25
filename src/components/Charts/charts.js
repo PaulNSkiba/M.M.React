@@ -3,9 +3,8 @@
  */
 import React, { Component } from 'react';
 import { connect } from 'react-redux'
-// import {LineChart, BarChart} from 'react-easy-chart';
 import Select from '../Select/select'
-import {AddDay} from '../../js/helpers'
+import {AddDay, getSubjFieldName} from '../../js/helpers'
 import Chart from "react-google-charts";
 
 import "./charts.css"
@@ -220,7 +219,7 @@ class Charts extends Component {
             return "Нет оценок за " + this.state.periodDays + "дн."
     }
     prepDataForBarChart() {
-        let {avg_marks} = this.props.userSetup;
+        let {avg_marks, langCode} = this.props.userSetup;
         let colors = [   "#87DD97", "#7DA8E6", "#C6EFCE", "#409be6", "silver", "gold", "#e5e4e2", "#C00000",'green','#006EFF','#00FF08', "#b87333", "#FFEB9C", "#FF8594", ]
         let retArr = [], tempArr = [] // datestr = '',
         retArr.push(["Предмет", "Средняя оценка", { role: "style" }])
@@ -229,7 +228,7 @@ class Charts extends Component {
         ))
         if (Object(tempArr[0]).marks) {
             for (let i = 0; i < Object(tempArr[0]).marks.length; i++) {
-                retArr.push([Object(tempArr[0]).marks[i].subj_name_ua, Number(Object(tempArr[0]).marks[i].mark), colors.length>i?colors[i]:"lightgrey"])
+                retArr.push([Object(tempArr[0]).marks[i][getSubjFieldName(langCode)], Number(Object(tempArr[0]).marks[i].mark), colors.length>i?colors[i]:"lightgrey"])
             }
         }
 
@@ -241,7 +240,7 @@ class Charts extends Component {
         let data = []
         let data2 = []
         let place = ""
-        let {studSubj, userID} = this.props.userSetup
+        let {studSubj, userID, langCode} = this.props.userSetup
         let map = new Map()
 
         if (!userID) return (<div></div>)
@@ -249,8 +248,7 @@ class Charts extends Component {
         if (!studSubj.size) {
             let {subjects_list : subjlist} = this.props.userSetup
             map.clear()
-            // const name = subjlist[0].subj_name_ua
-            map.set(subjlist[0].subj_key, subjlist[0].subj_name_ua)
+            map.set(subjlist[0].subj_key, subjlist[0][getSubjFieldName(langCode)])
             studSubj = map
         }
 
