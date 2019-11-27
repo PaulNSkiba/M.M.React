@@ -10,16 +10,34 @@ import AddSubject from "../AddSubject/addsubject";
 // import subjectsforclasses from './subjectsforclasses'
 
 class SubjectList extends Component {
-    state = {
-        map : new Map(this.props.selectedsubjects.map(obj=>[obj.subj_key, obj[getSubjFieldName(this.props.userSetup.langCode)]])), //new Map()//this.props.selectedsubjects.reduce((map, obj) => (map[obj.key] = obj.val, map), {}),
-        showAddSubject: false
+    constructor(props) {
+        super(props);
+        // Don't call this.setState() here!
+        const {selectedSubjects, langCode} = this.props.userSetup;
+        console.log("SubjectList", langCode, getSubjFieldName(langCode))
+
+        this.state = {
+//            map : new Map(selectedSubjects.map(obj=>[obj.subj_key, obj[getSubjFieldName(langCode)]])), //new Map()//this.props.selectedsubjects.reduce((map, obj) => (map[obj.key] = obj.val, map), {}),
+            map : new Map(selectedSubjects.map(obj=>[obj.subj_key, obj[getSubjFieldName(langCode)]])), //new Map()//this.props.selectedsubjects.reduce((map, obj) => (map[obj.key] = obj.val, map), {}),
+
+            showAddSubject: false
+        };
+        // this.handleClick = this.handleClick.bind(this);
     }
+
+    // state = {
+    //     // map : new Map(this.props.selectedsubjects.map(obj=>[obj.subj_key, obj[getSubjFieldName(this.props.userSetup.langCode)]])), //new Map()//this.props.selectedsubjects.reduce((map, obj) => (map[obj.key] = obj.val, map), {}),
+    //     map : new Map(this.props.selectedsubjects.map(obj=>[obj.subj_key, obj[getSubjFieldName(this.props.userSetup.langCode)]])), //new Map()//this.props.selectedsubjects.reduce((map, obj) => (map[obj.key] = obj.val, map), {}),
+    //
+    //     showAddSubject: false
+    // }
 
     componentDidMount(){
         console.log("subjectList: componentDidMount", this.state.map, this.props.selectedsubjects, this.props.userSetup.selectedsubjects, this.props.userSetup)
     }
     addClass(e) {
         // let isActive = false
+        const {subjects_list} = this.props.userSetup;
 
         if (this.props.studentid>0) return;
         let map = this.state.map
@@ -38,7 +56,7 @@ class SubjectList extends Component {
                     }
                     this.setState({map})
 
-                    this.props.changestate("selectedSubjects", this.props.subjects_list.filter(value => map.has(value.subj_key)))
+                    this.props.changestate("selectedSubjects", subjects_list.filter(value => map.has(value.subj_key)))
                 }
                 // this.props.changestate("subjCount", "")
                 break;
@@ -65,15 +83,15 @@ class SubjectList extends Component {
         // console.log("subjects",subjects, subjects())
         // const {classnumber, step, selectedsubjects} = this.props;
         const {step} = this.props;
-        const {langCode, classID, userID} = this.props.userSetup
+        const {langCode, classID, userID, subjects_list, selectedSubjects} = this.props.userSetup
 
         let subjArray = []
             switch (step) {
                 case 4:
-                     subjArray = this.props.subjects_list;
+                     subjArray = subjects_list;
                     break;
                 case 5:
-                    subjArray = this.props.selectedsubjects
+                    subjArray = selectedSubjects
                     break;
                 default:
                     //  + 1

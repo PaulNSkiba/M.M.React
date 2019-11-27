@@ -103,7 +103,7 @@ class App extends Component {
         // console.log("componentWillMount1")
         (async () => {
             this.getSessionID();
-            await this.getGeo();
+            await this.getGeo2();
             await this.getClasses();
             await this.getStats();
             await this.getAsync(localStorage.getItem("langCode") ? localStorage.getItem("langCode") : defLang)
@@ -321,26 +321,29 @@ class App extends Component {
         let countryCode = "UA"
         // if (this.state.myCountryCode!==defLang&&this.state.myCountryCode)
         console.log("getGeo2", countryCode, defLang);
+        // axios.get(`${API_URL}getgeo`)
+        //     .then(response => {
+        //         console.log("getGeo2", response.data);})
+
         if (!(localStorage.getItem("statsDate") === (new Date().toLocaleDateString())) || !(localStorage.getItem("langCode") === localStorage.getItem("myCountryCode"))) {
-            axios.get("http://gd.geobytes.com/GetCityDetails")
+            axios.get(`${API_URL}getgeo`)
                 .then(response => {
-                    console.log("getGeo2", response.data);
-                    axios.get("http://api.ipapi.com/" + response.data.geobytesremoteip + "?access_key=db04ca03c9aac62c6b107e089e5acba1")
-                        .then(response => {
-                            if (!(response.data.city === localStorage.getItem("city"))) {
-                                countryCode = response.data.country_code
+                           console.log("getGeo2", response.data);
+                           if (!(response.data.city === localStorage.getItem("city"))) {
+                                const {city, country, iso_code} = response.data
+                                countryCode = iso_code
                                 this.setState(
                                     {
-                                        myCity: response.data.city,
-                                        myCountry: response.data.country_name,
-                                        myCountryCode: response.data.country_code,
+                                        myCity: city,
+                                        myCountry: country,
+                                        myCountryCode: iso_code,
                                     }
                                 )
-                                localStorage.setItem("myCity", response.data.city)
-                                localStorage.setItem("myCountry", response.data.country_name)
-                                localStorage.setItem("myCountryCode", response.data.country_code)
-                                localStorage.setItem("langCode", arrLangs.includes(response.data.country_code) ? response.data.country_code : defLang)
-                                this.props.onReduxUpdate("LANG_CODE", arrLangs.includes(response.data.country_code) ? response.data.country_code : defLang)
+                                localStorage.setItem("myCity", city)
+                                localStorage.setItem("myCountry", country)
+                                localStorage.setItem("myCountryCode", iso_code)
+                                localStorage.setItem("langCode", arrLangs.includes(iso_code) ? iso_code : defLang)
+                                this.props.onReduxUpdate("LANG_CODE", arrLangs.includes(iso_code) ? iso_code : defLang)
                             }
                         })
                         .catch(response => {
@@ -357,21 +360,6 @@ class App extends Component {
                             localStorage.setItem("myCountryCode", "UA")
                             localStorage.setItem("langCode", defLang)
                         })
-                })
-                .catch(response => {
-                    this.setState(
-                        {
-                            myCity: "Kyiv",
-                            myCountry: "Ukraine",
-                            myCountryCode: "UA",
-                        }
-                    )
-                    localStorage.setItem("myCity", "Kyiv")
-                    localStorage.setItem("myCountry", "Ukraine")
-                    localStorage.setItem("myCountryCode", "UA")
-                    localStorage.setItem("langCode", defLang)
-                    this.props.onReduxUpdate("LANG_CODE", defLang)
-                })
         }
         else {
             // console.log("getGEO", this.state.myCountryCode, this.state.myCountryCode===undefined, this.state.myCountryCode==="undefined")
@@ -569,14 +557,27 @@ class App extends Component {
                 break;
             case "subjCount" :
                 // console.log("selectedSubjsArray", selectedSubjects);
-                json = `{"subjects_count":"${subjects_list.length + '/' + selectedSubjects[0] === "" ? 0 : selectedSubjects.length}"}`;
+                json = `{"subjects_count":"${selectedSubjects[0] === "" ? 0 : selectedSubjects.length}/${subjects_list.length}"}`;
                 break;
             case "selectedSubjects" : // Выбранные предметы
-                json = `{"selected_subjects":[${value.map(val => `{"subj_key":"${val.subj_key}","${getSubjFieldName(langCode)}":"${val[getSubjFieldName(langCode)]}"}`)}]}`;
+                // json = `{"selected_subjects":[${value.map(val => `{"subj_key":"${val.subj_key}","${getSubjFieldName(langCode)}":"${val[getSubjFieldName(langCode)]}"}`)}]}`;
+                json = `{"selected_subjects":[${value.map(val => `{"subj_key":"${val.subj_key}"
+                                                                    ,"${"subj_name_ua"}":"${val["subj_name_ua"]}"
+                                                                    ,"${"subj_name_ru"}":"${val["subj_name_ru"]}"
+                                                                    ,"${"subj_name_en"}":"${val["subj_name_en"]}"
+                                                                    ,"${"subj_name_gb"}":"${val["subj_name_gb"]}"
+                                                                    ,"${"subj_name_de"}":"${val["subj_name_de"]}"
+                                                                    ,"${"subj_name_fr"}":"${val["subj_name_fr"]}"
+                                                                    ,"${"subj_name_it"}":"${val["subj_name_it"]}"
+                                                                    ,"${"subj_name_pl"}":"${val["subj_name_pl"]}"
+                                                                    ,"${"subj_name_pt"}":"${val["subj_name_pt"]}"
+                                                                    ,"${"subj_name_es"}":"${val["subj_name_es"]}"
+                                                                    }`)}
+                                                                    ]}`;
                 data = JSON.parse(json);
                 console.log("selected_subjects", value, json);
                 this.props.onSetSetup(data, this.props.userSetup);
-                json = `{"subjects_count":"${subjects_list.length + '/' + value.length}"}`;
+                json = `{"subjects_count":"${value.length}/${subjects_list.length}"}`;
                 break;
             case "markBlank" :
                 let alias = "", pk = 0; //id = value;
@@ -928,7 +929,7 @@ class App extends Component {
             direction, titlekind, withoutholidays, classNumber, selectedSubjects, selectedSubj,
             subjects_list, studentID, studentName, classID, isadmin, loading, langCode } = this.props.userSetup;
 
-        // console.log("LANGLIBRARY", langLibrary, this.state.myCountryCode)
+        console.log("RENDER:APP", selectedSubj)
         // console.log("LANGLIBRARY_AFTER", this.props.userSetup.langLibrary)
         let langLibrary = {}//getLangLibrary()
         if (this.props.userSetup.langLibrary) {
@@ -1336,7 +1337,7 @@ class App extends Component {
                     <div>
                         <TitleBlock
                             title={!isMobile ? `${langLibrary.step} ${!this.isShortList() ? 5 : 4}${langLibrary.step4Descr}` : `${!this.isShortList() ? 5 : 4}${langLibrary.step4DescrMob}`}
-                            caption={!isMobile ? selectedSubj[getSubjFieldName(langCode)] : (selectedSubj.id > 0 ? langLibrary.yes : "")}
+                            caption={!isMobile ? selectedSubj["subj_name_ua"] : (selectedSubj.id > 0 ? langLibrary.yes : "")}
                             done={selectedSubj.id} onclick={this.stepClick.bind(this)}
                             step={!this.isShortList() ? 5 : 4} hide={!this.isShortList() ? step5 : step4}/>
                     </div>
@@ -1631,12 +1632,12 @@ const mapDispatchToProps = dispatch => {
                                 if (userSetup.userID && userSetup.isadmin > 0)
                                     instanceAxios().get(API_URL + 'class/' + userSetup.classID + '/' + Object.keys(data)[0] + '/' + Object.values(data)[0])
                                         .then(response => {
-                                            console.log("GROUP_UPDATE")
+                                            console.log("GROUP_UPDATE", response.data)
                                         })
                                         .catch(response => {
-                                            console.log("GROUP_UPDATE_ERROR")
+                                            console.log("GROUP_UPDATE_ERROR", response.data)
                                         })
-
+                                console.log("subjects_count", response.data)
                                 let json = `{"subjects_count":"${response.data.length + "/" + response.data.length}"}`;
                                 dispatch({type: 'UPDATE_SETUP_LOCALLY', payload: JSON.parse(json)});
                                 document.body.style.cursor = 'default';
