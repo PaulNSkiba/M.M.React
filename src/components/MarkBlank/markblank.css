@@ -26,16 +26,12 @@ ul {
 .ul12,.ul5,.ulAF {
     width : 104px;
 }
+.uTT {
+    width : 154px;
+}
 li {
     display: inline-block;
     float: left;
-}
-li a {
-    display: block;
-    color: white;
-    text-align: center;
-    padding: 14px 18px;
-    text-decoration: none;
 }
 li.li-title {
     display: block;
@@ -66,18 +62,23 @@ li a:hover {
     0% {opacity: 0;}
     100% {opacity: 1;}
 }
-.dropdown-content3 {
+.dropdown-content3, .dropdown-content3-line {
     display: flex;
     justify-content: space-around;
-    color: white;
     font-size: 0.7em;
     font-weight: 600;
     width: 100%;
 }
-.dropdown-content3 ul {
+.dropdown-content3-line {
+    color: black;
+}
+.dropdown-content3 {
+    color: white;
+}
+.dropdown-content3 ul, .dropdown-content3-line ul {
     width: 100%;
 }
-.dropdown-content3 ul li{
+.dropdown-content3 ul li, .dropdown-content3-line ul li{
     width: 33.33%;
 }
 .dropdown-content3 ul.fivemarks li{
@@ -100,8 +101,8 @@ li a:hover {
 .dropdown-content0 ul li{
     width: 100%;
 }
-.marks12, .marks9,.marks6,.marks3,.marks0{
-    color : var(--mark-text)
+.marks12,.marks9,.marks6,.marks3,.marks0,.timetable0,.timetable1,.timetable2,.timetable3{
+    /*color : var(--mark-text)*/
 }
 .marks12{
     background-color: var(--excel-mark);
@@ -117,6 +118,26 @@ li a:hover {
 }
 .marks0{
     background-color: var(--erase-mark);
+}
+.marksHeader {
+    background-color: var(--selected-item);
+    color : #fff;
+}
+.timetable0{
+    background-color: var(--timetable0);
+    color : #2f75b5;
+}
+.timetable1{
+    background-color: var(--timetable1);
+    color : #2f75b5;
+}
+.timetable2{
+    background-color: var(--timetable2);
+    color : #2f75b5;
+}
+.timetable3{
+    background-color: var(--timetable3);
+    color : #2f75b5;
 }
 #markblank{
     /*display: none;*/
@@ -145,7 +166,14 @@ li a:hover {
     margin: -5px 0 0 15px;
     /*width : 100%;*/
 }
-ul.marks12>li>a,ul.marks9>li>a,ul.marks6>li>a,ul.marks3>li>a,ul.marks0>li>a {
+/*li a {*/
+    /*display: block;*/
+    /*color: white;*/
+    /*text-align: center;*/
+    /*padding: 14px 18px;*/
+    /*text-decoration: none;*/
+/*}*/
+ul.marks12>li>a,ul.marks9>li>a,ul.marks6>li>a,ul.marks3>li>a,ul.marks0>li>a,ul.timetable0>li>a,ul.timetable1>li>a,ul.timetable2>li>a,ul.timetable3>li>a {
     display: block;
     text-align: center;
     padding: 10px 10px;
@@ -153,9 +181,24 @@ ul.marks12>li>a,ul.marks9>li>a,ul.marks6>li>a,ul.marks3>li>a,ul.marks0>li>a {
     font-size: 1.2em;
     font-weight: 600;
 }
-/*.dontshow{*/
-    /*!*display: none;*!*/
-/*}*/
+ul.marks12>li>a,ul.marks9>li>a {
+    color : var(--excel-mark-font);
+}
+ul.marks6>li>a {
+    color : var(--norm-mark-font);
+}
+ul.marks3>li>a {
+    color : var(--msg-hw-color);
+}
+ul.marks0>li>a {
+    color : #4d4d4d;
+}
+ul.timetable0>li>a,ul.timetable1>li>a,ul.timetable2>li>a,ul.timetable3>li>a {
+    color : var(--selected-item-hard);
+}
+ul.marks12>li>a:hover,ul.marks9>li>a:hover,ul.marks6>li>a:hover,ul.marks3>li>a:hover,ul.marks0>li>a:hover,ul.timetable0>li>a:hover,ul.timetable1>li>a:hover,ul.timetable2>li>a:hover,ul.timetable3>li>a:hover {
+    color : white;
+}
 .show {
     display: block;
 }

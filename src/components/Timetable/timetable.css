@@ -1,0 +1,16 @@
+.subjectsByDayOfWeek {
+    /*border : 1px solid #000;*/
+    display: flex;
+    flex-wrap: wrap;
+    /*padding-right : 10px;*/
+    /*padding-bottom: 10px;*/
+    width : 60%;
+}
+.timetableMain {
+    display : flex;
+
+}
+.subjListTableBlock{
+    margin-right: 10px;
+    margin-bottom: 10px;
+}

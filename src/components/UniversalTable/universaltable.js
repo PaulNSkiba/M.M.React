@@ -5,7 +5,7 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux'
 import { userLoggedOut } from '../../actions/userAuthActions'
 import { AUTH_URL, API_URL, STUDENTS_UPDATE_URL } from '../../config/config'
-import { instanceAxios, mapStateToProps, toYYYYMMDD } from '../../js/helpers'
+import { instanceAxios, mapStateToProps, toYYYYMMDD, axios2 } from '../../js/helpers'
 import '../../containers/App.css'
 import './universaltable.css'
 
@@ -36,6 +36,7 @@ class UniversalTable extends Component {
         this.onSelectStudent = this.props.onstudentclick
         this.handleDate = this.handleDate.bind(this)
         this.onUserCreate = this.onUserCreate.bind(this)
+        this.onResetStudent = this.props.onresetstudent
     }
     componentDidMount() {
         // console.log("UniversalTable.DidMount")
@@ -219,65 +220,114 @@ class UniversalTable extends Component {
         // console.log("onInputChange", e.target)
     }
     updateSource=(column, id, value, key)=>{
-        console.log("updateSource", column, id, value, key)
+        console.log("updateSource", column, id, value, key, this.props.kind)
+        // return
         const {classNameOfTD} = this.props
+        const {userID, classID, userName} = this.props.userSetup
         const {arrRows : rows, row : row_state, column : column_state, checkedMap} = this.state
         let url, uniqid, arr, newarr
+        uniqid = new Date().getTime() + userName
         let json = "", data = "", isCheckBox = false;
         switch (this.props.kind) {
             case 'students' :
-                switch (column) {
-                    case 2:
-                        this.props.rows[this.state.row - 1].student_nick = value
-                        json = `{"student_nick":"${value}"}`;
-                        break;
-                    case 3:
-                        this.props.rows[this.state.row - 1].student_name = value
-                        json = `{"student_name":"${value}"}`;
-                        break;
-                    case 4:
-                        this.props.rows[this.state.row - 1].email = value
-                        json = `{"email":"${value}"}`;
-                        break;
-                    case 5:
-                        this.props.rows[this.state.row - 1].memo = value
-                        json = `{"memo":"${value}"}`;
-                        break;
-                    case 6:
-                        checkedMap.has(value) ? checkedMap.delete(value) : checkedMap.set(value, true)
-                        json = `{"isout":"${checkedMap.has(value) ? 1 : 0}"}`;
-                        this.setState({checkedMap});
-                        isCheckBox = true;
-                        console.log("checkedMap", checkedMap, checkedMap.has(value), value)
-                        break;
-                    case 7:
-                        checkedMap.has(value) ? checkedMap.delete(value) : checkedMap.set(value, true)
-                        json = `{"isRealName":"${checkedMap.has(value) ? 1 : 0}"}`;
-                        this.setState({checkedMap});
-                        isCheckBox = true;
-                        console.log("checkedMap", checkedMap, checkedMap.has(value), value)
-                        break;
-                    default:
-                        break;
-                }
-                if (json) {
-                    data = JSON.parse(json);
-                    this.props.onStudentUpdate(this.props.rows)
-                    instanceAxios().post(STUDENTS_UPDATE_URL + '/' + id, JSON.stringify(data))
-                        .then(response => {
-                            console.log('UPDATE_STUDENTS_REMOTE', response.data)
-                        })
-                        .catch(response => {
-                            console.log(response);
-                        })
-                }
-                this.setState({ row : -1, column :-1, rows: this.createTableRows(rows, this.onInputChange, isCheckBox, row_state, column_state, classNameOfTD, checkedMap)})
-                break;
+                if (Number(id)) {
+                        switch (column) {
+                            case 2:
+                                this.props.rows[this.state.row - 1].student_nick = value
+                                json = `{"student_nick":"${value}"}`;
+                                break;
+                            case 3:
+                                this.props.rows[this.state.row - 1].student_name = value
+                                json = `{"student_name":"${value}"}`;
+                                break;
+                            case 4:
+                                this.props.rows[this.state.row - 1].email = value
+                                json = `{"email":"${value}"}`;
+                                break;
+                            case 5:
+                                this.props.rows[this.state.row - 1].memo = value
+                                json = `{"memo":"${value}"}`;
+                                break;
+                            case 6:
+                                checkedMap.has(value) ? checkedMap.delete(value) : checkedMap.set(value, true)
+                                json = `{"isout":"${checkedMap.has(value) ? 1 : 0}"}`;
+                                this.setState({checkedMap});
+                                isCheckBox = true;
+                                console.log("checkedMap", checkedMap, checkedMap.has(value), value)
+                                break;
+                            case 7:
+                                checkedMap.has(value) ? checkedMap.delete(value) : checkedMap.set(value, true)
+                                json = `{"isRealName":"${checkedMap.has(value) ? 1 : 0}"}`;
+                                this.setState({checkedMap});
+                                isCheckBox = true;
+                                console.log("checkedMap", checkedMap, checkedMap.has(value), value)
+                                break;
+                            default:
+                                break;
+                        }
+                        if (json) {
+                            data = JSON.parse(json);
+                            // url = `${API_URL}student/addone`
+                            this.props.onStudentUpdate(this.props.rows)
+                            // instanceAxios().post(STUDENTS_UPDATE_URL + '/' + id, JSON.stringify(data))
+                                axios2('post', `${STUDENTS_UPDATE_URL}/${id}`, JSON.stringify(data))
+                                .then(response => {
+                                    console.log('UPDATE_STUDENTS_REMOTE', response.data)
+                                })
+                                .catch(response => {
+                                    console.log(response);
+                                })
+                        }
+                    }
+                    else {
+                        if ((column===2||column===3)) {
+                            // $stud->student_name = $r->student_name;
+                            // $stud->student_nick = $r->student_nick;
+                            // $stud->rowno = $r->rowno;
+                            // $stud->class_id = $r->class_id;
+                            // $stud->user_id = $r->user_id;
+                            const row = key.split('#')[0]
+                            json = `{
+                                    "${column===3?"student_name":"student_nick"}":"${value}",
+                                    "rowno":${row},
+                                    "class_id":${classID},
+                                    "user_id":${userID},
+                                    "uniqid":"${uniqid}",
+                                    "email":"${""}"
+                                }`;
+                            console.log("NEWSTUDENT", json)
+                            data = JSON.parse(json);
+                            console.log("NEWSTUDENT", json, data)
+                            url = `${API_URL}student/addone`
+                            // this.props.onStudentUpdate(this.props.rows)
+                            // instanceAxios().post(STUDENTS_UPDATE_URL + '/' + id, JSON.stringify(data))
+                                axios2('post', url, JSON.stringify(data))
+                                .then(response => {
+                                    console.log('CREATE_STUDENT', response.data, this.props.rows)
+                                    const rows = this.props.rows.map(item=>{
+                                        if (Number(item.rowno) === Number(row)) {
+                                            item = response.data
+                                        }
+                                        return item
+                                    })
+                                    this.props.onStudentUpdate(rows)
+                                })
+                                .catch(response => {
+                                    console.log('CREATE_STUDENT_ERROR', response);
+                                })
+                        }
+                    }
+                    this.setState({
+                        row: -1,
+                        column: -1,
+                        rows: this.createTableRows(rows, this.onInputChange, isCheckBox, row_state, column_state, classNameOfTD, checkedMap)
+                    })
+                    break;
+
             case "aliases" :
                 const   alias =  String(key.split('#')[3]),
                         llw_id = Number(key.split('#')[4])
                 url = ''
-                uniqid = new Date().getTime() + this.props.userSetup.userName
                 arr = this.props.userSetup.aliasesList
                 newarr = arr.map(item=>{
                     if (item.id === id) {
@@ -306,8 +356,6 @@ class UniversalTable extends Component {
                 }
                 if (json) {
                     data = JSON.parse(json);
-                    // this.props.onStudentUpdate(this.props.rows)
-                    // console.log("UPDATE_URL", url, json)
                     instanceAxios().post(url, JSON.stringify(data))
                         .then(response => {
                             // arr = this.props.userSetup.aliasesList
@@ -411,7 +459,6 @@ class UniversalTable extends Component {
                 break;
             case "budgetpaysout" :
                 url =  `${AUTH_URL}/api/budgetpays/update/${id}`
-                uniqid = new Date().getTime() + this.props.userSetup.userName
                 arr = this.props.userSetup.budgetpays
                 newarr = arr.map(item=>{
                     if (item.id === id) {
@@ -567,8 +614,9 @@ class UniversalTable extends Component {
         switch (this.props.kind) {
             case 'students' :
                 arr = this.props.userSetup.students;
-                arr.push(objblank);
+                // arr.push(objblank);
                 rows = this.createTableRows(arr, this.onInputChange, true, row_state, column_state, classNameOfTD, checkedMap)
+                this.scrollToBottom();
                 break;
             case 'budget' :
                 arr = this.props.userSetup.budget;
@@ -707,7 +755,6 @@ class UniversalTable extends Component {
                             if (item.id === id) item.datein = date===null?null:toYYYYMMDD(date)
                             return item
                         });
-                        console.log("onStudentUpdate", arr)
                         this.props.onStudentUpdate(arr)
                     break;
                     case 'start' :
@@ -715,7 +762,6 @@ class UniversalTable extends Component {
                             if (item.id === id) item.paydate = date===null?null:toYYYYMMDD(date)
                             return item
                         });
-                        // console.log("onStudentUpdate", arr)
                         this.props.onReduxUpdate("BUDGETPAYS_UPDATE", arr)
                         break;
                     case 'end' :
@@ -723,7 +769,6 @@ class UniversalTable extends Component {
                             if (item.id === id) item.payend = date===null?null:toYYYYMMDD(date)
                             return item
                         });
-                        // console.log("onStudentUpdate", arr)
                         this.props.onReduxUpdate("BUDGETPAYS_UPDATE", arr)
                         break;
                     default :
@@ -761,10 +806,12 @@ class UniversalTable extends Component {
             case 'students' :
                 reduxrows = this.props.userSetup.students;
                 if (this.addNewRowFlag ) {
+                    objblank.rowno = reduxrows.length + 1;
                     reduxrows.push(objblank);
                     this.addNewRowFlag = false
                 }
-                rows = this.createTableRows(reduxrows, this.onInputChange, true, row_state, column_state, classNameOfTD, checkedMap)
+                // rowsArr, onInputChange, withInput, row, column, classNameOfTD, checkedMap, updateRow
+                rows = this.createTableRows(reduxrows, this.onInputChange, true, row_state, column_state, classNameOfTD, checkedMap, this.props.updatestudentfrom, this.props.updatestudentto)
                 break;
             case 'budget' :
                 reduxrows = this.props.userSetup.students;
@@ -819,15 +866,6 @@ class UniversalTable extends Component {
                                 </tbody>
                             </table>
                         </div>
-                        {/*{window.scroll(0, window.pageYOffset - this.props.scrollStepInPx)}*/}
-                        {/*<table id="simple-board" style={{display: "block", overflowX: "auto"}}>*/}
-                            {/*<thead style={{display: "block"}}>*/}
-                                {/*{head}*/}
-                            {/*</thead>*/}
-                            {/*<tbody style={{overflow: "auto", height: "100px"}}>*/}
-                                {/*{rows}*/}
-                            {/*</tbody>*/}
-                        {/*</table>*/}
                     </div>
                 </div>
             </div>

@@ -1,8 +1,8 @@
 /**
  * Created by Paul on 22.01.2019.
  */
-import { LOGOUTUSER_URL, LOGINUSER_URL, AUTH_URL } from '../config/config'
-import { instanceAxios } from '../js/helpers'
+import { LOGOUTUSER_URL, LOGINUSER_URL, API_URL } from '../config/config'
+import { instanceAxios, toYYYYMMDD, axios2 } from '../js/helpers'
 
 export const userLoggedIn = (email, pwd, provider, provider_id, langLibrary) => {
     return dispatch => {
@@ -24,6 +24,7 @@ export const userLoggedIn = (email, pwd, provider, provider_id, langLibrary) => 
                 dispatch({type: 'ADD_CHAT_MESSAGES', payload : response.data.chatrows});
                 // пробуем записать в LocalStorage имя пользователя, ID, имя и тип авторизации
                 saveToLocalStorage("myMarks.data", email, response.data)
+                window.localStorage.setItem("userSetupDate", toYYYYMMDD(new Date()))
                 window.localStorage.setItem("localChatMessages", response.data.chatrows)
                 document.body.style.cursor = 'default';
                 dispatch({type: 'APP_LOADED'})
@@ -47,26 +48,19 @@ export const userLoggedInByToken = (email, token, kind, langLibrary) => {
         };
         console.log("userLoggedInByToken", data, langLibrary);
         document.body.style.cursor = 'progress';
-        instanceAxios().post(`${AUTH_URL}user`, data)
-            .then(response => {
-                // dispatch({type: 'USER_LOGGEDIN', payload: response.data, langLibrary : langLibrary?langLibrary:getLangLibrary(localStorage.getItem("myCountryCode")?localStorage.getItem("myCountryCode"):"EN")});
-
+        // instanceAxios().get(`${API_URL}user`, data)
+        axios2('get', `${API_URL}user`)
+        .then(response => {
+                response.data.token = token
                 dispatch({type: 'USER_LOGGEDIN', payload: response.data, langLibrary : langLibrary});
-
+                // dispatch({type: "UPDATE_TOKEN", payload: token})
                 dispatch({type: 'ADD_CHAT_MESSAGES', payload : response.data.chatrows});
                 dispatch({type: 'APP_LOADED'})
                 // пробуем записать в LocalStorage имя пользователя, ID, имя и тип авторизации
                 saveToLocalStorage("myMarks.data", email, response.data)
+                window.localStorage.setItem("userSetupDate", toYYYYMMDD(new Date()))
                 window.localStorage.setItem("localChatMessages", response.data.chatrows)
-                // let ls = {}
-                // let {   name : userName, id : userID, class_id : classID } = response.data.user;
-                // let {   token} = response.data;
-                // ls.email = email;
-                // ls.name = userName;
-                // ls.id = userID;
-                // ls.class_id = classID;
-                // ls.token = token;
-                // window.localStorage.setItem("myMarks.data", JSON.stringify(ls));
+
                 document.body.style.cursor = 'default';
             })
             .catch(response => {

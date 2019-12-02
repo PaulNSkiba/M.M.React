@@ -178,13 +178,19 @@ class App extends Component {
 
         if (localStorage.getItem("langLibrary"))
             langLibrary = localStorage.getItem("langLibrary")
+
          if (!(window.localStorage.getItem("myMarks.data") === null) && !(window.localStorage.getItem("userSetup") && window.localStorage.getItem("userSetupDate") === toYYYYMMDD(new Date()))) {
-             let localstorage = JSON.parse(window.localStorage.getItem("myMarks.data"))
-            // this.props.onUserLoggingByToken(email, token, null, langLibrary);
+            console.log("PART1")
+            let localstorage = JSON.parse(window.localStorage.getItem("myMarks.data"))
+             const {token} = localstorage
+            this.props.onReduxUpdate("UPDATE_TOKEN", token)
+            this.props.onUserLoggingByToken(null, token, null, langLibrary);
         }
         else if (window.localStorage.getItem("userSetup") && window.localStorage.getItem("userSetupDate") === toYYYYMMDD(new Date())) {
+             console.log("PART2")
         }
         else {
+             console.log("PART3")
         }
         this.props.onReduxUpdate("IS_MOBILE", this.state.isMobile)
         this.props.onChangeStepsQty(this.isSaveEnabled())
@@ -923,13 +929,12 @@ class App extends Component {
 
     render() {
 
-
         let {
             userID, userName, pupilCount, currentYear, subjCount, currentPeriodDateCount, markBlank,
             direction, titlekind, withoutholidays, classNumber, selectedSubjects, selectedSubj,
-            subjects_list, studentID, studentName, classID, isadmin, loading, langCode } = this.props.userSetup;
+            subjects_list, studentID, studentName, classID, isadmin, loading, langCode, token } = this.props.userSetup;
 
-        console.log("RENDER:APP", selectedSubj)
+        console.log("RENDER:APP")
         // console.log("LANGLIBRARY_AFTER", this.props.userSetup.langLibrary)
         let langLibrary = {}//getLangLibrary()
         if (this.props.userSetup.langLibrary) {

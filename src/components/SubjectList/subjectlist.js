@@ -3,7 +3,7 @@
  */
 import React, { Component } from 'react';
 import './subjectlist.css'
-import {getSubjFieldName} from '../../js/helpers'
+import {getSubjFieldName, mapStateToProps} from '../../js/helpers'
 import { connect } from 'react-redux'
 import AddSubject from "../AddSubject/addsubject";
 
@@ -125,15 +125,6 @@ class SubjectList extends Component {
     }
 }
 
-// export default SubjectList
-// приклеиваем данные из store
-const mapStateToProps = store => {
-    // console.log(store) // посмотрим, что же у нас в store?
-    return {
-        user:       store.user,
-        userSetup:  store.userSetup,
-    }
-}
 const mapDispatchToProps = dispatch => {
     return ({
         onInitState: () => dispatch([]),

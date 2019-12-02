@@ -16,11 +16,18 @@
     --mark-text : #C00000;
     --excel-mark : #87DD97;
     --good-mark: #C6EFCE;
+    --excel-mark-font : #387541;
     --norm-mark: #FFEB9C;
+    --norm-mark-font: #d87b38;
     --bad-mark: #FF8594;
-    --erase-mark: #E0E0E0;
+    --erase-mark: #d4d4d4;
 
     --navbar-color : #f0f0f0;
     --menu-item: #1890e6;
     --menu-homework : #E7AD00;
+
+    --timetable0 : #ddebf7;
+    --timetable1 : #bdd7ee;
+    --timetable2 : #b4c6e7;
+    --timetable3 : #b4c6e7;
 }

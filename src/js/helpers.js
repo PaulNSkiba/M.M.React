@@ -31,6 +31,22 @@ export const instanceAxios=()=>{
         }
     }));
 };
+export const axios2=(method, url, data)=>{
+    let {token} = store.getState().userSetup
+    token = token===null?'':token
+    return (axios({
+        method: `${method}`,
+        url: `${url}`,
+        data : `${data}`,
+        headers: {
+            Authorization: `Bearer ${token}`,
+            Accept: 'application/json',
+            'Content-Type': 'application/json',
+            'Access-Control-Allow-Origin' : '*',
+            'Access-Control-Allow-Methods' : 'GET, POST, PUT, DELETE, OPTIONS',
+        }
+    }))
+}
 let mainDiv = document.createElement("div")//document.getElementById("markblank")
 // let curCell = {r:0, c:0}
 
@@ -370,6 +386,7 @@ export function dateDiffHour(date1, date2) {
     return  Math.round(Number(Math.abs(dt1 - dt2) / 36e5), 0) //Math.floor((Date.UTC(dt2.getFullYear(), dt2.getMonth(), dt2.getDate(), dt2.getHours()) - Date.UTC(dt1.getFullYear(), dt1.getMonth(), dt1.getDate(), dt1.getHours()) ) /(1000 * 60 * 24));
 }
 export let arrOfWeekDays = ['Вс','Пн','Вт','Ср','Чт','Пт','Сб']
+export let arrOfWeekDaysLocal = ['Пн','Вт','Ср','Чт','Пт','Сб','Вс']
 // AddDay function (format MM-DD-YYY)
 export function AddDay(strDate,intNum)
 {

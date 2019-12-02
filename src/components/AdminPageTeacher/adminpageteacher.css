@@ -9,9 +9,9 @@
     width : 100%;
 }
 .addToSchool {
-    border : 1px solid var(--selected-item-background);
+    border : 1px solid var(--selected-item);
     padding : 5px;
-    background-color: var(--menu-item);
+    background-color: var(--selected-item);
     color : var(--msg-left-side);
     font-weight: 600;
     border-radius: 5px;
@@ -42,7 +42,13 @@
     cursor : pointer;
 }
 .flexTD{
-    /*display : flex;*/
-    /*justify-content: space-between;*/
-    /*!*height: auto;*!*/
+}
+.changeStudentButton {
+    background-color : #1890e6;
+    color : #fff;
+    border-radius : 5px;
+}
+.changeStudentButton:hover {
+    background-color : #33ccff;
+    cursor : pointer;
 }

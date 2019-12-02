@@ -345,7 +345,7 @@ class MarksTable extends Component {
         // console.log('mark_date', this.props.userSetup.mark_date.date, this.state.dateStart, this.state.dateEnd, this.state.marks)
         // console.log(this.props)
 
-            for (var idx = 0; idx < (this.props.dayscount + 2); idx++){
+            for (let idx = 0; idx < (this.props.dayscount + 2); idx++){
                 let cellID = `h0c${idx}`
                 switch (idx) {
                     case 0 :

@@ -37,7 +37,7 @@ const initialState = (check)=>{
                     chatSSL: isSSLChat, localChatMessages: [],
                     isMobile: false, aliasesList: [], aliasesLang: "", menuItem : "",
                     budget : [], budgetpays : [],
-                    renderBudget : 1, langCode : "",
+                    renderBudget : 1, langCode : "", studentToChange : 0,
                 }
         }
     return obj
@@ -261,6 +261,10 @@ export function userSetupReducer(state = initialState(true), action) {
             initState.langCode = localStorage.getItem("langCode") ? localStorage.getItem("langCode") : defLang
             // console.log("userSetupReducer", 'USER_LOGGEDOUT', initState)
             return {...initState};
+        case 'UPDATE_TOKEN' :
+            return{...state, token: action.payload}
+        case 'STUDENT_CHANGE' :
+            return{...state, studentToChange: action.payload}
         default :
             return state
     }

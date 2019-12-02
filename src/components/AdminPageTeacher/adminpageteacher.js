@@ -20,6 +20,7 @@ import 'react-flags-select/css/react-flags-select.css';
 import { MARKS_URL } from '../../config/config'
 import Logo from '../../img/LogoMyMsmall.png'
 import SchoolListBlock from '../SchoolListBlock/schoollistblock'
+import Timetable from '../Timetable/timetable'
 
 class AdminPageTeacher extends Component {
     constructor(props) {
@@ -29,6 +30,7 @@ class AdminPageTeacher extends Component {
             isMobile : this.props.userSetup.isMobile,
             stats : [],
             curStudent : 0,
+            studentTo : 0,
             showList : false,
         }
         this.headArray = [
@@ -40,6 +42,7 @@ class AdminPageTeacher extends Component {
             {name: "Реал без email", width : "40px"},
             {name: "Оценок", width : "40px", isvert: true},
             {name: "Переброс оценок на другого", width : "80px"},
+            {name: "Замена", width : "25px", isvert: true},
             {name: "Админ", width : "25px", isvert: true},
             {name: "Учитель", width : "25px", isvert: true},
             {name: "Ученик", width : "25px", isvert: true},
@@ -71,6 +74,7 @@ class AdminPageTeacher extends Component {
         //     {name: "Оценок", width : "5%"},
         // ])
         this.renderStudents=this.renderStudents.bind(this)
+        this.onResetStudent=this.onResetStudent.bind(this)
     }
 
     // Админ
@@ -165,9 +169,12 @@ class AdminPageTeacher extends Component {
     classNameOfTD=(email, verified)=> {
         return email ? (verified ? "left-text verified flexTD" : "left-text verification flexTD") : "left-text flexTD"
     }
-    createTableRows(rowsArr, onInputChange, withInput, row, column, classNameOfTD, checkedMap) {
+    // onResetStudent=()=>{
+    //
+    // }
+    createTableRows(rowsArr, onInputChange, withInput, row, column, classNameOfTD, checkedMap, updateIDfrom, updateIDto) {
         // let {row, column} = this.state
-        console.log("createTableRows", row, column, rowsArr)
+        console.log("createStudentTableRows", rowsArr)
         let cell = [],
             rows = [];
         if (rowsArr) {
@@ -231,8 +238,14 @@ class AdminPageTeacher extends Component {
                     }
                 </select>
             </td>)
+            // Замена
+            cell.push(<td style={{paddingLeft: "2px", paddingRight: "2px", width : "25px", fontSize: "0.8em", textAlign : "center"}}  id={(i + 1) + "#10#" + rowsArr[i].id} key={"r" + (i + 1) + "c10.1"}>
+                {/*<input type="button" onChange={this.changeStudent} id={(i + 1) + "#11#" + rowsArr[i].id}*/}
+                       {/*disabled="disabled" checked={checkedMap.has((i + 1) + "#11#" + rowsArr[i].id)}/>*/}
+                {updateIDfrom===rowsArr[i].id?<div className={"changeStudentButton"} key={"btn"+rowsArr[i].id} onClick={()=>this.onResetStudent(updateIDfrom, updateIDto)}>{">>"}</div>:null}
+            </td>)
             // Админ
-            cell.push(<td style={{paddingLeft: "2px", paddingRight: "2px", width : "25px", fontSize: "0.8em", textAlign : "center"}}  id={(i + 1) + "#10#" + rowsArr[i].id} key={"r" + (i + 1) + "c10"}>
+            cell.push(<td style={{paddingLeft: "2px", paddingRight: "2px", width : "25px", fontSize: "0.8em", textAlign : "center"}}  id={(i + 1) + "#11#" + rowsArr[i].id} key={"r" + (i + 1) + "c10"}>
                 <input type="checkbox" onChange={this.changeState} id={(i + 1) + "#11#" + rowsArr[i].id}
                        disabled="disabled" checked={checkedMap.has((i + 1) + "#11#" + rowsArr[i].id)}/>
                 {/*<button key={"btn"+rowsArr[i].id} onClick={this.onResetStudent}>Привязать</button>*/}
@@ -287,7 +300,7 @@ class AdminPageTeacher extends Component {
     }
 
     createStatTableRows(rowsArr, onInputChange, withInput, row, column, classNameOfTD, checkedMap) {
-        console.log("createStatTableRows", row, column, rowsArr)
+        // console.log("createStatTableRows", row, column, rowsArr)
         const {langCode} = this.props.userSetup
 
         let cell = [],
@@ -360,16 +373,31 @@ class AdminPageTeacher extends Component {
             </option>})
 
     onResetStudent(studentFrom, studentTo) {
+        this.setState({curStudent : -1, studentTo : -1})
+        console.log("onResetStudent", studentFrom, studentTo)
+        // return
+        if (Number(studentFrom)>0&&Number(studentTo)>0) {
+            instanceAxios().get(STUDENTS_GET_URL + `/change/${studentFrom}/${studentTo}`)
+                .then(response => {
+                    console.log("onChangeStudent", response.data)
+                    // this.props.onStopLoading()
+                })
+                .catch(response => {
+                    console.log("onChangeStudent:Error", response.data);
+                    // this.props.onStopLoading()
+                })
+            this.forceUpdate()
+        }
 
     }
     onSelectStudent=(e, id)=>{
-        if (this.props.userSetup.isadmin=1) {
+        if (this.props.userSetup.isadmin===1) {
 
-            this.setState({curStudent: id})
             const student_from = e.target.value.split("#")[0], student_to = e.target.value.split("#")[1]
-
-            console.log("onStudentClick", e.target.value, student_from, student_to, STUDENTS_GET_URL + `/change/${student_from}/${student_to}`)
-            // return
+            this.setState({curStudent: Number(student_from), studentTo : student_to})
+            console.log("onStudentClick", id, e.target.value, student_from, student_to, STUDENTS_GET_URL + `/change/${student_from}/${student_to}`)
+            this.forceUpdate()
+            return
             if (Number(student_from)>0&&Number(student_to)>0) {
                 instanceAxios().get(STUDENTS_GET_URL + `/change/${student_from}/${student_to}`)
                     .then(response => {
@@ -387,10 +415,31 @@ class AdminPageTeacher extends Component {
         }
     }
     render() {
-        let {userID, userName, isadmin, langLibrary} = this.props.userSetup;
+        let {userID, userName, isadmin, langLibrary, classID, classNumber} = this.props.userSetup;
         let {isMobile} = this.state
-        console.log("RENDER_TEACHER")
-        const objBlank = {}
+        console.log("RENDER_TEACHER", this.state.curStudent)
+        const objBlank = {
+            class_id: classID,
+            class_number: classNumber,
+            datein: null,
+            email: null,
+            id: 0,
+            inList: 1,
+            isRealName: null,
+            isadmin: null,
+            isout: 0,
+            marks_count: null,
+            memo: null,
+            photo: null,
+            rowno: null,
+            school_id: null,
+            student_name: "<Заполните имя>",
+            student_nick: "<Заполните ник>",
+            subuser_id: null,
+            user_id: userID,
+            uniqid : localStorage.getItem("langCode") ? localStorage.getItem("langCode") : defLang,
+        }
+
         return (
             <div className="AdminPage">
                 <div className="navbar" style={userID===0?{"justifyContent":  "flex-end"}:{"justifyContent":  "space-between"}}>
@@ -441,7 +490,15 @@ class AdminPageTeacher extends Component {
                                     selectedstudent={this.state.curStudent}
                                     objblank={objBlank}
                                     initrows={()=>{return this.props.userSetup.students}}
-                                    kind={"students"}/>
+                                    kind={"students"}
+                                    updatestudentfrom={this.state.curStudent}
+                                    updatestudentto={this.state.studentTo}
+                                    studentTo={this.state.studentTo}
+                                    onresetstudent={this.onResetStudent}
+                    />
+                </div>
+                <div className="mym-adminpageteacher-tableblock">
+                    <Timetable/>
                 </div>
                 <div className="mym-adminpageteacher-tableblock">
                     <div className="h4">Статистика</div>

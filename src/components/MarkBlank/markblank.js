@@ -152,6 +152,62 @@ class MarkBlank extends Component {
                         </div>
                     )
                 break;
+                case 4 :
+                    return (
+                        <div id="markblank_twelve" className={classNames(selected, withborder)} onClick={this.onClick.bind(this)}>
+                            <div id="leftrect"></div>
+                            <ul className={nohover?"nohover uTT":"uTT"}>
+                                <div className="dropdown-content0">
+                                    <ul className="marksHeader">
+                                        <li>{"№ урока п/п"}</li>
+                                    </ul>
+                                </div>
+                                <div className="dropdown-content3-line">
+                                    <ul className="timetable0">
+                                        <li><a onClick={this.onClickA.bind(this)}>1</a></li>
+                                        <li><a onClick={this.onClickA.bind(this)}>2</a></li>
+                                        <li><a onClick={this.onClickA.bind(this)}>3</a></li>
+                                        <li><a onClick={this.onClickA.bind(this)}>1-2</a></li>
+                                        <li><a onClick={this.onClickA.bind(this)}>2-3</a></li>
+                                        <li><a onClick={this.onClickA.bind(this)}>3-4</a></li>
+                                    </ul>
+                                </div>
+                                <div className="dropdown-content3-line">
+                                    <ul className="timetable1">
+                                        <li><a onClick={this.onClickA.bind(this)}>4</a></li>
+                                        <li><a onClick={this.onClickA.bind(this)}>5</a></li>
+                                        <li><a onClick={this.onClickA.bind(this)}>6</a></li>
+                                        <li><a onClick={this.onClickA.bind(this)}>4-5</a></li>
+                                        <li><a onClick={this.onClickA.bind(this)}>5-6</a></li>
+                                        <li><a onClick={this.onClickA.bind(this)}>6-7</a></li>
+                                    </ul>
+                                </div>
+                                <div className="dropdown-content3-line">
+                                    <ul className="timetable1">
+                                        <li><a onClick={this.onClickA.bind(this)}>7</a></li>
+                                        <li><a onClick={this.onClickA.bind(this)}>8</a></li>
+                                        <li><a onClick={this.onClickA.bind(this)}>9</a></li>
+                                        <li><a onClick={this.onClickA.bind(this)}>7-8</a></li>
+                                        <li><a onClick={this.onClickA.bind(this)}>8-9</a></li>
+                                        <li><a onClick={this.onClickA.bind(this)}>9-10</a></li>
+                                    </ul>
+                                </div>
+                                {/*<div className="dropdown-content3">*/}
+                                    {/*<ul className="marks3">*/}
+                                        {/*<li><a onClick={this.onClickA.bind(this)}>10</a></li>*/}
+                                        {/*<li><a onClick={this.onClickA.bind(this)}>11</a></li>*/}
+                                        {/*<li><a onClick={this.onClickA.bind(this)}>12</a></li>*/}
+                                    {/*</ul>*/}
+                                {/*</div>*/}
+                                <div className="dropdown-content0">
+                                    <ul className="marks0">
+                                        <li><a onClick={this.onClickA.bind(this)}>{langLibrary.toErase}</a></li>
+                                    </ul>
+                                </div>
+                            </ul>
+                        </div>
+                    )
+                    break;
                 default :
                     return null
             }
