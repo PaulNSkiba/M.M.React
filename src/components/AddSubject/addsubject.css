@@ -1,25 +1,26 @@
-.addSubject{
+.addSubject, .addSubjectEx{
     display: block;
     position: absolute;
     z-index: 11;
     border: 2px solid #70c2e6;
     background-color: #e6f6ff;
-    box-shadow: 0px 3px 5px 0px rgba(0, 0, 0, 0.2);
+    box-shadow: 0 3px 5px 0 rgba(0, 0, 0, 0.2);
     width: 200px;
-    height: 90px;
-    /*right: 12%;*/
     right : 5px;
     bottom: 5px;
     padding : 5px;
     color : black;
-    /*margin: 0 -50px 0;*/
-    /*overflow: visible;*/
 }
-
-.addSubject input {
+.addSubject{
+    height: 90px;
+}
+.addSubjectEx{
+    height: 140px;
+}
+.addSubject input, .addSubjectEx input, .addSubjectEx select {
     width: 180px;
     margin : 5px;
 }
-.addSubject button {
+.addSubject button, .addSubjectEx button {
     margin: 8px 5px;
 }

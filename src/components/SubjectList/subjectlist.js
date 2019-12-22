@@ -117,7 +117,8 @@ class SubjectList extends Component {
                     {this.state.showAddSubject?<AddSubject firehide={this.hideAddSubj.bind(this)}
                                                            classid={classID}
                                                            userid ={userID}
-                                                           title={"Новый предмет"}
+                                                           title={"Создать новый"}
+                                                           withselect
                                                             />:""}
                 </div>
             </div>

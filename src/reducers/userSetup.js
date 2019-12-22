@@ -38,7 +38,7 @@ const initialState = (check)=>{
                     isMobile: false, aliasesList: [], aliasesLang: "", menuItem : "",
                     budget : [], budgetpays : [],
                     renderBudget : 1, langCode : "", studentToChange : 0,
-                    curMenuItem : {id : 0, label : ''}, timetable : [],
+                    curMenuItem : {id : 0, label : ''}, timetable : [], subjects : [],
                 }
         }
     return obj
@@ -57,7 +57,7 @@ export function userSetupReducer(state = initialState(true), action) {
                     selected_subjects, selected_subj, students, marks,
                     mark_dates, best_lines, avg_lines, avg_marks, addUserToken,
                     lastmarkssent, emails, homework, stats2, stats3, mark_date,
-                    avgclassmarks, classObj, chatrows, budget, budgetpays, timetable} = action.payload;
+                    avgclassmarks, classObj, chatrows, budget, budgetpays, timetable, subjects} = action.payload;
             let {   name : userName, id : userID, isadmin } = action.payload.user;
             let {   class_number, pupil_count, year_name, perioddayscount,
                     markblank_id, markblank_alias, selected_marker, titlekind,
@@ -76,7 +76,7 @@ export function userSetupReducer(state = initialState(true), action) {
                 isadmin, studentName, studentID, marks, mark_dates, best_lines, avg_lines, avg_marks, addUserToken,
                 cnt_marks, stud_cnt, subj_cnt, lastmarkssent, emails, homework, stats2 : stats2[0], stats3 : stats3[0],
                 mark_date, avgclassmarks, localChatMessages : chatrows, budget, budgetpays, timetable,
-                withoutholidays, withtimetable, onlywithmailstudents}
+                withoutholidays, withtimetable, onlywithmailstudents, subjects}
             if (Object.keys(action.langLibrary).length)
             setup = {...setup, langLibrary : action.langLibrary}
 

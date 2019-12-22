@@ -101,8 +101,9 @@ class App extends Component {
 
     componentWillMount() {
         // console.log("componentWillMount1", this.props.userSetup, window.localStorage.getItem("myMarks.data"), this.props.userSetup.langLibrary)
-        // console.log("componentWillMount1")
+
         (async () => {
+            // console.log("componentWillMount1", localStorage.getItem("langCode"), localStorage.getItem("langCode")?localStorage.getItem("langCode"):defLang)
             this.getSessionID();
             await this.getGeo2();
             await this.getClasses();
@@ -138,7 +139,7 @@ class App extends Component {
             lang = localStorage.getItem("langCode") ? localStorage.getItem("langCode") : defLang
         }
         let langObj = {}
-        console.log("getLangLibrary:start", lang)
+        // console.log("getLangLibrary:start", lang)
         let {token} = store.getState().userSetup
 
         this.props.onReduxUpdate("LANG_CODE", lang)
@@ -192,7 +193,7 @@ class App extends Component {
             this.props.onUserLoggingByToken(null, token, null, langLibrary);
         }
         else if (window.localStorage.getItem("userSetup")) { // && window.localStorage.getItem("userSetupDate") === toYYYYMMDD(new Date())
-             // console.log("PART2", langLibrary)
+             console.log("PART2", langLibrary)
              let localstorage = JSON.parse(window.localStorage.getItem("userSetup"))
              let {token} = localstorage
              this.props.onReduxUpdate("UPDATE_TOKEN", token)
@@ -213,7 +214,7 @@ class App extends Component {
         // console.log("shouldComponentUpdate", this.loading, this.props.userSetup.langLibrary)
         const {chatSessionID, langLibrary : lngLib} = this.props.userSetup
 
-        // console.log("shouldComponentUpdate1", lngLib)
+        // console.log("shouldComponentUpdate1", lngLib, this.loading)
 
         if (this.loading)
             return false
@@ -244,13 +245,14 @@ class App extends Component {
 
     onSelectLang = async countryCode => {
         this.props.onStartLoading()
-        // let lb = this.getAsync(countryCode)//getLangLibrary(localStorage.getItem("langCode")?localStorage.getItem("langCode"):defLang)
+        this.getAsync(countryCode)//getLangLibrary(localStorage.getItem("langCode")?localStorage.getItem("langCode"):defLang)
 
         this.props.onReduxUpdate("LANG_LIBRARY", this.state.langLibrary)
         this.props.onReduxUpdate("LANG_CODE", countryCode)
 
         localStorage.setItem("langCode", countryCode)
         localStorage.setItem("langLibrary", JSON.stringify(this.state.langLibrary))
+        // this.props.onStopLoading()
         // console.log(countryCode)
     }
     /*
@@ -343,17 +345,11 @@ class App extends Component {
     }
 
     getGeo2 = () => {
-        // let countryCode = "UA"
-        // if (this.state.myCountryCode!==defLang&&this.state.myCountryCode)
-        // console.log("getGeo2", countryCode, defLang);
-        // axios.get(`${API_URL}getgeo`)
-        //     .then(response => {
-        //         console.log("getGeo2", response.data);})
 
         if (!(localStorage.getItem("statsDate") === (new Date().toLocaleDateString())) || !(localStorage.getItem("langCode") === localStorage.getItem("myCountryCode"))) {
             axios.get(`${API_URL}getgeo`)
                 .then(response => {
-                           console.log("getGeo2", response.data);
+                           // console.log("getGeo2", response.data);
                            if (!(response.data.city === localStorage.getItem("city"))) {
                                 const {city, country, iso_code} = response.data
                                 // countryCode = iso_code
@@ -367,8 +363,14 @@ class App extends Component {
                                 localStorage.setItem("myCity", city)
                                 localStorage.setItem("myCountry", country)
                                 localStorage.setItem("myCountryCode", iso_code)
-                                localStorage.setItem("langCode", arrLangs.includes(iso_code) ? iso_code : defLang)
-                                this.props.onReduxUpdate("LANG_CODE", arrLangs.includes(iso_code) ? iso_code : defLang)
+
+                               if (!localStorage.getItem("langCode")) {
+                                   localStorage.setItem("langCode", arrLangs.includes(iso_code) ? iso_code : defLang)
+                                   this.props.onReduxUpdate("LANG_CODE", arrLangs.includes(iso_code) ? iso_code : defLang)
+                               }
+                                // localStorage.getItem("langCode") ? localStorage.getItem("langCode") : defLang
+
+
                             }
                         })
                         .catch(response => {
@@ -382,8 +384,8 @@ class App extends Component {
                             )
                             localStorage.setItem("myCity", "Kyiv")
                             localStorage.setItem("myCountry", "Ukraine")
-                            localStorage.setItem("myCountryCode", "UA")
-                            localStorage.setItem("langCode", defLang)
+                            // localStorage.setItem("myCountryCode", "UA")
+                            // localStorage.setItem("langCode", defLang)
                         })
         }
         else {
@@ -956,7 +958,7 @@ class App extends Component {
             direction, titlekind, withoutholidays, classNumber, selectedSubjects, selectedSubj,
             subjects_list, studentID, studentName, classID, isadmin, loading } = this.props.userSetup;
 
-        console.log("RENDER:APP")
+
         // console.log("LANGLIBRARY_AFTER", this.props.userSetup.langLibrary)
         let langLibrary = {}//getLangLibrary()
         if (this.props.userSetup.langLibrary) {
@@ -987,6 +989,8 @@ class App extends Component {
         // *************************
         // Если идёт загрузка
         // *************************
+        console.log("RENDER:APP", loading, this.loading)
+
         if (loading || loading === -1 || this.loading)
             return (
                 <div className="App">
