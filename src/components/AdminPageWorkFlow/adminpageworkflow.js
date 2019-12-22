@@ -13,6 +13,7 @@ import { Link } from 'react-router-dom';
 import MobileMenu from '../MobileMenu/mobilemenu'
 import {withRouter} from 'react-router-dom'
 import Menu from '../Menu/menu'
+import MenuEx from '../MenuEx/menuex'
 import { userLoggedInByToken, userLoggedOut } from '../../actions/userAuthActions'
 import ReactFlagsSelect from 'react-flags-select';
 import 'react-flags-select/css/react-flags-select.css';
@@ -295,17 +296,27 @@ class AdminPageWorkFlow extends Component {
                 <div className="navbar" style={userID===0?{"justifyContent":  "flex-end"}:{"justifyContent":  "space-between"}}>
                     <div className="navBlock">
                         <div style={{"display": "flex", "justifyContent" : "space-between", "alignItems" : "center"}}>
-                            <Link to="/"><img src={Logo} alt={"My.Marks"}/></Link>
-                            <div className="myTitle"><h3><Link to="/">{langLibrary.siteName}</Link></h3></div>
+                            <Link onClick={()=>{
+                                this.props.onReduxUpdate("MENU_ITEM", {id : 0, label : ''});
+                                this.props.onReduxUpdate("MENU_CLICK", "")
+                            }}
+                                  to="/"
+                            ><img src={Logo} alt={"My.Marks"}/></Link>
+                            <div className="myTitle"><h3><Link
+                                onClick={()=>{
+                                    this.props.onReduxUpdate("MENU_ITEM", {id : 0, label : ''});
+                                    this.props.onReduxUpdate("MENU_CLICK", "")
+                                }}
+                                to="/"
+                            >{langLibrary.siteName}</Link></h3></div>
                         </div>
                     </div>
                     <div className="navBlockEx">
                         {isMobile?
                             <MobileMenu userID={userID} userName={userName} isadmin={isadmin} withtomain={this.props.withtomain} userLogin={this.userLogin.bind(this)} userLogout={this.userLogout.bind(this)}/>:
-                            userID>0 && <Menu className="menuTop" userid={userID} isadmin={isadmin}/>
+                            userID>0 &&
+                            <MenuEx className="menuTop" userid={userID} isadmin={isadmin}/>
                         }
-                        {/*{(window.location.href.slice(-3)==="/r3"&&userID===0)?*/}
-                        {/*this.fireUserV3Login(window.location.href):""}*/}
                         {isMobile?<div>
                             {this.state.showLoginLight||(window.location.href.slice(-2)==="/r"&&userID===0)?
                                 <LoginBlockLight onLogin={this.props.onUserLogging} firehide={this.fireLoginLight.bind(this)}/>:""}
@@ -457,6 +468,7 @@ const mapDispatchToProps = dispatch => {
             console.log("onHomeWorkChanged")
             dispatch({type: 'UPDATE_HOMEWORK', payload: arr})
         },
+        onReduxUpdate : (key, payload) => dispatch({type: key, payload: payload}),
         onUserLoggingOut  : token => dispatch(userLoggedOut(token)),
     })
 }

@@ -1,0 +1,405 @@
+@media only screen and (min-width: 400px) {
+    .homeWorkSectionMain {
+        width : 100%;
+    }
+    .homeWorkSection { width : 100%; }
+    .app-homeWorkSection{
+        width : 50%;
+        margin : 5px 10px 0 0;
+    }
+}
+@media only screen and (max-width: 400px) {
+    .homeWorkSectionMain {        width : 100%;   }
+    .myTitle > h3 {font-size : 1em}
+    .homeWorkSection { margin : 0 5%; width: 95% }
+    .app-homeWorkSection{
+        width : 95%;
+        /*margin : 5px 10px 0 0;*/
+    }
+}
+/*@media only screen and (min-width: 401px) {    .homeWorkSectionMain {        margin: 55px 0 0 0;    }  }*/
+
+.homeWorkSectionMain {
+    position: relative;
+    display: flex;
+    justify-content: flex-start;
+    /*align-items: flex-start;*/
+    height: 100%;
+    border-radius: 5px;
+    border-bottom-left-radius: 10px;
+    border-bottom-right-radius: 10px;
+    /*left : 0;*/
+}
+
+.homeWorkSection {
+    display: inline-block;
+    /*border : 1px solid green;*/
+    /*width : 100%;*/
+    margin: 1px;
+    /*border-bottom-left-radius: 10px;*/
+    /*border-bottom-right-radius: 10px;*/
+    border: 0.5px solid #9D9D9D;
+    border-radius: 10px;
+    /*z-index: 10;*/
+    /*left : 0;*/
+}
+.hwSectionLeft{
+    /*background-color: rgb(157, 157, 157);*/
+    /*color:white;*/
+
+    color: #686868;
+    background-color:white;
+    border-top: 0.5px solid #9D9D9D;
+    border-left: 0.5px solid #9D9D9D;
+    border-right: 0.5px solid #9D9D9D;
+    border-bottom: 0.5px solid #9D9D9D;
+    /*border : 0.5px solid #9D9D9D;*/
+    /*border-radius: 10px;*/
+    font-weight: 700;
+
+    /*border : 2px solid rgb(255,230,153);*/
+    width: 30%;
+    padding : 5px;
+    text-align: center;
+
+    /*-moz-border-radius-topleft: 10px;*/
+    /*-moz-border-radius-topright: 10px;*/
+    border-top-left-radius: 10px;
+    /*border-top-right-radius: 10px;*/
+    border-bottom-right-radius: 10px;
+}
+.hwSectionRight{
+    /*background-color: rgb(236, 236, 236);*/
+    /*border : 1px solid #DDEBF7;*/
+    border-top: 0.5px solid #9D9D9D;
+    /*border-left: 0.5px solid #9D9D9D;*/
+    border-right: 0.5px solid #9D9D9D;
+    width: 70%;
+    padding : 5px 5px 5px 15px;
+    /*color : rgb(181, 34, 39);*/
+    /*color : rgb(255, 230, 153);*/
+    /*color : white;*/
+    color : #9d9d9d;
+
+    /*text-shadow:*/
+    /*-0.5px -0.5px 0px #555a6e,*/
+    /*0px -0.5px 0px #555a6e,*/
+    /*0.5px -0.5px 0px #555a6e,*/
+    /*-0.5px  0px 0px #555a6e,*/
+    /*0.5px  0px 0px #555a6e,*/
+    /*-0.5px  0.5px 0px #555a6e,*/
+    /*0px  0.5px 0px #555a6e,*/
+    /*0.5px  0.5px 0px #555a6e;*/
+
+    /*text-shadow: 0 0 2px #2F75B5; !* horizontal-offset vertical-offset 'blur' colour *!*/
+    /*-moz-text-shadow: 0 0 2px #2F75B5;*/
+    /*-webkit-text-shadow: 0 0 2px #2F75B5;*/
+
+    font-size : 1.1em;
+    font-weight: 700;
+    border-top-right-radius: 10px;
+    /*color : rgb(255,230,153)*/
+}
+.homeWorkSectionHeader {
+
+    background-color: #F5F5F5;
+
+    border-top-left-radius: 10px;
+    border-top-right-radius: 10px;
+}
+.buttonPlusDay:hover, .buttonMinusDay:hover{cursor: pointer; background-color: rgb(249, 209, 105);}
+.buttonPlusDay, .buttonMinusDay
+{
+    display: flex;
+    /*border : 4px solid rgb(235, 197, 99);*/
+    border : 1.5px solid #9D9D9D;
+    border-radius: 10px;
+    /*color : rgb(192,143,0);*/
+    color:#9D9D9D;
+    justify-content: center;
+    align-items: center;
+    padding : 2px 20px;
+    font-weight: 700;
+    height: 30px;
+    margin: 2px 2px;
+    /*margin: ;*/
+}
+.homeWorkSectionHeader, .homeWorkSectionSelDate, .homeWorkCurrentSectionHeader, .homeWorkCurrentSectionHeaderL, .homeWorkCurrentSectionHeaderR, .homeWorkSectionSelSubj{
+    margin: 0;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    /*padding : 5px;*/
+}
+.homeWorkSectionSelDate{
+    /*background-color: rgb(255,230,153);*/
+    /*background-color: rgb(157, 157, 157);*/
+    background-color: #F5F5F5;
+    /*color : rgb(192,143,0);*/
+    color : white;
+    border-right : 0.5px solid #9D9D9D;
+    border-left: 0.5px solid #9D9D9D;
+}
+.weekDay {
+    font-weight: 700;
+    /*color :#52aee6;*/
+    color : #95c3d3;
+}
+.hwDate {
+    /*color : rgb(192,143,0);*/
+    color : #2F75B5;
+    font-weight: 700;
+}
+.homeWorkCurrentSectionHeader{
+    background-color: rgb(47,117,181);
+    color: white;
+}
+.homeWorkCurrentSectionHeaderL{
+    background-color: rgb(221, 235, 247);
+    color: white;
+}
+.homeWorkCurrentSectionHeaderR{
+    /*background-color: rgb(47,117,181);*/
+    color: white;
+}
+.hwCurrentSectionLeft,.hwCurrentSectionRight{
+    width: 50%;
+    padding : 5px;
+    font-weight: 700;
+    text-align: center;
+    /*-moz-border-radius-topleft: 10px;*/
+    /*-moz-border-radius-topright: 10px;*/
+    /*border-top-left-radius: 10px;*/
+    /*border-top-right-radius: 10px;*/
+}
+.hwCurrentSectionRight {
+    background-color: rgb(221, 235, 247);
+    color: rgb(47, 117, 181);
+    -moz-border-radius-topleft: 10px;
+    /*-moz-border-radius-topright: 10px;*/
+    border-top-left-radius: 10px;
+    /*border-top-right-radius: 10px;*/
+}
+.hwCurrentSectionLeft {
+    /*background-color: rgb(47, 117, 181);*/
+    /*background-color: rgb(255, 230, 153);*/
+    background-color: white;
+    color: rgb(47, 117, 181);
+    /*color: white;*/
+    /*-moz-border-radius-topleft: 10px;*/
+    -moz-border-radius-topright: 10px;
+    /*border-top-left-radius: 10px;*/
+    border-top-right-radius: 10px;
+}
+.hwCurrentSectionLeft:hover{
+    cursor:pointer;
+    /*color : rgb(255,230,153)*/
+    /*color : white;*/
+    color: rgb(47, 117, 181);
+}
+.hwCurrentSectionRight:hover{
+    cursor:pointer;
+    /*color : rgb(192,143,0)*/
+    /*color : white;*/
+    color: rgb(47, 117, 181);
+}
+.leftSideSubjList, .rightSideSubjList{
+    display: inline-block;
+    height: 100%;
+    width: 100%;
+    border-bottom-left-radius: 10px;
+    border-bottom-right-radius: 10px;
+    /*border-left : 1px solid rgb(47,117,181);*/
+    /*border-right : 1px solid rgb(47,117,181);*/
+    /*border-bottom : 1px solid rgb(47,117,181);*/
+}
+.leftSideSubjList{
+    backround-color: white;
+    color: rgb(140, 183, 198);
+    /*padding-bottom: 2px;*/
+    /*background-color: rgb(47,117,181);*/
+    /*color: white;*/
+}
+.rightSideSubjList{
+    background-color: rgb(221,235,247);
+    color: rgb(47,117,181);
+}
+.listOfHomeWork{
+    border : 1px solid rgb(47,117,181);
+    border-bottom-left-radius: 10px;
+    border-bottom-right-radius: 10px;
+    /*background-color: #fff;*/
+
+    /*background-color: rgb(47,117,181)*/
+    background-color: white;
+}
+.factSubjRow {
+    display: flex;
+    position: relative;
+    justify-content: space-between;
+    border-bottom: 1px solid rgb(157, 206, 223);
+    border-bottom-left-radius: 10px;
+    border-bottom-right-radius: 10px;
+}
+.subjName {
+    display: inline-block;
+    font-weight: 700;
+    padding : 2px 5px;
+    width: 30%;
+    /*text-align: center;*/
+}
+.subjNameTitle {
+    font-weight: 700;
+    padding : 2px 5px;
+    width: 100%;
+    text-align: center;
+}
+.subjHomeWork{
+    display: inline-block;
+    margin: 0 5px;
+    color : #686868;
+    width: 70%;
+    font-weight: 600;
+    /*text-align: right;*/
+}
+.imgEdit > img {
+    position: absolute;
+    right : 2px;
+    top : 2px;
+    width : 15px;
+    height: 15px;
+    z-index: 3;
+    background-color: lightblue;
+    border-radius: 3px;
+    opacity : 0.6;
+}
+.buttonPlusSubj:hover, .buttonMinusSubj:hover{cursor: pointer; background-color: rgb(221,235,247);}
+.buttonPlusSubj, .buttonMinusSubj
+{
+    display: flex;
+    border : 2px solid rgb(157, 206, 223);
+    border-radius: 10px;
+    color : rgb(47,117,181);
+    justify-content: center;
+    align-items: center;
+    padding : 2px 20px;
+    font-weight: 700;
+    height: 30px;
+    margin : 2px 2px;
+}
+.buttonMinusFaked
+{
+    display: flex;
+    visibility: hidden;
+    border : 2px solid rgb(157, 206, 223);
+    border-radius: 10px;
+    color : rgb(47,117,181);
+    justify-content: center;
+    align-items: center;
+    padding : 2px 20px;
+    font-weight: 700;
+    height: 30px;
+    margin : 2px 0;
+}
+.homeWorkSectionSelSubj{
+    background-color: rgb(221,235,247);
+    color : rgb(47,117,181);
+}
+.mainInput {
+    display: inline-block;
+    margin : 1px 2px 0 2px;
+    height: 100px;
+    width: 97%;
+    font-size: 1.2em;
+}
+.addHomeWorkBtn {
+    text-align: center;
+    padding: 5px;
+    border: 1px solid  rgb(47,117,181);
+    background-color: rgb(255,230,153);
+    border-radius: 10px;
+    font-weight: 700;
+    color : rgb(192,143,0);
+    width: 100%;
+}
+.buttonsSection {
+    display: flex;
+    justify-content: space-between;
+    padding : 2px;
+    position: relative;
+}
+.symbButton {
+    display: inline-block;
+    border : 1px solid rgb(47,117,181);
+    background-color: rgb(221,235,247);
+    color : rgb(47,117,181);
+    border-radius: 3px;
+    margin : 1px;
+    padding : 2px;
+    text-align: center;
+    width : 43px;
+    font-weight: 800;
+    /*height : 20px;*/
+}
+.btnSpace, .btnComa, .btnBackSpace  {
+    display: inline-block;
+    border : 1px solid rgb(47,117,181);
+    background-color: rgb(221,235,247);
+    color : rgb(47,117,181);
+    border-radius: 3px;
+    margin : 1px;
+    padding : 2px;
+    text-align: center;
+    width : 70%;
+    margin-bottom: 14px;
+    font-weight: 800;
+    /*height: 20px;*/
+}
+.btnSpace{    width : 70%; }
+.btnComa{    width : 10%;}
+.btnBackSpace {    width: 20%; color : #b52227; font-size: 1.2em}
+.symbButton:hover{
+    cursor: pointer;
+}
+.selectedRow {
+    border : 1px solid #FFE699;
+    box-shadow: 0px 0px 3px 3px #FFE699;
+    border-radius: 4px;
+}
+.hwInfo{
+    position: absolute;
+    display: inline-block;
+    bottom: 0;
+    left: 0;
+    height: 25px;
+    padding : 2px;
+    width : 97%;
+    border-radius: 3px;
+    border : 1px solid rgb(47,117,181);
+    background-color: rgb(221,235,247);
+    color : rgb(47,117,181);
+    margin: 1%;
+}
+/*
+.navbar {
+    display:flex;
+    padding : 0px 10px;
+    justify-content: space-between;
+    align-items: center;
+    overflow: visible;
+    background-color: #f0f0f0;
+    position: fixed;
+    top: 0;
+    width: 100%;
+    height: 50px;
+    box-shadow: 0px 3px 5px 0px rgba(0, 0, 0, 0.2);
+    z-index: 10;
+}
+*/
+
+.navbar-shadow {
+    position: relative;
+    top: 0; /* Position the navbar at the top of the page */
+    width: 100%;
+    height: 50px;
+}

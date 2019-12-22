@@ -4,7 +4,7 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux'
 import Select from '../Select/select'
-import {AddDay, getSubjFieldName} from '../../js/helpers'
+import {addDay, getSubjFieldName} from '../../js/helpers'
 import Chart from "react-google-charts";
 
 import "./charts.css"
@@ -16,7 +16,7 @@ class Charts extends Component {
         this.state = {
             marksarray : [],
             marksmap : new Map(),
-            periodStart : AddDay((new Date()),-31),
+            periodStart : addDay((new Date()),-31),
             periodDays : 31,
             place : ""
         };
@@ -109,17 +109,17 @@ class Charts extends Component {
             switch (value)
             {
                 case 'WEEK':
-                    this.setState({ periodStart : AddDay((new Date()),-7), periodDays : 7 }); break;
+                    this.setState({ periodStart : addDay((new Date()),-7), periodDays : 7 }); break;
                 case 'MONTH':
-                    this.setState({ periodStart : AddDay((new Date()),-31), periodDays : 31 }); break;
+                    this.setState({ periodStart : addDay((new Date()),-31), periodDays : 31 }); break;
                 case 'QUARTER':
-                    this.setState({ periodStart : AddDay((new Date()),-90), periodDays : 90 }); break;
+                    this.setState({ periodStart : addDay((new Date()),-90), periodDays : 90 }); break;
                 case 'TERM':
-                    this.setState({ periodStart : AddDay((new Date()),-150), periodDays : 150 }); break;
+                    this.setState({ periodStart : addDay((new Date()),-150), periodDays : 150 }); break;
                 case 'YEAR':
-                    this.setState({ periodStart : AddDay((new Date()),-365), periodDays : 365 }); break;
+                    this.setState({ periodStart : addDay((new Date()),-365), periodDays : 365 }); break;
                 case 'ALL':
-                    this.setState({ periodStart : AddDay((new Date()),-3650), periodDays : 3650 }); break;
+                    this.setState({ periodStart : addDay((new Date()),-3650), periodDays : 3650 }); break;
                 default:
                     break;
             }
@@ -236,7 +236,7 @@ class Charts extends Component {
         return retArr
     }
     render() {
-        console.log("this.props.userSetup.studSubj", this.props.userSetup.studSubj, this.props.userSetup)
+        console.log("this.props.userSetup.studSubj")
         let data = []
         let data2 = []
         let place = ""

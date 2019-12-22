@@ -6,6 +6,7 @@ import {UPDATESETUP_URL, SUBJECTS_GET_URL, MARKS_URL, markType, API_URL} from '.
 import {instanceAxios, mapStateToProps, arrOfWeekDaysLocal, getSubjFieldName, toYYYYMMDD, dateFromYYYYMMDD, axios2} from '../../js/helpers'
 import {connect} from 'react-redux'
 import '../MarksTable/markstable.css'
+import '../../css/colors.css'
 import './timetable.css'
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
@@ -281,24 +282,10 @@ class Timetable extends Component {
                             </th>)
                             break
                         default:
-                            // console.log("Current Rows", i, (this.state.row), idx, this.state.column, AddDay(this.state.dateStart, idx - 2), AddDay(this.state.dateStart, idx - 2).getDay())
-                            // if ((AddDay(this.state.dateStart, idx - 2).getDay() > 0 && AddDay(this.state.dateStart, idx - 2).getDay() < 6 && this.props.withoutholidays) || (!this.props.withoutholidays)) {
                             const mark = this.getTimetableHash(`${subjects_list[i].subj_key.replace('#', '')}#${subjects_list[i].subj_key.replace('#', '')}#${idx - 2}`);
-                            //     let markBefore = this.getMarkHashBefore(this.props.userSetup.selectedSubj.subj_key.replace('#', '') + "#" + students[i].id + "#" + mapDays.get(idx));
-                            //     let markTypes = this.getMarkHashType(this.props.userSetup.selectedSubj.subj_key.replace('#', '') + "#" + students[i].id + "#" + mapDays.get(idx));
-                            //
-                            //     let badmark =   (this.props.userSetup.markBlank.id==="markblank_twelve"&&(mark==='1'||mark==='2'||mark==='3'))||
-                            //         (this.props.userSetup.markBlank.id==="markblank_five"&&(mark==='1'||mark==='2'))||
-                            //         (this.props.userSetup.markBlank.id==="markblank_letters"&&(mark==='D'||mark==='E/F'))
                             cellID = `${i}#${idx}#${subjects_list[i].subj_key.replace("#", '')}#${idx - 2}#${!(mark===null)?mark.id:0}`
-                            cell.push(<td key={cellID} id={cellID} onClick={this.onClick} className={"tableBody"}>
-
-                                {/*{!(mark===null)&&markTypes.length>0&&mark.length?<div className="topMarkLabel">{markTypes}</div>:""}*/}
-                                {/*{!(mark===null)&&markBefore.length>0&&mark.length?<div className="topMarkLabelBefore">{markBefore}</div>:""}*/}
-                                {!(mark===null)?mark.position:null}
-                                {/*{(this.props.userSetup.isadmin===1&&mark===null)&&"X"}*/}
-                                {/*/!*{this.getMarkHash(this.props.userSetup.selectedSubj.subj_key.replace('#', '') + "#" + this.props.userSetup.students[i].id + "#" + mapDays.get(idx))}*!/*/}
-                                {/*/!*mathem#242#2019-01-31*!/*/}
+                            cell.push(<td key={cellID} id={cellID} onClick={this.onClick} className={mark===null?"tableBody":"tableBody timeTableSelected"}>
+                                {(mark!==null)?mark.position:null}
                                 {i === (this.state.row) && idx === this.state.column ? this.getMarkBlank(cellID) : ""}
                             </td>)
                             break;

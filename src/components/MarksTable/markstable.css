@@ -45,7 +45,7 @@ th.namescol.head{
 th.tablebody,td.tablebody,th.tablehead {
     width: 35px;
     height: 30px;
-    font-size: 1em;
+    font-size: .9em;
 }
 .tablebody{
     position: relative;
@@ -74,12 +74,12 @@ tr#row-1, tr#row-2{
     color : #feff77;
 }
 #daysback, #daysforward, #daysforwardone {
-    font-size: 1em;
+    font-size: .9em;
     font-weight: 500;
-    padding : 3px 10px;
+    padding : 3px 8px;
     /*padding-right: 10px;*/
     align-items: center;
-    margin : 10px 10px;
+    margin : 5px;
     border : 1px solid #c4c4c4;
     border-radius: 5px;
 }
@@ -92,6 +92,7 @@ tr#row-1, tr#row-2{
     cursor: pointer;
 }
 .periodName {
+    position: relative;
     display : flex;
     margin : 5px 0;
     align-items: center;
@@ -100,7 +101,7 @@ tr#row-1, tr#row-2{
 .selectGroup {
     display : flex;
     position : relative;
-    margin: 4px 0;
+    /*margin: 1px 0;*/
     justify-content: space-between;
 }
 .selectGroup > label {
@@ -111,17 +112,17 @@ tr#row-1, tr#row-2{
     background-color: lightgrey;
     position: relative;
 }
-/*.marktable{*/
-    /*position: relative;*/
-/*}*/
-.selectGroup > button {
+.selectGroup-btn {
     border : 1px solid rgb(68,114,196);
     color : rgb(68,114,196);
     background-color: rgb(244,244,244);
-    padding: 5px;
+    padding: 2px;
     border-radius: 5px;
+    width : 250px;
+    font-size: .8em;
+    text-align: center;
 }
-.selectGroup > button:hover {
+.selectGroup-btn:hover {
     color: #f2b436;
     cursor: pointer;
 }
@@ -274,19 +275,47 @@ tr#row-1, tr#row-2{
     color: #3257e6;
     font-weight: 700;
 }
-.mondayFlag{
+.bottomDoubleMark{
+    position: absolute;
+    right : 1px;
+    bottom : 0;
+    font-size: 0.6em;
+    color: #b52227;
+    font-weight: 700;
+}
+.mondayFlag,.holidayFlag{
     position : absolute;
     font-size: 0.6em;
     right :0;
     top : -6px;
-    color: #3257e6;
+}
+.holidayFlag{ color: #b52227; }
+.mondayFlag{ color: #3257e6; }
+.markstable-doubleDay {
+    position : absolute;
+    font-size: 0.6em;
+    right : 0;
+    bottom : -6px;
+    /*color: #3257e6;*/
 }
 .tableheadtd {
     position : relative;
-
 }
 .periodTitle {
     border : 1px solid  #c4c4c4;
     border-radius: 5px;
     padding : 8px 0;
+    font-size: .85em;
+}
+.markTableStatCaption{
+    position : absolute;
+    font-size : 0.8em;
+    right : 0;
+    top : 0;
+    color : var(--selected-item-hard);
+    margin-top : -5px;
+}
+.markstable-checkbox-group{
+    display: flex;
+    flex-direction: column;
 }

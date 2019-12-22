@@ -27,11 +27,12 @@ import {
 }        from '../config/config'
 import {
     numberToLang, msgTimeOut, instanceAxios, mapStateToProps, getLangLibrary,
-    toYYYYMMDD, getLangByCountry, waitCursorBlock, getDefLangLibrary, getSubjFieldName
+    getLangByCountry, getDefLangLibrary, getSubjFieldName
 } from '../js/helpers'
 import LoginBlock from '../components/LoginBlock/loginblock'
 import LoginBlockLight from '../components/LoginBlockLight/loginblocklight'
 import Menu from '../components/Menu/menu'
+import MenuEx from '../components/MenuEx/menuex'
 import ChatBtn from "../img/chat-btn.svg"
 import AndroidBtn from "../img/android-icon-small.png"
 import './App.css';
@@ -40,13 +41,12 @@ import {store} from '../store/configureStore'
 import ReactFlagsSelect from 'react-flags-select';
 import 'react-flags-select/css/react-flags-select.css';
 import Logo from '../img/LogoMyMsmall.png'
-// import GooglePlay from '../img/GooglePlay2.png'
-// import GoogleAppleLogo from '../img/GoogleAppleLogo.png'
 import GooglePlayLogo from '../img/GooglePlayLogo.png'
 import AppStoreLogo from '../img/AppStoreLogo.png'
 
 // import ReactPlayer from 'react-player'
-
+// import GooglePlay from '../img/GooglePlay2.png'
+// import GoogleAppleLogo from '../img/GoogleAppleLogo.png'
 // import Chart from "react-google-charts/dist/ReactGoogleCharts.d";
 // import {CSSTransitionGroup, CSSTransition, TransitionGroup } from 'react-transition-group/CSSTransitionGroup';
 
@@ -93,6 +93,7 @@ class App extends Component {
         this.loginBlock = this.loginBlock.bind(this)
         // this.initLangLibrary = this.initLangLibrary.bind(this)
         this.clickClassButton = this.clickClassButton.bind(this)
+        this.changeState = this.changeState.bind(this)
     }
 
     componentWillUnmount() {
@@ -124,7 +125,7 @@ class App extends Component {
         await axios.get(API_URL + ('subjects/bycountry' + (lang ? ('/' + lang) : '')), null, headers)
             .then(res => {
                 this.classCount = res.data
-                console.log('GET_CLASSES', res)
+                // console.log('GET_CLASSES', res)
             })
             .catch(res => {
 
@@ -153,15 +154,12 @@ class App extends Component {
             .then(res => {
 
                     res.data.forEach(item => langObj[item.alias] = item.word)
-                    console.log("langDone", langObj)
-
-                    // console.log("getLangLibrary:end")
+                    // console.log("langDone", langObj)
                     this.props.onReduxUpdate("LANG_LIBRARY", langObj)
                     this.props.onStopLoading()
                     this.loading = false
                     this.setState({langLibrary: langObj});
-                    console.log("langDone2")
-
+                    // console.log("langDone2", langObj)
                 }
             )
             .catch(res => {
@@ -171,26 +169,37 @@ class App extends Component {
         // console.log("getLangLibrary:stop")
     }
 
-    componentDidMount() {
-        this.props.onStartLoading()
-        // console.log("componentDidMount0")
-        let {langLibrary} = this.state
+    async componentDidMount() {
 
-        if (localStorage.getItem("langLibrary"))
+        this.props.onStartLoading()
+        let {langLibrary} = this.props.userSetup
+
+        // console.log("componentDidMount1", Object.keys(langLibrary).length)
+
+        // if (!Object.keys(langLibrary).length)
+        // await this.getAsync(localStorage.getItem("langCode") ? localStorage.getItem("langCode") : defLang)
+
+        // console.log("componentDidMount2", Object.keys(langLibrary).length)
+
+        if (!langLibrary&&(localStorage.getItem("langLibrary")))
             langLibrary = localStorage.getItem("langLibrary")
 
-         if (!(window.localStorage.getItem("myMarks.data") === null) && !(window.localStorage.getItem("userSetup") && window.localStorage.getItem("userSetupDate") === toYYYYMMDD(new Date()))) {
-            console.log("PART1")
+         if (!(window.localStorage.getItem("myMarks.data") === null) && !(window.localStorage.getItem("userSetup"))) { //  && window.localStorage.getItem("userSetupDate") === toYYYYMMDD(new Date())
+            console.log("PART1", langLibrary)
             let localstorage = JSON.parse(window.localStorage.getItem("myMarks.data"))
-             const {token} = localstorage
+            let {token} = localstorage
             this.props.onReduxUpdate("UPDATE_TOKEN", token)
             this.props.onUserLoggingByToken(null, token, null, langLibrary);
         }
-        else if (window.localStorage.getItem("userSetup") && window.localStorage.getItem("userSetupDate") === toYYYYMMDD(new Date())) {
-             console.log("PART2")
-        }
+        else if (window.localStorage.getItem("userSetup")) { // && window.localStorage.getItem("userSetupDate") === toYYYYMMDD(new Date())
+             // console.log("PART2", langLibrary)
+             let localstorage = JSON.parse(window.localStorage.getItem("userSetup"))
+             let {token} = localstorage
+             this.props.onReduxUpdate("UPDATE_TOKEN", token)
+             this.props.onUserLoggingByToken(null, token, null, langLibrary);
+         }
         else {
-             console.log("PART3")
+             console.log("PART3", langLibrary)
         }
         this.props.onReduxUpdate("IS_MOBILE", this.state.isMobile)
         this.props.onChangeStepsQty(this.isSaveEnabled())
@@ -202,17 +211,27 @@ class App extends Component {
     shouldComponentUpdate(nextProps, nextState) {
         // console.log("shouldComponentUpdate", this.state.langLibrary, Object.keys(this.state.langLibrary).length, this.props.userSetup.langLibrary, nextProps.userSetup.langLibrary)
         // console.log("shouldComponentUpdate", this.loading, this.props.userSetup.langLibrary)
+        const {chatSessionID, langLibrary : lngLib} = this.props.userSetup
+
+        // console.log("shouldComponentUpdate1", lngLib)
+
         if (this.loading)
             return false
 
+        let langLibrary = {}
+        if (Object.keys(lngLib).length) {
+            langLibrary = lngLib
+        }
+        else {
+            langLibrary = getDefLangLibrary()
+        }
 
-        // console.log("shouldComponentUpdate1")
-        if ((this.props.userSetup.chatSessionID !== nextProps.userSetup.chatSessionID)) {
+         if ((chatSessionID !== nextProps.userSetup.chatSessionID)) {
             // console.log("shouldComponentUpdate2")
             return false
         }
         // return this.props.userSetup.chatSessionID !== nextProps.userSetup.chatSessionID
-        else if (!Object.keys(this.props.userSetup.langLibrary).length) {
+        else if (!Object.keys(langLibrary).length) {
             // console.log("shouldComponentUpdate3")
 
             return false
@@ -225,7 +244,7 @@ class App extends Component {
 
     onSelectLang = async countryCode => {
         this.props.onStartLoading()
-        let lb = this.getAsync(countryCode)//getLangLibrary(localStorage.getItem("langCode")?localStorage.getItem("langCode"):defLang)
+        // let lb = this.getAsync(countryCode)//getLangLibrary(localStorage.getItem("langCode")?localStorage.getItem("langCode"):defLang)
 
         this.props.onReduxUpdate("LANG_LIBRARY", this.state.langLibrary)
         this.props.onReduxUpdate("LANG_CODE", countryCode)
@@ -324,9 +343,9 @@ class App extends Component {
     }
 
     getGeo2 = () => {
-        let countryCode = "UA"
+        // let countryCode = "UA"
         // if (this.state.myCountryCode!==defLang&&this.state.myCountryCode)
-        console.log("getGeo2", countryCode, defLang);
+        // console.log("getGeo2", countryCode, defLang);
         // axios.get(`${API_URL}getgeo`)
         //     .then(response => {
         //         console.log("getGeo2", response.data);})
@@ -337,7 +356,7 @@ class App extends Component {
                            console.log("getGeo2", response.data);
                            if (!(response.data.city === localStorage.getItem("city"))) {
                                 const {city, country, iso_code} = response.data
-                                countryCode = iso_code
+                                // countryCode = iso_code
                                 this.setState(
                                     {
                                         myCity: city,
@@ -509,7 +528,7 @@ class App extends Component {
 
     changeState(name, value) {
         let json, data;
-        let {pupilCount, students: studs, userID, subjects_list, selectedSubjects, classID, langLibrary, langCode} = this.props.userSetup;
+        let {pupilCount, students: studs, userID, subjects_list, selectedSubjects, classID, langLibrary} = this.props.userSetup;
         switch (name) {
             case 'classNumber' :
                 json = `{"class_number":${value}}`;
@@ -740,9 +759,6 @@ class App extends Component {
         }
     }
 
-    // btnLoginClassName=()=>(
-    //     this.props.userSetup.userID > 0?"loginbtn loggedbtn":"loginbtn"
-    // )
     hideSteps = () => (
         this.setState({
             steps: {
@@ -755,8 +771,14 @@ class App extends Component {
         let map = new Map()
         const {subjects_list: subjlist, langCode} = this.props.userSetup
         map.clear()
-        console.log("onStudSubjChanged", key, subjlist, name)
-        name = subjlist.filter(value => (value.subj_key === key))[0][getSubjFieldName(langCode)]
+        // console.log("onStudSubjChanged", key, subjlist, name)
+        if (subjlist.filter(value => (value.subj_key === key)).length)
+            name = subjlist.filter(value => (value.subj_key === key))[0][getSubjFieldName(langCode)]
+        else {
+            name = subjlist[0][getSubjFieldName(langCode)]
+            key = subjlist[0].subj_key
+        }
+
         map.set(key, name)
         this.props.onStudentChartSubject(map)
     }
@@ -932,7 +954,7 @@ class App extends Component {
         let {
             userID, userName, pupilCount, currentYear, subjCount, currentPeriodDateCount, markBlank,
             direction, titlekind, withoutholidays, classNumber, selectedSubjects, selectedSubj,
-            subjects_list, studentID, studentName, classID, isadmin, loading, langCode, token } = this.props.userSetup;
+            subjects_list, studentID, studentName, classID, isadmin, loading } = this.props.userSetup;
 
         console.log("RENDER:APP")
         // console.log("LANGLIBRARY_AFTER", this.props.userSetup.langLibrary)
@@ -983,7 +1005,10 @@ class App extends Component {
                             </div>
                         </div>
                         <div className="navBlockEx">
-                            {userID ? <Menu className="menuTop"
+                            {userID ? true?<MenuEx className="menuTop"
+                                                      userid={userID}
+                                                      isadmin={isadmin}
+                                                      langlibrary={langLibrary}/>:<Menu className="menuTop"
                                             userid={userID}
                                             isadmin={isadmin}
                                             withtomain={true}
@@ -1024,7 +1049,10 @@ class App extends Component {
                             </div>
                         </div>
                         <div className="navBlockEx">
-                            {userID ? <Menu className="menuTop"
+                            {userID ? true?<MenuEx className="menuTop"
+                                                      userid={userID}
+                                                      isadmin={isadmin}
+                                                      langlibrary={langLibrary}/>:<Menu className="menuTop"
                                             userid={userID}
                                             isadmin={isadmin}
                                             withtomain={true}
@@ -1076,7 +1104,10 @@ class App extends Component {
                                                 userLogin={this.userLogin.bind(this)}
                                                 userLogout={this.userLogout}
                                                 langlibrary={langLibrary}/> :
-                            userID ? <Menu className="menuTop"
+                            userID ? true?<MenuEx className="menuTop"
+                                                     userid={userID}
+                                                     isadmin={isadmin}
+                                                     langlibrary={langLibrary}/>:<Menu className="menuTop"
                                            userid={userID}
                                            isadmin={isadmin}
                                            langlibrary={langLibrary}/> : null}
@@ -1629,7 +1660,7 @@ const mapDispatchToProps = dispatch => {
                                             // dispatch({type: 'UPDATE_SETUP_FAILED', payload: response.data})
                                         })
                                 }
-                                console.log("userSetup.isadmin", userSetup.isadmin)
+                                // console.log("userSetup.isadmin", userSetup.isadmin)
                                 // ToDO: Проставим перечень предметов + для всех студентов (будем делать это на стороне сервера)
                                 // ToDO: Выберем все предметы + для всех студентов (будем делать это на стороне сервера)
                                 // ToDO: Предметом укажем первый + для всех студентов (будем делать это на стороне сервера)

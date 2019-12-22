@@ -20,18 +20,17 @@ class Menu extends Component {
     }
     render() {
 
-
-        const {isadmin, userID} = this.props.userSetup
+        const {isadmin, userID, langLibrary : lngLib} = this.props.userSetup
         // console.log("MENU_FROM_REDUX", isadmin, Number(isadmin)&8, (isadmin&8)===8)
         let langLibrary = {}
-        if (Object.keys(this.props.userSetup.langLibrary).length) {
-            langLibrary = this.props.userSetup.langLibrary
-            // console.log("MENU_FROM_REDUX", true, this.props.userSetup.langLibrary)
+        if (Object.keys(lngLib).length) {
+            langLibrary = lngLib
+            console.log("MENU_FROM_REDUX", true, this.props.userSetup.langLibrary)
         }
         else {
             langLibrary = getDefLangLibrary()
         }
-
+        console.log("MenuBlock", langLibrary.adminSite, this.props.userSetup)
         return (
             <div className="menuBlock">
                 {Object.keys(langLibrary).length?

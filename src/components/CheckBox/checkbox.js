@@ -18,14 +18,13 @@ class Checkbox extends Component {
         });
     }
     render() {
+        // console.log("CheckBox", `"${this.props.fsize?this.props.fsize:1}em"`)
         return (
             <div className="checkboxLabel">
                 <input type="checkbox"
                        checked={this.state.isChecked}
-                       onChange={this.toggleChange}
-                       // id={this.props.id}
-                />
-                <b>{this.props.label}</b>
+                       onChange={this.toggleChange}/>
+                <span style={{fontSize : ".9em"}}>{this.props.label}</span>
             </div>
         );
     }

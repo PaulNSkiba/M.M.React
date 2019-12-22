@@ -12,6 +12,9 @@ import AdminPageTeacher from './components/AdminPageTeacher/adminpageteacher'
 import HomeWorkSection from './components/AdminHomeWorkSection/homeworksection'
 import AdminPageWorkFlow from './components/AdminPageWorkFlow/adminpageworkflow'
 import AdminBudgetPage from './components/AdminBudgetPage/adminbudgetpage'
+import AdminPageSchool from './components/AdminPageSchool/adminpageschool'
+import VideoSection from './components/VideoSection/videosection'
+
 import { CookiesProvider } from 'react-cookie';
 // import {CSSTransitionGroup, CSSTransition, TransitionGroup } from 'react-transition-group/CSSTransitionGroup';
 // const store = createStore(() => {}, {})
@@ -31,6 +34,8 @@ ReactDOM.render(
                     <Route path="/hw" component={HomeWorkSection}/>
                     <Route path="/budget" component={AdminBudgetPage}/>
                     <Route path="/workflow" component={AdminPageWorkFlow}/>
+                    <Route path="/adminschool" component={AdminPageSchool}/>
+                    <Route path="/video" component={VideoSection}/>
                 </div>
             </BrowserRouter>
         </CookiesProvider>

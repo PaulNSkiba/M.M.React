@@ -343,14 +343,14 @@ export function makeHeader(colCount, curTable, dateFrom) {
                 break;
             default:
                 curRow2.appendChild(curHeader)
-                var date = AddDay(dateFrom, (i-2))
+                var date = addDay(dateFrom, (i-2))
                 // console.log(date)
 
                 var shortDate = date.getDate() // + '.' + (date.getMonth() + 1)
                 curHeader.innerHTML = shortDate
                 if (!(curMonth === date.getMonth())) {
                     curRow.appendChild(curHeader0)
-                    curHeader0.setAttribute("colspan", getSpanCount(date, colCount + 2 - i))
+                    curHeader0.setAttribute("colspan", getSpanCount(date, colCount + 2 - i), false, false, [], "")
                     curMonth = date.getMonth()
                     curHeader0.innerHTML = (curMonth + 1) + "." + date.getFullYear()
                 }
@@ -360,13 +360,28 @@ export function makeHeader(colCount, curTable, dateFrom) {
     }
 }
 // Function get count of cells to be merged by "colspan"
-export function getSpanCount(dateStart, dateCnt, woholidays) {
-    var daysToReturn = 0;
-    var curMonth = dateStart.getMonth()
-    for (var i = 0; i < dateCnt; i++) {
-        if ((woholidays && AddDay(dateStart, i).getDay() > 0 && AddDay(dateStart, i).getDay() < 6) || (!woholidays))
+export function getSpanCount(dateStart, dateCnt, withoutHolidays, withTimeTable, subjDays) {
+    let daysToReturn = 0;
+    const curMonth = dateStart.getMonth()
+
+    for (let i = 0; i < dateCnt; i++) {
+        const isDay = (addDay(dateStart, i).getDay() > 0 && addDay(dateStart, i).getDay() < 6 && withoutHolidays)
+        const newDay = addDay(dateStart, i).getDay()===0?6:addDay(dateStart, i).getDay()-1
+        const timetableDay = subjDays.filter(item=>Number(item.weekday)===Number(newDay))
+        let condition = false
+        if (withTimeTable) {
+            if (timetableDay.length)
+                condition = true
+        }
+        else {
+            condition = isDay || (!withoutHolidays)
+        }
+        // console.log("getSpanCount", dateCnt, daysToReturn, condition)
+        if (condition) //((withoutoHolidays && addDay(dateStart, i).getDay() > 0 && addDay(dateStart, i).getDay() < 6) || (!withoutoHolidays))
         {
-            if (AddDay(dateStart, i).getMonth() === curMonth) {
+            if (addDay(dateStart, i).getMonth() === curMonth) {
+                daysToReturn++;
+                if (withTimeTable&&timetableDay.length&&(timetableDay[0].position.length>1))
                 daysToReturn++;
             }
         }
@@ -387,10 +402,10 @@ export function dateDiffHour(date1, date2) {
 }
 export let arrOfWeekDays = ['Вс','Пн','Вт','Ср','Чт','Пт','Сб']
 export let arrOfWeekDaysLocal = ['Пн','Вт','Ср','Чт','Пт','Сб','Вс']
-// AddDay function (format MM-DD-YYY)
-export function AddDay(strDate,intNum)
+// addDay function (format MM-DD-YYY)
+export function addDay(strDate,intNum)
 {
-    var sdate =  new Date(strDate);
+    let sdate =  new Date(strDate);
     sdate.setDate(sdate.getDate()+intNum);
     return new Date(sdate.getFullYear(), sdate.getMonth(), sdate.getDate());
 }
@@ -1109,4 +1124,7 @@ export const waitCursorBlock=()=>
         <div></div>
         <div></div>
     </div>
+export const weekDaysGlobal = ["Вс","Пн","Вт","Ср","Чт","Пт","Сб"]
+export const weekDaysLocal = ["Пн","Вт","Ср","Чт","Пт","Сб","Вс"]
+
 /* eslint-disable */

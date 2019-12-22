@@ -13,7 +13,7 @@ import {
     instanceLocator, testToken, chatUserName
 } from '../../config/config'
 import {
-    AddDay,
+    addDay,
     arrOfWeekDays,
     dateDiff,
     toYYYYMMDD,
@@ -41,7 +41,7 @@ class Chat extends Component {
         super(props);
 
         this.state = {
-            curDate: AddDay(new Date(), 1),
+            curDate: addDay(new Date(), 1),
             currentUser: null,
             currentRoom: {users: []},
             messages: [],
@@ -623,12 +623,12 @@ class Chat extends Component {
         for (let i = -2; i < 8; i++) {
             let obj = {}
             obj.id = i
-            obj.name = this.dateString(AddDay(this.now, i))
+            obj.name = this.dateString(addDay(this.now, i))
             daysArr.push(obj)
         }
         console.log("daysArr", daysArr)
         return daysArr.map((item, i) => (<div key={i} onClick={() => {
-            this.setState({curDate: AddDay(this.now, item.id), selDate: true, dayUp: !this.state.dayUp})
+            this.setState({curDate: addDay(this.now, item.id), selDate: true, dayUp: !this.state.dayUp})
         }} className="add-msg-homework-day" id={item.id}>{item.name}</div>))
     }
     dateString = (curDate) => {

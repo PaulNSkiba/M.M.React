@@ -1,0 +1,121 @@
+.menuItemEx {
+    display: flex;
+    position: relative;
+    color: #1890e6;
+    align-items: center;
+    border : 1px solid var(--selected-item);
+    height: 30px;
+    padding-left: 10px;
+    font-weight: 600;
+    border-radius: 10px;
+}
+.mym-app-arrow-down-ex{
+     font-size: .8em;
+    margin-left: 10px;
+}
+.menuItemEx a {
+    color : #1890e6;
+}
+.activeItemEx {
+    background-color: #7DA8E6;
+    color: #eee;
+    border-bottom-left-radius: 0;
+    border-bottom-right-radius: 0;
+}
+.activeItemEx2 {
+    background-color: #7DA8E6;
+    color: #eee;
+}
+.menuItemEx:hover{
+    background-color: #7DA8E6;
+    color : white;
+    cursor : pointer;
+}
+.menuItemExDropDown{
+    position: absolute;
+    display: inline-block;
+    width : 200px;
+    border-top-right-radius: 10px;
+    border-bottom-left-radius: 10px;
+    border-bottom-right-radius: 10px;
+    background-color: #7DA8E6;
+    color : white;
+}
+.menuItemExDropDown a {
+    color : #eee;
+}
+.menuSubItem {
+    display: flex;
+    height: 30px;
+    align-items: center;
+}
+.menuSubItem a {
+    color : #eee;
+    font-weight: 600;
+    margin: 10px;
+}
+.menuSubItem a:hover {
+    color : white;
+}
+.menuSubItem:hover {
+    cursor : pointer;
+}
+
+.menuItemHw a {
+    color : var(--menu-homework);
+    font-weight: 600;
+    padding: 5px 3px;
+}
+.menuItemHw a:hover{
+    color : rgb(249, 247, 140);
+    text-decoration: underline;
+    background-color: #7DA8E6;
+    height: 30px;
+    outline: none;
+    border-radius: 10px;
+}
+.menuBlock{
+    margin : 5px;
+}
+.menuItemHint{
+    position: absolute;
+    font-size: 0.6em;
+    color : #eee;
+    background-color: #7DA8E6;
+    right : 0;
+    top : 0;
+}
+.menuItems {
+    display:flex;
+    left : 0;
+    margin-left: 10px;
+    width : auto;
+    min-width: 360px;
+    max-width: 600px;
+    font-size: .88em;
+}
+.activeItem a {
+    -webkit-box-shadow: 0 0 4px 7px #7DA8E6;
+    -moz-box-shadow: 0 0 4px 7px #7DA8E6;
+    box-shadow: 0 0 4px 7px #7DA8E6;
+    background-color: #7DA8E6;
+    color : white;
+    border-radius: 2px;
+}
+.mym-menuitem-workflow a {
+    font-weight: 700;
+    color : #B40530;
+    font-size : 0.9em;
+}
+.menuBlock div {
+    margin-right : 5px;
+}
+.mym-menuitem-workflow a:hover{
+    text-decoration: underline;
+    -webkit-box-shadow: 0 0 4px 7px #7DA8E6;
+    -moz-box-shadow: 0 0 4px 7px #7DA8E6;
+    box-shadow: 0 0 4px 7px #7DA8E6;
+    background-color: #7DA8E6;
+    color : white;
+    border-radius: 2px;
+}

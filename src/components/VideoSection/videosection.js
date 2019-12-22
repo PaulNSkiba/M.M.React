@@ -1,5 +1,5 @@
 /**
- * Created by Paul on 07.04.2019.
+ * Created by Paul on 16.12.2019.
  */
 import React, {Component} from 'react'
 import {
@@ -23,16 +23,16 @@ import LoginBlockLight from '../LoginBlockLight/loginblocklight'
 import edit_icon from '../../img/Edit-512s.png'
 import {HOMEWORK_ADD_URL, defLang, arrLangs} from '../../config/config'
 import '../../containers/App.css'
-import './homeworksection.css'
+import './videosection.css'
 import ReactFlagsSelect from 'react-flags-select';
 import 'react-flags-select/css/react-flags-select.css';
 import Logo from '../../img/LogoMyMsmall.png'
-// import ReactPlayer from 'react-player'
+import ReactPlayer from 'react-player'
 
 let btns = ['§', 'Стр.', '-', '№', 'Упр.', 'Зад.', 'Кнсп.']
 let btnsNumb = [1, 2, 3, 4, 5, 6, 7, 8, 9, 0]
 
-class HomeWorkSection extends Component {
+class VideoSection extends Component {
     constructor(props) {
         super(props);
         this.state = {
@@ -385,103 +385,103 @@ class HomeWorkSection extends Component {
                     </div>
                     : null}
 
-                <div className="homeWorkSectionMain">
-                    <div className="homeWorkSection">
-                        <div className="homeWorkSectionHeader">
-                            <div className="hwSectionLeft">Домашка:</div>
-                            <div className="hwSectionRight">{this.dateString()}</div>
-                        </div>
-                        <div className="homeWorkSectionSelDate">
-                            <div className="buttonPlusDay" onClick={this.changeMinusDay.bind(this)}> {'<<<'} </div>
-                            <div className="hwDate">{this.getDate(true)}</div>
-                            <div className="weekDay">{this.getDate(false)}</div>
-                            <div className="buttonPlusDay" onClick={this.changePlusDay.bind(this)}> {'>>>'} </div>
-                        </div>
-                        <div className="listOfHomeWork">
-                            <div
-                                className={this.state.sideListLeft ? "homeWorkCurrentSectionHeaderL" : "homeWorkCurrentSectionHeaderR"}>
-                                <div id="leftSide" className="hwCurrentSectionLeft"
-                                     onClick={this.changeCurrentSection.bind(this)}>Что задали
-                                </div>
-                                <div id="rightSide" className="hwCurrentSectionRight"
-                                     onClick={this.changeCurrentSection.bind(this)}>Добавить
-                                </div>
-                            </div>
-                            <div className={this.subjListClassName()}>
-                                {this.state.sideListLeft ?
-                                    <div className="factSubjRows">
-                                        {!this.getHomeWorkListForDate(this.state.curDate).length ?
-                                            <div className="buttonMinusFaked"></div> : ""}
-                                        {this.getHomeWorkList(this.state.curDate)}
-                                    </div>
-                                    : <div>
-
-                                        <div className="homeWorkSectionSelSubj">
-                                            <div className="buttonPlusSubj"
-                                                 onClick={this.changeMinusSubj.bind(this)}> {'<<<'} </div>
-                                            <div
-                                                className="subjNameTitle">{this.state.editId ? this.getHomeWorkByID(this.state.editId)[getSubjFieldName(langCode)] : this.getCurSubj()}</div>
-                                            <div className="buttonPlusSubj"
-                                                 onClick={this.changePlusSubj.bind(this)}> {'>>>'} </div>
-                                        </div>
-                                        <textarea className="mainInput" ref={input => {
-                                            this.homeWorkTxt = input
-                                        }}
-                                                  defaultValue={this.state.editId > 0 ? this.getHomeWorkByID(this.state.editId).homework : ""}/>
-                                        {/*{this.homeWorkTxt.focus()}*/}
-                                        <div className="buttonsSection">
-                                            {/*<div className="symbButton" onClick={this.btnClick.bind(this)}>§</div>*/}
-                                            {btns.map((item, i) => (
-                                                <div className="symbButton" key={'keyn' + i} id={'key' + i}
-                                                     onClick={this.btnClick.bind(this)}>{item}</div>))}
-                                        </div>
-                                        <div className="buttonsSection">
-                                            {btnsNumb.map((item, i) => (
-                                                <div className="symbButton" key={'keyn' + i} id={'keyn' + i}
-                                                     onClick={this.btnClick.bind(this)}>{item}</div>))}
-                                        </div>
-                                        <div className="buttonsSection">
-                                            <div className="btnComa" id="btncoma" onClick={this.btnClick.bind(this)}>,
-                                            </div>
-                                            <div className="btnSpace" id="btnspace" onClick={this.btnClick.bind(this)}>
-                                                ПРОБЕЛ
-                                            </div>
-                                            <div className="btnBackSpace" id="btnbackspace"
-                                                 onClick={this.btnClick.bind(this)}>←
-                                            </div>
-                                        </div>
-                                        <div className="buttonsSection">
-                                            <div className="addHomeWorkBtn"
-                                                 onClick={this.addHomeWork.bind(this)}>{this.state.editId > 0 ? "ИЗМЕНИТЬ" : `СОХРАНИТЬ ${!this.props.userSetup.userID ? 'НЕЛЬЗЯ,Т.К. НУЖНО ВОЙТИ' : ''}`}</div>
-                                        </div>
-                                    </div>}
-
-                            </div>
-                        </div>
-                    </div>
-
-                </div>
-
-                {/*{!this.props.hasOwnProperty("withouthead") ?*/}
-                    {/*<div>*/}
-                        {/*<div style={{marginBottom: "70px"}}>*/}
-                            {/*<h3 style={{color: "#2F75B5"}}>1. Создание нового класса:</h3>*/}
-                            {/*<ReactPlayer url='https://mymarks.info/download/1.Class-register.mp4' controls/>*/}
+                {/*<div className="homeWorkSectionMain">*/}
+                    {/*<div className="homeWorkSection">*/}
+                        {/*<div className="homeWorkSectionHeader">*/}
+                            {/*<div className="hwSectionLeft">Домашка:</div>*/}
+                            {/*<div className="hwSectionRight">{this.dateString()}</div>*/}
                         {/*</div>*/}
-                        {/*<div style={{marginBottom: "70px"}}>*/}
-                            {/*<h3 style={{color: "#2F75B5"}}>2. Добавление себя к созданному классу:</h3>*/}
-                            {/*<ReactPlayer url='https://mymarks.info/download/1.Student-Register.mp4' controls/>*/}
+                        {/*<div className="homeWorkSectionSelDate">*/}
+                            {/*<div className="buttonPlusDay" onClick={this.changeMinusDay.bind(this)}> {'<<<'} </div>*/}
+                            {/*<div className="hwDate">{this.getDate(true)}</div>*/}
+                            {/*<div className="weekDay">{this.getDate(false)}</div>*/}
+                            {/*<div className="buttonPlusDay" onClick={this.changePlusDay.bind(this)}> {'>>>'} </div>*/}
                         {/*</div>*/}
-                        {/*<div style={{marginBottom: "70px"}}>*/}
-                            {/*<h3 style={{color: "#2F75B5"}}>3. Описание работы учителя:</h3>*/}
-                            {/*<ReactPlayer url='https://mymarks.info/download/1.Teacher-Studying.mp4' controls/>*/}
-                        {/*</div>*/}
-                        {/*<div style={{marginBottom: "70px"}}>*/}
-                            {/*<h3 style={{color: "#2F75B5"}}>4. Обучение работе с Android-приложением:</h3>*/}
-                            {/*<ReactPlayer url='https://mymarks.info/download/1.Android-Studing.mp4' controls/>*/}
+                        {/*<div className="listOfHomeWork">*/}
+                            {/*<div*/}
+                                {/*className={this.state.sideListLeft ? "homeWorkCurrentSectionHeaderL" : "homeWorkCurrentSectionHeaderR"}>*/}
+                                {/*<div id="leftSide" className="hwCurrentSectionLeft"*/}
+                                     {/*onClick={this.changeCurrentSection.bind(this)}>Что задали*/}
+                                {/*</div>*/}
+                                {/*<div id="rightSide" className="hwCurrentSectionRight"*/}
+                                     {/*onClick={this.changeCurrentSection.bind(this)}>Добавить*/}
+                                {/*</div>*/}
+                            {/*</div>*/}
+                            {/*<div className={this.subjListClassName()}>*/}
+                                {/*{this.state.sideListLeft ?*/}
+                                    {/*<div className="factSubjRows">*/}
+                                        {/*{!this.getHomeWorkListForDate(this.state.curDate).length ?*/}
+                                            {/*<div className="buttonMinusFaked"></div> : ""}*/}
+                                        {/*{this.getHomeWorkList(this.state.curDate)}*/}
+                                    {/*</div>*/}
+                                    {/*: <div>*/}
+
+                                        {/*<div className="homeWorkSectionSelSubj">*/}
+                                            {/*<div className="buttonPlusSubj"*/}
+                                                 {/*onClick={this.changeMinusSubj.bind(this)}> {'<<<'} </div>*/}
+                                            {/*<div*/}
+                                                {/*className="subjNameTitle">{this.state.editId ? this.getHomeWorkByID(this.state.editId)[getSubjFieldName(langCode)] : this.getCurSubj()}</div>*/}
+                                            {/*<div className="buttonPlusSubj"*/}
+                                                 {/*onClick={this.changePlusSubj.bind(this)}> {'>>>'} </div>*/}
+                                        {/*</div>*/}
+                                        {/*<textarea className="mainInput" ref={input => {*/}
+                                            {/*this.homeWorkTxt = input*/}
+                                        {/*}}*/}
+                                                  {/*defaultValue={this.state.editId > 0 ? this.getHomeWorkByID(this.state.editId).homework : ""}/>*/}
+                                        {/*/!*{this.homeWorkTxt.focus()}*!/*/}
+                                        {/*<div className="buttonsSection">*/}
+                                            {/*/!*<div className="symbButton" onClick={this.btnClick.bind(this)}>§</div>*!/*/}
+                                            {/*{btns.map((item, i) => (*/}
+                                                {/*<div className="symbButton" key={'keyn' + i} id={'key' + i}*/}
+                                                     {/*onClick={this.btnClick.bind(this)}>{item}</div>))}*/}
+                                        {/*</div>*/}
+                                        {/*<div className="buttonsSection">*/}
+                                            {/*{btnsNumb.map((item, i) => (*/}
+                                                {/*<div className="symbButton" key={'keyn' + i} id={'keyn' + i}*/}
+                                                     {/*onClick={this.btnClick.bind(this)}>{item}</div>))}*/}
+                                        {/*</div>*/}
+                                        {/*<div className="buttonsSection">*/}
+                                            {/*<div className="btnComa" id="btncoma" onClick={this.btnClick.bind(this)}>,*/}
+                                            {/*</div>*/}
+                                            {/*<div className="btnSpace" id="btnspace" onClick={this.btnClick.bind(this)}>*/}
+                                                {/*ПРОБЕЛ*/}
+                                            {/*</div>*/}
+                                            {/*<div className="btnBackSpace" id="btnbackspace"*/}
+                                                 {/*onClick={this.btnClick.bind(this)}>←*/}
+                                            {/*</div>*/}
+                                        {/*</div>*/}
+                                        {/*<div className="buttonsSection">*/}
+                                            {/*<div className="addHomeWorkBtn"*/}
+                                                 {/*onClick={this.addHomeWork.bind(this)}>{this.state.editId > 0 ? "ИЗМЕНИТЬ" : `СОХРАНИТЬ ${!this.props.userSetup.userID ? 'НЕЛЬЗЯ,Т.К. НУЖНО ВОЙТИ' : ''}`}</div>*/}
+                                        {/*</div>*/}
+                                    {/*</div>}*/}
+
+                            {/*</div>*/}
                         {/*</div>*/}
                     {/*</div>*/}
-                    {/*: null}*/}
+
+                {/*</div>*/}
+
+                {!this.props.hasOwnProperty("withouthead") ?
+                    <div>
+                        <div style={{marginBottom: "70px"}}>
+                            <h3 style={{color: "#2F75B5"}}>1. Создание нового класса:</h3>
+                            <ReactPlayer url='https://mymarks.info/download/1.Class-register.mp4' controls/>
+                        </div>
+                        <div style={{marginBottom: "70px"}}>
+                            <h3 style={{color: "#2F75B5"}}>2. Добавление себя к созданному классу:</h3>
+                            <ReactPlayer url='https://mymarks.info/download/1.Student-Register.mp4' controls/>
+                        </div>
+                        <div style={{marginBottom: "70px"}}>
+                            <h3 style={{color: "#2F75B5"}}>3. Описание работы учителя:</h3>
+                            <ReactPlayer url='https://mymarks.info/download/1.Teacher-Studying.mp4' controls/>
+                        </div>
+                        <div style={{marginBottom: "70px"}}>
+                            <h3 style={{color: "#2F75B5"}}>4. Обучение работе с Android-приложением:</h3>
+                            <ReactPlayer url='https://mymarks.info/download/1.Android-Studing.mp4' controls/>
+                        </div>
+                    </div>
+                    : null}
 
                 {/*{console.log("this.state.showMsg", this.state.showMsg)}*/}
                 {this.state.sideListLeft && this.state.showInfo &&
@@ -502,9 +502,9 @@ const mapDispatchToProps = dispatch => {
             }
             dispatch(asyncLoggedInByToken(email, token, kind))
         },
-        onHomeWorkChanged: (arr) => {dispatch({type: 'UPDATE_HOMEWORK', payload: arr})},
+        onHomeWorkChanged: (arr) => { dispatch({type: 'UPDATE_HOMEWORK', payload: arr})},
         onReduxUpdate: (key, payload) => dispatch({type: key, payload: payload}),
         onUserLoggingOut: token => dispatch(userLoggedOut(token)),
     })
 }
-export default connect(mapStateToProps, mapDispatchToProps)(withRouter(HomeWorkSection))
+export default connect(mapStateToProps, mapDispatchToProps)(withRouter(VideoSection))

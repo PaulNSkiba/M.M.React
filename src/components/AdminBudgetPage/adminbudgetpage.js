@@ -4,7 +4,7 @@
 
 import React, {Component} from 'react'
 import {
-    AddDay,
+    addDay,
     arrOfWeekDays,
     dateDiff,
     toYYYYMMDD,
@@ -15,6 +15,7 @@ import {
     getLangByCountry
 } from '../../js/helpers'
 import Menu from '../Menu/menu'
+import MenuEx from '../MenuEx/menuex'
 import {connect} from 'react-redux'
 import {withRouter} from 'react-router-dom'
 import {userLoggedInByToken, userLoggedOut} from '../../actions/userAuthActions'
@@ -195,219 +196,12 @@ class AdminBudgetPage extends Component {
         }
         this.setState({planIns: arr})
     };
-    // fillInTable = () => {
-    //     registerLocale('ru', ru)
-    //     const daysArr = (() => {
-    //         let arr = [];
-    //         for (let i = 1; i < 32; i++) {
-    //             arr.push(i)
-    //         }
-    //         return arr
-    //     })()
-    //     const {curInRow: row, curInColumn: column} = this.state
-    //     return <div>
-    //         <table style={{marginTop: "5px", width: "98%", overflowY: "scroll"}}>
-    //             <thead style={{backgroundColor: "#C6EFCE", display: "block"}}>
-    //             <tr>
-    //                 <th style={{width: "20px", padding: "5px"}}>№ п/п</th>
-    //                 <th style={{width: "200px", padding: "5px"}}>Наименование</th>
-    //                 <th style={{width: "50px", padding: "5px"}}>Сокр.</th>
-    //                 <th style={{width: "50px", padding: "5px"}}>Сумма</th>
-    //                 <th style={{width: "50px", padding: "5px"}}>Регуляр- ный (раз в месяц)</th>
-    //                 <th style={{width: "70px", padding: "5px"}}>Дата оплаты</th>
-    //                 <th style={{width: "70px", padding: "5px"}}>Дата окончания оплаты</th>
-    //                 <th style={{width: "50px", padding: "5px"}}>День месяца (для регул-х)</th>
-    //                 <th style={{width: "40px", padding: "5px"}}>Нач. сальдо</th>
-    //                 <th style={{width: "20px", padding: "5px"}}>-</th>
-    //             </tr>
-    //             </thead>
-    //         </table>
-    //         <div style={{maxHeight: "250px", overflowY: "scroll"}}>
-    //             <table>
-    //                 <tbody>
-    //                 {this.state.planIns.map((item, key) =>
-    //                     <tr key={"r" + key}>
-    //                         <td style={{width: "20px", padding: "5px", textAlign: "center"}}>{key + 1}</td>
-    //                         <td style={{width: "200px", padding: "5px"}}
-    //                             onClick={() => this.setState({curInRow: key + 1, curInColumn: 2})}>{item.name}
-    //                             {(row === (key + 1) && column === 2) ?
-    //                                 <input type="text" id={(key + 1) + "#2#" + item.id} className="inputEditor"
-    //                                        onChange={e => this.onInputChange(e.target.value, item.id)}
-    //                                        onKeyPress={this.onInputKeyPress}
-    //                                        onBlur={this.onBlur}
-    //                                        defaultValue={item.name}/> : ""}
-    //                         </td>
-    //                         <td style={{width: "50px", padding: "5px", textAlign: "center"}}>{item.short}</td>
-    //                         <td style={{width: "50px", padding: "5px", textAlign: "center"}}>{item.sum}</td>
-    //                         <td style={{width: "60px", padding: "5px", textAlign: "center"}}>
-    //                             <input type="checkbox" onChange={(e) => {
-    //                                 console.log(e.target.value);
-    //                                 this.changeState(e, item.id, 4)
-    //                             }} id={(key + 1) + "#7_1#" + key} checked={item.isregular === 1}/>
-    //                         </td>
-    //                         <td style={{width: "70px", padding: "5px", textAlign: "center"}}>
-    //                             <DatePicker
-    //                                 // showMonthYearDropdown
-    //                                 fixedHeight
-    //                                 dateFormat="dd/MM/yy"
-    //                                 withPortal
-    //                                 locale="ru"
-    //                                 selected={item.paydate === null ? null : item.paydate.length === 8 ? dateFromYYYYMMDD(item.paydate) : new Date(item.paydate)}
-    //                                 onChange={date => this.handleDate('start', item.id, date)}
-    //                                 customInput={<input style={{
-    //                                     width: "55px",
-    //                                     textAlign: "center",
-    //                                     backgroundColor: "#7DA8E6",
-    //                                     color: "#fff", fontSize: "0.9em"
-    //                                 }}/>}
-    //
-    //                             />
-    //                         </td>
-    //                         <td style={{width: "70px", padding: "5px", textAlign: "center"}}>
-    //                             <DatePicker
-    //                                 // showMonthYearDropdown
-    //                                 fixedHeight
-    //                                 dateFormat="dd/MM/yy"
-    //                                 withPortal
-    //                                 locale="ru"
-    //                                 selected={item.payend === null ? null : item.payend.length === 8 ? dateFromYYYYMMDD(item.payend) : new Date(item.payend)}
-    //                                 onChange={date => this.handleDate('end', item.id, date)}
-    //                                 customInput={<input style={{
-    //                                     width: "55px",
-    //                                     textAlign: "center",
-    //                                     backgroundColor: "#7DA8E6",
-    //                                     color: "#fff", fontSize: "0.9em"
-    //                                 }}/>}
-    //                             />
-    //                         </td>
-    //                         <td style={{width: "50px", padding: "5px", textAlign: "center"}}>
-    //                             <select name="days" onClick={this.onLangClick} defaultValue={item.dayOfPayment}>
-    //                                 {daysArr.map((item, key) => {
-    //                                     return <option key={key}>
-    //                                         {item}
-    //                                     </option>
-    //                                 })}
-    //                             </select>
-    //                         </td>
-    //                         <td style={{width: "40px", padding: "5px", textAlign: "center"}}>
-    //                             <input type="checkbox" onChange={(e) => {
-    //                                 console.log(e.target.value);
-    //                                 this.changeState(e, item.id, 8)
-    //                             }} id={(key + 1) + "#7_1#" + key} checked={item.issaldo}/>
-    //                         </td>
-    //                         <td style={{width: "20px", padding: "5px", textAlign: "center"}}>
-    //                             <button onClick={() => {
-    //                                 console.log("Удалить?")
-    //                             }}>-
-    //                             </button>
-    //                         </td>
-    //                     </tr>
-    //                 )}
-    //                 </tbody>
-    //             </table>
-    //         </div>
-    //     </div>
-    // }
-    // fillOutTable = () => {
-    //     registerLocale('ru', ru)
-    //     const daysArr = (() => {
-    //         let arr = [];
-    //         for (let i = 1; i < 32; i++) {
-    //             arr.push(i)
-    //         }
-    //         return arr
-    //     })()
-    //     return <div>
-    //         <table height="300px" style={{margin: "5px", width: "98%"}}>
-    //             <thead style={{backgroundColor: "#ecabb9"}}>
-    //             <tr>
-    //                 <th style={{width: "30px", padding: "5px"}}>№ п/п</th>
-    //                 <th style={{width: "100%", padding: "5px"}}>Наименование</th>
-    //                 <th style={{width: "50px", padding: "5px"}}>Сумма</th>
-    //                 <th style={{width: "30px", padding: "5px"}}>Регуляр- ный (раз в месяц)</th>
-    //                 <th style={{width: "70px", padding: "5px"}}>Дата оплаты</th>
-    //                 <th style={{width: "70px", padding: "5px"}}>Дата окончания оплаты</th>
-    //                 <th style={{width: "50px", padding: "5px"}}>День месяца (для регул-х)</th>
-    //                 <th style={{width: "20px", padding: "5px"}}>-</th>
-    //             </tr>
-    //             </thead>
-    //             <tbody>
-    //             {this.state.planOuts.map((item, key) =>
-    //                 <tr key={"r" + key}>
-    //                     <td style={{width: "30px", textAlign: "center"}}>{key + 1}</td>
-    //                     <td style={{width: "100px"}}>{item.name}</td>
-    //                     <td style={{width: "30px", textAlign: "center"}}>{item.sum}</td>
-    //                     <td style={{width: "30px", textAlign: "center"}}>
-    //                         <input type="checkbox" onChange={(e) => {
-    //                             console.log(e.target.value);
-    //                             this.changeState(e, item.id, 4)
-    //                         }} id={(key + 1) + "#7_1#" + key} checked={item.isregular === 1}/>
-    //                     </td>
-    //                     <td style={{width: "70px", textAlign: "center"}}>
-    //                         <DatePicker
-    //                             // showMonthYearDropdown
-    //                             isClearable
-    //                             fixedHeight
-    //                             dateFormat="dd/MM/yy"
-    //                             withPortal
-    //                             locale="ru"
-    //                             selected={item.start === null ? null : item.paydate.length === 8 ? dateFromYYYYMMDD(item.paydate) : new Date(item.paydate)}
-    //                             onChange={date => this.handleDate('start', item.id, date)}
-    //                             customInput={<input style={{
-    //                                 width: "70px",
-    //                                 textAlign: "center",
-    //                                 backgroundColor: "#7DA8E6",
-    //                                 color: "#fff", fontSize: "0.9em"
-    //                             }}/>}
-    //
-    //                         />
-    //                     </td>
-    //                     <td style={{width: "70px", textAlign: "center"}}>
-    //                         <DatePicker
-    //                             // showMonthYearDropdown
-    //                             isClearable
-    //                             fixedHeight
-    //                             dateFormat="dd/MM/yy"
-    //                             withPortal
-    //                             locale="ru"
-    //                             selected={item.payend === null ? null : item.payend.length === 8 ? dateFromYYYYMMDD(item.payend) : new Date(item.payend)}
-    //                             onChange={date => this.handleDate('end', item.id, date)}
-    //                             customInput={<input style={{
-    //                                 width: "70px",
-    //                                 textAlign: "center",
-    //                                 backgroundColor: "#7DA8E6",
-    //                                 color: "#fff", fontSize: "0.9em"
-    //                             }}/>}
-    //                         />
-    //                     </td>
-    //                     <td style={{width: "30px", textAlign: "center"}}>
-    //                         <select name="days" onClick={this.onDayOfPaymentClick} defaultValue={item.dayOfPayment}>
-    //                             {daysArr.map((item, key) => {
-    //                                 return <option key={key}>
-    //                                     {item}
-    //                                 </option>
-    //                             })}
-    //                         </select>
-    //                     </td>
-    //                     <td>
-    //                         <button onClick={() => {
-    //                             console.log("Удалить?")
-    //                         }}>-
-    //                         </button>
-    //                     </td>
-    //                 </tr>
-    //             )}
-    //             </tbody>
-    //         </table>
-    //     </div>
-    // }
     classNameOfTD = (email, verified) => {
         return email ? (verified ? "left-text verified" : "left-text verification") : "left-text"
     }
     onDayOfPaymentClick = e => {
 
     }
-
     createInTableRows(rowsArr, onInputChange, withInput, row, column, classNameOfTD, checkedMap, headex, year) {
         let cell = [],
             rows = []
@@ -743,7 +537,7 @@ class AdminBudgetPage extends Component {
                                                         "user_id":${this.props.userSetup.userID},
                                                         "student_id":${rowsArr[i].id},
                                                         "paydate":"${headex[j].item.isregular !== 1 ? headex[j].item.paydate : toYYYYMMDD(new Date(headex[j].realdate))}",
-                                                        "sum":${id > 0 && curSum !== null && headex[j].item.isregular ? null : headex[j].item.sum.toString().replace(",", ".")},
+                                                        "sum":${id > 0 && curSum !== null && (headex[j].item.isregular||headex[j].item.isregular===null) ? null : headex[j].item.sum.toString().replace(",", ".")},
                                                         "payment_id":${headex[j].item.id},
                                                         "payment_offset":${j},
                                                         "isregular":${headex[j].item.isregular}}`
@@ -924,8 +718,18 @@ class AdminBudgetPage extends Component {
                     <div className="navBlock">
                         <div className="navBlock">
                             <div style={{"display": "flex", "justifyContent": "space-between", "alignItems": "center"}}>
-                                <Link to="/"><img src={Logo} alt={"My.Marks"}/></Link>
-                                <div className="myTitle"><h3><Link to="/">{langLibrary.siteName}</Link></h3></div>
+                                <Link
+                                    onClick={()=>{
+                                        this.props.onReduxUpdate("MENU_ITEM", {id : 0, label : ''});
+                                        this.props.onReduxUpdate("MENU_CLICK", "")
+                                    }}
+                                    to="/"><img src={Logo} alt={"My.Marks"}/></Link>
+                                <div className="myTitle"><h3><Link
+                                    onClick={()=>{
+                                        this.props.onReduxUpdate("MENU_ITEM", {id : 0, label : ''});
+                                        this.props.onReduxUpdate("MENU_CLICK", "")
+                                    }}
+                                    to="/">{langLibrary.siteName}</Link></h3></div>
                             </div>
                         </div>
                     </div>
@@ -934,7 +738,7 @@ class AdminBudgetPage extends Component {
                             <MobileMenu userID={userID} userName={userName} isadmin={isadmin}
                                         withtomain={this.props.withtomain} userLogin={this.userLogin.bind(this)}
                                         userLogout={this.userLogout.bind(this)}/> :
-                            userID > 0 && <Menu className="menuTop" userid={userID} isadmin={isadmin}/>
+                            userID > 0 && <MenuEx className="menuTop" userid={userID} isadmin={isadmin}/>
                         }
                         {isMobile ? <div>
                             {this.state.showLoginLight || (window.location.href.slice(-2) === "/r" && userID === 0) ?

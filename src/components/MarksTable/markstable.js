@@ -4,13 +4,15 @@
 /* eslint-disable */
 import React, { Component } from 'react'
 import MarkBlank from '../MarkBlank/markblank'
-import { AddDay, getSpanCount, toYYYYMMDD, consoleLog, instanceAxios, mapStateToProps, getSubjFieldName} from '../../js/helpers'
+import { addDay, getSpanCount, toYYYYMMDD, consoleLog, instanceAxios, mapStateToProps,
+         getSubjFieldName, weekDaysGlobal, axios2} from '../../js/helpers'
 import Select from '../Select/select'
 import { connect } from 'react-redux'
-import { MARKS_URL, ISDEBUG, markType } from '../../config/config'
+import { MARKS_URL, ISDEBUG, markType, UPDATESETUP_URL } from '../../config/config'
 import Checkbox from '../CheckBox/checkbox'
 import './markstable.css'
-
+import '../../css/colors.css'
+import '../CheckBox/checkbox.css'
 
 class MarksTable extends Component {
     constructor(props){
@@ -19,11 +21,11 @@ class MarksTable extends Component {
             size: this.props.size,
             row : -1,
             column: -1,
-            dateStart: AddDay(new Date(this.props.userSetup.mark_date.date),-(this.props.dayscount - 1)),
+            subcolumn : 0,
+            dateStart: addDay(new Date(this.props.userSetup.mark_date.date),-(this.props.dayscount - 1)),
             dateEnd : new Date(this.props.userSetup.mark_date.date),
             mapDays : new Map(),
-            marks : this.fillMarks(AddDay(new Date(this.props.userSetup.mark_date.date),-(this.props.dayscount - 1)), new Date(this.props.userSetup.mark_date.date), (typeof this.props.userSetup.selectedSubj==="object"?this.props.userSetup.selectedSubj.subj_key:'').toString().replace('#',''), (typeof this.props.userSetup.selectedSubj==="object"?this.props.userSetup.selectedSubj.id:0)),
-            onlywithmailstudents : this.props.userSetup.userID,
+            marks : this.fillMarks(addDay(new Date(this.props.userSetup.mark_date.date),-(this.props.dayscount - 1)), new Date(this.props.userSetup.mark_date.date), (typeof this.props.userSetup.selectedSubj==="object"?this.props.userSetup.selectedSubj.subj_key:'').toString().replace('#',''), (typeof this.props.userSetup.selectedSubj==="object"?this.props.userSetup.selectedSubj.id:0)),
             mailSentCount : 0,
             mailSent : "",
             done : true,
@@ -32,11 +34,15 @@ class MarksTable extends Component {
             marksBefore : new Map(),
             markType : 0,
             msgTimeOut : 4000,
-
+            onlywithmailstudents : this.props.userSetup.onlywithmailstudents,
+            withtimetable : this.props.userSetup.withtimetable,
+            withoutholidays : this.props.userSetup.withoutholidays,
         }
         this.setMarkType = this.setMarkType.bind(this)
+        // this.setStudentFilter = this.setStudentFilter.bind(this)
+        // this.setTimetableFilter = this.setTimetableFilter.bind(this)
+        this.handleInputChange = this.handleInputChange.bind(this);
     }
-
      initMap=()=>{
             let map = new Map()
             this.props.userSetup.selectedSubjects.forEach(function(item, i, arr) {
@@ -46,15 +52,7 @@ class MarksTable extends Component {
             // console.log('InitMap', map)
     }
     componentWillMount=()=>{
-        // this.setState({marks : this.fillMarks(  AddDay((new Date()),
-        //                                         -(this.props.dayscount - 1)),
-        //                                         new Date(),
-        //                                         (typeof this.props.userSetup.selectedSubj==="object"?this.props.userSetup.selectedSubj.subj_key:'').toString().replace('#','xxxxxx'),
-        //                                         (typeof this.props.userSetup.selectedSubj==="object"?this.props.userSetup.selectedSubj.id:0))})
-        //
-        // dateStart: AddDay((new Date((this.props.userSetup.mark_date.length)?this.props.userSetup.mark_date.date:this.props.userSetup.mark_date)),-(this.props.dayscount - 1)),
-        // dateEnd : new Date((this.props.userSetup.mark_date.length)?this.props.userSetup.mark_date.date:this.props.userSetup.mark_date)
-    }
+     }
     componentDidMount(){
         this.initMap()
     }
@@ -71,31 +69,28 @@ class MarksTable extends Component {
         let marksTypes = new Map()
         let {userID, curClass, classID, selectedSubj} = this.props.userSetup;
         // console.log("fillMarks", userID, curClass, selectedSubj, typeof selectedSubj)
-
-        // instanceAxios().get(MARKS_URL + '/'+userID+'/class/'+classID+'/subject/'+(typeof selectedSubj==="object"?selectedSubj.id:0)+
-        //     '/subjkey/'+(typeof selectedSubj==="object"?selectedSubj.subj_key:'').toString().replace('#','')+
+        //  instanceAxios().get(MARKS_URL + '/'+userID+'/class/'+classID+'/subject/'+subj_id+'/subjkey/'+subj_key.toString().replace('#','')+
         //     '/periodstart/'+toYYYYMMDD(dStart)+'/periodend/'+toYYYYMMDD(dEnd)+'/student/0')
-        instanceAxios().get(MARKS_URL + '/'+userID+'/class/'+classID+'/subject/'+subj_id+'/subjkey/'+subj_key.toString().replace('#','')+
-            '/periodstart/'+toYYYYMMDD(dStart)+'/periodend/'+toYYYYMMDD(dEnd)+'/student/0')
+        axios2('get', `${MARKS_URL}/${userID}/class/${classID}/subject/${subj_id}/subjkey/${subj_key.toString().replace('#','')}/periodstart/${toYYYYMMDD(dStart)}/periodend/${toYYYYMMDD(dEnd)}/student/0`)
             .then(response => {
-
-                ISDEBUG&&console.log('GET_MARKS_REMOTE', MARKS_URL + '/'+userID+'/class/'+classID+'/subject/'+subj_id+'/subjkey/'+subj_key.toString().replace('#','')+
+                console.log('GET_MARKS_REMOTE', MARKS_URL + '/'+userID+'/class/'+classID+'/subject/'+subj_id+'/subjkey/'+subj_key.toString().replace('#','')+
                     '/periodstart/'+toYYYYMMDD(dStart)+'/periodend/'+toYYYYMMDD(dEnd)+'/student/0',  response.data)
-
                 marks.clear()
                 marksBefore.clear()
                 marksTypes.clear()
                 for (let i = 0; i < response.data.length; i++) {
-                    marks.set(response.data[i].subj_key.replace('#', '')+"#"+response.data[i].stud_id+"#"+toYYYYMMDD(new Date(response.data[i].mark_date)), response.data[i].mark)
-                    if (!(response.data[i].mark_before===null)) {
-                        marksBefore.set(response.data[i].subj_key.replace('#', '') + "#" + response.data[i].stud_id + "#" + toYYYYMMDD(new Date(response.data[i].mark_date)), response.data[i].mark_before)
+                    let {subj_key, stud_id, mark_date, mark, mark_before, mark_type_name, position} = response.data[i]
+                    let key = `${subj_key.replace('#','')}#${stud_id}#${toYYYYMMDD(new Date(mark_date))}#${position===null?0:position}`
+                    // console.log("MARK", key, mark)
+                    marks.set(key, mark)
+                    if ((mark_before!==null)) {
+                        marksBefore.set(key, mark_before)
                     }
-                    if (!(response.data[i].mark_type_name===null)) {
-                        marksTypes.set(response.data[i].subj_key.replace('#', '')+"#"+response.data[i].stud_id+"#"+toYYYYMMDD(new Date(response.data[i].mark_date)), response.data[i].mark_type_name)
+                    if ((mark_type_name!==null)) {
+                        marksTypes.set(key, mark_type_name)
                     }
                 }
                 // console.log(marks, marksBefore, marksTypes)
-                // dispatch({type: 'UPDATE_STUDENTS_REMOTE', payload: response.data})
                 this.setState ({ marks, marksTypes, marksBefore })
                 document.body.style.cursor = 'default';
             })
@@ -110,60 +105,42 @@ class MarksTable extends Component {
     onClick(e){
         // console.log("onClick", e.target, e.target.nodeName, e.target.innerHTML)
         if (e.target.nodeName === "TD") {
+
             let row = Number(e.target.id.split('#')[0])//Number(e.target.id.split('c')[0].replace('r', ''));
             let column = Number(e.target.id.split('#')[1])//Number(e.target.id.split('c')[1]);
             let id = Number(e.target.id.split('#')[2])
-
-            // console.log("table_OnClick", row, column)
-            if (row===this.state.row&&column===this.state.column) {
-                row=-1
-                column=-1}
+            let subcolumn = Number(e.target.id.split('#')[4])
+            console.log("table_OnClick", e.target.id, row, column, subcolumn)
+            if (row===this.state.row&&column===this.state.column&&subcolumn===this.state.subcolumn) {row=-1; column=-1;}
             // console.log(row, column, e.target.id.split('c')[1])
-            this.setState(
-                {
-                    row: row,
-                    column: column
-                }
-            )
+            this.setState({ row, column, subcolumn})
         }
         // else if(e.target.nodeName === "A" && this.state.row < (this.state.size - 1) && this.props.direction==="UPDOWN") {
         else if(e.target.nodeName === "A" && this.state.row < (this.props.userSetup.students.length - 1) && this.props.direction==="UPDOWN") {
             let {row} = this.state
-            this.setState(
-                {
-                    row: row + 1
-                }
-                )
+            this.setState({ row: row + 1})
         }
         else if(e.target.nodeName === "A" && this.state.column < (this.props.dayscount + 2) && this.props.direction==="LEFTRIGHT") {
             let {column} = this.state
             // let add = 1;
-            console.log("SetColumnState", this.state.row, AddDay(this.state.dateStart, column + 1 - 2).getDay(), AddDay(this.state.dateStart, column + 1 - 2))
-            // AddDay(this.state.dateStart, column + 1 - 2).getDay() > 0 && AddDay(this.state.dateStart, column + 1 - 2).getDay() < 6 && this.props.withoutholidays?
-            let add = !this.props.withoutholidays?1:AddDay(this.state.dateStart, column + 1 - 2).getDay()===6?3:1;
-
-            this.setState(
-                {
-                    column: column + add
-                }
-            )
-
+            console.log("SetColumnState", this.state.row, addDay(this.state.dateStart, column + 1 - 2).getDay(), addDay(this.state.dateStart, column + 1 - 2))
+            // addDay(this.state.dateStart, column + 1 - 2).getDay() > 0 && addDay(this.state.dateStart, column + 1 - 2).getDay() < 6 && this.props.withoutholidays?
+            let add = !this.props.withoutholidays?1:addDay(this.state.dateStart, column + 1 - 2).getDay()===6?3:1;
+            this.setState({ column: column + add})
         }
     }
     changeCell = (cell, value, id) =>{
          // console.log("Table_changeCell", cell, value, id)
-
-        let {userID, selectedSubj,curClass, classID} = this.props.userSetup;
-        let student_id = id.split('#')[2]
-        let ondate = id.split('#')[3]
-        let markKey = selectedSubj.subj_key.replace("#","")+"#"+student_id+"#"+ondate
-        let {marks, marksTypes, marksBefore} = this.state
+        const {userID, selectedSubj,curClass, classID} = this.props.userSetup;
+        const student_id = id.split('#')[2]
+        const ondate = id.split('#')[3]
+        const position = id.split('#')[4]
+        const markKey = selectedSubj.subj_key.replace("#","")+"#"+student_id+"#"+ondate+"#"+position
+        const {marks, marksTypes} = this.state
         marks.set(markKey, value.toString().length<4?value:"")
-
         // marksTypes.set(markKey, this.state.markType>0?this.state.markType===1?'К':(this.state.markType===2?'С':'Т'):(marksTypes.get(markKey)===undefined?"":marksTypes.get(markKey)))
-        console.log("changeCell", markType, this.state.markType, markType[this.state.markType])
+        console.log("changeCell", id, id.split('#')[4])
         marksTypes.set(markKey, markType[this.state.markType].letter)
-
         this.setState({marks, marksTypes})
 
         let json = `{   "user_id":${userID},
@@ -173,18 +150,18 @@ class MarksTable extends Component {
                         "stud_id":${student_id},
                         "mark_date":"${ondate}",
                         "mark_type_name":"${markType[this.state.markType].letter}",
+                        "position":${position},
                         "mark":"${value.toString().length<4?value:""}"}`
-
         // "mark_type_name":"${this.state.markType>0?this.state.markType===1?'К':(this.state.markType===2?'С':'Т'):marksTypes.get(markKey)}",
         let data = JSON.parse(json);
         console.log("Table_changeCell", cell, value, id, data, JSON.stringify(data))
         this.props.onclick(this.state.row, this.state.column, value)
         // '/marks/{user_id}/class/{class_id}/subject/{subj_id}/student/{student_id}/ondate/{ondate}'
-
         if (userID > 0) {
             // console.log("MARKS_URL", JSON.stringify(data), MARKS_URL +'/'+ userID+'/class/'+classID+'/subject/'+selectedSubj.id+'/student/'+student_id+'/ondate/'+ondate+'/mark/'+value)
              // return;
-            instanceAxios().post(MARKS_URL + '/add', JSON.stringify(data))
+//            instanceAxios().post(MARKS_URL + '/add', JSON.stringify(data))
+                axios2('post',`${MARKS_URL}/add`, JSON.stringify(data))
                 .then(response => {
                     console.log('UPDATE_MARKS_REMOTE', response.data)
                     // dispatch({type: 'UPDATE_STUDENTS_REMOTE', payload: response.data})
@@ -194,36 +171,39 @@ class MarksTable extends Component {
                     // dispatch({type: 'UPDATE_STUDENTS_FAILED', payload: response.data})
                 })
         }
-        }
-
+    }
     getMarkBlank =(cellID)=>{
         // console.log(this.props.markblank)
         return(<MarkBlank kind={this.props.markblank} onclickA={this.changeCell} parent={cellID}/>)
     }
     getMark = (key)=> {
-        if (this.props.marks.has(key))
-            return this.props.marks.get(key)
+        const {marks} = this.state
+        if (marks.has(key))
+            return marks.get(key)
         else
             return ""
     }
     getMarkHash = (key)=> {
-        if (this.state.marks.has(key))
-            return this.state.marks.get(key)
+        const {marks} = this.state
+        if (marks.has(key))
+            return marks.get(key)
         else
             return ""
     }
     getMarkHashType = (key)=> {
-        if (this.state.marksTypes.has(key))
-            return this.state.marksTypes.get(key)===undefined?"":this.state.marksTypes.get(key)
+        const {marksTypes} = this.state
+        if (marksTypes.has(key))
+            return marksTypes.get(key)===undefined?"":marksTypes.get(key)
         else
             return ""
     }
     getMarkHashBefore = (key)=> {
-            if (this.state.marksBefore.has(key))
-                return this.state.marksBefore.get(key)===undefined?"":this.state.marksBefore.get(key)
-            else
-                return ""
-        }
+        const {marksBefore} = this.state
+        if (marksBefore.has(key))
+            return marksBefore.get(key)===undefined?"":marksBefore.get(key)
+        else
+            return ""
+    }
     getPeriod=()=>{
         let {dateStart, dateEnd} = this.state
         dateStart = new Date(dateStart)
@@ -232,15 +212,14 @@ class MarksTable extends Component {
         dateEnd.getDate() +'.'+(dateEnd.getMonth() + 1) +'.'+dateEnd.getFullYear().toString().slice(-2))
         }
     getDateForHead=(add)=>{
-        let newDate = AddDay(this.state.dateStart, add)
+        let newDate = addDay(this.state.dateStart, add)
         // console.log("getDateForHead", newDate, newDate.getDay(), newDate.getDay()===1?"\*":"", newDate.getDate() +'.'+ (Number(newDate.getMonth()) + 1).toString(), )
         return (newDate.getDate() +'.'+ (Number(newDate.getMonth()) + 1).toString()) //+ (newDate.getDay()===1?<div className="mondayFlag">Пн</div>:"").toString() ) //
         // (newDate.getDay()===1?"\*":"").toString() )
     }
-    getDateForHeadFull=(add)=>{
-        let newDate = AddDay(this.state.dateStart, add)
-        // console.log("getDateForHead", newDate, newDate.getDay(), newDate.getDay()===1?"\*":"", newDate.getDate() +'.'+ (Number(newDate.getMonth()) + 1).toString(), )
-        return (newDate.getFullYear().toString()+('0' + (Number(newDate.getMonth()) + 1)).toString().slice(-2) + ('0' + newDate.getDate()).slice(-2)) //
+    getDateForHeadFull=(add, position)=>{
+        let newDate = addDay(this.state.dateStart, add)
+        return (newDate.getFullYear().toString()+('0' + (Number(newDate.getMonth()) + 1)).toString().slice(-2) + ('0' + newDate.getDate()).slice(-2) + '#' + position)
     }
     classNameForSelection=(selected)=>{
         return (selected?"namescol nameselected":"namescol")
@@ -255,25 +234,26 @@ class MarksTable extends Component {
         let {selectedSubj} = this.props.userSetup;
         switch (e.target.id) {
             case "daysback" :
-                dateStart = AddDay(dateStart, -(this.props.dayscount - 1))
-                dateEnd = AddDay(dateEnd, -(this.props.dayscount - 1))
+                dateStart = addDay(dateStart, -(this.props.dayscount - 1))
+                dateEnd = addDay(dateEnd, -(this.props.dayscount - 1))
                 break;
             case "daysforward" :
-                // console.log("daysforward", AddDay(dateEnd, (this.props.dayscount - 1)), (new Date), (new Date) - AddDay(dateEnd, (this.props.dayscount - 1)) )
-                if ((new Date) - AddDay(dateEnd, (this.props.dayscount - 1)) >= 0) {
-                    dateStart = AddDay(dateStart, (this.props.dayscount - 1))
-                    dateEnd = AddDay(dateEnd, (this.props.dayscount - 1))
+                // console.log("daysforward", addDay(dateEnd, (this.props.dayscount - 1)), (new Date), (new Date) - addDay(dateEnd, (this.props.dayscount - 1)) )
+                if ((new Date) - addDay(dateEnd, (this.props.dayscount - 1)) >= 0) {
+                    dateStart = addDay(dateStart, (this.props.dayscount - 1))
+                    dateEnd = addDay(dateEnd, (this.props.dayscount - 1))
                 }
+                break;
             case "daysforwardone" :
-                // console.log("daysforward", AddDay(dateEnd, (this.props.dayscount - 1)), (new Date), (new Date) - AddDay(dateEnd, (this.props.dayscount - 1)) )
-                if ((new Date) - AddDay(dateEnd, 1) >= 0) {
-                    dateStart = AddDay(dateStart, 1)
-                    dateEnd = AddDay(dateEnd, 1)
+                // console.log("daysforward", addDay(dateEnd, (this.props.dayscount - 1)), (new Date), (new Date) - addDay(dateEnd, (this.props.dayscount - 1)) )
+                if ((new Date) - addDay(dateEnd, 1) >= 0) {
+                    dateStart = addDay(dateStart, 1)
+                    dateEnd = addDay(dateEnd, 1)
                 }
-            else {
-                    dateStart = AddDay((new Date()),-(this.props.dayscount - 1))
-                    dateEnd = new Date()
-            }
+                else {
+                        dateStart = addDay((new Date()),-(this.props.dayscount - 1))
+                        dateEnd = new Date()
+                }
             break;
         }
         this.setState({
@@ -282,9 +262,11 @@ class MarksTable extends Component {
         this.fillMarks(dateStart, dateEnd, (typeof selectedSubj==="object"?selectedSubj.subj_key:'xxxxx').toString().replace('#',''), (typeof selectedSubj==="object"?selectedSubj.id:0))
     }
     setStudentFilter(name, value){
-        // console.log("setStudentFilter", name, value);
-        this.setState({onlywithmailstudents : value})
+        this.setState({onlywithmailstudents : !this.state.onlywithmailstudents})
     }
+    // setTimetableFilter(name, value){
+    //     this.setState({withtimetable : !this.state.withtimetable})
+    // }
     sendMail(){
         // console.log("sendMail")
         document.body.style.cursor = 'progress';
@@ -314,37 +296,43 @@ class MarksTable extends Component {
     setMarkType=(e)=>{
         let marktype = Number(e.target.id.slice(-1))
         console.log("marktype", marktype)
-        // switch (e.target.id){
-        //     case "marktype-1":
-                this.setState({markType:this.state.markType===marktype?0:marktype})
-        //         break;
-        //     case "marktype-2":
-        //         this.setState({markType:this.state.markType===2?0:2})
-        //         break;
-        //     case "marktype-3":
-        //         this.setState({markType:this.state.markType===3?0:3})
-        //         break;
-        //     case "marktype-4":
-        //         this.setState({markType:this.state.markType===4?0:4})
-        //         break;
-        //     case "marktype-5":
-        //         this.setState({markType:this.state.markType===5?0:5})
-        //         break;
-        // }
+        this.setState({markType:this.state.markType===marktype?0:marktype})
+    }
+    handleInputChange(event) {
+        const target = event.target;
+        const value = target.type === 'checkbox' ? target.checked : target.value;
+        const name = target.name;
+
+        this.setState({
+            [name]: value
+        });
+        const json = `{"${name}":${value}}`;
+        console.log("UPDATE", `${UPDATESETUP_URL}/${this.props.userSetup.userID}`, json)
+        this.props.onReduxUpdate("UPDATE_SETUP_LOCALLY", JSON.parse(json))
+            axios2('post', `${UPDATESETUP_URL}/${this.props.userSetup.userID}`, json)
+            .then(res => {
+                console.log('UPDATE_SETUP_SUCCESSFULLY', res.data);
+            })
+            .catch(res => {
+                console.log('UPDATE_SETUP_FAILED', res);
+            })
     }
     render(){
+        const {students, selectedSubj, timetable, isadmin, markBlank} = this.props.userSetup
+        let {withtimetable, dateStart, mapDays, withoutholidays} = this.state
+        const {dayscount} = this.props
+
         let  head = []
             ,cell = []
             ,cell2 = []
             ,curMonth = -1
-            ,mapDays = this.state.mapDays
+            // ,mapDays = mapDays
             ,doneFirst = false
         mapDays.clear()
-
-        const {students} = this.props.userSetup
+        // console.log("filter", selectedSubj.subj_key, withoutholidays)
+        const subjDays = timetable.filter(item=>item!==null).filter(item=>item.subj_key===selectedSubj.subj_key)
         // console.log('mark_date', this.props.userSetup.mark_date.date, this.state.dateStart, this.state.dateEnd, this.state.marks)
-        // console.log(this.props)
-
+        // console.log("MARKS", mapDays.keys(), mapDays.values())
             for (let idx = 0; idx < (this.props.dayscount + 2); idx++){
                 let cellID = `h0c${idx}`
                 switch (idx) {
@@ -359,38 +347,76 @@ class MarksTable extends Component {
                         </th>)
                         break
                     default:
-                        // let isFirstCol = (idx===2)
-                        // console.log("isFirstCol", idx)
-                        if ((AddDay(this.state.dateStart, idx-2).getDay() > 0 && AddDay(this.state.dateStart, idx-2).getDay() < 6 && this.props.withoutholidays) || (!this.props.withoutholidays)) {
-
-                            if (curMonth != (AddDay(this.state.dateStart, idx - 2).getMonth())) {
+                        // ToDO: Двойной день, когда пара предметов
+                        const isDay = (addDay(dateStart, idx-2).getDay() > 0 && addDay(dateStart, idx-2).getDay() < 6 && withoutholidays)
+                        const newWeekDay = addDay(dateStart, idx-2).getDay()===0?6:addDay(dateStart, idx-2).getDay()-1
+                        const timetableDay = subjDays.filter(item=>Number(item.weekday)===Number(newWeekDay))
+                        let condition = false
+                        if (withtimetable) {
+                            if (timetableDay.length)
+                            condition = true
+                        }
+                        else {
+                            condition = isDay || (!withoutholidays)
+                        }
+                        // if (timetableDay.length)
+                        // console.log("TimeTable", condition, timetableDay.length&&timetableDay[0].position)
+                        if (condition) {
+                        if (curMonth !== (addDay(this.state.dateStart, idx - 2).getMonth())) {
                                 let markArr = markType.filter(item=>item.id>0)
                                 let markDivs = markArr.map((item, i)=><div className={this.state.markType===item.id?"markType-selected":"markType"} key={i} id={`marktype-${item.id}`} onClick={this.setMarkType}>{item.letter}<div className="hoverText">{item.name}</div></div>)
-
                                 cell.push(<th
-                                    colSpan={getSpanCount(AddDay(this.state.dateStart, idx - 2), this.props.dayscount, this.props.withoutholidays)}
-                                    key={cellID} id={cellID} onClick={this.onClick.bind(this)}
+                                    colSpan={getSpanCount(addDay(dateStart, idx - 2), dayscount - (idx - 2), withoutholidays, withtimetable, subjDays)}
+                                    key={cellID}
+                                    id={cellID}
+                                    onClick={this.onClick.bind(this)}
                                     className="tablehead">
-                                    {AddDay(this.state.dateStart, idx - 2).getMonth() + 1 + "." + AddDay(this.state.dateStart, idx - 2).getFullYear().toString().slice(-2)}
+                                    {addDay(dateStart, idx - 2).getMonth() + 1 + "." + addDay(dateStart, idx - 2).getFullYear().toString().slice(-2)}
                                     {!doneFirst?<div className={this.state.markType===0?"addMarkTypes":"addMarkTypes-selected"}>
                                         {markDivs}
-                                        {/*<div className={this.state.markType===1?"markType-selected":"markType"} id={"marktype-1"} onClick={this.setMarkType}>K<div className="hoverText">Контрольная</div></div>*/}
-                                        {/*<div className={this.state.markType===2?"markType-selected":"markType"} id={"marktype-2"} onClick={this.setMarkType}>C<div className="hoverText">Самостоятельная</div></div>*/}
-                                        {/*<div className={this.state.markType===3?"markType-selected":"markType"} id={"marktype-3"} onClick={this.setMarkType}>T<div className="hoverText">Тематическая</div></div>*/}
-                                        {/*<div className={this.state.markType===4?"markType-selected":"markType"} id={"marktype-4"} onClick={this.setMarkType}>S<div className="hoverText">Семестровая</div></div>*/}
-                                        {/*<div className={this.state.markType===5?"markType-selected":"markType"} id={"marktype-5"} onClick={this.setMarkType}>A<div className="hoverText">Годовая</div></div>*/}
-
                                     </div>:""}
                                 </th>)
-                                curMonth = AddDay(this.state.dateStart, idx - 2).getMonth()
+                                curMonth = addDay(this.state.dateStart, idx - 2).getMonth()
                                 {!doneFirst?doneFirst=true:""}
                             }
-                            cell2.push(<th key={cellID} id={cellID} onClick={this.onClick.bind(this)}
-                                           className={this.classDateForSelection((idx)===this.state.column)}><div className="tableheadtd">
-                                {this.getDateForHead(idx - 2)}{(AddDay(this.state.dateStart, (idx - 2)).getDay()===1?<div className="mondayFlag">{"Пн"}</div>:"")}
-                            </div>
-                            </th>)
-                            {mapDays.set(idx, this.getDateForHeadFull(idx - 2))}
+                            {
+                             if   (withtimetable&&timetableDay.length&&(timetableDay[0].position.length>1)) {
+                                 cell2.push(<th key={cellID+'#0'} id={cellID+'#0'} onClick={this.onClick.bind(this)}
+                                                className={this.classDateForSelection((idx) === this.state.column)}>
+                                     <div className="tableheadtd">
+                                         {`${this.getDateForHead(idx - 2)}`}
+                                          <div className={addDay(dateStart, (idx - 2)).getDay() === 0 ? "holidayFlag" : "mondayFlag"}>{weekDaysGlobal[addDay(dateStart, (idx - 2)).getDay()]}</div>
+                                          <div className={"markstable-doubleDay"}>{"/1"}</div>
+                                     </div>
+                                 </th>)
+                                 // console.log("mapDays.1", idx+"#0", this.getDateForHeadFull(idx - 2, 0))
+                                 {mapDays.set(idx+"#0", this.getDateForHeadFull(idx - 2, 0))}
+                                 cell2.push(<th key={cellID+'#1'} id={cellID+'#1'} onClick={this.onClick.bind(this)}
+                                                className={this.classDateForSelection((idx) === this.state.column)}>
+                                     <div className="tableheadtd">
+                                         {`${this.getDateForHead(idx - 2)}`}
+                                         <div className={addDay(dateStart, (idx - 2)).getDay() === 0 ? "holidayFlag" : "mondayFlag"}>{weekDaysGlobal[addDay(dateStart, (idx - 2)).getDay()]}</div>
+                                         <div className={"markstable-doubleDay"}>{"/2"}</div>
+                                     </div>
+                                 </th>)
+                                 // console.log("mapDays.2", idx+"#1", this.getDateForHeadFull(idx - 2, 1))
+                                 {mapDays.set(idx+"#1", this.getDateForHeadFull(idx - 2, 1))}
+                             }
+                             else
+                                cell2.push(<th key={cellID} id={cellID+'#0'} onClick={this.onClick.bind(this)}
+                                               className={this.classDateForSelection((idx) === this.state.column)}>
+                                    <div className="tableheadtd">
+                                        {this.getDateForHead(idx - 2)}
+                                        {/*{(addDay(dateStart, (idx - 2)).getDay()===1?<div className="mondayFlag">{"Пн"}</div>:"")}*/}
+                                        <div
+                                            className={addDay(dateStart, (idx - 2)).getDay()===0 ? "holidayFlag" : "mondayFlag"}>{weekDaysGlobal[addDay(dateStart, (idx - 2)).getDay()]}
+                                        </div>
+                                    </div>
+                                </th>)
+                                // console.log("mapDays", idx+"#0", this.getDateForHeadFull(idx - 2, 0))
+                                {mapDays.set(idx+"#0", this.getDateForHeadFull(idx - 2, 0))}
+                                {mapDays.set(idx+"#1", this.getDateForHeadFull(idx - 2, 1))}
+                            }
                         }
                         break;
                 }
@@ -401,17 +427,16 @@ class MarksTable extends Component {
         // console.log("onlywithmailstudents", this.state.onlywithmailstudents, this.state.size)
         let rows = [];
         // for (var i = 0; i < this.state.size; i++) {
-        for (var i = 0; i < this.props.userSetup.students.length; i++) {
+        for (let i = 0; i < students.length; i++) {
             let rowID = `row${i}`
-            let cell = []
+            let cell = [], cellID = ''
             // console.log(this.props.userSetup.students, this.props.userSetup.students[i])
             if ((!(students[i].isout===1)) &&
                 (   ( this.state.onlywithmailstudents && (students[i].email===null?"":students[i].email).length)
                     || (!this.state.onlywithmailstudents)
                     || (students[i].isRealName===1))) {
-                for (var idx = 0; idx < (this.props.dayscount + 2); idx++) {
-                    let cellID = i + "#" + idx + "#" + students[i].id + "#" + mapDays.get(idx)
-
+                for (let idx = 0; idx < (this.props.dayscount + 2); idx++) {
+                    cellID = i + "#" + idx + "#" + students[i].id + "#" + mapDays.get(idx)
                     switch (idx) {
                         case 0 :
                             cell.push(<th key={cellID} id={cellID} className={"numbercol"}>
@@ -426,26 +451,81 @@ class MarksTable extends Component {
                             </th>)
                             break
                         default:
-                            // console.log("Current Rows", i, (this.state.row), idx, this.state.column, AddDay(this.state.dateStart, idx - 2), AddDay(this.state.dateStart, idx - 2).getDay())
-                            if ((AddDay(this.state.dateStart, idx - 2).getDay() > 0 && AddDay(this.state.dateStart, idx - 2).getDay() < 6 && this.props.withoutholidays) || (!this.props.withoutholidays)) {
-                                let mark = this.getMarkHash(this.props.userSetup.selectedSubj.subj_key.replace('#', '') + "#" + students[i].id + "#" + mapDays.get(idx));
-                                let markBefore = this.getMarkHashBefore(this.props.userSetup.selectedSubj.subj_key.replace('#', '') + "#" + students[i].id + "#" + mapDays.get(idx));
-                                let markTypes = this.getMarkHashType(this.props.userSetup.selectedSubj.subj_key.replace('#', '') + "#" + students[i].id + "#" + mapDays.get(idx));
+                            // console.log("Current Rows", i, (this.state.row), idx, this.state.column)
+                            const isDay = (addDay(dateStart, idx-2).getDay() > 0 && addDay(dateStart, idx-2).getDay() < 6 && withoutholidays)
+                            const newWeekDay = addDay(dateStart, idx-2).getDay()===0?6:addDay(dateStart, idx-2).getDay()-1
+                            const timetableDay = subjDays.filter(item=>Number(item.weekday)===Number(newWeekDay))
+                            let condition = false
+                            if (withtimetable) {
+                                if (timetableDay.length)
+                                    condition = true
+                            }
+                            else {
+                                condition = isDay || (!withoutholidays)
+                            }
+                            if (condition) { //((addDay(this.state.dateStart, idx - 2).getDay() > 0 && addDay(this.state.dateStart, idx - 2).getDay() < 6 && this.props.withoutholidays) || (!this.props.withoutholidays)) {
+                                let markBefore = this.getMarkHashBefore(selectedSubj.subj_key.replace('#', '') + "#" + students[i].id + "#" + mapDays.get(idx));
+                                let markTypes = this.getMarkHashType(selectedSubj.subj_key.replace('#', '') + "#" + students[i].id + "#" + mapDays.get(idx));
+                                let badmark =   (markBlank.id==="markblank_twelve"&&(mark==='1'||mark==='2'||mark==='3'))||
+                                                (markBlank.id==="markblank_five"&&(mark==='1'||mark==='2'))||
+                                                (markBlank.id==="markblank_letters"&&(mark==='D'||mark==='E/F'))
+                                let mark = null,
+                                    key = ''
+                                if   (withtimetable&&timetableDay.length&&(timetableDay[0].position.length>1)) {
+                                    // console.log("MARK_IN_TABLE.1", idx + "#0", mapDays.get(idx + "#0"))
+                                    cellID = i + "#" + idx + "#" + students[i].id + "#" + mapDays.get(idx+"#0")
+                                    key = selectedSubj.subj_key.replace('#','') + "#" + students[i].id + "#" + mapDays.get(idx + "#0") //+ "#0"
+                                    mark = this.getMarkHash(key);
+                                    cell.push(<td key={cellID+'#0'} id={cellID+'#0'} onClick={this.onClick.bind(this)}
+                                                  className={badmark ? "tableBody badmark" : "tableBody"}>
+                                        {!(mark === null) && markTypes.length > 0 && mark.length ?
+                                            <div className="topMarkLabel">{markTypes}</div> : ""}
+                                        {!(mark === null) && markBefore.length > 0 && mark.length ?
+                                            <div className="topMarkLabelBefore">{markBefore}</div> : ""}
+                                        {!(mark === null) && mark}
+                                        {(isadmin === 1 && mark === null) && "X"}
+                                        {/*mathem#242#2019-01-31*/}
+                                        {i===this.state.row&&idx===this.state.column&&this.state.subcolumn===0?this.getMarkBlank(cellID):null}
+                                    </td>)
+                                    cellID = i + "#" + idx + "#" + students[i].id + "#" + mapDays.get(idx+"#1")
+                                    key = selectedSubj.subj_key.replace('#','') + "#" + students[i].id + "#" + mapDays.get(idx + "#1")
+                                    mark = this.getMarkHash(key);
+                                    cell.push(<td key={cellID+'#1'} id={cellID+'#1'} onClick={this.onClick.bind(this)}
+                                                  className={badmark ? "tableBody badmark" : "tableBody"}>
+                                        {!(mark === null) && markTypes.length > 0 && mark.length ?
+                                            <div className="topMarkLabel">{markTypes}</div> : ""}
+                                        {!(mark === null) && markBefore.length > 0 && mark.length ?
+                                            <div className="topMarkLabelBefore">{markBefore}</div> : ""}
+                                        {!(mark === null) && mark}
+                                        {(isadmin === 1 && mark === null) && "X"}
+                                        {/*mathem#242#2019-01-31*/}
+                                        {i===this.state.row&&idx===this.state.column&&this.state.subcolumn===1?this.getMarkBlank(cellID):null}
+                                    </td>)
+                                }
+                                else {
+                                    // console.log("MARK_IN_TABLE.2", idx + "#0", mapDays.get(idx + "#0"))
+                                    cellID = i + "#" + idx + "#" + students[i].id + "#" + mapDays.get(idx+"#0")
+                                    key = selectedSubj.subj_key.replace('#','') + "#" + students[i].id + "#" + mapDays.get(idx + "#0")// + "#0"
+                                    let key2 = selectedSubj.subj_key.replace('#','') + "#" + students[i].id + "#" + mapDays.get(idx + "#1")// + "#0"
+                                    mark = this.getMarkHash(key);
+                                    let mark2 = this.getMarkHash(key2);
+                                    cell.push(<td key={cellID+'#0'} id={cellID+'#0'} onClick={this.onClick.bind(this)}
+                                              className={badmark ? "tableBody badmark" : "tableBody"}>
+                                    {(mark!==null) && markTypes.length > 0 && mark.length ?
+                                        <div className="topMarkLabel">{markTypes}</div> : ""}
+                                    {(mark!==null) && markBefore.length > 0 && mark.length ?
+                                        <div className="topMarkLabelBefore">{markBefore}</div> : ""}
+                                    {(mark!==null) && mark}
+                                    {/*{console.log("mark2", mark2)}*/}
+                                    {(mark2!=="")?
+                                        <div className="bottomDoubleMark">{'/'+mark2}</div>
+                                     :null}
 
-                                let badmark =   (this.props.userSetup.markBlank.id==="markblank_twelve"&&(mark==='1'||mark==='2'||mark==='3'))||
-                                                (this.props.userSetup.markBlank.id==="markblank_five"&&(mark==='1'||mark==='2'))||
-                                                (this.props.userSetup.markBlank.id==="markblank_letters"&&(mark==='D'||mark==='E/F'))
-
-                                cell.push(<td key={cellID} id={cellID} onClick={this.onClick.bind(this)} className={badmark?"tableBody badmark":"tableBody"}>
-
-                                {!(mark===null)&&markTypes.length>0&&mark.length?<div className="topMarkLabel">{markTypes}</div>:""}
-                                {!(mark===null)&&markBefore.length>0&&mark.length?<div className="topMarkLabelBefore">{markBefore}</div>:""}
-                                {!(mark===null)&&mark}
-                                    {(this.props.userSetup.isadmin===1&&mark===null)&&"X"}
-                                {/*{this.getMarkHash(this.props.userSetup.selectedSubj.subj_key.replace('#', '') + "#" + this.props.userSetup.students[i].id + "#" + mapDays.get(idx))}*/}
-                                {/*mathem#242#2019-01-31*/}
-                                {i === (this.state.row) && idx === this.state.column ? this.getMarkBlank(cellID) : ""}
-                            </td>)
+                                    {(isadmin === 1 && mark === null) && "X"}
+                                    {/*mathem#242#2019-01-31*/}
+                                    {i===this.state.row&&idx===this.state.column&&this.state.subcolumn===0?this.getMarkBlank(cellID):null}
+                                </td>)
+                            }
                             }
                             break;
                     }
@@ -453,29 +533,20 @@ class MarksTable extends Component {
                 rows.push(<tr key={i} id={rowID}>{cell}</tr>)
             }
         }
-        // console.log("this.props.user.id", this.props.user.id)
+        console.log("marksTable", this.props.userSetup)
         const {userID, langCode} = this.props.userSetup;
-        // let field_name = "ua"
-        // switch (langCode) {
-        //     case "RU" :
-        //         field_name = "ru"
-        //         break
-        //     case "EN" :
-        //         field_name = "en"
-        //         break
-        //     case "GB" :
-        //         field_name = "gb"
-        //         break
-        //     default :
-        //         break;
-        // }
-        // field_name = "subj_name_"+field_name
+
         return(
 
             <div className="containertable">
                 <div className="row">
                     <div className="col s12 board">
                         <div className="periodName">
+                            <div className="markTableStatCaption">
+                            <label><b>За три дня: </b>
+                                Оценки/студенты/предметы: <b>{this.props.userSetup.cnt_marks}/
+                                    {this.props.userSetup.stud_cnt}/{this.props.userSetup.subj_cnt}</b></label>
+                            </div>
                             <div className="periodTitle">
                                 <a id="daysback" onClick={this.daysMove.bind(this)}>{"-" + this.props.dayscount + "дн"}</a>
                                     <b>{this.getPeriod()}</b>
@@ -515,17 +586,51 @@ class MarksTable extends Component {
                         </div>
 
                         {userID > 0 && <div className="selectGroup">
-                            {userID > 0 &&<Checkbox onclick={this.setStudentFilter.bind(this)} bold={true}
-                                                    defelem={this.state.onlywithmailstudents}
-                                                    label=" Только студенты с email"
-                                                    name = {"onlywithmailstudents"}/>}
-                            <label><b>За три дня: </b>
-                                Оценки/студенты/предметы: <b>{this.props.userSetup.cnt_marks}/
-                                {this.props.userSetup.stud_cnt}/{this.props.userSetup.subj_cnt}</b></label>
-                            <button onClick={this.sendMail.bind(this)}>Разослать оценки за 3 недели [Предыдущая: {this.props.userSetup.lastmarkssent}]</button>
+                            {userID > 0 &&<div className={"markstable-checkbox-group"}>
+                                {/*<Checkbox onclick={this.setTimetableFilter} bold={true}*/}
+                                          {/*defelem={this.state.withTimetable}*/}
+                                          {/*label=" Журнал с учётом расписания"*/}
+                                          {/*name = {"onlywithmailstudents"}/>*/}
+                                {/*<Checkbox onclick={()=>{this.setState({withoutholidays : !this.state.withoutholidays})}} bold={true}*/}
+                                          {/*defelem={this.state.withoutholidays}*/}
+                                          {/*label=" Убрать выходные дни"*/}
+                                          {/*name = {"onlywithmailstudents"}/>*/}
+                                {/*<Checkbox onclick={this.setStudentFilter} bold={true}*/}
+                                          {/*defelem={this.state.onlywithmailstudents}*/}
+                                          {/*label=" Только студенты с email"*/}
+                                          {/*name = {"onlywithmailstudents"}/>*/}
+                                {/*<form>*/}
+                                <div className="checkboxLabel">
+                                    <input
+                                           name="withtimetable"
+                                           type="checkbox"
+                                           checked={!timetable.length?false:this.state.withtimetable}
+                                           disabled={!timetable.length}
+                                           onChange={this.handleInputChange}/>
+                                    {" Журнал с учётом расписания"}
+                                </div>
+                                <div className="checkboxLabel">
+                                    <input
+                                        name="withoutholidays"
+                                        type="checkbox"
+                                        checked={this.state.withoutholidays}
+                                        onChange={this.handleInputChange}/>
+                                    {"  Убрать выходные дни"}
+                                </div>
+                                <div className="checkboxLabel">
+                                    <input
+                                        name="onlywithmailstudents"
+                                        type="checkbox"
+                                        checked={this.state.onlywithmailstudents}
+                                        onChange={this.handleInputChange}/>
+                                    {" Только студенты с email"}
+                                </div>
+                            </div>}
+                            <div className={"selectGroup-btn"} onClick={this.sendMail.bind(this)}>Разослать оценки за 3 недели [Предыдущая: {this.props.userSetup.lastmarkssent}]</div>
+                            {this.state.mailSent.length?
                             <div className={this.state.mailSent.length?"popup2 show":"popup2"} onClick={this.hidePopup.bind(this)}>
                                 {this.state.mailSent.length?<span className="popuptext2" id="myPopup">{this.state.mailSent}</span>:""}
-                            </div>
+                            </div>:null}
                         </div>}
 
                         <table id="simple-board">
@@ -542,6 +647,12 @@ class MarksTable extends Component {
         )
     }
 }
-
-export default  connect(mapStateToProps)(MarksTable)
+const mapDispatchToProps = dispatch => {
+    return ({
+        onReduxUpdate: (key, payload) => dispatch({type: key, payload: payload}),
+        onStopLoading: () => dispatch({type: 'APP_LOADED'}),
+        onStartLoading: () => dispatch({type: 'APP_LOADING'}),
+    })
+}
+export default  connect(mapStateToProps, mapDispatchToProps)(MarksTable)
 /* eslint-disable */

@@ -46,7 +46,7 @@ export const userLoggedInByToken = (email, token, kind, langLibrary) => {
             "token": token,
             "kind": kind,
         };
-        console.log("userLoggedInByToken", data, langLibrary);
+        console.log("userLoggedInByToken");
         document.body.style.cursor = 'progress';
         // instanceAxios().get(`${API_URL}user`, data)
         axios2('get', `${API_URL}user`)
@@ -66,7 +66,7 @@ export const userLoggedInByToken = (email, token, kind, langLibrary) => {
             .catch(response => {
                 console.log("userLoggedInByTokenError", response.data);
                 window.localStorage.removeItem("myMarks.data");
-                dispatch({type: "LANG_LIBRARY", langLibrary: langLibrary})
+                // dispatch({type: "LANG_LIBRARY", langLibrary: langLibrary})
                 dispatch({type: 'APP_LOADED'})
                 document.body.style.cursor = 'default';
                 // Список ошибок в отклике...

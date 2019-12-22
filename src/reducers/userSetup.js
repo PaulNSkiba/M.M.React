@@ -24,7 +24,7 @@ const initialState = (check)=>{
                     selectedSubjsArray: [], selectedSubjects: [], selectedSubj: {id: 0, subj_key: "#null"},
                     subjects_list: [], markBlank: {id: "", alias: "", pk: 1},
                     currentPeriodDateCount: 5, marks: [], direction: "UPDOWN", titlekind: "NICK",
-                    withoutholidays: true, token: "", userName: "",
+                    withoutholidays: true, withtimetable : false, onlywithmailstudents : true, token: "", userName: "",
                     isadmin: 0, studentName: "", studentID: 0,
                     studSubj: new Map(), mark_dates: [], best_lines: [], avg_lines: [], avg_marks: [],
                     addUserToken: "", cnt_marks: 0, stud_cnt: 0, subj_cnt: 0,
@@ -38,6 +38,7 @@ const initialState = (check)=>{
                     isMobile: false, aliasesList: [], aliasesLang: "", menuItem : "",
                     budget : [], budgetpays : [],
                     renderBudget : 1, langCode : "", studentToChange : 0,
+                    curMenuItem : {id : 0, label : ''}, timetable : [],
                 }
         }
     return obj
@@ -55,11 +56,12 @@ export function userSetupReducer(state = initialState(true), action) {
             let {   token, subj_count, subjects_list,
                     selected_subjects, selected_subj, students, marks,
                     mark_dates, best_lines, avg_lines, avg_marks, addUserToken,
-                    lastmarkssent, emails, homework, stats2, stats3, mark_date, avgclassmarks, classObj, chatrows, budget, budgetpays} = action.payload;
+                    lastmarkssent, emails, homework, stats2, stats3, mark_date,
+                    avgclassmarks, classObj, chatrows, budget, budgetpays, timetable} = action.payload;
             let {   name : userName, id : userID, isadmin } = action.payload.user;
             let {   class_number, pupil_count, year_name, perioddayscount,
                     markblank_id, markblank_alias, selected_marker, titlekind,
-                    direction, class_id } = action.payload.usersetup;
+                    direction, class_id, withoutholidays, withtimetable, onlywithmailstudents } = action.payload.usersetup;
             let {   id : studentID, student_name : studentName} = action.payload.student;
             let {   cnt_marks, stud_cnt, subj_cnt } = action.payload.stats[0];
             studentID = studentID?studentID:0;
@@ -73,11 +75,17 @@ export function userSetupReducer(state = initialState(true), action) {
                 selectedSubj : selected_subj, students : students?students:[], classObj,
                 isadmin, studentName, studentID, marks, mark_dates, best_lines, avg_lines, avg_marks, addUserToken,
                 cnt_marks, stud_cnt, subj_cnt, lastmarkssent, emails, homework, stats2 : stats2[0], stats3 : stats3[0],
-                mark_date, avgclassmarks, langLibrary : action.langLibrary, localChatMessages : chatrows, budget, budgetpays
-                }
+                mark_date, avgclassmarks, localChatMessages : chatrows, budget, budgetpays, timetable,
+                withoutholidays, withtimetable, onlywithmailstudents}
+            if (Object.keys(action.langLibrary).length)
+            setup = {...setup, langLibrary : action.langLibrary}
+
             saveToLocalStorageOnDate("userSetupDate", toYYYYMMDD(new Date()))
             saveToLocalStorageOnDate("userSetup", JSON.stringify(setup))
-            saveToLocalStorageOnDate("langLibrary", JSON.stringify(action.langLibrary))
+
+            if (Object.keys(action.langLibrary).length)
+                saveToLocalStorageOnDate("langLibrary", action.langLibrary)
+
             return setup
             }
         case "USER_SETUP" :
@@ -168,6 +176,14 @@ export function userSetupReducer(state = initialState(true), action) {
                         JSON.stringify({...state, direction: Object.values(action.payload)[0]}))
                     return {...state, direction: Object.values(action.payload)[0]};
                 case "withoutholidays" :
+                    saveToLocalStorageOnDate("userSetup",
+                        JSON.stringify({...state, withoutholidays: Object.values(action.payload)[0]}))
+                    return {...state, withoutholidays: Object.values(action.payload)[0]};
+                case "withtimetable" :
+                    saveToLocalStorageOnDate("userSetup",
+                        JSON.stringify({...state, withoutholidays: Object.values(action.payload)[0]}))
+                    return {...state, withoutholidays: Object.values(action.payload)[0]};
+                case "onlywithmailstudents" :
                     saveToLocalStorageOnDate("userSetup",
                         JSON.stringify({...state, withoutholidays: Object.values(action.payload)[0]}))
                     return {...state, withoutholidays: Object.values(action.payload)[0]};
@@ -265,6 +281,9 @@ export function userSetupReducer(state = initialState(true), action) {
             return{...state, token: action.payload}
         case 'STUDENT_CHANGE' :
             return{...state, studentToChange: action.payload}
+        case 'MENU_ITEM' :
+            console.log("MENU_ITEM", action.payload)
+            return{...state, curMenuItem: action.payload}
         default :
             return state
     }
