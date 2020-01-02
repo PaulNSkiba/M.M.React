@@ -1,4 +1,4 @@
-.addSubject, .addSubjectEx{
+.addSubject, .addSubjectEx, .addSubjectTop{
     display: block;
     position: absolute;
     z-index: 11;
@@ -7,20 +7,25 @@
     box-shadow: 0 3px 5px 0 rgba(0, 0, 0, 0.2);
     width: 200px;
     right : 5px;
-    bottom: 5px;
     padding : 5px;
     color : black;
 }
-.addSubject{
+.addSubject, .addSubjectEx{
+     bottom: 5px;
+ }
+.addSubjectTop{
+    bottom: -45px;
+}
+.addSubject, .addSubjectTop{
     height: 90px;
 }
 .addSubjectEx{
     height: 140px;
 }
-.addSubject input, .addSubjectEx input, .addSubjectEx select {
+.addSubject input, .addSubjectTop input, .addSubjectEx input, .addSubjectEx select {
     width: 180px;
     margin : 5px;
 }
-.addSubject button, .addSubjectEx button {
+.addSubject button, .addSubjectTop button, .addSubjectEx button {
     margin: 8px 5px;
 }

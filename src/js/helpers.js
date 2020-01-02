@@ -7,6 +7,9 @@ import {AUTH_URL, API_URL, BASE_HOST, WEBSOCKETPORT, LOCALPUSHERPWD} from '../co
 import Echo from 'laravel-echo'
 import Pusher from 'pusher-js'
 
+export const weekDaysGlobal = ["Вс","Пн","Вт","Ср","Чт","Пт","Сб"]
+export const weekDaysLocal = ["Пн","Вт","Ср","Чт","Пт","Сб","Вс"]
+export const classLetters = ["А", "Б", "В", "Г", "Д"]
 /* eslint-disable */
 export const mapStateToProps = store => {
     // console.log(store) // посмотрим, что же у нас в store?
@@ -1124,7 +1127,6 @@ export const waitCursorBlock=()=>
         <div></div>
         <div></div>
     </div>
-export const weekDaysGlobal = ["Вс","Пн","Вт","Ср","Чт","Пт","Сб"]
-export const weekDaysLocal = ["Пн","Вт","Ср","Чт","Пт","Сб","Вс"]
+
 
 /* eslint-disable */

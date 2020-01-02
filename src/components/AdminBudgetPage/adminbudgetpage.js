@@ -3,18 +3,8 @@
  */
 
 import React, {Component} from 'react'
-import {
-    addDay,
-    arrOfWeekDays,
-    dateDiff,
-    toYYYYMMDD,
-    instanceAxios,
-    addMonths,
-    dateFromYYYYMMDD,
-    mapStateToProps,
-    getLangByCountry
-} from '../../js/helpers'
-import Menu from '../Menu/menu'
+import { addDay, arrOfWeekDays, dateDiff, toYYYYMMDD, instanceAxios, addMonths, dateFromYYYYMMDD, mapStateToProps, getLangByCountry, axios2} from '../../js/helpers'
+// import Menu from '../Menu/menu'
 import MenuEx from '../MenuEx/menuex'
 import {connect} from 'react-redux'
 import {withRouter} from 'react-router-dom'
@@ -29,12 +19,14 @@ import './adminbudgetpage.css'
 import ReactFlagsSelect from 'react-flags-select';
 import 'react-flags-select/css/react-flags-select.css';
 import Logo from '../../img/LogoMyMsmall.png'
-import ReactPlayer from 'react-player'
+// import ReactPlayer from 'react-player'
 import DatePicker from "react-datepicker";
 import {registerLocale, setDefaultLocale} from  "react-datepicker";
 import {ru} from 'date-fns/locale';
 import UniversalTable from '../UniversalTable/universaltable'
-// import YearPicker from "react-year-picker";
+import AddSubject from '../AddSubject/addsubject'
+import Tabs from 'react-responsive-tabs';
+import 'react-responsive-tabs/styles.css';
 
 import "react-datepicker/dist/react-datepicker.css";
 
@@ -62,6 +54,8 @@ class AdminBudgetPage extends Component {
             curInColumn: null,
             curOutRow: null,
             curOutColumn: null,
+            row: -1,
+            column: -1,
         }
         this.headArray = [
             {name: "№ п/п", width: "20px"},
@@ -92,6 +86,10 @@ class AdminBudgetPage extends Component {
             {name: "Нач. сальдо", width: "40px"},
             {name: "-", width: "20px"},
         ]
+        this.tabs = [{ name: 'Взносы', memo: 'Взносы', id : 0 },
+            { name: 'Расходы класса', memo: 'Расходы класса', id : 1 },
+            { name: 'Взносы фактические', memo: 'Взносы фактические', id : 2 },
+        ];
         this.onClick = this.onClick.bind(this)
     }
 
@@ -202,6 +200,7 @@ class AdminBudgetPage extends Component {
     onDayOfPaymentClick = e => {
 
     }
+
     createInTableRows(rowsArr, onInputChange, withInput, row, column, classNameOfTD, checkedMap, headex, year) {
         let cell = [],
             rows = []
@@ -239,17 +238,19 @@ class AdminBudgetPage extends Component {
                                onBlur={this.onBlur}
                                defaultValue={item.name}/> : ""}
                 </td>)
-                cell.push(<td key={"bbr" + (i + 1) + "c3"} style={{width: "50px", padding: "2px", textAlign: "center", fontSize: "0.8em"}}
+                cell.push(<td key={"bbr" + (i + 1) + "c3"}
+                              style={{width: "50px", padding: "2px", textAlign: "center", fontSize: "0.8em"}}
                               id={(i + 1) + "#3#" + rowsArr[i].id}
                               onClick={this.onClick}>
                     {item.short}
                     {(row === (i + 1) && column === 3) ?
-                    <input type="text" id={(i + 1) + "#3#" + item.id} className="inputEditor"
-                           onChange={e => this.onInputChange(e.target.value, item.id)}
-                           onKeyPress={this.onInputKeyPress}
-                           onBlur={this.onBlur}
-                           defaultValue={item.short}/> : ""}</td>)
-                cell.push(<td key={"bbr" + (i + 1) + "c4"} style={{width: "50px", padding: "2px", textAlign: "center", fontSize: "0.8em"}}
+                        <input type="text" id={(i + 1) + "#3#" + item.id} className="inputEditor"
+                               onChange={e => this.onInputChange(e.target.value, item.id)}
+                               onKeyPress={this.onInputKeyPress}
+                               onBlur={this.onBlur}
+                               defaultValue={item.short}/> : ""}</td>)
+                cell.push(<td key={"bbr" + (i + 1) + "c4"}
+                              style={{width: "50px", padding: "2px", textAlign: "center", fontSize: "0.8em"}}
                               id={(i + 1) + "#4#" + rowsArr[i].id}
                               onClick={this.onClick}>
                     {item.sum}
@@ -259,7 +260,7 @@ class AdminBudgetPage extends Component {
                                onKeyPress={this.onInputKeyPress}
                                onBlur={this.onBlur}
                                defaultValue={item.sum}/> : ""}
-                    </td>)
+                </td>)
                 cell.push(<td key={"bbr" + (i + 1) + "c5"} style={{width: "40px", padding: "2px", textAlign: "center"}}>
                     <input type="checkbox" onChange={(e) => {
                         console.log(e.target.value);
@@ -363,7 +364,7 @@ class AdminBudgetPage extends Component {
                     // onClick={()=>this.setState({curInRow : key + 1, curInColumn : 2})}
                               id={(i + 1) + "#2#" + rowsArr[i].id}
                               onClick={this.onClick}>
-                    {checkedMap.has((i + 1) + "#9#" + rowsArr[i].id)?<div className={"plusSaldo"}>V</div>:null}
+                    {checkedMap.has((i + 1) + "#9#" + rowsArr[i].id) ? <div className={"plusSaldo"}>V</div> : null}
                     {item.name}
                     {(row === (i + 1) && column === 2) ?
                         <input type="text" id={(i + 1) + "#2#" + item.id} className="inputEditor"
@@ -474,7 +475,7 @@ class AdminBudgetPage extends Component {
         let cell = [],
             rows = []
         rowsArr = rowsArr.filter(item => item.isout !== 1)
-        // console.log("createTableRows", rowsArr)
+        console.log("createTableRows", this.state.row, this.state.column)
         if (rowsArr) {
             for (let i = 0; i < rowsArr.length; i++) {
                 cell = []
@@ -507,10 +508,9 @@ class AdminBudgetPage extends Component {
                         />
                     </td>)
 
-
                 if (headex !== undefined)
                     for (let j = 0; j < headex.length; j++) {
-                        let curSum = null, id = 0
+                        let curSum = null, id = 0, factSum = null
                         if (this.props.userSetup.budget !== undefined && this.props.userSetup.budget.length) {
                             const arr = this.props.userSetup.budget.filter(item => {
                                     // console.log("FILTER", headex[j], item)
@@ -522,32 +522,32 @@ class AdminBudgetPage extends Component {
                             )
 
                             if (arr.length) {
-
                                 id = arr[0].id
                                 curSum = arr[0].sum
-                                // console.log("CURSUM", id, curSum)
+                                factSum = arr[0].sum_fact
+                                // console.log("CURSUM", id, curSum, factSum)
                             }
                         }
                         cell.push(<td key={"bbr" + j + (i + 1) + "c3"}
                                       id={headex[j].item.id + '#' + rowsArr[i].id + "#" + headex[j].item.sum}
-                                      onClick={() => {
-                                          const budgetID = id
-                                          const json = `{"id":${budgetID},
+                                      onClick={this.state.row === -1 && this.state.column === -1 ? () => {
+                                          const json = `{"id":${id},
                                                         "class_id":${this.props.userSetup.classID},
                                                         "user_id":${this.props.userSetup.userID},
                                                         "student_id":${rowsArr[i].id},
                                                         "paydate":"${headex[j].item.isregular !== 1 ? headex[j].item.paydate : toYYYYMMDD(new Date(headex[j].realdate))}",
-                                                        "sum":${id > 0 && curSum !== null && (headex[j].item.isregular||headex[j].item.isregular===null) ? null : headex[j].item.sum.toString().replace(",", ".")},
+                                                        "sum":${id > 0 && curSum !== null && (headex[j].item.isregular || headex[j].item.isregular === null) ? null : headex[j].item.sum.toString().replace(",", ".")},
+                                                        "sum_fact":${id > 0 && curSum !== null && (headex[j].item.isregular || headex[j].item.isregular === null) ? null : null},
                                                         "payment_id":${headex[j].item.id},
                                                         "payment_offset":${j},
                                                         "isregular":${headex[j].item.isregular}}`
                                           console.log("JSON", json)
-                                          instanceAxios().post(`${API_URL}budget/update/${budgetID}`, json)
+                                          instanceAxios().post(`${API_URL}budget/update/${id}`, json)
                                               .then(res => {
                                                   // console.log("UPDATED", res)
                                                   let newarr = this.props.userSetup.budget
                                                   if (id)
-                                                      newarr = newarr.filter(item => item.id != id)
+                                                      newarr = newarr.filter(item => item.id !== id)
                                                   newarr.push(res.data)
                                                   this.props.onReduxUpdate("BUDGET_UPDATE", newarr)
                                                   this.props.onReduxUpdate("RENDER_BUDGET", ++this.props.userSetup.renderBudget)
@@ -556,14 +556,51 @@ class AdminBudgetPage extends Component {
                                               })
                                               .catch(res => console.log("ERROR", res))
                                           // console.log(headex[j].item.id + '#' + rowsArr[i].id + "#" + headex[j].item.sum)
-                                      }}
+                                      } : null}
                                       style={{
+                                          positon: "relative",
                                           width: "54px",
                                           textAlign: "center",
                                           backgroundColor: curSum !== null ? "#C6EFCE" : "#fff",
                                           cursor: "pointer"
                                       }}>
+
+                            {curSum!==null ? <div className="budget-rightArrow" onClick={e => {
+                                this.setState({row: i, column: j});
+                                e.stopPropagation();
+                                this.onFactSumClick(e, i, j, factSum)
+                            }}></div> : null}
+                            {factSum!==null ? <div className="budget-rightText" onClick={e => {
+                                this.setState({row: i, column: j});
+                                e.stopPropagation();
+                                this.onFactSumClick(e, i, j, factSum)
+                            }}>{factSum}</div> : null}
+                            {this.state.row === i && this.state.column === j ?
+                                <AddSubject addsubjecttop title={"Фактическая оплата"} firehide={(hide) => {
+                                    this.setState({row: -1, column: -1})
+                                }} addfunc={(sum) => {
+                                    console.log("ADD_FUNC", sum)
+                                    const json = `{     "id":${id},
+                                                        "sum_fact":${id > 0 && sum !== null ? sum.toString().replace(",", ".") : null}}`
+                                    console.log("JSON:FACT", json)
+                                    axios2('post', `${API_URL}budget/update/${id}`, json)
+                                        .then(res => {
+                                            console.log("UPDATED", res)
+                                            let newarr = this.props.userSetup.budget
+                                            if (id)
+                                                newarr = newarr.filter(item => item.id!==id)
+                                            newarr.push(res.data)
+                                            this.props.onReduxUpdate("BUDGET_UPDATE", newarr)
+                                            this.props.onReduxUpdate("RENDER_BUDGET", ++this.props.userSetup.renderBudget)
+                                            this.setState({renderRows: ++this.state.renderRows})
+
+                                        })
+                                        .catch(res => console.log("ERROR", res))
+
+                                }
+                                }/> : null}
                             {curSum}
+
                         </td>)
                     }
                 rows.push(<tr key={i}>{cell}</tr>)
@@ -573,6 +610,12 @@ class AdminBudgetPage extends Component {
         return rows;
     }
 
+    onFactSumClick = (e, row, column, factSum) => {
+        // alert(row + " " + column + " " + factSum)
+
+        // e.preventDefault()
+        e.stopPropagation()
+    }
     prepPaymentsHeaderAndRowArray = (planIns, year) => {
         let arr = []
         let headArray = [...this.headArray]
@@ -643,7 +686,8 @@ class AdminBudgetPage extends Component {
             </div>
             <div>
                 {userID > 0 ? <button className="logoutbtn" onClick={this.userLogout.bind(this)}>
-                    <div className={userName.length>10?"mym-app-button-name-small":"mym-app-button-name"}>{userName}</div>
+                    <div
+                        className={userName.length > 10 ? "mym-app-button-name-small" : "mym-app-button-name"}>{userName}</div>
                     <div className="mym-app-button-exit">{langLibrary.exit}</div>
                 </button> : null}
             </div>
@@ -666,8 +710,7 @@ class AdminBudgetPage extends Component {
             optionsSize={12}/>
         </div>
     }
-
-    render() {
+    getTabs=()=>{
         const yearArr = (() => {
             let arr = [];
             const curYear = (new Date()).getFullYear()
@@ -706,11 +749,116 @@ class AdminBudgetPage extends Component {
             created_at: null,
             updated_at: null
         }
+        const objBlank = {}
+        return this.tabs.map((item, key) => ({
+            title: item.name,
+            getContent: () => {
+                switch (item.id) {
+                    case 0 :
+                        return                     <div className={"insBlock"}>
+                            {/*<div style={{*/}
+                            {/*display: "flex",*/}
+                            {/*justifyContent: "space-between",*/}
+                            {/*height: "30px",*/}
+                            {/*margin: "5px 5%"*/}
+                            {/*}}>*/}
+                            {/*<div style={{fontWeight: "600", fontSize: "1em"}}>Взносы</div>*/}
+                            {/*<button>Добавить взнос</button>*/}
+                            {/*</div>*/}
+                            {/*{this.fillInTable()}*/}
+                            <UniversalTable head={this.headInArray}
+                                            rows={this.state.planIns}
+                                            createTableRows={this.createInTableRows}
+                                            classNameOfTD={this.classNameOfTD}
+                                            onstudentclick={this.onSelectStudent}
+                                            selectedstudent={this.state.curStudent}
+                                            btncaption={"+Взнос"}
+                                            objblank={objInBlank}
+                                            initrows={() => {
+                                                return this.props.userSetup.budgetpays
+                                            }}
+                                            height={"300px"}
+                                            kind={"budgetpaysin"}
+                                            year={this.state.curYear}
+                            />
+                        </div>
+                    case 1 :
+                        return                     <div className={"outsBlock"}>
+                            <UniversalTable head={this.headOutArray}
+                                            rows={this.state.planOuts}
+                                            createTableRows={this.createOutTableRows}
+                                            classNameOfTD={this.classNameOfTD}
+                                            onstudentclick={this.onSelectStudent}
+                                            selectedstudent={this.state.curStudent}
+                                            btncaption={"+Расход"}
+                                            objblank={objOutBlank}
+                                            initrows={() => {
+                                                return this.props.userSetup.budgetpays
+                                            }}
+                                            height={"300px"}
+                                            kind={"budgetpaysout"}
+                                            saldo={true}
+                                            year={this.state.curYear}
+                            />
+                        </div>
+                    case 2 :
+                        return                 <div className="insAndOutsFactBlock">
+                            <div className={"insFactBlock"}>
+                                <div style={{
+                                    display: "flex",
+                                    justifyContent: "space-between",
+                                    height: "30px",
+                                    margin: "5px 5%"
+                                }}>
+                                    <div style={{fontWeight: "600", fontSize: "1em"}}>Взносы(факт)</div>
+                                    <div>
+                                        <select name="days" onClick={(e) => this.handleYear(e.target.value)}
+                                                defaultValue={this.state.curYear}>
+                                            {yearArr.map((item, key) => {
+                                                return <option key={key}>
+                                                    {item}
+                                                </option>
+                                            })}
+                                        </select>
+                                    </div>
+                                    {/*<YearPicker onChange={this.handleYear} />;*/}
+                                </div>
+                                <UniversalTable head={this.state.factInsHeader}
+                                                rows={this.state.rowArray}
+                                                createTableRows={this.createTableRows}
+                                                classNameOfTD={this.classNameOfTD}
+                                                onstudentclick={this.onSelectStudent}
+                                                selectedstudent={this.state.curStudent}
+                                                btncaption={""}
+                                                render={this.props.userSetup.renderBudget}
+                                                objblank={objBlank}
+                                                initrows={() => {
+                                                    return this.props.userSetup.students
+                                                }}
+                                                kind={"budget"}
+                                                height={"500px"}
+                                                headex={ this.state.factInsHeaderEx}
+                                                year={this.state.curYear}
+                                                onfactclick={this.onFactSumClick}
+                                />
+                            </div>
+                        </div>
+                    default :
+                        break;
+                }
+            },
+            /* Optional parameters */
+            key: key,
+            tabClassName: 'tab',
+            panelClassName: 'panel',
+        }));
+    }
+    render() {
 
         let {userID, userName, isadmin, langLibrary} = this.props.userSetup;
         let {isMobile} = this.state
         console.log("RENDER_BUDGET", this.props.userSetup)
-        const objBlank = {}
+
         return (
             <div className="AdminPage">
                 <div className="navbar"
@@ -719,14 +867,14 @@ class AdminBudgetPage extends Component {
                         <div className="navBlock">
                             <div style={{"display": "flex", "justifyContent": "space-between", "alignItems": "center"}}>
                                 <Link
-                                    onClick={()=>{
-                                        this.props.onReduxUpdate("MENU_ITEM", {id : 0, label : ''});
+                                    onClick={() => {
+                                        this.props.onReduxUpdate("MENU_ITEM", {id: 0, label: ''});
                                         this.props.onReduxUpdate("MENU_CLICK", "")
                                     }}
                                     to="/"><img src={Logo} alt={"My.Marks"}/></Link>
                                 <div className="myTitle"><h3><Link
-                                    onClick={()=>{
-                                        this.props.onReduxUpdate("MENU_ITEM", {id : 0, label : ''});
+                                    onClick={() => {
+                                        this.props.onReduxUpdate("MENU_ITEM", {id: 0, label: ''});
                                         this.props.onReduxUpdate("MENU_CLICK", "")
                                     }}
                                     to="/">{langLibrary.siteName}</Link></h3></div>
@@ -755,93 +903,88 @@ class AdminBudgetPage extends Component {
                     </div>
                 </div>
                 <div className="navbar-shadow"></div>
-                <div className="insAndOutsFactBlock">
-                    <div className={"insBlock"}>
+
+                <div style={{marginTop : "10px"}}>
+                    <Tabs items={this.getTabs()} />
+                </div>
+                {/*<div className="insAndOutsFactBlock">*/}
+                    {/*<div className={"insBlock"}>*/}
+                        {/*<UniversalTable head={this.headInArray}*/}
+                                        {/*rows={this.state.planIns}*/}
+                                        {/*createTableRows={this.createInTableRows}*/}
+                                        {/*classNameOfTD={this.classNameOfTD}*/}
+                                        {/*onstudentclick={this.onSelectStudent}*/}
+                                        {/*selectedstudent={this.state.curStudent}*/}
+                                        {/*btncaption={"+Взнос"}*/}
+                                        {/*objblank={objInBlank}*/}
+                                        {/*initrows={() => {*/}
+                                            {/*return this.props.userSetup.budgetpays*/}
+                                        {/*}}*/}
+                                        {/*height={"300px"}*/}
+                                        {/*kind={"budgetpaysin"}*/}
+                                        {/*year={this.state.curYear}*/}
+                        {/*/>*/}
+                    {/*</div>*/}
+                    {/*<div className={"outsBlock"}>*/}
+                        {/*<UniversalTable head={this.headOutArray}*/}
+                                        {/*rows={this.state.planOuts}*/}
+                                        {/*createTableRows={this.createOutTableRows}*/}
+                                        {/*classNameOfTD={this.classNameOfTD}*/}
+                                        {/*onstudentclick={this.onSelectStudent}*/}
+                                        {/*selectedstudent={this.state.curStudent}*/}
+                                        {/*btncaption={"+Расход"}*/}
+                                        {/*objblank={objOutBlank}*/}
+                                        {/*initrows={() => {*/}
+                                            {/*return this.props.userSetup.budgetpays*/}
+                                        {/*}}*/}
+                                        {/*height={"300px"}*/}
+                                        {/*kind={"budgetpaysout"}*/}
+                                        {/*saldo={true}*/}
+                                        {/*year={this.state.curYear}*/}
+                        {/*/>*/}
+                    {/*</div>*/}
+                {/*</div>*/}
+                {/*<div className="insAndOutsFactBlock">*/}
+                    {/*<div className={"insFactBlock"}>*/}
                         {/*<div style={{*/}
-                        {/*display: "flex",*/}
-                        {/*justifyContent: "space-between",*/}
-                        {/*height: "30px",*/}
-                        {/*margin: "5px 5%"*/}
+                            {/*display: "flex",*/}
+                            {/*justifyContent: "space-between",*/}
+                            {/*height: "30px",*/}
+                            {/*margin: "5px 5%"*/}
                         {/*}}>*/}
-                        {/*<div style={{fontWeight: "600", fontSize: "1em"}}>Взносы</div>*/}
-                        {/*<button>Добавить взнос</button>*/}
+                            {/*<div style={{fontWeight: "600", fontSize: "1em"}}>Взносы(факт)</div>*/}
+                            {/*<div>*/}
+                                {/*<select name="days" onClick={(e) => this.handleYear(e.target.value)}*/}
+                                        {/*defaultValue={this.state.curYear}>*/}
+                                    {/*{yearArr.map((item, key) => {*/}
+                                        {/*return <option key={key}>*/}
+                                            {/*{item}*/}
+                                        {/*</option>*/}
+                                    {/*})}*/}
+                                {/*</select>*/}
+                            {/*</div>*/}
+                            {/*/!*<YearPicker onChange={this.handleYear} />;*!/*/}
                         {/*</div>*/}
-                        {/*{this.fillInTable()}*/}
-                        <UniversalTable head={this.headInArray}
-                                        rows={this.state.planIns}
-                                        createTableRows={this.createInTableRows}
-                                        classNameOfTD={this.classNameOfTD}
-                                        onstudentclick={this.onSelectStudent}
-                                        selectedstudent={this.state.curStudent}
-                                        btncaption={"+Взнос"}
-                                        objblank={objInBlank}
-                                        initrows={() => {
-                                            return this.props.userSetup.budgetpays
-                                        }}
-                                        height={"300px"}
-                                        kind={"budgetpaysin"}
-                                        year={this.state.curYear}
-                        />
-                    </div>
-                    <div className={"outsBlock"}>
-                        <UniversalTable head={this.headOutArray}
-                                        rows={this.state.planOuts}
-                                        createTableRows={this.createOutTableRows}
-                                        classNameOfTD={this.classNameOfTD}
-                                        onstudentclick={this.onSelectStudent}
-                                        selectedstudent={this.state.curStudent}
-                                        btncaption={"+Расход"}
-                                        objblank={objOutBlank}
-                                        initrows={() => {
-                                            return this.props.userSetup.budgetpays
-                                        }}
-                                        height={"300px"}
-                                        kind={"budgetpaysout"}
-                                        saldo={true}
-                                        year={this.state.curYear}
-                        />
-                    </div>
-                </div>
-                <div className="insAndOutsFactBlock">
-                    <div className={"insFactBlock"}>
-                        <div style={{
-                            display: "flex",
-                            justifyContent: "space-between",
-                            height: "30px",
-                            margin: "5px 5%"
-                        }}>
-                            <div style={{fontWeight: "600", fontSize: "1em"}}>Взносы(факт)</div>
-                            <div>
-                                <select name="days" onClick={(e) => this.handleYear(e.target.value)}
-                                        defaultValue={this.state.curYear}>
-                                    {yearArr.map((item, key) => {
-                                        return <option key={key}>
-                                            {item}
-                                        </option>
-                                    })}
-                                </select>
-                            </div>
-                            {/*<YearPicker onChange={this.handleYear} />;*/}
-                        </div>
-                        <UniversalTable head={this.state.factInsHeader}
-                                        rows={this.state.rowArray}
-                                        createTableRows={this.createTableRows}
-                                        classNameOfTD={this.classNameOfTD}
-                                        onstudentclick={this.onSelectStudent}
-                                        selectedstudent={this.state.curStudent}
-                                        btncaption={""}
-                                        render={this.props.userSetup.renderBudget}
-                                        objblank={objBlank}
-                                        initrows={() => {
-                                            return this.props.userSetup.students
-                                        }}
-                                        kind={"budget"}
-                                        height={"500px"}
-                                        headex={ this.state.factInsHeaderEx}
-                                        year={this.state.curYear}
-                        />
-                    </div>
-                </div>
+                        {/*<UniversalTable head={this.state.factInsHeader}*/}
+                                        {/*rows={this.state.rowArray}*/}
+                                        {/*createTableRows={this.createTableRows}*/}
+                                        {/*classNameOfTD={this.classNameOfTD}*/}
+                                        {/*onstudentclick={this.onSelectStudent}*/}
+                                        {/*selectedstudent={this.state.curStudent}*/}
+                                        {/*btncaption={""}*/}
+                                        {/*render={this.props.userSetup.renderBudget}*/}
+                                        {/*objblank={objBlank}*/}
+                                        {/*initrows={() => {*/}
+                                            {/*return this.props.userSetup.students*/}
+                                        {/*}}*/}
+                                        {/*kind={"budget"}*/}
+                                        {/*height={"500px"}*/}
+                                        {/*headex={ this.state.factInsHeaderEx}*/}
+                                        {/*year={this.state.curYear}*/}
+                                        {/*onfactclick={this.onFactSumClick}*/}
+                        {/*/>*/}
+                    {/*</div>*/}
+                {/*</div>*/}
             </div>
         )
     }

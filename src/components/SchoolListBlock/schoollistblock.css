@@ -1,11 +1,30 @@
 .schoolSelectedBlock {
-    margin : 10px 5%;
-    border-radius: 10px;
+    position: relative;
+    margin : 2px 2%;
+    border-radius: 3px;
     border: 1px solid var(--selected-item);
 
 }
 .schoolFilters {
     display: flex;
     justify-content: space-between;
-    padding : 10px;
+    padding : 12px 10px 2px 10px;
+}
+.schoolBlock-count{
+    position: absolute;
+    top : -1px;
+    right : 10px;
+    font-size: .7em;
+    font-weight: 600;
+    color : white;
+    background-color : var(--selected-item);
+    padding : 0 5px;
+}
+.schlist-label{
+    position : absolute;
+    left : 0;
+    top : 0;
+    color : var(--selected-item-hard);
+    font-size: 0.65em;
+    font-weight: 600;
 }

@@ -10,6 +10,8 @@ import './adminpageadmin.css'
 import {withRouter} from 'react-router-dom'
 import Checkbox from '../../components/CheckBox/checkbox'
 import UniversalTable from '../UniversalTable/universaltable'
+import Tabs from 'react-responsive-tabs';
+import 'react-responsive-tabs/styles.css';
 
 class AdminPageAdmin extends Component {
     constructor(props) {
@@ -57,6 +59,11 @@ class AdminPageAdmin extends Component {
         this.renderLangs = this.renderLangs.bind(this)
         this.renderClasses = this.renderClasses.bind(this)
         this.onClick = this.onClick.bind(this)
+        this.tabs = [{ name: 'Справочники', memo: 'Справочники', id : 0 },
+            { name: 'Перевод', memo: 'Перевод', id : 1 },
+            { name: 'Статистика', memo: 'Статистика', id : 2 },
+            { name: 'Параметры', memo: 'Параметры', id : 3 },
+        ];
     }
     componentWillMount(){
         (async()=>{
@@ -353,7 +360,7 @@ class AdminPageAdmin extends Component {
     getLangCounters=()=>{
         return this.props.aliasesList.length + "/" + this.props.aliasesList.filter(item=>true)
     }
-    render(){
+    getTabs=()=> {
         const {classes, langs, subjectsSelected, subjects, rowArray, stats} = this.state
         const objBlank = {
             id : 0,
@@ -364,83 +371,146 @@ class AdminPageAdmin extends Component {
             llw_id : 0,
             uniqid : localStorage.getItem("langCode") ? localStorage.getItem("langCode") : defLang,
         }
-        // console.log("adminPareAdmin:Render", this.props.userSetup)
-        return (
-            <div className="mym-adminpage-container">
-                <div><Checkbox onclick={this.props.onReduxUpdate.bind(this)} bold={true} name={"CHAT_SSL"} defelem={this.props.userSetup.chatSSL} label=" работа Чата по SSL"/></div>
-
-                <div className="subBlocks">
-                    <div className={"mym-adminpage-subjblock"}>
-                        <div className={"mym-adminpage-subjblock-header"}>
-                            <div className="h4">Перечень предметов для {
-                                <select name="classes" onClick={this.onClassClick}>
-                                    {classes.length&&this.renderClasses()}
-                                </select>}-го класса
-                            </div>
-                        </div>
-                        <div className={"mym-adminpage-subjblock-selectors"}>
-                            <div>
-                                <select className="subjFromSelector" multiple onClick={this.onClick} onDoubleClick={this.onDoubleClick} name="subjs">
-                                    {subjects.length&&this.renderSubjects()}
-                                </select>
-                            </div>
-                            <div>
-                                <select className="subjToSelector" multiple onClick={this.onClick} onDoubleClick={this.onDoubleClick} name="subjs">
-                                    {subjectsSelected.length&&this.renderSubjectsSelected()}
-                                </select>
-                            </div>
-                        </div>
-                    </div>
-                    <div className={"mym-adminpage-translateblock"}>
-                        <div className={"mym-adminpage-translateblock-header"}>
-                            <div>
-                                <div className="h4">Перечень ключевых слов для {
-                                    <select name="langs" onClick={this.onLangClick} defaultValue={localStorage.getItem("langCode") ? localStorage.getItem("langCode") : defLang}>
-                                        {langs.length&&this.renderLangs()}
-                                    </select>} языка
-                                    {this.props.userSetup.aliasesList.length?': ' + (this.props.userSetup.aliasesList.length + "/" + this.props.userSetup.aliasesList.filter(item=>item.word!==null).length):null}
+        return this.tabs.map((item, key) => ({
+            title: item.name,
+            getContent: () => {
+                switch (item.id) {
+                    case 0 :
+                        return                     <div className={"mym-adminpage-subjblock"}>
+                            <div className={"mym-adminpage-subjblock-header"}>
+                                <div className="h4">Перечень предметов для {
+                                    <select name="classes" onClick={this.onClassClick}>
+                                        {classes.length&&this.renderClasses()}
+                                    </select>}-го класса
                                 </div>
                             </div>
-                            {/*<div className="mym-btn-add-lang-alias" onClick={this.onAddLangAlias}>+Алиас</div>*/}
+                            <div className={"mym-adminpage-subjblock-selectors"}>
+                                <div>
+                                    <select className="subjFromSelector" multiple onClick={this.onClick} onDoubleClick={this.onDoubleClick} name="subjs">
+                                        {subjects.length&&this.renderSubjects()}
+                                    </select>
+                                </div>
+                                <div>
+                                    <select className="subjToSelector" multiple onClick={this.onClick} onDoubleClick={this.onDoubleClick} name="subjs">
+                                        {subjectsSelected.length&&this.renderSubjectsSelected()}
+                                    </select>
+                                </div>
+                            </div>
                         </div>
-                        <div>
-                            {/*{console.log("UniversalTable.2")}*/}
-                            <UniversalTable head={this.headArray} rows={rowArray} createTableRows={this.createTableRows} classNameOfTD={this.classNameOfTD} btncaption={"+Алиас"}
-                                            objblank={objBlank} initrows={this.initAliasArray} kind={"aliases"}/>
+                    case 1 :
+                        return                     <div className={"mym-adminpage-translateblock"}>
+                            <div className={"mym-adminpage-translateblock-header"}>
+                                <div>
+                                    <div className="h4">Перечень ключевых слов для {
+                                        <select name="langs" onClick={this.onLangClick} defaultValue={localStorage.getItem("langCode") ? localStorage.getItem("langCode") : defLang}>
+                                            {langs.length&&this.renderLangs()}
+                                        </select>} языка
+                                        {this.props.userSetup.aliasesList.length?': ' + (this.props.userSetup.aliasesList.length + "/" + this.props.userSetup.aliasesList.filter(item=>item.word!==null).length):null}
+                                    </div>
+                                </div>
+                            </div>
+                            <div>
+                                <UniversalTable head={this.headArray} rows={rowArray} createTableRows={this.createTableRows} classNameOfTD={this.classNameOfTD} btncaption={"+Алиас"}
+                                                objblank={objBlank} initrows={this.initAliasArray} kind={"aliases"}/>
+                            </div>
                         </div>
-                    </div>
-                </div>
+                    case 2 :
+                        return                 <div className="tableStats">
+                            <div className="h4">Статистика</div>
+                            <UniversalTable head={this.headStat}
+                                            rows={stats}
+                                            createTableRows={this.createStatTableRows}
+                                            classNameOfTD={this.classNameOfTD}
+                                            btncaption={""}
+                                            onstudentclick={null}
+                                            selectedstudent={null}
+                                            objblank={null}
+                                            initrows={()=>{return this.state.stats}}
+                                            kind={""}/>
+                        </div>
+                    case 3 :
+                        return <div><Checkbox onclick={this.props.onReduxUpdate.bind(this)} bold={true} name={"CHAT_SSL"} defelem={this.props.userSetup.chatSSL} label=" работа Чата по SSL"/></div>
+                }}
+            ,
+            /* Optional parameters */
+            key: key,
+            tabClassName: 'tab',
+            panelClassName: 'panel',}))
+    }
+    render(){
+        // const {classes, langs, subjectsSelected, subjects, rowArray, stats} = this.state
+        // const objBlank = {
+        //     id : 0,
+        //     alias : "empty",
+        //     baseLangValue : "введите описание",
+        //     description : "введите перевод",
+        //     lang : this.props.userSetup.aliasesLang?this.props.userSetup.aliasesLang:defLang,
+        //     llw_id : 0,
+        //     uniqid : localStorage.getItem("langCode") ? localStorage.getItem("langCode") : defLang,
+        // }
 
-                <div className="tableStats">
-                    <div className="h4">Статистика</div>
-                    <UniversalTable head={this.headStat}
-                                    rows={stats}
-                                    createTableRows={this.createStatTableRows}
-                                    classNameOfTD={this.classNameOfTD}
-                                    btncaption={""}
-                                    onstudentclick={null}
-                                    selectedstudent={null}
-                                    objblank={null}
-                                    initrows={()=>{return this.state.stats}}
-                                    kind={""}/>
-                </div>
+        // console.log("adminPareAdmin:Render", this.props.userSetup)
+        return (
+
+            <div className="mym-adminpage-container">
+                <Tabs items={this.getTabs()} />
+                {/*<div><Checkbox onclick={this.props.onReduxUpdate.bind(this)} bold={true} name={"CHAT_SSL"} defelem={this.props.userSetup.chatSSL} label=" работа Чата по SSL"/></div>*/}
+
+                {/*<div className="subBlocks">*/}
+                    {/*<div className={"mym-adminpage-subjblock"}>*/}
+                        {/*<div className={"mym-adminpage-subjblock-header"}>*/}
+                            {/*<div className="h4">Перечень предметов для {*/}
+                                {/*<select name="classes" onClick={this.onClassClick}>*/}
+                                    {/*{classes.length&&this.renderClasses()}*/}
+                                {/*</select>}-го класса*/}
+                            {/*</div>*/}
+                        {/*</div>*/}
+                        {/*<div className={"mym-adminpage-subjblock-selectors"}>*/}
+                            {/*<div>*/}
+                                {/*<select className="subjFromSelector" multiple onClick={this.onClick} onDoubleClick={this.onDoubleClick} name="subjs">*/}
+                                    {/*{subjects.length&&this.renderSubjects()}*/}
+                                {/*</select>*/}
+                            {/*</div>*/}
+                            {/*<div>*/}
+                                {/*<select className="subjToSelector" multiple onClick={this.onClick} onDoubleClick={this.onDoubleClick} name="subjs">*/}
+                                    {/*{subjectsSelected.length&&this.renderSubjectsSelected()}*/}
+                                {/*</select>*/}
+                            {/*</div>*/}
+                        {/*</div>*/}
+                    {/*</div>*/}
+
+                    {/*<div className={"mym-adminpage-translateblock"}>*/}
+                        {/*<div className={"mym-adminpage-translateblock-header"}>*/}
+                            {/*<div>*/}
+                                {/*<div className="h4">Перечень ключевых слов для {*/}
+                                    {/*<select name="langs" onClick={this.onLangClick} defaultValue={localStorage.getItem("langCode") ? localStorage.getItem("langCode") : defLang}>*/}
+                                        {/*{langs.length&&this.renderLangs()}*/}
+                                    {/*</select>} языка*/}
+                                    {/*{this.props.userSetup.aliasesList.length?': ' + (this.props.userSetup.aliasesList.length + "/" + this.props.userSetup.aliasesList.filter(item=>item.word!==null).length):null}*/}
+                                {/*</div>*/}
+                            {/*</div>*/}
+                        {/*</div>*/}
+                        {/*<div>*/}
+                            {/*<UniversalTable head={this.headArray} rows={rowArray} createTableRows={this.createTableRows} classNameOfTD={this.classNameOfTD} btncaption={"+Алиас"}*/}
+                                            {/*objblank={objBlank} initrows={this.initAliasArray} kind={"aliases"}/>*/}
+                        {/*</div>*/}
+                    {/*</div>*/}
+                {/*</div>*/}
 
                 {/*<div className="tableStats">*/}
                     {/*<div className="h4">Статистика</div>*/}
-                    {/*<table>*/}
-                        {/*<thead>*/}
-                        {/*{this.head}*/}
-                        {/*</thead>*/}
-                        {/*<tbody>*/}
-                            {/*{stats.map((item, i)=>(<tr key={"tr"+i}><td>{(new Date(item.dd)).toLocaleDateString()}</td>*/}
-                                                                        {/*<td>{item.hh}</td>*/}
-                                                                        {/*<td>{(new Date(item.min)).toLocaleTimeString()}</td>*/}
-                                                                        {/*<td>{(new Date(item.max)).toLocaleTimeString()}</td>*/}
-                                                                        {/*<td>{item.diff}</td><td>{item.cnt}</td>*/}
-                                                                        {/*<td>{item.tomark===null?"":item.tomark}</td></tr>))}*/}
-                        {/*</tbody>*/}
-                     {/*</table>*/}
+                    {/*<UniversalTable head={this.headStat}*/}
+                                    {/*rows={stats}*/}
+                                    {/*createTableRows={this.createStatTableRows}*/}
+                                    {/*classNameOfTD={this.classNameOfTD}*/}
+                                    {/*btncaption={""}*/}
+                                    {/*onstudentclick={null}*/}
+                                    {/*selectedstudent={null}*/}
+                                    {/*objblank={null}*/}
+                                    {/*initrows={()=>{return this.state.stats}}*/}
+                                    {/*kind={""}/>*/}
                 {/*</div>*/}
+
             </div>
 
         )

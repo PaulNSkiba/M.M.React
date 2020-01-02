@@ -43,7 +43,7 @@ class Timetable extends Component {
     fillTimetable=()=>{
         const {classID, langCode} = this.props.userSetup
         // console.log("TIME", `${(new Date()).getFullYear()},${(new Date()).getMonth()>=7?"09":"01"}01`)
-        console.log("fillTimetable")
+        // console.log("fillTimetable")
         axios2('get', `${API_URL}timetable/get/${classID}/${toYYYYMMDD(this.state.mainDate)}`)
             .then(res=>{
                 // let markKey = subj_key.replace("#","")+"#"+subj_key.replace("#","")+"#"+ondate
@@ -55,7 +55,7 @@ class Timetable extends Component {
                 res.data = res.data.map(item=>{item.subj_name=item[getSubjFieldName(langCode)]; return item})
                 this.setState({timetable, timetableArr : res.data})
 
-                console.log("INITTIMETABLE", timetable, res.data)
+                // console.log("INITTIMETABLE", timetable, res.data)
              })
             .catch(res=>{
                 console.log("fillTimetable:error")
@@ -227,12 +227,11 @@ class Timetable extends Component {
 
         let {subjects_list, langCode} = this.props.userSetup
         subjects_list = subjects_list.filter(item=>item.subj_key!=="#xxxxxx")
-        // const map = new Map(subjects_list.map(obj=>[obj.subj_key, obj[getSubjFieldName(langCode)]]))
         const mapDays = new Map()
         for (let i = 0; i < arrOfWeekDaysLocal.length; i++){
             mapDays.set(i, arrOfWeekDaysLocal[i])
         }
-        console.log("Timetable", subjects_list, getSubjFieldName(langCode), this.props.userSetup)
+        // console.log("Timetable", subjects_list, getSubjFieldName(langCode), this.props.userSetup)
 
         for (let idx = 0; idx < (7 + 2); idx++) {
             let cellID = `h0c${idx}`
@@ -262,7 +261,7 @@ class Timetable extends Component {
         let j = 0
         for (let i = 0; i < subjects_list.length; i++) {
             let rowID = `row${i}`
-            console.log("subjects_list.length", subjects_list.length)
+            // console.log("subjects_list.length", subjects_list.length)
             let cell = []
                 for (let idx = 0; idx < (7 + 2); idx++) {
                     j++;
@@ -295,7 +294,6 @@ class Timetable extends Component {
             }
 
         return (
-
                 <div>
                     <div style={{display : "flex", alignItems : "center"}}>
                         <div className="h4">Расписание для {
@@ -321,80 +319,80 @@ class Timetable extends Component {
                             }}/>}
                         />
                     </div>
-                <div className={"timetableMain"}>
-                    <div style={{width : "40%"}}>
-                        <table id="simple-board">
-                            <thead className="tablehead">
-                            {head}
-                            </thead>
-                            <tbody>
-                            {rows}
-                            </tbody>
-                        </table>
+                    <div className={"timetableMain"}>
+                        <div style={{width : "40%", marginRight: "10px"}}>
+                            <table id="simple-board">
+                                <thead className="tablehead">
+                                {head}
+                                </thead>
+                                <tbody>
+                                {rows}
+                                </tbody>
+                            </table>
+                        </div>
+                        <div className={"subjectsByDayOfWeek"}>
+                            <div className={"subjListTableBlock"}>
+                                <table id="simple-board">
+                                    <thead className="tablehead">
+                                        {this.subjListTableHead("Понедельник")}
+                                    </thead>
+                                    <tbody>
+                                        {this.subjListRows(0)}
+                                    </tbody>
+                                </table>
+                            </div>
+                            <div className={"subjListTableBlock"}>
+                                <table id="simple-board">
+                                    <thead className="tablehead">
+                                    {this.subjListTableHead("Вторник")}
+                                    </thead>
+                                    <tbody>
+                                    {this.subjListRows(1)}
+                                    </tbody>
+                                </table>
+                            </div>
+                            <div className={"subjListTableBlock"}>
+                                <table id="simple-board">
+                                    <thead className="tablehead">
+                                    {this.subjListTableHead("Среда")}
+                                    </thead>
+                                    <tbody>
+                                    {this.subjListRows(2)}
+                                    </tbody>
+                                </table>
+                            </div>
+                            <div className={"subjListTableBlock"}>
+                                <table id="simple-board">
+                                    <thead className="tablehead">
+                                    {this.subjListTableHead("Четверг")}
+                                    </thead>
+                                    <tbody>
+                                    {this.subjListRows(3)}
+                                    </tbody>
+                                </table>
+                            </div>
+                            <div className={"subjListTableBlock"}>
+                                <table id="simple-board">
+                                    <thead className="tablehead">
+                                    {this.subjListTableHead("Пятница")}
+                                    </thead>
+                                    <tbody>
+                                    {this.subjListRows(4)}
+                                    </tbody>
+                                </table>
+                            </div>
+                            <div className={"subjListTableBlock"}>
+                                <table id="simple-board">
+                                    <thead className="tablehead">
+                                    {this.subjListTableHead("Суббота")}
+                                    </thead>
+                                    <tbody>
+                                    {this.subjListRows(5)}
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
                     </div>
-                    <div className={"subjectsByDayOfWeek"}>
-                        <div className={"subjListTableBlock"}>
-                            <table id="simple-board">
-                                <thead className="tablehead">
-                                    {this.subjListTableHead("Понедельник")}
-                                </thead>
-                                <tbody>
-                                    {this.subjListRows(0)}
-                                </tbody>
-                            </table>
-                        </div>
-                        <div className={"subjListTableBlock"}>
-                            <table id="simple-board">
-                                <thead className="tablehead">
-                                {this.subjListTableHead("Вторник")}
-                                </thead>
-                                <tbody>
-                                {this.subjListRows(1)}
-                                </tbody>
-                            </table>
-                        </div>
-                        <div className={"subjListTableBlock"}>
-                            <table id="simple-board">
-                                <thead className="tablehead">
-                                {this.subjListTableHead("Среда")}
-                                </thead>
-                                <tbody>
-                                {this.subjListRows(2)}
-                                </tbody>
-                            </table>
-                        </div>
-                        <div className={"subjListTableBlock"}>
-                            <table id="simple-board">
-                                <thead className="tablehead">
-                                {this.subjListTableHead("Четверг")}
-                                </thead>
-                                <tbody>
-                                {this.subjListRows(3)}
-                                </tbody>
-                            </table>
-                        </div>
-                        <div className={"subjListTableBlock"}>
-                            <table id="simple-board">
-                                <thead className="tablehead">
-                                {this.subjListTableHead("Пятница")}
-                                </thead>
-                                <tbody>
-                                {this.subjListRows(4)}
-                                </tbody>
-                            </table>
-                        </div>
-                        <div className={"subjListTableBlock"}>
-                            <table id="simple-board">
-                                <thead className="tablehead">
-                                {this.subjListTableHead("Суббота")}
-                                </thead>
-                                <tbody>
-                                {this.subjListRows(5)}
-                                </tbody>
-                            </table>
-                        </div>
-                    </div>
-                </div>
              </div>
         )
     }

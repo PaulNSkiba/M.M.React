@@ -22,23 +22,21 @@ const initialState = (check)=>{
                     curClass: 0, classNumber: 0, classID: 0,
                     pupilCount: 0, students: [], currentYear: "", curYearDone: 0, subjCount: "0/0", userID: 0,
                     selectedSubjsArray: [], selectedSubjects: [], selectedSubj: {id: 0, subj_key: "#null"},
-                    subjects_list: [], markBlank: {id: "", alias: "", pk: 1},
+                    subjects_list: [], subjects : [], markBlank: {id: "", alias: "", pk: 1},
                     currentPeriodDateCount: 5, marks: [], direction: "UPDOWN", titlekind: "NICK",
                     withoutholidays: true, withtimetable : false, onlywithmailstudents : true, token: "", userName: "",
-                    isadmin: 0, studentName: "", studentID: 0,
-                    studSubj: new Map(), mark_dates: [], best_lines: [], avg_lines: [], avg_marks: [],
+                    isadmin: 0, studentName: "", studentID: 0, studSubj: new Map(),
+                    mark_dates: [], best_lines: [], avg_lines: [], avg_marks: [],
                     addUserToken: "", cnt_marks: 0, stud_cnt: 0, subj_cnt: 0,
                     lastmarkssent: "", emails: [], homework: [],
-                    stats2: [], stats3: [], mark_date: {date: new Date()},
-                    avgclassmarks: [], loading: -1, stepsLeft: 6,
-                    chatSessionID: '', classObj: {chatroom_id: 0},
+                    stats2: [], stats3: [], mark_date: {date: new Date()}, avgclassmarks: [],
+                    loading: -1, stepsLeft: 6, chatSessionID: '', classObj: {chatroom_id: 0},
                     newMsgCount: 0, countryCode: defLang,
-                    langLibrary: {}, //(localStorage.getItem("langLibrary")!==null)&&localStorage.getItem("langLibrary")?JSON.parse(localStorage.getItem("langLibrary")):getLangLibrary(),
-                    chatSSL: isSSLChat, localChatMessages: [],
+                    langLibrary: {}, chatSSL: isSSLChat, localChatMessages: [],
                     isMobile: false, aliasesList: [], aliasesLang: "", menuItem : "",
-                    budget : [], budgetpays : [],
-                    renderBudget : 1, langCode : "", studentToChange : 0,
-                    curMenuItem : {id : 0, label : ''}, timetable : [], subjects : [],
+                    budget : [], budgetpays : [], renderBudget : 1,
+                    langCode : "", studentToChange : 0, curMenuItem : {id : 0, label : ''}, timetable : [],
+                    school_id : 0, school_name : "", school : {}, class_letter : "", schoolclasses : []
                 }
         }
     return obj
@@ -53,11 +51,10 @@ export function userSetupReducer(state = initialState(true), action) {
             return {...state, initialState}
         case 'USER_LOGGEDIN' : {
             // console.log("JUST_LOGGEDIN", action.langLibrary)
-            let {   token, subj_count, subjects_list,
-                    selected_subjects, selected_subj, students, marks,
-                    mark_dates, best_lines, avg_lines, avg_marks, addUserToken,
-                    lastmarkssent, emails, homework, stats2, stats3, mark_date,
-                    avgclassmarks, classObj, chatrows, budget, budgetpays, timetable, subjects} = action.payload;
+            let {   token, subj_count, subjects_list, selected_subjects, selected_subj, subjects,
+                    students, marks, mark_dates, best_lines, avg_lines, avg_marks, addUserToken,
+                    lastmarkssent, emails, homework, stats2, stats3, mark_date, class_letter,
+                    avgclassmarks, classObj, chatrows, budget, budgetpays, timetable, school_id, school_name, schoolclasses} = action.payload;
             let {   name : userName, id : userID, isadmin } = action.payload.user;
             let {   class_number, pupil_count, year_name, perioddayscount,
                     markblank_id, markblank_alias, selected_marker, titlekind,
@@ -76,9 +73,10 @@ export function userSetupReducer(state = initialState(true), action) {
                 isadmin, studentName, studentID, marks, mark_dates, best_lines, avg_lines, avg_marks, addUserToken,
                 cnt_marks, stud_cnt, subj_cnt, lastmarkssent, emails, homework, stats2 : stats2[0], stats3 : stats3[0],
                 mark_date, avgclassmarks, localChatMessages : chatrows, budget, budgetpays, timetable,
-                withoutholidays, withtimetable, onlywithmailstudents, subjects}
-            if (Object.keys(action.langLibrary).length)
-            setup = {...setup, langLibrary : action.langLibrary}
+                withoutholidays, withtimetable, onlywithmailstudents, subjects, school_id, school_name, class_letter, schoolclasses}
+
+                if (Object.keys(action.langLibrary).length)
+                    setup = {...setup, langLibrary : action.langLibrary}
 
             saveToLocalStorageOnDate("userSetupDate", toYYYYMMDD(new Date()))
             saveToLocalStorageOnDate("userSetup", JSON.stringify(setup))
@@ -256,12 +254,6 @@ export function userSetupReducer(state = initialState(true), action) {
             console.log("ALIASES_LANG")
             return{...state, aliasesLang: action.payload}
         }
-        // case "INIT_CHAT_MESSAGES" : {
-        //     return{...state, localChatMessages: action.payload}
-        // }
-        // case "ADD_CHAT_MESSAGES" : {
-        //     return{...state, localChatMessages: action.payload}
-        // }
         case 'MENU_CLICK' :
             return{...state, menuItem: action.payload}
         case 'BUDGET_UPDATE' :
@@ -275,15 +267,16 @@ export function userSetupReducer(state = initialState(true), action) {
             let initState = initialState(false)
             initState.langLibrary = action.langLibrary //action.langLibray?action.langLibray:(localStorage.getItem("langLibrary")?JSON.parse(localStorage.getItem("langLibrary")):null)
             initState.langCode = localStorage.getItem("langCode") ? localStorage.getItem("langCode") : defLang
-            // console.log("userSetupReducer", 'USER_LOGGEDOUT', initState)
             return {...initState};
         case 'UPDATE_TOKEN' :
             return{...state, token: action.payload}
         case 'STUDENT_CHANGE' :
             return{...state, studentToChange: action.payload}
         case 'MENU_ITEM' :
-            console.log("MENU_ITEM", action.payload)
+            // console.log("MENU_ITEM", action.payload)
             return{...state, curMenuItem: action.payload}
+        case 'UPDATE_SCHOOL' :
+            return{...state, school_id: action.payload.id, school_name : action.payload.name, class_letter : action.payload.class_letter}
         default :
             return state
     }

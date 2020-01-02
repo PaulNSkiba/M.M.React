@@ -37,6 +37,7 @@ class UniversalTable extends Component {
         this.handleDate = this.handleDate.bind(this)
         this.onUserCreate = this.onUserCreate.bind(this)
         this.onResetStudent = this.props.onresetstudent
+        this.onFactSumClick = this.props.onfactclick
     }
     componentDidMount() {
         // console.log("UniversalTable.DidMount")
@@ -200,7 +201,7 @@ class UniversalTable extends Component {
                 }
             }
         }
-        console.log("FILLMAP", map, this.props.kind, rows, this.props.userSetup)
+        // console.log("FILLMAP", map, this.props.kind, rows, this.props.userSetup)
         return map;
     }
     createTableHead=(head)=>(

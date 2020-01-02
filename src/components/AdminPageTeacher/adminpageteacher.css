@@ -1,12 +1,14 @@
 .mym-adminpageteacher-tableblock {
-    margin : 10px 2%;
+    margin : 5px 0;
 }
 .mym-adminpageteacher-description {
+    position: absolute;
     margin : 5px 2%;
     display: flex;
     align-items: center;
-    justify-content: space-between;
+    justify-content: flex-end;
     width : 100%;
+    right : 20px;
 }
 .addToSchool {
     border : 1px solid var(--selected-item);
@@ -15,7 +17,14 @@
     color : var(--msg-left-side);
     font-weight: 600;
     border-radius: 5px;
-    margin-right: 20px;
+}
+.addToSchoolDisabled {
+    border : 1px solid var(--selected-item);
+    padding : 5px;
+    background-color: var(--navbar-color);
+    color : var(--border-color);
+    font-weight: 600;
+    border-radius: 5px;
 }
 .addToSchool:hover{
     color : white;

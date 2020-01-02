@@ -22,7 +22,7 @@ class AddSubject extends Component {
         // console.log("LoginBlockLight.userLogin", this.inputEmail.value, this.inputPwd.value)
         // this.props.onclick(this.inputEmail.value, this.inputPwd.value)
        const {classid, userid} = this.props
-       console.log("addSubj", this.props.userSetup.token, `${SUBJECT_CREATE_URL}/${this.inputSubject.value.length?this.inputSubject.value:null}/${classid}/${userid}/${this.state.selectedSubjKey}`, this.state.selectedSubjKey )
+       // console.log("addSubj", this.props.userSetup.token, `${SUBJECT_CREATE_URL}/${this.inputSubject.value.length?this.inputSubject.value:null}/${classid}/${userid}/${this.state.selectedSubjKey}`, this.state.selectedSubjKey )
 
         // , this.props.userSetup.classID
         if (this.props.hasOwnProperty('addfunc')) {
@@ -76,7 +76,7 @@ class AddSubject extends Component {
     render(){
         // console.log("AddObject", this.state)
         return (
-            <div className={this.props.hasOwnProperty('withselect')?"addSubjectEx":"addSubject"}>
+            <div className={this.props.hasOwnProperty('withselect')?"addSubjectEx":this.props.hasOwnProperty('addsubjecttop')?"addSubjectTop":"addSubject"}>
                 <form>
                     {this.props.hasOwnProperty('withselect')?
                         <div>

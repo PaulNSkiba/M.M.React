@@ -8,7 +8,7 @@
 }
 .timetableMain {
     display : flex;
-
+    /*padding-right : 15px;*/
 }
 .subjListTableBlock{
     margin-right: 10px;

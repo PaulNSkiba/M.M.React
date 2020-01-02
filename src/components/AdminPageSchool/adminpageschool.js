@@ -7,7 +7,6 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux'
 import LoginBlockLight from '../LoginBlockLight/loginblocklight'
-// import Menu from '../Menu/menu'
 import MenuEx from '../MenuEx/menuex'
 import { userLoggedOut } from '../../actions/userAuthActions'
 import UniversalTable from '../UniversalTable/universaltable'
@@ -17,7 +16,7 @@ import './adminpageschool.css'
 import '../Menu/menu.css'
 import { Link } from 'react-router-dom';
 import MobileMenu from '../MobileMenu/mobilemenu'
-import { instanceAxios, mapStateToProps, getLangByCountry, getSubjFieldName } from '../../js/helpers'
+import { instanceAxios, mapStateToProps, getLangByCountry, getSubjFieldName, classLetters } from '../../js/helpers'
 import { arrLangs, defLang, STUDENTS_GET_URL } from '../../config/config'
 import ReactFlagsSelect from 'react-flags-select';
 import 'react-flags-select/css/react-flags-select.css';
@@ -25,6 +24,19 @@ import { MARKS_URL } from '../../config/config'
 import Logo from '../../img/LogoMyMsmall.png'
 import SchoolListBlock from '../SchoolListBlock/schoollistblock'
 import Timetable from '../Timetable/timetable'
+import Tabs from 'react-responsive-tabs';
+import 'react-responsive-tabs/styles.css';
+import '../AdminPageTeacher/adminpageteacher.css'
+
+const tabs = [{ name: 'Статистика', memo: 'Статистика', id : 0 },
+    { name: 'Расписание', memo: 'Расписание', id : 1 },
+    { name: 'Объявления', memo: 'Объявления', id : 2 },
+    { name: 'Чат', memo: 'Чат', id : 3 },
+    { name: 'Карточка школы', memo: 'Карточка школы', id : 4 }
+];
+// const schoolClasses = [ {number: 6, letter : "Б", users : 21, students : 21},
+//                         {number: 7, letter : "Г", users : 40, students : 30}
+//                         ]
 
 class AdminPageSchool extends Component {
     constructor(props) {
@@ -36,6 +48,7 @@ class AdminPageSchool extends Component {
             curStudent : 0,
             studentTo : 0,
             showList : false,
+            selectedColumn : null,
         }
         this.headArray = [
             {name: "№ п/п", width : "30px"} ,
@@ -138,7 +151,7 @@ class AdminPageSchool extends Component {
     loginBlock=(userID, userName, langLibrary)=>{
         let {loading} = this.props.userSetup
         let {showLoginLight} = this.state
-        console.log("loginBlock", loading, userID)
+        // console.log("loginBlock", loading, userID)
         return <div className="logBtnsBlock">
             <div>
                 {!loading&&!userID?
@@ -367,8 +380,6 @@ class AdminPageSchool extends Component {
         }
         return rows;
     }
-
-
     renderStudents=(myID)=>
         this.state.rowsArr.map((value, key)=>{
             if (value.id!==myID&&value.email.length)
@@ -419,8 +430,97 @@ class AdminPageSchool extends Component {
 
         }
     }
+    selectCols=col=>{
+        this.setState({selectedColumn : this.state.selectedColumn===col?null:col})
+    }
+    getClassBlockHeader=()=>{
+        let cell = []
+        cell.push(<th key={"th0.0"}><div className={`pageschool-headerbutton ${this.state.selectedColumn===0?"activeCol":""}`} onClick={()=>this.selectCols(0)}>Буква / Класс</div></th>)
+        for (let j = 1; j < 12; j++){
+            cell.push(<th key={"th"+j}><div className={`pageschool-headerbutton ${this.state.selectedColumn===0 ||this.state.selectedColumn===j?"activeCol":""}`} onClick={()=>this.selectCols(j)}>{j}</div></th>)
+        }
+        return <tr>{cell}</tr>
+    }
+    getClassBlock=()=>{
+        const {schoolclasses : schoolClasses} = this.props.userSetup
+        let rows = [], cell
+           for (let i = 0; i < classLetters.length; i++){
+               cell = []
+               for (let j = 0; j < 12; j++){
+                   switch (j) {
+                       case 0 :
+                           cell.push(<td key={"td"+i+'.'+j}><div  className={`pageschool-classbutton`}>{classLetters[i]}</div></td>)
+                           break;
+                       default :
+                           cell.push(<td key={"td"+i+'.'+j}>
+                               <div className={`pageschool-classbutton ${schoolClasses.filter(item=>item.letter===classLetters[i]&&item.number===j).length?` enabled ${this.state.selectedColumn===0 ||this.state.selectedColumn===j?"activeCol":""}`:" disabled"}`}>
+                                   <div className={`pageschool-classbutton-leftcorner ${this.state.selectedColumn===0 ||this.state.selectedColumn===j?"activeCol":null}`}>{schoolClasses.filter(item=>item.letter===classLetters[i]&&item.number===j).length?schoolClasses.filter(item=>item.letter===classLetters[i]&&item.number===j)[0].students:null}</div>
+                                   <div className={`pageschool-classbutton-rightcorner ${this.state.selectedColumn===0 ||this.state.selectedColumn===j?"activeCol":null}`}>{schoolClasses.filter(item=>item.letter===classLetters[i]&&item.number===j).length?schoolClasses.filter(item=>item.letter===classLetters[i]&&item.number===j)[0].users:null}</div>
+                                   {`${j}${classLetters[i]}`}
+                               </div>
+                           </td>)
+                           break;
+                   }
+                }
+           rows.push(<tr key={"tr"+i}>{cell}</tr>)
+       }
+       return rows
+    }
+    getTabs=()=>{
+        return tabs.map((item, key) => ({
+            title: item.name,
+            getContent: () => {
+                switch (item.id) {
+                    case 0 :
+                        return this.getStatTable()
+                    case 1 :
+                        return (<div className="mym-adminpageteacher-tableblock">
+                            <Timetable/>
+                        </div>)
+                     default :
+                        break;
+                }
+                },
+            /* Optional parameters */
+            key: key,
+            tabClassName: 'tab',
+            panelClassName: 'panel',
+        }));
+    }
+    getStatTable=()=>{
+        return <div style={{marginLeft : "0", marginRight : "0"}}>
+            <table id="simple-board">
+                {this.getStatBlockHeader()}
+                <tbody>
+                {this.getStatBlock()}
+                </tbody>
+            </table>
+        </div>
+    }
+    getStatBlockHeader=()=>{
+        return <thead className="tablehead">
+            <tr>
+                <th rowSpan={2}>Предмет</th><th colSpan={5}>6"Б"</th><th colSpan={5}>7"Г"</th>
+            </tr>
+            <tr>
+                <th></th>
+                        <th style={{width : "50px"}}>Средний бал</th>
+                         <th style={{width : "50px"}}>Динамика</th>
+                         <th style={{width : "50px"}}>Дата ввода</th>
+                         <th style={{width : "50px"}}>Дней назад</th>
+                        <th style={{width : "50px"}}>Средний бал</th>
+                         <th style={{width : "50px"}}>Динамика</th>
+                         <th style={{width : "50px"}}>Дата ввода</th>
+                         <th style={{width : "50px"}}>Дней назад</th>
+            </tr>
+        </thead>
+
+    }
+    getStatBlock=()=>{
+        return <tr></tr>
+    }
     render() {
-        let {userID, userName, isadmin, langLibrary, classID, classNumber} = this.props.userSetup;
+        let {userID, userName, isadmin, langLibrary, classID, classNumber, school_id, school_name, class_letter} = this.props.userSetup;
         let {isMobile} = this.state
         console.log("RENDER_TEACHER", this.state.curStudent)
         const objBlank = {
@@ -487,45 +587,24 @@ class AdminPageSchool extends Component {
                 <div className="descrAndAnnounce">
                     <div className="descrAndAnnounceNotMobile">
                         <div className="mym-adminpageteacher-description">
-                            <div>Общешкольная страница: {userName}</div>
-                            <div className={"addToSchool"} onClick={()=>{this.setState({showList:!this.state.showList})}}>Присоединиться к учебному заведению</div>
+                            {/*<div>Общешкольная страница: {userName}</div>*/}
+                            {school_id?<div style={{margin : "10px", fontWeight: 700, fontSize : ".8em", color : "#4472C4"}}>{`${school_name.charAt(0).toUpperCase()}${school_name.slice(1)}`}</div>:null}
                         </div>
                     </div>
-                    {this.state.showList?<SchoolListBlock/>:null}
+                    <div style={{marginTop : "10px", marginLeft : "2%", marginRight : "2%"}}>
+                        <table id="simple-board">
+                            <thead className="tablehead">
+                            {this.getClassBlockHeader()}
+                            </thead>
+                            <tbody>
+                            {this.getClassBlock()}
+                            </tbody>
+                        </table>
+                    </div>
                 </div>
-                {/*<div className={"mym-adminpageteacher-tableblock"}>*/}
-                    {/*<UniversalTable head={this.headArray}*/}
-                                    {/*rows={this.state.rowArray}*/}
-                                    {/*createTableRows={this.createTableRows}*/}
-                                    {/*classNameOfTD={this.classNameOfTD}*/}
-                                    {/*btncaption={"+ Новый студент"}*/}
-                                    {/*onstudentclick={this.onSelectStudent}*/}
-                                    {/*selectedstudent={this.state.curStudent}*/}
-                                    {/*objblank={objBlank}*/}
-                                    {/*initrows={()=>{return this.props.userSetup.students}}*/}
-                                    {/*kind={"students"}*/}
-                                    {/*updatestudentfrom={this.state.curStudent}*/}
-                                    {/*updatestudentto={this.state.studentTo}*/}
-                                    {/*studentTo={this.state.studentTo}*/}
-                                    {/*onresetstudent={this.onResetStudent}*/}
-                    {/*/>*/}
-                {/*</div>*/}
-                {/*<div className="mym-adminpageteacher-tableblock">*/}
-                    {/*<Timetable/>*/}
-                {/*</div>*/}
-                {/*<div className="mym-adminpageteacher-tableblock">*/}
-                    {/*<div className="h4">Статистика</div>*/}
-                    {/*<UniversalTable head={this.headStat}*/}
-                                    {/*rows={this.state.stats}*/}
-                                    {/*createTableRows={this.createStatTableRows}*/}
-                                    {/*classNameOfTD={this.classNameOfTD}*/}
-                                    {/*btncaption={""}*/}
-                                    {/*onstudentclick={null}*/}
-                                    {/*selectedstudent={null}*/}
-                                    {/*objblank={null}*/}
-                                    {/*initrows={()=>{return this.state.stats}}*/}
-                                    {/*kind={""}/>*/}
-                {/*</div>*/}
+                <div style={{marginTop : "20px"}}>
+                    <Tabs items={this.getTabs()} />
+                </div>
             </div>
         )
     }
