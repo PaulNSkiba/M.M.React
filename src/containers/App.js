@@ -96,9 +96,6 @@ class App extends Component {
         this.changeState = this.changeState.bind(this)
     }
 
-    componentWillUnmount() {
-    }
-
     componentWillMount() {
         // console.log("componentWillMount1", this.props.userSetup, window.localStorage.getItem("myMarks.data"), this.props.userSetup.langLibrary)
 
@@ -108,11 +105,12 @@ class App extends Component {
             await this.getGeo2();
             await this.getClasses();
             await this.getStats();
-            await this.getAsync(localStorage.getItem("langCode") ? localStorage.getItem("langCode") : defLang)
+            await this.getLangAsync(localStorage.getItem("langCode")&&arrLangs.includes(localStorage.getItem("langCode")) ? localStorage.getItem("langCode") : defLang)
             this.loading = false
         })();
     }
-
+    componentWillUnmount() {
+    }
     getClasses = async () => {
         const lang = localStorage.getItem("myCountryCode") ? localStorage.getItem("myCountryCode") : defLang
         let {token} = store.getState().user
@@ -132,7 +130,72 @@ class App extends Component {
 
             })
     }
-    getAsync = async (lang) => {
+
+    async componentDidMount() {
+
+        this.props.onStartLoading()
+        let {langLibrary} = this.props.userSetup
+
+        // console.log("componentDidMount1", Object.keys(langLibrary).length)
+        // console.log("componentDidMount2", Object.keys(langLibrary).length)
+
+        if (!langLibrary&&(localStorage.getItem("langLibrary")))
+            langLibrary = localStorage.getItem("langLibrary")
+
+         if (!(window.localStorage.getItem("myMarks.data") === null) && !(window.localStorage.getItem("userSetup"))) { //  && window.localStorage.getItem("userSetupDate") === toYYYYMMDD(new Date())
+            console.log("PART1", langLibrary)
+            let localstorage = JSON.parse(window.localStorage.getItem("myMarks.data"))
+            let {token} = localstorage
+            this.props.onReduxUpdate("UPDATE_TOKEN", token)
+            this.props.onUserLoggingByToken(null, token, null, langLibrary);
+        }
+        else if (window.localStorage.getItem("userSetup")) { // && window.localStorage.getItem("userSetupDate") === toYYYYMMDD(new Date())
+             console.log("PART2", langLibrary)
+             let localstorage = JSON.parse(window.localStorage.getItem("userSetup"))
+             let {token} = localstorage
+             this.props.onReduxUpdate("UPDATE_TOKEN", token)
+             this.props.onUserLoggingByToken(null, token, null, langLibrary);
+         }
+        else {
+             console.log("PART3", langLibrary)
+        }
+        this.props.onReduxUpdate("IS_MOBILE", this.state.isMobile)
+        this.props.onChangeStepsQty(this.isSaveEnabled())
+
+        this.props.onStopLoading()
+        document.body.style.cursor = 'default';
+    }
+
+    shouldComponentUpdate(nextProps, nextState) {
+        // console.log("shouldComponentUpdate", this.state.langLibrary, Object.keys(this.state.langLibrary).length, this.props.userSetup.langLibrary, nextProps.userSetup.langLibrary)
+        // console.log("shouldComponentUpdate", this.loading, this.props.userSetup.langLibrary)
+        const {chatSessionID, langLibrary : lngLib} = this.props.userSetup
+
+        if (this.loading)
+            return false
+
+        let langLibrary = {}
+        if (Object.keys(lngLib).length) {
+            langLibrary = lngLib
+        }
+        else {
+            langLibrary = getDefLangLibrary()
+        }
+
+         if ((chatSessionID !== nextProps.userSetup.chatSessionID)) {
+            // console.log("shouldComponentUpdate2")
+            return false
+        }
+        // return this.props.userSetup.chatSessionID !== nextProps.userSetup.chatSessionID
+        else if (!Object.keys(langLibrary).length) {
+            // console.log("shouldComponentUpdate3")
+            return false
+        }
+        else {
+            return true
+        }
+    }
+    getLangAsync = async (lang) => {
         if (
             !lang
         ) {
@@ -170,82 +233,9 @@ class App extends Component {
         // console.log("getLangLibrary:stop")
     }
 
-    async componentDidMount() {
-
-        this.props.onStartLoading()
-        let {langLibrary} = this.props.userSetup
-
-        // console.log("componentDidMount1", Object.keys(langLibrary).length)
-
-        // if (!Object.keys(langLibrary).length)
-        // await this.getAsync(localStorage.getItem("langCode") ? localStorage.getItem("langCode") : defLang)
-
-        // console.log("componentDidMount2", Object.keys(langLibrary).length)
-
-        if (!langLibrary&&(localStorage.getItem("langLibrary")))
-            langLibrary = localStorage.getItem("langLibrary")
-
-         if (!(window.localStorage.getItem("myMarks.data") === null) && !(window.localStorage.getItem("userSetup"))) { //  && window.localStorage.getItem("userSetupDate") === toYYYYMMDD(new Date())
-            console.log("PART1", langLibrary)
-            let localstorage = JSON.parse(window.localStorage.getItem("myMarks.data"))
-            let {token} = localstorage
-            this.props.onReduxUpdate("UPDATE_TOKEN", token)
-            this.props.onUserLoggingByToken(null, token, null, langLibrary);
-        }
-        else if (window.localStorage.getItem("userSetup")) { // && window.localStorage.getItem("userSetupDate") === toYYYYMMDD(new Date())
-             console.log("PART2", langLibrary)
-             let localstorage = JSON.parse(window.localStorage.getItem("userSetup"))
-             let {token} = localstorage
-             this.props.onReduxUpdate("UPDATE_TOKEN", token)
-             this.props.onUserLoggingByToken(null, token, null, langLibrary);
-         }
-        else {
-             console.log("PART3", langLibrary)
-        }
-        this.props.onReduxUpdate("IS_MOBILE", this.state.isMobile)
-        this.props.onChangeStepsQty(this.isSaveEnabled())
-
-        this.props.onStopLoading()
-        document.body.style.cursor = 'default';
-    }
-
-    shouldComponentUpdate(nextProps, nextState) {
-        // console.log("shouldComponentUpdate", this.state.langLibrary, Object.keys(this.state.langLibrary).length, this.props.userSetup.langLibrary, nextProps.userSetup.langLibrary)
-        // console.log("shouldComponentUpdate", this.loading, this.props.userSetup.langLibrary)
-        const {chatSessionID, langLibrary : lngLib} = this.props.userSetup
-
-        // console.log("shouldComponentUpdate1", lngLib, this.loading)
-
-        if (this.loading)
-            return false
-
-        let langLibrary = {}
-        if (Object.keys(lngLib).length) {
-            langLibrary = lngLib
-        }
-        else {
-            langLibrary = getDefLangLibrary()
-        }
-
-         if ((chatSessionID !== nextProps.userSetup.chatSessionID)) {
-            // console.log("shouldComponentUpdate2")
-            return false
-        }
-        // return this.props.userSetup.chatSessionID !== nextProps.userSetup.chatSessionID
-        else if (!Object.keys(langLibrary).length) {
-            // console.log("shouldComponentUpdate3")
-
-            return false
-        }
-        else {
-            // this.props.onStopLoading()
-            return true
-        }
-    }
-
     onSelectLang = async countryCode => {
         this.props.onStartLoading()
-        this.getAsync(countryCode)//getLangLibrary(localStorage.getItem("langCode")?localStorage.getItem("langCode"):defLang)
+        this.getLangAsync(countryCode)//getLangLibrary(localStorage.getItem("langCode")?localStorage.getItem("langCode"):defLang)
 
         this.props.onReduxUpdate("LANG_LIBRARY", this.state.langLibrary)
         this.props.onReduxUpdate("LANG_CODE", countryCode)
@@ -1198,7 +1188,7 @@ class App extends Component {
                                target="_blank" rel="noopener noreferrer">{` ${langLibrary.refNewStudentEnd}`}</a></span>
                             : ""
                         }
-                        <div className="descrAndAnnounceNotMobile">
+                        <div className="descrAndAnnounceNotMobileMainPage">
                             {studentID ?
                                 <div className="app-homeWorkSection">
                                     <HomeWorkSection withoutshadow={true} withouthead={true}/>

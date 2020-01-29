@@ -1120,6 +1120,15 @@ export const getSubjFieldName=lang=>{
     }
     return "subj_name_"+field_name
 }
+export const getNearestSeptFirst=()=>{
+    let now = new Date()
+    for (let i = 0; i < 367; i++){
+        now = addDay(now, -1)
+        if (now.getMonth() === 8 && now.getDate() === 1) {
+            return now;
+        }
+    }
+}
 export const waitCursorBlock=()=>
     <div className="lds-ring">
         <div></div>
@@ -1128,5 +1137,7 @@ export const waitCursorBlock=()=>
         <div></div>
     </div>
 
-
+export function onlyUnique(value, index, self) {
+    return self.indexOf(value) === index;
+}
 /* eslint-disable */

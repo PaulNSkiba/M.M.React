@@ -22,50 +22,65 @@ class Timetable extends Component {
             timetable : new Map(),
             timetableArr : [],
             mainDate : dateFromYYYYMMDD(`${(new Date()).getFullYear()}${(new Date()).getMonth()>=7?"09":"01"}01`),
+            defClass : "7Г",
+            curSubjectList : []
         }
-        this.defClass = "7Г"
+
         this.renderClasses = this.renderClasses.bind(this)
         this.onClick = this.onClick.bind(this)
     }
     initClassList = () => {
         let classList = []
         for (let i = 1; i < 12; i++) {
-            classList.push(`${i}A`)
+            classList.push(`${i}А`)
             classList.push(`${i}Б`)
             classList.push(`${i}В`)
             classList.push(`${i}Г`)
+            classList.push(`${i}Д`)
         }
         return classList
     }
     componentDidMount(){
         this.fillTimetable()
     }
+    shouldComponentUpdate(nextProps, nextState){
+        // const classNumber = this.props.curClass!==undefined&&this.props.curClass!==null?this.props.curClass:this.props.userSetup.curClass
+        // console.log("Timetable: shoudUpdate", classNumber, nextProps.curNumber)
+        return true
+    }
     fillTimetable=()=>{
-        const {classID, langCode} = this.props.userSetup
-        // console.log("TIME", `${(new Date()).getFullYear()},${(new Date()).getMonth()>=7?"09":"01"}01`)
-        // console.log("fillTimetable")
-        axios2('get', `${API_URL}timetable/get/${classID}/${toYYYYMMDD(this.state.mainDate)}`)
+        const {classID, langCode, school_id} = this.props.userSetup
+        console.log("fillTimetable",this.props.curClass, this.props.curLetter)
+        const classNumber = this.props.curClass!==undefined&&this.props.curClass!==null?this.props.curClass:this.props.userSetup.curClass
+        const classLetter = this.props.curLetter!==undefined&&this.props.curLetter!==null?this.props.curLetter:this.props.userSetup.class_letter
+
+        console.log("TIME", encodeURI(`${API_URL}timetable/getbyschool/${school_id}/${classNumber}/${classLetter}/${toYYYYMMDD(this.state.mainDate)}`))
+
+        //axios2('get', `${API_URL}timetable/getex/${classID}/${toYYYYMMDD(this.state.mainDate)}`)
+        axios2('get', `${API_URL}timetable/getbyschool/${school_id}/${classNumber}/${classLetter}/${toYYYYMMDD(this.state.mainDate)}`)
             .then(res=>{
                 // let markKey = subj_key.replace("#","")+"#"+subj_key.replace("#","")+"#"+ondate
-                let {timetable, timetableArr} = this.state
+                let {timetable} = this.state
+                res.data = res.data.filter(item=>item!==null)
                 res.data.forEach(item=>{
                     let key = `${item.subj_key.replace("#","")}#${item.subj_key.replace("#","")}#${item.weekday}`
                     timetable.set(key, item)
                 })
                 res.data = res.data.map(item=>{item.subj_name=item[getSubjFieldName(langCode)]; return item})
                 this.setState({timetable, timetableArr : res.data})
-
                 // console.log("INITTIMETABLE", timetable, res.data)
              })
             .catch(res=>{
                 console.log("fillTimetable:error")
             })
     }
-    renderClasses = () =>
-        this.state.classList.map(value =>
+    renderClasses=(selected)=> {
+        console.log("renderClasses", selected)
+        return this.state.classList.map(value =>
             <option key={value} value={value}>
                 { value }
             </option>)
+    }
 
     onClick(e){
         console.log("onClick", e.target, e.target.nodeName, e.target.innerHTML)
@@ -106,13 +121,18 @@ class Timetable extends Component {
     changeCell = (cell, value, id) =>{
         console.log("Table_changeCell", value)
 
-        let {userID, classID, subjects_list, langCode, classNumber} = this.props.userSetup;
+        let {userID, classID, classNumber : classNumberUserSetup, class_letter, langCode, school_id, subjects} = this.props.userSetup;
         let tid = Number(id.split('#')[4])
         let subj_key = `#${id.split('#')[2]}`
         let ondate = id.split('#')[3]
         let key = subj_key.replace("#","")+"#"+subj_key.replace("#","")+"#"+ondate
         let {timetable, timetableArr} = this.state
-        const subj = subjects_list.filter(item=>item.subj_key===subj_key)
+
+        if (this.props.timetableArr!==undefined) {
+            timetableArr = this.props.timetableArr
+            timetable = this.props.timetable
+        }
+        const subj = subjects.filter(item=>item.subj_key===subj_key)
         const obj = {id : tid, subj_key : subj_key, subj_name : subj.length?subj[0][getSubjFieldName(langCode)]:"", weekday : Number(ondate), position : value.toString().length<4?value:"", ondate : toYYYYMMDD(this.state.mainDate), class_id : classID, class_number : classNumber }
         if ((value.toString().length<4?value:null)!==null) {
             console.log('Добавляем')
@@ -124,18 +144,21 @@ class Timetable extends Component {
             timetable.delete(key)
             timetableArr = timetableArr.filter(item=>item.subj_key!==subj_key&&item.position!==value.toString().length<4?value:"")
         }
-
         this.setState({timetable, timetableArr})
-
         console.log("changeCell", timetable, timetableArr)
 
         // `id`, `class_id`, `class_number`, `school_id`, `user_id`, `subj_id`, `subj_key`, `subj_name_ua`, `subj_name_ru`, `subj_name_en`, `subj_name_gb`,
         // `weekday`, `position`, `room_id`, `room`, `teacher_id`, `teacher_name`, `dateFrom`, `dateTo`, `authorized_at`, `created_at`, `updated_at`
+        // const defClass = this.props.curClass!==undefined&&this.props.curClass!==null?this.props.curClass+this.props.curLetter:curClass+classLetter
+        const classNumber = this.props.curClass!==undefined&&this.props.curClass!==null?this.props.curClass:this.props.userSetup.curClass
+        const classLetter = this.props.curLetter!==undefined&&this.props.curLetter!==null?this.props.curLetter:this.props.userSetup.curLetter
 
-        const json = `{  "user_id":${userID},
-                        "class_id":${classID},
+        console.log("UPDATE", classNumber, classNumberUserSetup, class_letter, classLetter)
+        const json = `{ "user_id":${userID},
+                        "class_id":${classNumber===classNumberUserSetup&&class_letter===classLetter?classID:null},
                         "class_number":${classNumber},
-                        "school_id":${null},
+                        "class_letter":"${classLetter}",
+                        "school_id":${school_id},
                         "subj_id":${subj.length?subj[0].id:null},
                         "subj_key":"${subj.length?subj[0].subj_key:null}",
                         "subj_name_ua":"${subj.length?subj[0].subj_name_ua:null}",
@@ -170,7 +193,13 @@ class Timetable extends Component {
         // alert(cellID)
         return(<MarkBlank kind={4} onclickA={this.changeCell} parent={cellID}/>)
     }
-    getTimetableHash=key=>this.state.timetable.has(key)?this.state.timetable.get(key):null
+    getTimetableHash=key=>{
+        let {timetable} = this.state
+        if (this.props.timetable!==undefined) {
+            timetable = this.props.timetable
+        }
+        return timetable.has(key)?timetable.get(key):null
+    }
 
     subjListTableHead=(day)=>{
         return <tr>
@@ -182,7 +211,11 @@ class Timetable extends Component {
                 </tr>
     }
     subjListRows=(day)=>{
-        const arr = this.state.timetableArr.filter(item=>item.weekday===day).sort((a,b)=> {
+        let {timetableArr} = this.state
+        if (this.props.timetableArr!==undefined) {
+            timetableArr = this.props.timetableArr
+         }
+        const arr = timetableArr.filter(item=>item.weekday===day).sort((a,b)=> {
             if (a.pos > b.pos) return 1;
             if (a.pos === b.pos) return 0;
             if (a.pos < b.pos) return -1;
@@ -219,19 +252,37 @@ class Timetable extends Component {
         )
         return retArr
     }
+    unDoneTimeTable=(classNumber, classLetter)=>{
+        const {school_id} = this.props.userSetup
+        if (school_id)
+        axios2('get',`${API_URL}timetable/undone/${school_id}/${classNumber}/${classLetter}/${toYYYYMMDD(this.state.mainDate)}`)
+            .then(res=>{
+                console.log("UNDONE", res.data)
+                    })
+            .catch(err=>{})
+        // console.log('unDoneTimeTable', classNumber, classLetter)
+    }
     render() {
         const {classList} = this.state
+
         let head = []
             , cell = []
             , rows = [];
 
-        let {subjects_list, langCode} = this.props.userSetup
-        subjects_list = subjects_list.filter(item=>item.subj_key!=="#xxxxxx")
+        console.log("timetable",this.props.userSetup)
+        let {subjects_list, langCode, curClass, class_letter : classLetter, token} = this.props.userSetup
+
+        if (this.props.subjectList!==undefined&&this.props.subjectList.length)
+            subjects_list = this.props.subjectList.filter(item=>item.subj_key!=="#xxxxxx")
+        else
+            subjects_list = subjects_list.filter(item=>item.subj_key!=="#xxxxxx")
+
         const mapDays = new Map()
         for (let i = 0; i < arrOfWeekDaysLocal.length; i++){
             mapDays.set(i, arrOfWeekDaysLocal[i])
         }
-        // console.log("Timetable", subjects_list, getSubjFieldName(langCode), this.props.userSetup)
+        const defClass = this.props.curClass!==undefined&&this.props.curClass!==null?this.props.curClass+this.props.curLetter:curClass+classLetter
+        console.log("Timetable")
 
         for (let idx = 0; idx < (7 + 2); idx++) {
             let cellID = `h0c${idx}`
@@ -292,32 +343,37 @@ class Timetable extends Component {
                 }
                 rows.push(<tr key={i} id={rowID}>{cell}</tr>)
             }
-
+        // defaultValue={defClass}
         return (
                 <div>
-                    <div style={{display : "flex", alignItems : "center"}}>
-                        <div className="h4">Расписание для {
-                            <select name="classes" disabled={true} defaultValue={this.defClass} onClick={this.onClassClick}>
-                                {classList.length && this.renderClasses()}
-                            </select>}
-                         </div>
-                        {`${"  на:  "}`}
-                        <DatePicker
-                            // showMonthYearDropdown
-                            // isClearable
-                            fixedHeight
-                            dateFormat="dd/MM/yy"
-                            withPortal
-                            locale="ru"
-                            selected={new Date(this.state.mainDate)}
-                            onChange={date => this.handleDate('start', null, date)}
-                            customInput={<input style={{
-                                width: "80px",
-                                textAlign: "center",
-                                backgroundColor: "#7DA8E6",
-                                color: "#fff", fontSize: "0.9em"
-                            }}/>}
-                        />
+                    <div style={{display : "flex", justifyContent : "space-between", alignItems : "center", marginBottom : "5px"}}>
+                        <div style={{display : "flex", alignItems : "center"}}>
+                            <div className="h4" style={{marginRight : 5}}>Расписание для {
+                                <select name="classes" disabled={true} value={defClass} onClick={this.onClassClick}>
+                                    {classList.length && this.renderClasses(defClass)}
+                                </select>}
+                             </div>
+                            <div style={{marginRight : 10}}>{`  ${"на:"}  `}</div>
+                            <DatePicker
+                                // showMonthYearDropdown
+                                // isClearable
+                                fixedHeight
+                                dateFormat="dd/MM/yyyy"
+                                withPortal
+                                locale="ru"
+                                selected={new Date(this.state.mainDate)}
+                                onChange={date => this.handleDate('start', null, date)}
+                                customInput={<input style={{
+                                    width: "90px",
+                                    textAlign: "center",
+                                    backgroundColor: "#7DA8E6",
+                                    color: "#fff", fontSize: "0.9em"
+                                }}/>}
+                            />
+                        </div>
+                        <div onClick={()=>this.unDoneTimeTable(this.props.curClass!==undefined&&this.props.curClass!==null?this.props.curClass:curClass, this.props.curClass!==undefined&&this.props.curClass!==null?this.props.curLetter:classLetter)} className="lockTimetable-btn">
+                            {`Создать новое расписание для ${defClass} на ${(new Date(this.state.mainDate)).toLocaleDateString()} [Прежнее будет недоступно после ${(new Date(this.state.mainDate)).toLocaleDateString()}]`}
+                        </div>
                     </div>
                     <div className={"timetableMain"}>
                         <div style={{width : "40%", marginRight: "10px"}}>

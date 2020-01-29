@@ -17,3 +17,16 @@
 .timeTableSelected{
     background-color: var(--selected-item-background);
 }
+.lockTimetable-btn {
+    border: .5px solid #1890e6;
+    border-radius : 5px;
+    font-size : .8em;
+    padding : 5px;
+    text-align : center;
+    background-color: #bdd7ee;
+}
+.lockTimetable-btn:hover{
+    cursor: pointer;
+    background-color: #70baf7;
+    color : white;
+}

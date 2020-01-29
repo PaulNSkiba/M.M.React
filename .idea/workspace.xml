@@ -12,42 +12,49 @@
   <component name="ExecutionTargetManager" SELECTED_TARGET="default_target" />
   <component name="FileEditorManager">
     <leaf SIDE_TABS_SIZE_LIMIT_KEY="450">
+      <file leaf-file-name="adminbudgetpage.js" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/components/AdminBudgetPage/adminbudgetpage.js">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="164">
+              <caret line="756" column="76" lean-forward="false" selection-start-line="756" selection-start-column="68" selection-end-line="756" selection-end-column="76" />
+              <folding>
+                <element signature="e#43#81#0" expanded="true" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
       <file leaf-file-name="adminpageschool.js" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/components/AdminPageSchool/adminpageschool.js">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="12587">
-              <caret line="600" column="36" lean-forward="false" selection-start-line="600" selection-start-column="36" selection-end-line="600" selection-end-column="36" />
+            <state relative-caret-position="189">
+              <caret line="526" column="33" lean-forward="true" selection-start-line="526" selection-start-column="33" selection-end-line="526" selection-end-column="33" />
               <folding>
                 <element signature="e#42#83#0" expanded="false" />
                 <element signature="e#84#125#0" expanded="true" />
+                <marker date="1580295615321" expanded="true" signature="40171:40612" ph="..." />
+                <marker date="1580295615321" expanded="true" signature="48975:49699" ph="..." />
+                <marker date="1580295615321" expanded="true" signature="52940:53285" ph="..." />
               </folding>
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="addsubject.js" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/components/AddSubject/addsubject.js">
+      <file leaf-file-name="timetable.js" pinned="false" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/src/components/Timetable/timetable.js">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="333">
-              <caret line="78" column="140" lean-forward="false" selection-start-line="78" selection-start-column="140" selection-end-line="78" selection-end-column="140" />
-              <folding>
-                <marker date="1577730791270" expanded="true" signature="3130:3213" ph="..." />
-                <marker date="1577730791270" expanded="true" signature="3286:3321" ph="..." />
-                <marker date="1577730791270" expanded="true" signature="3583:4931" ph="..." />
-                <marker date="1577730791270" expanded="true" signature="3606:4912" ph="..." />
-                <marker date="1577730791270" expanded="true" signature="3698:4069" ph="..." />
-                <marker date="1577730791270" expanded="true" signature="3802:4038" ph="..." />
-                <marker date="1577730791270" expanded="true" signature="4705:4808" ph="..." />
-              </folding>
+            <state relative-caret-position="239">
+              <caret line="56" column="65" lean-forward="false" selection-start-line="56" selection-start-column="59" selection-end-line="56" selection-end-column="65" />
+              <folding />
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="addsubject.css" pinned="false" current-in-tab="true">
-        <entry file="file://$PROJECT_DIR$/src/components/AddSubject/addsubject.css">
+      <file leaf-file-name="timetable.css" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/components/Timetable/timetable.css">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="225">
-              <caret line="12" column="27" lean-forward="false" selection-start-line="12" selection-start-column="27" selection-end-line="12" selection-end-column="27" />
+            <state relative-caret-position="679">
+              <caret line="30" column="18" lean-forward="false" selection-start-line="30" selection-start-column="18" selection-end-line="30" selection-end-column="18" />
               <folding />
             </state>
           </provider>
@@ -56,32 +63,18 @@
       <file leaf-file-name="adminpageschool.css" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/components/AdminPageSchool/adminpageschool.css">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="439">
-              <caret line="100" column="43" lean-forward="false" selection-start-line="100" selection-start-column="43" selection-end-line="100" selection-end-column="43" />
+            <state relative-caret-position="326">
+              <caret line="29" column="21" lean-forward="true" selection-start-line="29" selection-start-column="21" selection-end-line="29" selection-end-column="21" />
               <folding />
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="adminbudgetpage.js" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/components/AdminBudgetPage/adminbudgetpage.js">
+      <file leaf-file-name="userSetup.js" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/reducers/userSetup.js">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="139">
-              <caret line="574" column="52" lean-forward="false" selection-start-line="574" selection-start-column="52" selection-end-line="574" selection-end-column="52" />
-              <folding>
-                <element signature="e#43#81#0" expanded="true" />
-                <element signature="e#282#319#0" expanded="true" />
-                <element signature="e#1006#1048#0" expanded="true" />
-              </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="adminbudgetpage.css" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/components/AdminBudgetPage/adminbudgetpage.css">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="200">
-              <caret line="8" column="17" lean-forward="false" selection-start-line="8" selection-start-column="17" selection-end-line="8" selection-end-column="17" />
+            <state relative-caret-position="241">
+              <caret line="58" column="58" lean-forward="true" selection-start-line="58" selection-start-column="58" selection-end-line="58" selection-end-column="58" />
               <folding />
             </state>
           </provider>
@@ -90,48 +83,28 @@
       <file leaf-file-name="adminpageteacher.js" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/components/AdminPageTeacher/adminpageteacher.js">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="575">
-              <caret line="25" column="3" lean-forward="false" selection-start-line="24" selection-start-column="0" selection-end-line="25" selection-end-column="42" />
-              <folding>
-                <marker date="1577727330278" expanded="true" signature="3540:3763" ph="..." />
-                <marker date="1577727330278" expanded="false" signature="19135:19149" ph="..." />
-                <marker date="1577727330278" expanded="false" signature="19547:19561" ph="..." />
-                <marker date="1577727330278" expanded="false" signature="19959:19973" ph="..." />
-                <marker date="1577727330278" expanded="false" signature="20357:20371" ph="..." />
-                <marker date="1577727330278" expanded="false" signature="20743:20757" ph="..." />
-                <marker date="1577727330278" expanded="true" signature="21292:21353" ph="..." />
-              </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="adminpageteacher.css" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/components/AdminPageTeacher/adminpageteacher.css">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="530">
-              <caret line="62" column="0" lean-forward="false" selection-start-line="62" selection-start-column="0" selection-end-line="62" selection-end-column="0" />
+            <state relative-caret-position="314">
+              <caret line="465" column="38" lean-forward="false" selection-start-line="465" selection-start-column="38" selection-end-line="465" selection-end-column="38" />
               <folding />
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="adminpageadmin.js" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/components/AdminPageAdmin/adminpageadmin.js">
+      <file leaf-file-name="universaltable.js" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/components/UniversalTable/universaltable.js">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="175">
-              <caret line="454" column="28" lean-forward="false" selection-start-line="454" selection-start-column="28" selection-end-line="454" selection-end-column="51" />
-              <folding>
-                <element signature="e#42#83#0" expanded="true" />
-              </folding>
+            <state relative-caret-position="364">
+              <caret line="214" column="5" lean-forward="false" selection-start-line="214" selection-start-column="5" selection-end-line="214" selection-end-column="5" />
+              <folding />
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="adminpageadmin.css" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/components/AdminPageAdmin/adminpageadmin.css">
+      <file leaf-file-name="adminbudgetpage.css" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/components/AdminBudgetPage/adminbudgetpage.css">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="226">
-              <caret line="41" column="25" lean-forward="false" selection-start-line="41" selection-start-column="25" selection-end-line="41" selection-end-column="25" />
+            <state relative-caret-position="207">
+              <caret line="15" column="1" lean-forward="false" selection-start-line="15" selection-start-column="1" selection-end-line="15" selection-end-column="1" />
               <folding />
             </state>
           </provider>
@@ -149,36 +122,36 @@
   </component>
   <component name="FindInProjectRecents">
     <findStrings>
-      <find>.descran</find>
-      <find>getMultyOptions</find>
-      <find>addTo</find>
-      <find>addToSchool</find>
-      <find>native</find>
-      <find>pk</find>
-      <find>getSchList</find>
-      <find>schools</find>
-      <find>getByRegion</find>
-      <find>students</find>
-      <find>&quot;А</find>
-      <find>objBlank</find>
-      <find>.descrand</find>
-      <find>.mym-adminpageteacher-tableblock</find>
-      <find>a</find>
-      <find>addSub</find>
-      <find>addSubje</find>
-      <find>addSubjec</find>
-      <find>addSubject</find>
-      <find>AddSubject</find>
-      <find>createTableRows</find>
-      <find>onFactSumClick</find>
-      <find>budgetID</find>
-      <find>onResetStudent</find>
+      <find>createTableHead</find>
+      <find>pageschool-headerbutton</find>
+      <find>mpSubject</find>
+      <find>handleDate</find>
       <find>getClassBlockHeader</find>
-      <find>this.tabs</find>
-      <find>mym-adminpage-container</find>
-      <find>mym-adminpageteacher-description</find>
-      <find>pageschool-classbutton</find>
-      <find>AddSub</find>
+      <find>defClass</find>
+      <find>curLetter</find>
+      <find>classList</find>
+      <find>rows</find>
+      <find>subjects_list</find>
+      <find>30px</find>
+      <find>shouldComponentUpdate</find>
+      <find>Time</find>
+      <find>Timetab</find>
+      <find>renderClasses</find>
+      <find>curSubjectList</find>
+      <find>getSubjectsList</find>
+      <find>timetable</find>
+      <find>toYYYYMMDD</find>
+      <find>headArray</find>
+      <find>&lt;Time</find>
+      <find>&lt;tim</find>
+      <find>fillTimetable</find>
+      <find>getClassBlock</find>
+      <find>schoolClasses</find>
+      <find>getTimetableHash</find>
+      <find>pageschool-classbutton-rightcorner</find>
+      <find>unDoneTimeTable</find>
+      <find>getTabs</find>
+      <find>width</find>
     </findStrings>
     <replaceStrings>
       <replace>2019-04-15</replace>
@@ -195,13 +168,14 @@
       <replace>getFullYear</replace>
       <replace>MenuDropDown</replace>
       <replace>const {schools} = this.state</replace>
+      <replace>&quot;40px&quot; : &quot;70px&quot;</replace>
     </replaceStrings>
     <dirStrings>
       <dir>C:\MyProjects\sch-journal\node_modules</dir>
       <dir>C:\MyProjects\sch-journal\node_modules\styled-components</dir>
-      <dir>C:\MyProjects\sch-journal\src\components</dir>
-      <dir>C:\MyProjects\sch-journal</dir>
       <dir>C:\MyProjects\sch-journal\src</dir>
+      <dir>C:\MyProjects\sch-journal</dir>
+      <dir>C:\MyProjects\sch-journal\src\components</dir>
     </dirStrings>
   </component>
   <component name="Git.Settings">
@@ -233,34 +207,34 @@
         <option value="$PROJECT_DIR$/src/components/AdminPage/adminpage.js" />
         <option value="$PROJECT_DIR$/src/components/CheckBox/checkbox.css" />
         <option value="$PROJECT_DIR$/src/components/CheckBox/checkbox.js" />
-        <option value="$PROJECT_DIR$/src/config/config.js" />
         <option value="$PROJECT_DIR$/src/components/MarksTable/markstable.css" />
         <option value="$PROJECT_DIR$/src/components/MarksTable/markstable.js" />
-        <option value="$PROJECT_DIR$/src/components/StudentTable/studenttable.css" />
         <option value="$PROJECT_DIR$/src/components/StudentTable/studenttable.js" />
         <option value="$PROJECT_DIR$/src/components/Charts/charts.js" />
         <option value="$PROJECT_DIR$/src/components/VideoSection/videosection.js" />
         <option value="$PROJECT_DIR$/src/components/AdminHomeWorkSection/homeworksection.js" />
-        <option value="$PROJECT_DIR$/src/containers/App.js" />
         <option value="$PROJECT_DIR$/src/components/SubjectList/subjectlist.js" />
         <option value="$PROJECT_DIR$/src/components/SchoolListBlock/schoollistblock.css" />
-        <option value="$PROJECT_DIR$/src/js/helpers.js" />
         <option value="$PROJECT_DIR$/src/reducers/userSetup.js" />
         <option value="$PROJECT_DIR$/src/actions/userAuthActions.js" />
         <option value="$PROJECT_DIR$/src/components/SchoolListBlock/schoollistblock.js" />
-        <option value="$PROJECT_DIR$/src/components/Timetable/timetable.js" />
-        <option value="$PROJECT_DIR$/src/components/Timetable/timetable.css" />
-        <option value="$PROJECT_DIR$/src/components/UniversalTable/universaltable.js" />
-        <option value="$PROJECT_DIR$/src/components/AdminPageSchool/adminpageschool.css" />
         <option value="$PROJECT_DIR$/src/components/AdminPageAdmin/adminpageadmin.js" />
         <option value="$PROJECT_DIR$/src/components/AdminPageAdmin/adminpageadmin.css" />
         <option value="$PROJECT_DIR$/src/components/AdminPageTeacher/adminpageteacher.css" />
-        <option value="$PROJECT_DIR$/src/components/AdminPageSchool/adminpageschool.js" />
-        <option value="$PROJECT_DIR$/src/components/AdminPageTeacher/adminpageteacher.js" />
-        <option value="$PROJECT_DIR$/src/components/AdminBudgetPage/adminbudgetpage.css" />
-        <option value="$PROJECT_DIR$/src/components/AdminBudgetPage/adminbudgetpage.js" />
         <option value="$PROJECT_DIR$/src/components/AddSubject/addsubject.js" />
         <option value="$PROJECT_DIR$/src/components/AddSubject/addsubject.css" />
+        <option value="$PROJECT_DIR$/src/config/config.js" />
+        <option value="$PROJECT_DIR$/src/containers/App.js" />
+        <option value="$PROJECT_DIR$/src/components/StudentTable/studenttable.css" />
+        <option value="$PROJECT_DIR$/src/js/helpers.js" />
+        <option value="$PROJECT_DIR$/src/components/AdminBudgetPage/adminbudgetpage.js" />
+        <option value="$PROJECT_DIR$/src/components/AdminBudgetPage/adminbudgetpage.css" />
+        <option value="$PROJECT_DIR$/src/components/UniversalTable/universaltable.js" />
+        <option value="$PROJECT_DIR$/src/components/AdminPageTeacher/adminpageteacher.js" />
+        <option value="$PROJECT_DIR$/src/components/AdminPageSchool/adminpageschool.js" />
+        <option value="$PROJECT_DIR$/src/components/AdminPageSchool/adminpageschool.css" />
+        <option value="$PROJECT_DIR$/src/components/Timetable/timetable.css" />
+        <option value="$PROJECT_DIR$/src/components/Timetable/timetable.js" />
       </list>
     </option>
   </component>
@@ -1211,18 +1185,22 @@
       <workItem from="1575756265968" duration="3652000" />
       <workItem from="1575897082334" duration="34055000" />
       <workItem from="1576583177216" duration="12438000" />
-      <workItem from="1576797014138" duration="155796000" />
+      <workItem from="1576797014138" duration="156996000" />
+      <workItem from="1578387629394" duration="5500000" />
+      <workItem from="1578763132206" duration="14327000" />
+      <workItem from="1579335072232" duration="9375000" />
+      <workItem from="1579549244664" duration="68622000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="2818297000" />
+    <option name="totallyTimeSpent" value="2917321000" />
   </component>
   <component name="ToolWindowManager">
-    <frame x="-11" y="-11" width="1942" height="1042" extended-state="1" />
+    <frame x="-11" y="-11" width="1942" height="1042" extended-state="6" />
     <editor active="true" />
     <layout>
-      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.21621622" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
+      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.20378378" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
       <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
       <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.034559645" sideWeight="0.5043243" order="7" side_tool="true" content_ui="tabs" />
       <window_info id="Database" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
@@ -1277,21 +1255,6 @@
     <watches-manager />
   </component>
   <component name="editorHistoryManager">
-    <entry file="file://$PROJECT_DIR$/src/components/MarkBlank/markblank.css">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="500">
-          <caret line="20" column="14" lean-forward="true" selection-start-line="20" selection-start-column="14" selection-end-line="20" selection-end-column="14" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/components/MenuDropDown/menudropdown.css">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="1975">
-          <caret line="79" column="1" lean-forward="true" selection-start-line="79" selection-start-column="1" selection-end-line="79" selection-end-column="1" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/src/components/MenuDropDown/menudropdown.js">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="525">
@@ -1310,7 +1273,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="435">
           <caret line="87" column="17" lean-forward="false" selection-start-line="87" selection-start-column="17" selection-end-line="87" selection-end-column="17" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -1318,7 +1280,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="750">
           <caret line="30" column="37" lean-forward="false" selection-start-line="30" selection-start-column="37" selection-end-line="30" selection-end-column="37" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -1326,7 +1287,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="300">
           <caret line="12" column="35" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="404" selection-end-column="1" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -1334,7 +1294,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="10100">
           <caret line="404" column="1" lean-forward="false" selection-start-line="404" selection-start-column="1" selection-end-line="404" selection-end-column="1" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -1342,7 +1301,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="241">
           <caret line="25" column="41" lean-forward="true" selection-start-line="25" selection-start-column="41" selection-end-line="25" selection-end-column="41" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -1357,7 +1315,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="2350">
           <caret line="94" column="18" lean-forward="false" selection-start-line="94" selection-start-column="18" selection-end-line="94" selection-end-column="18" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -1365,9 +1322,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="418">
           <caret line="300" column="34" lean-forward="false" selection-start-line="298" selection-start-column="33" selection-end-line="301" selection-end-column="30" />
-          <folding>
-            <element signature="e#42#83#0" expanded="false" />
-          </folding>
         </state>
       </provider>
     </entry>
@@ -1382,9 +1336,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="149">
           <caret line="70" column="61" lean-forward="false" selection-start-line="70" selection-start-column="61" selection-end-line="70" selection-end-column="61" />
-          <folding>
-            <element signature="e#42#83#0" expanded="false" />
-          </folding>
         </state>
       </provider>
     </entry>
@@ -1414,9 +1365,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="500">
           <caret line="22" column="38" lean-forward="false" selection-start-line="22" selection-start-column="12" selection-end-line="22" selection-end-column="43" />
-          <folding>
-            <element signature="n#!!doc" expanded="false" />
-          </folding>
         </state>
       </provider>
     </entry>
@@ -1424,15 +1372,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="75">
           <caret line="3" column="1" lean-forward="true" selection-start-line="3" selection-start-column="1" selection-end-line="3" selection-end-column="1" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/components/StudentTable/studenttable.css">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="358">
-          <caret line="144" column="1" lean-forward="true" selection-start-line="144" selection-start-column="1" selection-end-line="144" selection-end-column="1" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -1440,7 +1379,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="3965">
           <caret line="169" column="94" lean-forward="false" selection-start-line="169" selection-start-column="94" selection-end-line="169" selection-end-column="94" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -1462,9 +1400,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="280">
           <caret line="238" column="51" lean-forward="false" selection-start-line="238" selection-start-column="51" selection-end-line="238" selection-end-column="51" />
-          <folding>
-            <element signature="n#!!doc" expanded="false" />
-          </folding>
         </state>
       </provider>
     </entry>
@@ -1502,15 +1437,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="-3582">
           <caret line="380" column="16" lean-forward="true" selection-start-line="380" selection-start-column="16" selection-end-line="380" selection-end-column="16" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/containers/App.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="272">
-          <caret line="933" column="5" lean-forward="false" selection-start-line="932" selection-start-column="0" selection-end-line="939" selection-end-column="5" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -1518,33 +1444,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="250">
           <caret line="10" column="33" lean-forward="false" selection-start-line="10" selection-start-column="33" selection-end-line="10" selection-end-column="33" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/config/config.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-782">
-          <caret line="24" column="13" lean-forward="false" selection-start-line="24" selection-start-column="13" selection-end-line="24" selection-end-column="13" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/js/helpers.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="350">
-          <caret line="16" column="31" lean-forward="false" selection-start-line="16" selection-start-column="31" selection-end-line="16" selection-end-column="31" />
-          <folding>
-            <element signature="e#42#68#0" expanded="false" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/components/MarksTable/markstable.css">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="537">
-          <caret line="289" column="15" lean-forward="true" selection-start-line="289" selection-start-column="15" selection-end-line="289" selection-end-column="15" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -1552,7 +1451,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="291">
           <caret line="48" column="41" lean-forward="false" selection-start-line="48" selection-start-column="41" selection-end-line="48" selection-end-column="41" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -1567,45 +1465,10 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/reducers/userSetup.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="300">
-          <caret line="52" column="18" lean-forward="true" selection-start-line="52" selection-start-column="18" selection-end-line="52" selection-end-column="18" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/components/Timetable/timetable.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="316">
-          <caret line="322" column="70" lean-forward="false" selection-start-line="322" selection-start-column="70" selection-end-line="322" selection-end-column="70" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/components/Timetable/timetable.css">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="350">
-          <caret line="14" column="24" lean-forward="true" selection-start-line="14" selection-start-column="24" selection-end-line="14" selection-end-column="24" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/src/components/SchoolListBlock/schoollistblock.js">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="-5948">
           <caret line="10" column="47" lean-forward="true" selection-start-line="10" selection-start-column="47" selection-end-line="10" selection-end-column="47" />
-          <folding>
-            <element signature="n#!!doc" expanded="false" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/css/colors.css">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="625">
-          <caret line="25" column="5" lean-forward="false" selection-start-line="25" selection-start-column="4" selection-end-line="25" selection-end-column="15" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -1613,97 +1476,26 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="267">
           <caret line="113" column="79" lean-forward="true" selection-start-line="113" selection-start-column="43" selection-end-line="113" selection-end-column="153" />
-          <folding>
-            <element signature="e#42#82#0" expanded="false" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/components/UniversalTable/universaltable.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-1499">
-          <caret line="40" column="5" lean-forward="true" selection-start-line="40" selection-start-column="5" selection-end-line="40" selection-end-column="5" />
-          <folding>
-            <marker date="1577561063967" expanded="true" signature="42435:42447" ph="..." />
-            <marker date="1577561063967" expanded="true" signature="42501:42511" ph="..." />
-            <marker date="1577561063967" expanded="true" signature="42789:42950" ph="..." />
-            <marker date="1577561063967" expanded="true" signature="42829:42913" ph="..." />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/components/AdminPageAdmin/adminpageadmin.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="175">
-          <caret line="454" column="28" lean-forward="false" selection-start-line="454" selection-start-column="28" selection-end-line="454" selection-end-column="51" />
-          <folding>
-            <element signature="e#42#83#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/components/AdminPageSchool/adminpageschool.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="12587">
-          <caret line="600" column="36" lean-forward="false" selection-start-line="600" selection-start-column="36" selection-end-line="600" selection-end-column="36" />
-          <folding>
-            <element signature="e#42#83#0" expanded="false" />
-            <element signature="e#84#125#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/components/AdminPageTeacher/adminpageteacher.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="575">
-          <caret line="25" column="3" lean-forward="false" selection-start-line="24" selection-start-column="0" selection-end-line="25" selection-end-column="42" />
-          <folding>
-            <marker date="1577727330278" expanded="true" signature="3540:3763" ph="..." />
-            <marker date="1577727330278" expanded="false" signature="19135:19149" ph="..." />
-            <marker date="1577727330278" expanded="false" signature="19547:19561" ph="..." />
-            <marker date="1577727330278" expanded="false" signature="19959:19973" ph="..." />
-            <marker date="1577727330278" expanded="false" signature="20357:20371" ph="..." />
-            <marker date="1577727330278" expanded="false" signature="20743:20757" ph="..." />
-            <marker date="1577727330278" expanded="true" signature="21292:21353" ph="..." />
-          </folding>
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/src/components/AdminPageAdmin/adminpageadmin.css">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="226">
+        <state relative-caret-position="1025">
           <caret line="41" column="25" lean-forward="false" selection-start-line="41" selection-start-column="25" selection-end-line="41" selection-end-column="25" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/components/AdminBudgetPage/adminbudgetpage.css">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="200">
-          <caret line="8" column="17" lean-forward="false" selection-start-line="8" selection-start-column="17" selection-end-line="8" selection-end-column="17" />
-          <folding />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/src/components/AdminPageTeacher/adminpageteacher.css">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="530">
+        <state relative-caret-position="1550">
           <caret line="62" column="0" lean-forward="false" selection-start-line="62" selection-start-column="0" selection-end-line="62" selection-end-column="0" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/components/AdminPageSchool/adminpageschool.css">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="439">
-          <caret line="100" column="43" lean-forward="false" selection-start-line="100" selection-start-column="43" selection-end-line="100" selection-end-column="43" />
-          <folding />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/src/components/AddSubject/addsubject.js">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="333">
+        <state relative-caret-position="1800">
           <caret line="78" column="140" lean-forward="false" selection-start-line="78" selection-start-column="140" selection-end-line="78" selection-end-column="140" />
           <folding>
             <marker date="1577730791270" expanded="true" signature="3130:3213" ph="..." />
@@ -1717,22 +1509,161 @@
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/src/components/AddSubject/addsubject.css">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="300">
+          <caret line="12" column="27" lean-forward="false" selection-start-line="12" selection-start-column="27" selection-end-line="12" selection-end-column="27" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/components/AdminPageAdmin/adminpageadmin.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="2050">
+          <caret line="454" column="28" lean-forward="false" selection-start-line="454" selection-start-column="28" selection-end-line="454" selection-end-column="51" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/reducers/user.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="350">
+          <caret line="14" column="1" lean-forward="false" selection-start-line="14" selection-start-column="1" selection-end-line="14" selection-end-column="1" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/containers/App.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="2875">
+          <caret line="159" column="46" lean-forward="false" selection-start-line="159" selection-start-column="46" selection-end-line="159" selection-end-column="46" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/components/MarksTable/markstable.css">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="301">
+          <caret line="112" column="13" lean-forward="false" selection-start-line="111" selection-start-column="0" selection-end-line="112" selection-end-column="23" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/components/StudentTable/studenttable.css">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="401">
+          <caret line="41" column="27" lean-forward="false" selection-start-line="41" selection-start-column="27" selection-end-line="41" selection-end-column="27" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/components/UniversalTable/universaltable.css">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="100">
+          <caret line="13" column="4" lean-forward="false" selection-start-line="13" selection-start-column="4" selection-end-line="13" selection-end-column="4" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/js/helpers.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="271">
+          <caret line="1122" column="25" lean-forward="false" selection-start-line="1122" selection-start-column="13" selection-end-line="1122" selection-end-column="32" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/src/components/AdminBudgetPage/adminbudgetpage.js">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="139">
-          <caret line="574" column="52" lean-forward="false" selection-start-line="574" selection-start-column="52" selection-end-line="574" selection-end-column="52" />
+        <state relative-caret-position="164">
+          <caret line="756" column="76" lean-forward="false" selection-start-line="756" selection-start-column="68" selection-end-line="756" selection-end-column="76" />
           <folding>
             <element signature="e#43#81#0" expanded="true" />
-            <element signature="e#282#319#0" expanded="true" />
-            <element signature="e#1006#1048#0" expanded="true" />
           </folding>
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/components/AddSubject/addsubject.css">
+    <entry file="file://$PROJECT_DIR$/src/components/AdminBudgetPage/adminbudgetpage.css">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="225">
-          <caret line="12" column="27" lean-forward="false" selection-start-line="12" selection-start-column="27" selection-end-line="12" selection-end-column="27" />
+        <state relative-caret-position="207">
+          <caret line="15" column="1" lean-forward="false" selection-start-line="15" selection-start-column="1" selection-end-line="15" selection-end-column="1" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/components/AdminPageTeacher/adminpageteacher.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="314">
+          <caret line="465" column="38" lean-forward="false" selection-start-line="465" selection-start-column="38" selection-end-line="465" selection-end-column="38" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/reducers/userSetup.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="241">
+          <caret line="58" column="58" lean-forward="true" selection-start-line="58" selection-start-column="58" selection-end-line="58" selection-end-column="58" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/components/AdminPageSchool/adminpageschool.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="189">
+          <caret line="526" column="33" lean-forward="true" selection-start-line="526" selection-start-column="33" selection-end-line="526" selection-end-column="33" />
+          <folding>
+            <element signature="e#42#83#0" expanded="false" />
+            <element signature="e#84#125#0" expanded="true" />
+            <marker date="1580295615321" expanded="true" signature="40171:40612" ph="..." />
+            <marker date="1580295615321" expanded="true" signature="48975:49699" ph="..." />
+            <marker date="1580295615321" expanded="true" signature="52940:53285" ph="..." />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/css/colors.css">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="550">
+          <caret line="25" column="24" lean-forward="false" selection-start-line="25" selection-start-column="18" selection-end-line="25" selection-end-column="24" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/components/AdminPageSchool/adminpageschool.css">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="326">
+          <caret line="29" column="21" lean-forward="true" selection-start-line="29" selection-start-column="21" selection-end-line="29" selection-end-column="21" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/config/config.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="30">
+          <caret line="12" column="13" lean-forward="false" selection-start-line="12" selection-start-column="13" selection-end-line="12" selection-end-column="13" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/components/UniversalTable/universaltable.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="364">
+          <caret line="214" column="5" lean-forward="false" selection-start-line="214" selection-start-column="5" selection-end-line="214" selection-end-column="5" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/components/Timetable/timetable.css">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="679">
+          <caret line="30" column="18" lean-forward="false" selection-start-line="30" selection-start-column="18" selection-end-line="30" selection-end-column="18" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/components/Timetable/timetable.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="239">
+          <caret line="56" column="65" lean-forward="false" selection-start-line="56" selection-start-column="59" selection-end-line="56" selection-end-column="65" />
           <folding />
         </state>
       </provider>

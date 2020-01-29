@@ -4,7 +4,6 @@
 
 import React, {Component} from 'react'
 import { addDay, arrOfWeekDays, dateDiff, toYYYYMMDD, instanceAxios, addMonths, dateFromYYYYMMDD, mapStateToProps, getLangByCountry, axios2} from '../../js/helpers'
-// import Menu from '../Menu/menu'
 import MenuEx from '../MenuEx/menuex'
 import {connect} from 'react-redux'
 import {withRouter} from 'react-router-dom'
@@ -19,16 +18,16 @@ import './adminbudgetpage.css'
 import ReactFlagsSelect from 'react-flags-select';
 import 'react-flags-select/css/react-flags-select.css';
 import Logo from '../../img/LogoMyMsmall.png'
-// import ReactPlayer from 'react-player'
-import DatePicker from "react-datepicker";
 import {registerLocale, setDefaultLocale} from  "react-datepicker";
 import {ru} from 'date-fns/locale';
 import UniversalTable from '../UniversalTable/universaltable'
 import AddSubject from '../AddSubject/addsubject'
 import Tabs from 'react-responsive-tabs';
 import 'react-responsive-tabs/styles.css';
-
+import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
+// import ReactPlayer from 'react-player'
+// import Menu from '../Menu/menu'
 
 const ExampleCustomInput = ({value, onClick}) => (
     <button className="example-custom-input" onClick={onClick}>
@@ -225,7 +224,7 @@ class AdminBudgetPage extends Component {
                     textAlign: "center",
                     fontSize: "0.8em"
                 }}>{i + 1}</td>)
-                cell.push(<td key={"bbr" + (i + 1) + "c2"} style={{width: "200px", padding: "2px", fontSize: "0.8em"}}
+                cell.push(<td key={"bbr" + (i + 1) + "c2"} style={{minWidth: "200px", maxWidth: "200px", width: "200px", padding: "2px", fontSize: "0.8em"}}
                     // onClick={()=>this.setState({curInRow : key + 1, curInColumn : 2})}
                               id={(i + 1) + "#2#" + rowsArr[i].id}
                               onClick={this.onClick}
@@ -239,7 +238,7 @@ class AdminBudgetPage extends Component {
                                defaultValue={item.name}/> : ""}
                 </td>)
                 cell.push(<td key={"bbr" + (i + 1) + "c3"}
-                              style={{width: "50px", padding: "2px", textAlign: "center", fontSize: "0.8em"}}
+                              style={{minWidth: "50px", maxWidth: "50px", width: "50px", padding: "2px", textAlign: "center", fontSize: "0.8em"}}
                               id={(i + 1) + "#3#" + rowsArr[i].id}
                               onClick={this.onClick}>
                     {item.short}
@@ -250,7 +249,7 @@ class AdminBudgetPage extends Component {
                                onBlur={this.onBlur}
                                defaultValue={item.short}/> : ""}</td>)
                 cell.push(<td key={"bbr" + (i + 1) + "c4"}
-                              style={{width: "50px", padding: "2px", textAlign: "center", fontSize: "0.8em"}}
+                              style={{minWidth: "50px", maxWidth: "50px", width: "50px", padding: "2px", textAlign: "center", fontSize: "0.8em"}}
                               id={(i + 1) + "#4#" + rowsArr[i].id}
                               onClick={this.onClick}>
                     {item.sum}
@@ -261,14 +260,14 @@ class AdminBudgetPage extends Component {
                                onBlur={this.onBlur}
                                defaultValue={item.sum}/> : ""}
                 </td>)
-                cell.push(<td key={"bbr" + (i + 1) + "c5"} style={{width: "40px", padding: "2px", textAlign: "center"}}>
+                cell.push(<td key={"bbr" + (i + 1) + "c5"} style={{minWidth: "40px", maxWidth: "40px", width: "40px", padding: "2px", textAlign: "center"}}>
                     <input type="checkbox" onChange={(e) => {
                         console.log(e.target.value);
                         this.changeState(e, item.id, 5)
                     }} id={(i + 1) + "#5#" + rowsArr[i].id} checked={checkedMap.has((i + 1) + "#5#" + rowsArr[i].id)}/>
                 </td>)
                 cell.push(<td key={"bbr" + (i + 1) + "c6"}
-                              style={{width: "80px", padding: "2px", textAlign: "center", fontSize: "0.9em"}}>
+                              style={{minWidth: "80px", maxWidth: "80px", width: "80px", padding: "2px", textAlign: "center", fontSize: "0.9em"}}>
                     <DatePicker
                         // showMonthYearDropdown
                         isClearable
@@ -287,7 +286,7 @@ class AdminBudgetPage extends Component {
                     />
                 </td>)
                 cell.push(<td key={"bbr" + (i + 1) + "c7"}
-                              style={{width: "80px", padding: "2px", textAlign: "center", fontSize: "0.9em"}}>
+                              style={{minWidth: "80px", maxWidth: "80px", width: "80px", padding: "2px", textAlign: "center", fontSize: "0.9em"}}>
                     <DatePicker
                         // showMonthYearDropdown
                         isClearable
@@ -305,7 +304,7 @@ class AdminBudgetPage extends Component {
                         }}/>}
                     />
                 </td>)
-                cell.push(<td key={"bbr" + (i + 1) + "c8"} style={{width: "50px", padding: "2px", textAlign: "center"}}>
+                cell.push(<td key={"bbr" + (i + 1) + "c8"} style={{minWidth: "50px", maxWidth: "50px", width: "50px", padding: "2px", textAlign: "center"}}>
                     <select name="days" onClick={this.onLangClick} defaultValue={item.dayOfPayment}>
                         {daysArr.map((item, key) => {
                             return <option key={key}>
@@ -314,7 +313,7 @@ class AdminBudgetPage extends Component {
                         })}
                     </select>
                 </td>)
-                cell.push(<td key={"bbr" + (i + 1) + "c9"} style={{width: "40px", padding: "2px", textAlign: "center"}}>
+                cell.push(<td key={"bbr" + (i + 1) + "c9"} style={{minWidth: "40px", maxWidth: "40px", width: "40px", padding: "2px", textAlign: "center"}}>
                     <input type="checkbox" onChange={(e) => {
                         console.log(e.target.value);
                         this.changeState(e, item.id, 9)
@@ -360,7 +359,7 @@ class AdminBudgetPage extends Component {
                     fontSize: "0.8em"
                 }}>{i + 1}</td>)
                 cell.push(<td key={"bbr" + (i + 1) + "c2"}
-                              style={{width: "200px", padding: "2px", fontSize: "0.8em"}}
+                              style={{minWidth: "200px", maxWidth: "200px", width: "200px", padding: "2px", fontSize: "0.8em"}}
                     // onClick={()=>this.setState({curInRow : key + 1, curInColumn : 2})}
                               id={(i + 1) + "#2#" + rowsArr[i].id}
                               onClick={this.onClick}>
@@ -374,7 +373,7 @@ class AdminBudgetPage extends Component {
                                defaultValue={item.name}/> : ""}
                 </td>)
                 cell.push(<td key={"bbr" + (i + 1) + "c3"}
-                              style={{width: "50px", padding: "2px", textAlign: "center", fontSize: "0.8em"}}
+                              style={{minWidth: "50px", maxWidth: "50px", width: "50px", padding: "2px", textAlign: "center", fontSize: "0.8em"}}
                               id={(i + 1) + "#3#" + rowsArr[i].id}
                               onClick={this.onClick}>
                     {item.short}
@@ -386,7 +385,7 @@ class AdminBudgetPage extends Component {
                                defaultValue={item.short}/> : ""}
                 </td>)
                 cell.push(<td key={"bbr" + (i + 1) + "c4"}
-                              style={{width: "50px", padding: "2px", textAlign: "center", fontSize: "0.8em"}}
+                              style={{minWidth: "50px", maxWidth: "50px", width: "50px", padding: "2px", textAlign: "center", fontSize: "0.8em"}}
                               id={(i + 1) + "#4#" + rowsArr[i].id}
                               onClick={this.onClick}>
                     {item.sum}
@@ -397,14 +396,14 @@ class AdminBudgetPage extends Component {
                                onBlur={this.onBlur}
                                defaultValue={item.sum}/> : ""}
                 </td>)
-                cell.push(<td key={"bbr" + (i + 1) + "c5"} style={{width: "40px", padding: "2px", textAlign: "center"}}>
+                cell.push(<td key={"bbr" + (i + 1) + "c5"} style={{minWidth: "40px", maxWidth: "40px", width: "40px", padding: "2px", textAlign: "center"}}>
                     <input type="checkbox" onChange={(e) => {
                         console.log(e.target.value);
                         this.changeState(e, item.id, 5)
                     }} id={(i + 1) + "#5#" + item.id} checked={checkedMap.has((i + 1) + "#5#" + rowsArr[i].id)}/>
                 </td>)
                 cell.push(<td key={"bbr" + (i + 1) + "c6"}
-                              style={{width: "80px", padding: "2px", textAlign: "center", fontSize: "0.9em"}}>
+                              style={{minWidth: "80px", maxWidth: "80px", width: "80px", padding: "2px", textAlign: "center", fontSize: "0.9em"}}>
                     <DatePicker
                         // showMonthYearDropdown
                         isClearable
@@ -423,7 +422,7 @@ class AdminBudgetPage extends Component {
                     />
                 </td>)
                 cell.push(<td key={"bbr" + (i + 1) + "c7"}
-                              style={{width: "80px", padding: "2px", textAlign: "center", fontSize: "0.9em"}}>
+                              style={{minWidth: "80px", maxWidth: "80px", width: "80px", padding: "2px", textAlign: "center", fontSize: "0.9em"}}>
                     <DatePicker
                         // showMonthYearDropdown
                         isClearable
@@ -441,7 +440,7 @@ class AdminBudgetPage extends Component {
                         }}/>}
                     />
                 </td>)
-                cell.push(<td key={"bbr" + (i + 1) + "c8"} style={{width: "50px", padding: "2px", textAlign: "center"}}>
+                cell.push(<td key={"bbr" + (i + 1) + "c8"} style={{minWidth: "50px", maxWidth: "50px", width: "50px", padding: "2px", textAlign: "center"}}>
                     <select name="days" onClick={this.onSelectDateClick} defaultValue={item.dayOfPayment}>
                         {daysArr.map((item, key) => {
                             return <option key={key}>
@@ -450,7 +449,7 @@ class AdminBudgetPage extends Component {
                         })}
                     </select>
                 </td>)
-                cell.push(<td key={"bbr" + (i + 1) + "c9"} style={{width: "40px", padding: "2px", textAlign: "center"}}>
+                cell.push(<td key={"bbr" + (i + 1) + "c9"} style={{minWidth: "40px", maxWidth: "40px", width: "40px", padding: "2px", textAlign: "center"}}>
                     <input type="checkbox" onChange={(e) => {
                         console.log(e.target.value);
                         this.changeState(e, item.id, 9)
@@ -479,7 +478,7 @@ class AdminBudgetPage extends Component {
         if (rowsArr) {
             for (let i = 0; i < rowsArr.length; i++) {
                 cell = []
-                cell.push(<td style={{width: "25px", fontSize: "0.8em"}} key={"bbr" + (i + 1) + "c1"}>{i + 1}</td>)
+                cell.push(<td style={{minWidth: "25px", maxWidth: "25px", width: "25px", fontSize: "0.8em"}} key={"bbr" + (i + 1) + "c1"}>{i + 1}</td>)
                 cell.push(<td className="left-text"
                               style={{width: "300px", paddingLeft: "2px", paddingRight: "2px", fontSize: "0.9em"}}
                               id={(i + 1) + "#2#" + rowsArr[i].id} key={"bbr" + (i + 1) + "c2"}>
@@ -487,7 +486,7 @@ class AdminBudgetPage extends Component {
                 </td>)
                 // console.log("datein", rowsArr[i], i, (rowsArr[i].datein===null)?null:((rowsArr[i].datein.length===8)?dateFromYYYYMMDD(rowsArr[i].datein):(new Date(rowsArr[i].datein))))
                 cell.push(
-                    <td key={"bbr" + (i + 1) + "c3"} style={{width: "70px", textAlign: "center", fontSize: "0.9em"}}>
+                    <td key={"bbr" + (i + 1) + "c3"} style={{minWidth: "70px", maxWidth: "70px", width: "70px", textAlign: "center", fontSize: "0.9em"}}>
                         <DatePicker
                             // showMonthYearDropdown
                             isClearable

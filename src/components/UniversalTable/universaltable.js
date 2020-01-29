@@ -205,10 +205,9 @@ class UniversalTable extends Component {
         return map;
     }
     createTableHead=(head)=>(
-
         <tr id="row-1" key={"r0"}>{head.map((val, index)=>
             <th className={(val.isvert===true?' rotate':'')}
-                style={{width : val.width, paddingLeft : "2px", paddingRight : "2px"}} key={index}>
+                style={{minWidth : val.width, maxWidth : val.width, width : val.width, paddingLeft : "2px", paddingRight : "2px", height : "30px"}} key={index}>
                 <div>
                     {val.name}
                     </div>

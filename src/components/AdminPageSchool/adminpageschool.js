@@ -16,8 +16,9 @@ import './adminpageschool.css'
 import '../Menu/menu.css'
 import { Link } from 'react-router-dom';
 import MobileMenu from '../MobileMenu/mobilemenu'
-import { instanceAxios, mapStateToProps, getLangByCountry, getSubjFieldName, classLetters } from '../../js/helpers'
-import { arrLangs, defLang, STUDENTS_GET_URL } from '../../config/config'
+import { instanceAxios, mapStateToProps, getLangByCountry, getSubjFieldName,
+        classLetters, axios2, getNearestSeptFirst, toYYYYMMDD, dateFromYYYYMMDD } from '../../js/helpers'
+import { arrLangs, defLang, STUDENTS_GET_URL, API_URL } from '../../config/config'
 import ReactFlagsSelect from 'react-flags-select';
 import 'react-flags-select/css/react-flags-select.css';
 import { MARKS_URL } from '../../config/config'
@@ -27,6 +28,8 @@ import Timetable from '../Timetable/timetable'
 import Tabs from 'react-responsive-tabs';
 import 'react-responsive-tabs/styles.css';
 import '../AdminPageTeacher/adminpageteacher.css'
+import DatePicker from "react-datepicker";
+import "react-datepicker/dist/react-datepicker.css";
 
 const tabs = [{ name: 'Статистика', memo: 'Статистика', id : 0 },
     { name: 'Расписание', memo: 'Расписание', id : 1 },
@@ -49,6 +52,19 @@ class AdminPageSchool extends Component {
             studentTo : 0,
             showList : false,
             selectedColumn : null,
+            statData : [],
+            mpClasses : new Map(),
+            mpSubjects : new Map(),
+            curYear : "2020",
+            dBase : getNearestSeptFirst(),
+            dStart : getNearestSeptFirst(),
+            dEnd : new Date(),
+            curFigure : null,
+            curLetter : null,
+            curSubjectList : [],
+            timetable : new Map(),
+            timetableArr : [],
+            mainDate : dateFromYYYYMMDD(`${(new Date()).getFullYear()}${(new Date()).getMonth()>=7?"09":"01"}01`),
         }
         this.headArray = [
             {name: "№ п/п", width : "30px"} ,
@@ -92,39 +108,53 @@ class AdminPageSchool extends Component {
         // ])
         this.renderStudents=this.renderStudents.bind(this)
         this.onResetStudent=this.onResetStudent.bind(this)
+        this.getStatData = this.getStatData.bind(this)
     }
-
-    // Админ
-    // 1
-    // Учитель
-    // 2
-    // Студент/Ученик
-    // 4
-    // Родком
-    // 8
-    // Подписчик на рассылку
-    // 16
-    // Переводчик
-    // 32
-    // Администрация
-    // 64
-    // Партнер
-    // 128
+    // Админ : 1
+    // Учитель : 2
+    // Студент/Ученик : 4
+    // Родком : 8
+    // Подписчик на рассылку : 16
+    // Переводчик : 32
+    // Администрация : 64
+    // Партнер : 128
 
     createTableHead=(head)=>(
         <tr id="row-1" key={"r0"}>{head.map((val, index)=><th style={{width:`${val.width}`}} key={index}>{val.name}</th>)}</tr>
     )
-    // className={this.columnClassName(index)}
-    // columnClassName=key=> {
-    //     return "colstat-" + key;
-    // }
     btnLoginClassName=()=>(
         this.props.userSetup.userID > 0?"loginbtn loggedbtn":"loginbtn"
     )
     componentDidMount(){
         (async()=>{
             await this.getStats()
+            const   base = (new Date(this.state.dBase)),
+                    start = (new Date(this.state.dStart)),
+                    end = (new Date(this.state.dEnd))
+            await this.getStatData(base, start, end)
         })()
+    }
+    getStatData=(dBase, dStart, dEnd)=>{
+        const {school_id} = this.props.userSetup
+        const   base = toYYYYMMDD(new Date(dBase)),
+                start = toYYYYMMDD(new Date(dStart)),
+                end = toYYYYMMDD(new Date(dEnd))
+        axios2('get',`${API_URL}school/stat/${school_id}/${base}/${start}/${end}`)
+            .then(res => {
+                console.log("SCHOOL_STAT", res)
+                let mpClasses = new Map();
+                res.data.forEach((item)=>mpClasses.set(item.id, item.class_number + item.class_letter))
+                let mpSubjects = new Map();
+                res.data.forEach((item)=>mpSubjects.set(item.subj_id, item.subj_name_ua))
+                this.setState({
+                    statData: res.data,
+                    mpClasses,
+                    mpSubjects,
+                })
+            })
+            .catch(res => {
+                console.log(res.data);
+            })
     }
     userLogin=()=>{
 
@@ -172,9 +202,10 @@ class AdminPageSchool extends Component {
         let rows = ''
         // console.log('query', MARKS_URL + '/statsteacher/' + classID)
         instanceAxios().get(MARKS_URL + '/statsteacher/' + classID)
-            .then(response => {
+            .then(res => {
+
                 this.setState({
-                    stats: response.data,
+                    stats: res.data,
                 })
             })
             .catch(response => {
@@ -186,9 +217,6 @@ class AdminPageSchool extends Component {
     classNameOfTD=(email, verified)=> {
         return email ? (verified ? "left-text verified flexTD" : "left-text verification flexTD") : "left-text flexTD"
     }
-    // onResetStudent=()=>{
-    //
-    // }
     createTableRows(rowsArr, onInputChange, withInput, row, column, classNameOfTD, checkedMap, updateIDfrom, updateIDto) {
         // let {row, column} = this.state
         console.log("createStudentTableRows", rowsArr, updateIDfrom, updateIDto)
@@ -441,8 +469,54 @@ class AdminPageSchool extends Component {
         }
         return <tr>{cell}</tr>
     }
+    onClassClick=(curFigure, curLetter)=>{
+        const {curLetter : L, curFigure : F} = this.state
+        if (F===curFigure&&L===curLetter){
+            curFigure=curLetter=null
+        }
+        this.getSubjectsList(curFigure===null?-1:curFigure)
+        this.fillTimetable(curFigure, curLetter)
+        this.setState({curFigure, curLetter})
+        console.log("onClassClick", curFigure, curLetter)
+    }
+    getSubjectsList=async classNumber=>{
+        await axios2('get', `${API_URL}subjects/${classNumber}`)
+            .then(res=>{
+                // console.log("subjects_list", res)
+                this.setState({curSubjectList : res.data})
+            })
+            .catch(err=>console.log("getSubjectsList"))
+    }
+    fillTimetable=(curFigure, curLetter)=>{
+        const {langCode, school_id} = this.props.userSetup
+        // const {curFigure, curLetter} = this.state
+        console.log("fillTimetable", this.state)
+
+        console.log("TIME", encodeURI(`${API_URL}timetable/getbyschool/${school_id}/${curFigure}/${curLetter}/${toYYYYMMDD(this.state.mainDate)}`))
+
+        //axios2('get', `${API_URL}timetable/getex/${classID}/${toYYYYMMDD(this.state.mainDate)}`)
+        axios2('get', encodeURI(`${API_URL}timetable/getbyschool/${school_id}/${curFigure}/${curLetter}/${toYYYYMMDD(this.state.mainDate)}`))
+            .then(res=>{
+                // let markKey = subj_key.replace("#","")+"#"+subj_key.replace("#","")+"#"+ondate
+                // let {timetable} = this.state
+                let timetable = new Map()
+                res.data = res.data.filter(item=>item!==null)
+                res.data.forEach(item=>{
+                    let key = `${item.subj_key.replace("#","")}#${item.subj_key.replace("#","")}#${item.weekday}`
+                    timetable.set(key, item)
+                })
+                res.data = res.data.map(item=>{item.subj_name=item[getSubjFieldName(langCode)]; return item})
+                this.setState({timetable, timetableArr : res.data})
+                // console.log("INITTIMETABLE", timetable, res.data)
+            })
+            .catch(res=>{
+                console.log("fillTimetable:error")
+            })
+    }
     getClassBlock=()=>{
         const {schoolclasses : schoolClasses} = this.props.userSetup
+        const {curLetter, curFigure} = this.state
+        // console.log("curState", curLetter, curFigure)
         let rows = [], cell
            for (let i = 0; i < classLetters.length; i++){
                cell = []
@@ -453,9 +527,10 @@ class AdminPageSchool extends Component {
                            break;
                        default :
                            cell.push(<td key={"td"+i+'.'+j}>
-                               <div className={`pageschool-classbutton ${schoolClasses.filter(item=>item.letter===classLetters[i]&&item.number===j).length?` enabled ${this.state.selectedColumn===0 ||this.state.selectedColumn===j?"activeCol":""}`:" disabled"}`}>
-                                   <div className={`pageschool-classbutton-leftcorner ${this.state.selectedColumn===0 ||this.state.selectedColumn===j?"activeCol":null}`}>{schoolClasses.filter(item=>item.letter===classLetters[i]&&item.number===j).length?schoolClasses.filter(item=>item.letter===classLetters[i]&&item.number===j)[0].students:null}</div>
-                                   <div className={`pageschool-classbutton-rightcorner ${this.state.selectedColumn===0 ||this.state.selectedColumn===j?"activeCol":null}`}>{schoolClasses.filter(item=>item.letter===classLetters[i]&&item.number===j).length?schoolClasses.filter(item=>item.letter===classLetters[i]&&item.number===j)[0].users:null}</div>
+                               <div onClick={()=>this.onClassClick(j, classLetters[i])} className={`pageschool-classbutton ${curFigure===j&&curLetter===classLetters[i]?" selectedClass ": ""} ${schoolClasses.filter(item=>item.letter===classLetters[i]&&item.number===j).length?` enabled ${this.state.selectedColumn===0 ||this.state.selectedColumn===j?"activeCol":""}`:" disabled"}`}>
+                                   <div className={`pageschool-classbutton-leftcorner ${this.state.selectedColumn===0 ||this.state.selectedColumn===j?"activeCol":''}`}>{schoolClasses.filter(item=>item.letter===classLetters[i]&&item.number===j).length?(schoolClasses.filter(item=>item.letter===classLetters[i]&&item.number===j)[0].students?schoolClasses.filter(item=>item.letter===classLetters[i]&&item.number===j)[0].students:null):null}</div>
+                                   <div className={`pageschool-classbutton-rightcorner ${this.state.selectedColumn===0 ||this.state.selectedColumn===j?"activeCol":''}`}>{schoolClasses.filter(item=>item.letter===classLetters[i]&&item.number===j).length?(schoolClasses.filter(item=>item.letter===classLetters[i]&&item.number===j)[0].users?schoolClasses.filter(item=>item.letter===classLetters[i]&&item.number===j)[0].users:null):null}</div>
+                                   <div className={`pageschool-classbutton-letfcorner-bottom ${this.state.selectedColumn===0 ||this.state.selectedColumn===j?"activeCol":''}`}>{schoolClasses.filter(item=>item.letter===classLetters[i]&&item.number===j).length?(schoolClasses.filter(item=>item.letter===classLetters[i]&&item.number===j)[0].timetable?'расп':null):null}</div>
                                    {`${j}${classLetters[i]}`}
                                </div>
                            </td>)
@@ -466,16 +541,100 @@ class AdminPageSchool extends Component {
        }
        return rows
     }
+    handleYear = async year => {
+        // const arr = await this.prepPaymentsHeaderAndRowArray(this.state.planIns, year)
+        // console.log("changeYear", year, arr)
+        this.setState({curYear: year})
+    }
+    handleDate = (type, date) => {
+        const {dBase, dStart, dEnd} = this.state
+        if (type==='start') {
+            this.setState({dStart: date})
+            this.getStatData(dBase, date, dEnd);
+        }
+        else {
+            this.setState({dEnd: date})
+            this.getStatData(dBase, dStart, date);
+        }
+    };
     getTabs=()=>{
+        const {curLetter, curFigure, timetable, timetableArr, curSubjectList} = this.state
+        const yearArr = (() => {
+            let arr = [];
+            const curYear = (new Date()).getFullYear()
+            for (let i = 0; i < 25; i++) {
+                arr.push(curYear - 10 + i)
+            }
+            return arr
+        })()
         return tabs.map((item, key) => ({
             title: item.name,
             getContent: () => {
                 switch (item.id) {
                     case 0 :
-                        return this.getStatTable()
-                    case 1 :
+                        return <div>
+                                <div style={{marginBottom : "10px", display: "flex", width : "400px", paddingRight : "40px", justifyContent : "space-around"}}>
+                                    <div>
+                                        <select name="days" onClick={(e) => this.handleYear(e.target.value)}
+                                                defaultValue={this.state.curYear}>
+                                            {yearArr.map((item, key) => {
+                                                return <option key={key}>
+                                                    {item}
+                                                </option>
+                                            })}
+                                        </select>
+                                    </div>
+                                    <div>
+                                        <DatePicker
+                                            // showMonthYearDropdown
+                                            // isClearable
+                                            fixedHeight
+                                            dateFormat="dd/MM/yyyy"
+                                            withPortal
+                                            locale="ru"
+                                            scrollableYearDropdown
+                                            showYearDropdown
+                                            selected={this.state.dStart === null?getNearestSeptFirst():this.state.dStart}
+                                            onChange={date => this.handleDate('start', date)}
+                                            customInput={<input style={{
+                                                width: "80px",
+                                                textAlign: "left",
+                                                backgroundColor: "#7DA8E6",
+                                                color: "#fff", fontSize: "0.9em"
+                                            }}/>}
+                                        />
+                                    </div>
+                                    <div>
+                                        <DatePicker
+                                            // showMonthYearDropdown
+                                            // isClearable
+                                            fixedHeight
+                                            dateFormat="dd/MM/yyyy"
+                                            withPortal
+                                            locale="ru"
+                                            scrollableYearDropdown
+                                            showYearDropdown
+                                            selected={this.state.dEnd === null?new Date():this.state.dEnd}
+                                            onChange={date => this.handleDate('end', date)}
+                                            customInput={<input style={{
+                                                width: "80px",
+                                                textAlign: "left",
+                                                backgroundColor: "#7DA8E6",
+                                                color: "#fff", fontSize: "0.9em"
+                                            }}/>}
+                                        />
+                                    </div>
+                                </div>
+                                {this.getStatTable()}
+                                </div>
+                            case 1 :
                         return (<div className="mym-adminpageteacher-tableblock">
-                            <Timetable/>
+                            <Timetable curClass={curFigure}
+                                       curLetter={curLetter}
+                                       subjectList={curSubjectList}
+                                       timetable={timetable}
+                                       timetableArr={timetableArr}
+                            />
                         </div>)
                      default :
                         break;
@@ -488,62 +647,228 @@ class AdminPageSchool extends Component {
         }));
     }
     getStatTable=()=>{
-        return <div style={{marginLeft : "0", marginRight : "0"}}>
-            <table id="simple-board">
-                {this.getStatBlockHeader()}
-                <tbody>
-                {this.getStatBlock()}
-                </tbody>
-            </table>
+        // const {mpClasses} = this.state
+        // console.log("mpClasses", mpClasses)
+        // return <div style={{margin: "auto", width: "100%", height : "400px", overflowX : "scroll"}}>
+        //     <div id="header" style={{display : "flex", position : "relative"}}>
+        //         <div style={{width : "120px", minWidth : "120px", maxWidth : "120px",
+        //             height : "90px", minHeight : "90px", maxHeight : "90px", border : ".5px", borderStyle : "solid", borderColor : "#6d6d6d"}}>
+        //             <table style={{width : "120px", minWidth : "120px", maxWidth : "120px",
+        //                 height : "90px", minHeight : "90px", maxHeight : "90px", overflow : "hidden", border : 0}}>
+        //                 <th rowSpan={3} style={{width : "120px", minWidth : "120px", maxWidth : "120px",
+        //                     height : "90px", minHeight : "90px", maxHeight : "90px", border : 0}}>Предметы</th>
+        //             </table>
+        //         </div>
+        //         <div style={{width : "100%", minWidth : "100%", maxWidth : "100%", boxSizing : "content-box"}}>
+        //             <table style={{overflowX : "scroll"}}>
+        //                 <thead>
+        //                 {Array.from(mpClasses.values()).map((item,key)=>{
+        //                     return <th key={"th"+key} style={{width : "430px"}}>
+        //                         <tr style={{height : "30px", minHeight : "30px", maxHeight : "30px"}}>
+        //                             <td key={"th0"+key} colSpan={9}>{item}</td>
+        //                         </tr>
+        //                         <tr style={{height : "30px", minHeight : "30px", maxHeight : "30px"}}>
+        //                             <td key={"th1"+key} colSpan={3} style={{width : "150px"}}>{"Ср. оценка"}</td>
+        //                             <td key={"th2"+key} colSpan={3} style={{width : "150px"}}>{"Кол-во оценок"}</td>
+        //                             <td key={"th3"+key} colSpan={2} style={{width : "130px"}}>{"Дата"}</td>
+        //                         </tr>
+        //                         <tr style={{height : "30px", minHeight : "30px", maxHeight : "30px"}}>
+        //                             <td style={{width : "50px"}}>{"Нач"}</td>
+        //                             <td style={{width : "50px"}}>{"За период"}</td>
+        //                             <td style={{width : "50px"}}>{"Кон"}</td>
+        //                             <td style={{width : "50px"}}>{"Нач"}</td>
+        //                             <td style={{width : "50px"}}>{"За период"}</td>
+        //                             <td style={{width : "50px"}}>{"Кон"}</td>
+        //                             <td style={{width : "80px"}}>{"Ввода"}</td>
+        //                             <td style={{width : "50px"}}>{"Назад"}</td>
+        //                         </tr>
+        //                     </th>
+        //                 })}
+        //                 </thead>
+        //             </table>
+        //         </div>
+        //     </div>
+        // </div>
+
+        return <div style={{margin: "auto", width: "100%", height : "400px"}}>
+            <div style={{position: "relative", overflow: "hidden"}}>
+                <table style={{height : "400px"}}>
+                    <thead>
+                        {this.getStatBlockHeader()}
+                    </thead>
+                    <tbody>
+                        {this.getStatBlock()}
+                    </tbody>
+                </table>
+            </div>
         </div>
     }
     getStatBlockHeader=()=>{
-        return <thead className="tablehead">
-            <tr>
-                <th rowSpan={2}>Предмет</th><th colSpan={5}>6"Б"</th><th colSpan={5}>7"Г"</th>
-            </tr>
-            <tr>
-                <th></th>
-                        <th style={{width : "50px"}}>Средний бал</th>
-                         <th style={{width : "50px"}}>Динамика</th>
-                         <th style={{width : "50px"}}>Дата ввода</th>
-                         <th style={{width : "50px"}}>Дней назад</th>
-                        <th style={{width : "50px"}}>Средний бал</th>
-                         <th style={{width : "50px"}}>Динамика</th>
-                         <th style={{width : "50px"}}>Дата ввода</th>
-                         <th style={{width : "50px"}}>Дней назад</th>
-            </tr>
-        </thead>
+        // "id": 42,
+        //     "class_number": 7,
+        //     "class_letter": "Г",
+        //     "subj_name_ua": "Хімія",
+        //     "subj_id": 27,
+        //     "avg_start": 7.11,
+        //     "avg_in": 7.69,
+        //     "avg_end": 7.49,
+        //     "avg_start_cnt": "188",
+        //     "avg_in_cnt": "366",
+        //     "avg_end_cnt": "554",
+        //     "mark_date": "2019-11-22",
+        //     "daydiff": -62
+
+        const {mpClasses, selectedColumn} = this.state
+
+        // ToDo : Сделаем таблицу для левой колонки и шапки. Первая ячейка будет зафиксирована как отдельная таблица?
+        return <tr style={{ color : "#565656", backgroundColor: "#D3D3D3", height : "90px", minHeight : "90px", maxHeight : "90px", position : "sticky", top : "0px"}}>
+            <th style={{color : "#fff", backgroundColor: "#565656", width : "120px", position : "sticky", minWidth: "120px", maxWidth: "120px", left: "0px", zIndex : "2"}}>Предмет</th>
+            {/*<th colSpan={5}>6"Б"</th><th colSpan={5}>7"Г"</th>*/}
+            {
+                // console.log("HEADER",
+                //     Array.from(mpClasses.values()).filter(itemLetter => this.state.selectedColumn === 0 ? true : Number(itemLetter.length === 2 ? itemLetter.slice(1)[0] : itemLetter.slice(2)[0]) === this.state.selectedColumn),
+                //     Array.from(mpClasses.values()),
+                //     Number("6Г".length === 2 ? "6Г"[0] : "6Г"[0]+"6Г"[1]),
+                //     "6Г".length === 2 ? "6Г"[0] : "6Г"[0]+"6Г"[1],
+                //     this.state.selectedColumn
+                // )
+            }
+            {Array.from(mpClasses.values()).filter(itemLetter=>selectedColumn===null?true:selectedColumn===0?true:Number(itemLetter.length===2?itemLetter[0]:itemLetter[0]+itemLetter[1])===selectedColumn).map((item,key)=>{
+
+                return <th key={"th"+key} style={{width : "430px"}}>
+                    <tr style={{height : "30px", minHeight : "30px", maxHeight : "30px"}}>
+                        <td key={"th0"+key} colSpan={9}>{item}</td>
+                    </tr>
+                    <tr style={{height : "30px", minHeight : "30px", maxHeight : "30px"}}>
+                        <td key={"th1"+key} colSpan={3} style={{width : "150px"}}>{"Ср. оценка"}</td>
+                        <td key={"th2"+key} colSpan={3} style={{width : "150px"}}>{"Кол-во оценок"}</td>
+                        <td key={"th3"+key} colSpan={2} style={{width : "130px"}}>{"Дата"}</td>
+                    </tr>
+                    <tr style={{height : "30px", minHeight : "30px", maxHeight : "30px"}}>
+                        <td style={{width : "50px"}}>{"Нач"}</td>
+                        <td style={{width : "50px"}}>{"За период"}</td>
+                        <td style={{width : "50px"}}>{"Кон"}</td>
+                        <td style={{width : "50px"}}>{"Нач"}</td>
+                        <td style={{width : "50px"}}>{"За период"}</td>
+                        <td style={{width : "50px"}}>{"Кон"}</td>
+                        <td style={{width : "80px"}}>{"Ввода"}</td>
+                        <td style={{width : "50px"}}>{"Назад"}</td>
+                    </tr>
+                </th>
+            })}
+        </tr>
+        // </thead>
 
     }
     getStatBlock=()=>{
-        return <tr></tr>
+        let {statData} = this.state
+        // "id": 42,
+        //     "class_number": 7,
+        //     "class_letter": "Г",
+        //     "subj_name_ua": "Хімія",
+        //     "subj_id": 27,
+        //     "avg_start": 7.11,
+        //     "avg_in": 7.69,
+        //     "avg_end": 7.49,
+        //     "avg_start_cnt": "188",
+        //     "avg_in_cnt": "366",
+        //     "avg_end_cnt": "554",
+        //     "mark_date": "2019-11-22",
+        //     "daydiff": -62
+
+         const {mpClasses, mpSubjects, selectedColumn} = this.state
+
+                return Array.from(mpSubjects.keys()).map((itemSubj,keySubj)=> {
+                    return <tr key={"trsubj"+keySubj} style={{position : "relative"}}>
+                        <th className={"pageschool-stickycol"} style={{color : "#fff", backgroundColor: "#565656", zIndex : "2"}}>{mpSubjects.get(itemSubj)}</th>
+                        {Array.from(mpClasses.keys()).filter(itemLetter=>selectedColumn===null?true:selectedColumn===0?true:Number(mpClasses.get(itemLetter).length===2?mpClasses.get(itemLetter)[0]:mpClasses.get(itemLetter)[0]+mpClasses.get(itemLetter)[1])===selectedColumn).map((itemClass, keyClass)=>{
+                            // console.log("ARRAY", statData, itemClass, itemSubj)
+                            let arr = statData.filter(item=>item.subj_id===itemSubj&&item.id===itemClass)
+                            let ret = []
+                            if (arr.length) {
+                                let i = 0
+                                ret.push(<td style={{width: i !== 6 ? "50px" : "80px", height: "30px",
+                                    minWidth: i !== 6 ? "50px" : "80px",
+                                    maxWidth: i !== 6 ? "50px" : "80px"}}>{arr[0].avg_start}</td>)
+                                 i = 1
+                                ret.push(<td style={{width: i !== 6 ? "50px" : "80px", height: "30px",
+                                    minWidth: i !== 6 ? "50px" : "80px",
+                                    maxWidth: i !== 6 ? "50px" : "80px"}}>{arr[0].avg_in}</td>)
+                                 i = 2
+                                ret.push(<td style={{width: i !== 6 ? "50px" : "80px", height: "30px",
+                                    minWidth: i !== 6 ? "50px" : "80px",
+                                    maxWidth: i !== 6 ? "50px" : "80px",
+                                    backgroundColor : arr[0].avg_start===null?"#fff":arr[0].avg_start===arr[0].avg_end?"#fff":Number(arr[0].avg_start) > Number(arr[0].avg_end)?"#FF8594":"#C6EFCE"}}>{arr[0].avg_end}</td>)
+                                 i = 3
+                                ret.push(<td style={{width: i !== 6 ? "50px" : "80px", height: "30px",
+                                    minWidth: i !== 6 ? "50px" : "80px",
+                                    maxWidth: i !== 6 ? "50px" : "80px"}}>{arr[0].avg_start_cnt}</td>)
+                                 i = 4
+                                ret.push(<td style={{width: i !== 6 ? "50px" : "80px", height: "30px",
+                                    minWidth: i !== 6 ? "50px" : "80px",
+                                    maxWidth: i !== 6 ? "50px" : "80px"}}>{arr[0].avg_in_cnt}</td>)
+                                 i = 5
+                                ret.push(<td style={{width: i !== 6 ? "50px" : "80px", height: "30px",
+                                    minWidth: i !== 6 ? "50px" : "80px",
+                                    maxWidth: i !== 6 ? "50px" : "80px"}}>{arr[0].avg_end_cnt}</td>)
+                                 i = 6
+                                ret.push(<td style={{width: i !== 6 ? "50px" : "80px", height: "30px",
+                                    minWidth: i !== 6 ? "50px" : "80px",
+                                    maxWidth: i !== 6 ? "50px" : "80px"}}>{new Date(arr[0].mark_date).toLocaleDateString()}</td>)
+                                 i = 7
+                                ret.push(<td style={{width: i !== 6 ? "50px" : "80px", height: "30px",
+                                    minWidth: i !== 6 ? "50px" : "80px",
+                                    maxWidth: i !== 6 ? "50px" : "80px"}}>{Math.abs(arr[0].daydiff)}</td>)
+
+                                 //     "avg_start_cnt": "188",
+                                //     "avg_in_cnt": "366",
+                                //     "avg_end_cnt": "554",
+                                //     "mark_date": "2019-11-22",
+                                //     "daydiff": -62
+                            }
+                            else {
+                                for (let i = 0; i < 8; i++) {
+                                    ret.push(<td style={{
+                                        width: i !== 6 ? "50px" : "80px",
+                                        height: "30px",
+                                        minWidth: i !== 6 ? "50px" : "80px",
+                                        maxWidth: i !== 6 ? "50px" : "80px"
+                                    }}></td>)
+                                }
+                            }
+                            return <th><tr style={{width : "430px"}}>{ret}</tr></th>
+                        })
+                        }
+                    </tr>
+                })
+        // })
     }
     render() {
-        let {userID, userName, isadmin, langLibrary, classID, classNumber, school_id, school_name, class_letter} = this.props.userSetup;
+        let {userID, userName, isadmin, langLibrary,
+            classID, classNumber, school_id, school_name, class_letter} = this.props.userSetup;
         let {isMobile} = this.state
-        console.log("RENDER_TEACHER", this.state.curStudent)
-        const objBlank = {
-            class_id: classID,
-            class_number: classNumber,
-            datein: null,
-            email: null,
-            id: 0,
-            inList: 1,
-            isRealName: null,
-            isadmin: null,
-            isout: 0,
-            marks_count: null,
-            memo: null,
-            photo: null,
-            rowno: null,
-            school_id: null,
-            student_name: "<Заполните имя>",
-            student_nick: "<Заполните ник>",
-            subuser_id: null,
-            user_id: userID,
-            uniqid : localStorage.getItem("langCode") ? localStorage.getItem("langCode") : defLang,
-        }
+        console.log("RENDER_SCHOOL")
+        // const objBlank = {
+        //     class_id: classID,
+        //     class_number: classNumber,
+        //     datein: null,
+        //     email: null,
+        //     id: 0,
+        //     inList: 1,
+        //     isRealName: null,
+        //     isadmin: null,
+        //     isout: 0,
+        //     marks_count: null,
+        //     memo: null,
+        //     photo: null,
+        //     rowno: null,
+        //     school_id: null,
+        //     student_name: "<Заполните имя>",
+        //     student_nick: "<Заполните ник>",
+        //     subuser_id: null,
+        //     user_id: userID,
+        //     uniqid : localStorage.getItem("langCode") ? localStorage.getItem("langCode") : defLang,
+        // }
 
         return (
             <div className="AdminPage">
@@ -591,13 +916,13 @@ class AdminPageSchool extends Component {
                             {school_id?<div style={{margin : "10px", fontWeight: 700, fontSize : ".8em", color : "#4472C4"}}>{`${school_name.charAt(0).toUpperCase()}${school_name.slice(1)}`}</div>:null}
                         </div>
                     </div>
-                    <div style={{marginTop : "10px", marginLeft : "2%", marginRight : "2%"}}>
+                    <div style={{marginTop : "10px", marginLeft : "2%", marginRight : "2%", position : "relative"}}>
                         <table id="simple-board">
                             <thead className="tablehead">
-                            {this.getClassBlockHeader()}
+                                {this.getClassBlockHeader()}
                             </thead>
                             <tbody>
-                            {this.getClassBlock()}
+                                {this.getClassBlock()}
                             </tbody>
                         </table>
                     </div>

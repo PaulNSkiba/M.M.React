@@ -12,12 +12,12 @@
 .insBlock{
     border : 1px solid #2f75b5;
     display: inline-block;
-    width : 50%;
+    width : 80%;
 }
 .outsBlock{
     border : 1px solid #588f62;
     display: inline-block;
-    width : 50%;
+    width : 80%;
 }
 .insFactBlock{
     border : 1px solid #2f75b5;
