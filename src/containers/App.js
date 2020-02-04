@@ -571,6 +571,7 @@ class App extends Component {
                 value.push(subjects_list.filter(val => (val.subj_key === value[0]))[0].id)
                 // console.log("SELECTED_SUBJ", this.props.userSetup.subjects_list.filter(val=>(val.subj_key===value[0])), value);
                 json = `{"selected_subject":"${value}"}`;
+                this.props.onReduxUpdate('UPDATE_SELECTED_SUBJ', subjects_list.filter(val => (val.subj_key === value[0]))[0])
                 break;
             case "subjCount" :
                 // console.log("selectedSubjsArray", selectedSubjects);

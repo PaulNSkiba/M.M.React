@@ -118,13 +118,49 @@ tr#row-1, tr#row-2{
     background-color: rgb(244,244,244);
     padding: 2px;
     border-radius: 5px;
-    width : 250px;
+    width : 140px;
     font-size: .8em;
     text-align: center;
 }
 .selectGroup-btn:hover {
     color: #f2b436;
     cursor: pointer;
+}
+.markstable-showstat {
+    position : absolute;
+    width : 400px;
+    height : auto;
+    background-color: white;
+    border : .5px solid var(--excel-mark-font);
+    border-radius: 5px;
+    margin-top: 2px;
+    z-index : 120;
+    box-shadow: 5px 5px 5px 0 #c4c4c4;
+}
+.btn-showStat {
+    border : 1px solid grey;
+    color : grey;
+    background-color: lightgrey;
+    padding: 2px;
+    border-radius: 5px;
+    width : 140px;
+    font-size: .8em;
+    text-align: center;
+}
+.btn-showStat:hover {
+    cursor : pointer;
+}
+.btn-close {
+    position : absolute;
+    top : 1px;
+    right : 2px;
+    font-size: .8em;
+    font-weight: 900;
+    color : grey;
+}
+.btn-close:hover {
+    cursor : pointer;
+
 }
 
 /* Popup container */
@@ -318,4 +354,7 @@ tr#row-1, tr#row-2{
 .markstable-checkbox-group{
     display: flex;
     flex-direction: column;
+}
+.subjStatName:hover{
+    cursor : pointer
 }

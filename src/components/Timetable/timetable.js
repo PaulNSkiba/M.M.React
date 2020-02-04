@@ -49,22 +49,26 @@ class Timetable extends Component {
         return true
     }
     fillTimetable=()=>{
-        const {classID, langCode, school_id} = this.props.userSetup
-        console.log("fillTimetable",this.props.curClass, this.props.curLetter)
+        const {langCode, school_id} = this.props.userSetup
+        // console.log("fillTimetable",this.props.curClass, this.props.curLetter)
         const classNumber = this.props.curClass!==undefined&&this.props.curClass!==null?this.props.curClass:this.props.userSetup.curClass
         const classLetter = this.props.curLetter!==undefined&&this.props.curLetter!==null?this.props.curLetter:this.props.userSetup.class_letter
 
-        console.log("TIME", encodeURI(`${API_URL}timetable/getbyschool/${school_id}/${classNumber}/${classLetter}/${toYYYYMMDD(this.state.mainDate)}`))
+        // console.log("TIME", encodeURI(`${API_URL}timetable/getbyschool/${school_id}/${classNumber}/${classLetter}/${toYYYYMMDD(this.state.mainDate)}`))
 
         //axios2('get', `${API_URL}timetable/getex/${classID}/${toYYYYMMDD(this.state.mainDate)}`)
         axios2('get', `${API_URL}timetable/getbyschool/${school_id}/${classNumber}/${classLetter}/${toYYYYMMDD(this.state.mainDate)}`)
             .then(res=>{
                 // let markKey = subj_key.replace("#","")+"#"+subj_key.replace("#","")+"#"+ondate
                 let {timetable} = this.state
+                let {timetable : timetable2} = this.props
+                timetable.clear()
+                timetable2.clear()
                 res.data = res.data.filter(item=>item!==null)
                 res.data.forEach(item=>{
                     let key = `${item.subj_key.replace("#","")}#${item.subj_key.replace("#","")}#${item.weekday}`
                     timetable.set(key, item)
+                    timetable2.set(key, item)
                 })
                 res.data = res.data.map(item=>{item.subj_name=item[getSubjFieldName(langCode)]; return item})
                 this.setState({timetable, timetableArr : res.data})
@@ -75,7 +79,7 @@ class Timetable extends Component {
             })
     }
     renderClasses=(selected)=> {
-        console.log("renderClasses", selected)
+        // console.log("renderClasses", selected)
         return this.state.classList.map(value =>
             <option key={value} value={value}>
                 { value }
@@ -257,7 +261,10 @@ class Timetable extends Component {
         if (school_id)
         axios2('get',`${API_URL}timetable/undone/${school_id}/${classNumber}/${classLetter}/${toYYYYMMDD(this.state.mainDate)}`)
             .then(res=>{
-                console.log("UNDONE", res.data)
+                // console.log("UNDONE", res.data)
+                // ToDO : Очистить тайм-тэйбл локально
+                this.fillTimetable()
+                this.forceUpdate()
                     })
             .catch(err=>{})
         // console.log('unDoneTimeTable', classNumber, classLetter)
@@ -269,7 +276,7 @@ class Timetable extends Component {
             , cell = []
             , rows = [];
 
-        console.log("timetable",this.props.userSetup)
+        // console.log("timetable",this.props.userSetup)
         let {subjects_list, langCode, curClass, class_letter : classLetter, token} = this.props.userSetup
 
         if (this.props.subjectList!==undefined&&this.props.subjectList.length)
@@ -282,7 +289,7 @@ class Timetable extends Component {
             mapDays.set(i, arrOfWeekDaysLocal[i])
         }
         const defClass = this.props.curClass!==undefined&&this.props.curClass!==null?this.props.curClass+this.props.curLetter:curClass+classLetter
-        console.log("Timetable")
+        // console.log("Timetable")
 
         for (let idx = 0; idx < (7 + 2); idx++) {
             let cellID = `h0c${idx}`
@@ -343,7 +350,7 @@ class Timetable extends Component {
                 }
                 rows.push(<tr key={i} id={rowID}>{cell}</tr>)
             }
-        // defaultValue={defClass}
+            // console.log("ROWS", this.state.timetable, rows)
         return (
                 <div>
                     <div style={{display : "flex", justifyContent : "space-between", alignItems : "center", marginBottom : "5px"}}>

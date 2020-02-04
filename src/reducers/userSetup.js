@@ -19,7 +19,7 @@ const initialState = (check)=>{
 
             obj =
                 {
-                    curClass: 0, classNumber: 0, classID: 0,
+                    curClass: 0, classNumber: 0, classID: 0, class_letter : "", classNews : [],
                     pupilCount: 0, students: [], currentYear: "", curYearDone: 0, subjCount: "0/0", userID: 0,
                     selectedSubjsArray: [], selectedSubjects: [], selectedSubj: {id: 0, subj_key: "#null"},
                     subjects_list: [], subjects : [], markBlank: {id: "", alias: "", pk: 1},
@@ -36,7 +36,7 @@ const initialState = (check)=>{
                     isMobile: false, aliasesList: [], aliasesLang: "", menuItem : "",
                     budget : [], budgetpays : [], renderBudget : 1,
                     langCode : "", studentToChange : 0, curMenuItem : {id : 0, label : ''}, timetable : [],
-                    school_id : 0, school_name : "", school : {}, class_letter : "", schoolclasses : []
+                    school_id : 0, school_name : "", school : {}, schoolclasses : []
                 }
         }
     return obj
@@ -54,7 +54,8 @@ export function userSetupReducer(state = initialState(true), action) {
             let {   token, subj_count, subjects_list, selected_subjects, selected_subj, subjects,
                     students, marks, mark_dates, best_lines, avg_lines, avg_marks, addUserToken,
                     lastmarkssent, emails, homework, stats2, stats3, mark_date, class_letter,
-                    avgclassmarks, classObj, chatrows, budget, budgetpays, timetable, school_id, school_name, schoolclasses} = action.payload;
+                    avgclassmarks, classObj, chatrows, budget, budgetpays, timetable,
+                    school_id, school_name, schoolclasses, classNews} = action.payload;
             let {   name : userName, id : userID, isadmin } = action.payload.user;
             let {   class_number, pupil_count, year_name, perioddayscount,
                     markblank_id, markblank_alias, selected_marker, titlekind,
@@ -72,7 +73,7 @@ export function userSetupReducer(state = initialState(true), action) {
                 selectedSubj : selected_subj, students : students?students:[], classObj,
                 isadmin, studentName, studentID, marks, mark_dates, best_lines, avg_lines, avg_marks, addUserToken,
                 cnt_marks, stud_cnt, subj_cnt, lastmarkssent, emails, homework, stats2 : stats2[0], stats3 : stats3[0],
-                mark_date, avgclassmarks, localChatMessages : chatrows, budget, budgetpays, timetable,
+                mark_date, avgclassmarks, localChatMessages : chatrows, budget, budgetpays, timetable, classNews,
                 withoutholidays, withtimetable, onlywithmailstudents, subjects, school_id, school_name, class_letter, schoolclasses}
 
                 if (Object.keys(action.langLibrary).length)
@@ -97,6 +98,10 @@ export function userSetupReducer(state = initialState(true), action) {
                 markBlank:{id: markblank_id, alias: markblank_alias, pk: selected_marker},
                 titlekind: titlekind, direction : direction,
             }
+        }
+        case 'UPDATE_SELECTED_SUBJ' : {
+            saveToLocalStorageOnDate("userSetup", JSON.stringify({...state, selectedSubj: action.payload}))
+            return {...state, selectedSubj: action.payload};
         }
         case 'UPDATE_SETUP_LOCALLY' : {
             console.log('UPDATE_SETUP_LOCALLY', Object.keys(action.payload)[0], Object.values(action.payload)[0])
@@ -273,10 +278,13 @@ export function userSetupReducer(state = initialState(true), action) {
         case 'STUDENT_CHANGE' :
             return{...state, studentToChange: action.payload}
         case 'MENU_ITEM' :
-            // console.log("MENU_ITEM", action.payload)
             return{...state, curMenuItem: action.payload}
         case 'UPDATE_SCHOOL' :
             return{...state, school_id: action.payload.id, school_name : action.payload.name, class_letter : action.payload.class_letter}
+        case "UPDATE_NEWS" : {
+            saveToLocalStorageOnDate("userSetup", JSON.stringify({...state, classNews: action.payload}))
+            return{...state, classNews: action.payload}
+        }
         default :
             return state
     }

@@ -860,8 +860,8 @@ class UniversalTable extends Component {
                             </thead>
                         </table>
                          <div  ref={(div) => { this.tablerows = div; }} style={{maxHeight: "500px", overflowY: "auto  "}}>
-                            <table>
-                                <tbody>
+                            <table style={{display: "block", width : "100%"}}>
+                                <tbody style={{display: "block", width : "100%"}}>
                                     {rows}
                                 </tbody>
                             </table>

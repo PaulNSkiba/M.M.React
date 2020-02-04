@@ -30,6 +30,7 @@ import 'react-responsive-tabs/styles.css';
 import '../AdminPageTeacher/adminpageteacher.css'
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
+import NoticeTable from '../NoticeTable/noticetable'
 
 const tabs = [{ name: 'Статистика', memo: 'Статистика', id : 0 },
     { name: 'Расписание', memo: 'Расписание', id : 1 },
@@ -61,41 +62,42 @@ class AdminPageSchool extends Component {
             dEnd : new Date(),
             curFigure : null,
             curLetter : null,
+            curClassID : null,
             curSubjectList : [],
             timetable : new Map(),
             timetableArr : [],
             mainDate : dateFromYYYYMMDD(`${(new Date()).getFullYear()}${(new Date()).getMonth()>=7?"09":"01"}01`),
         }
-        this.headArray = [
-            {name: "№ п/п", width : "30px"} ,
-            {name: "Ник", width : "120px"},
-            {name: "Имя", width : "200px"},
-            {name: "Email", width : "250px"},
-            {name: "Скрыть", width : "25px", isvert: true},
-            {name: "Реал без email", width : "40px"},
-            {name: "Оценок", width : "40px", isvert: true},
-            {name: "Переброс оценок на другого", width : "80px"},
-            {name: "Замена", width : "25px", isvert: true},
-            {name: "Админ", width : "25px", isvert: true},
-            {name: "Учитель", width : "25px", isvert: true},
-            {name: "Ученик", width : "25px", isvert: true},
-            {name: "Родком", width : "25px", isvert: true},
-            {name: "Подп-ка", width : "25px", isvert: true},
-            {name: "Перевод", width : "25px", isvert: true},
-            {name: "Адм-ция", width : "25px", isvert: true},
-            {name: "Партнер", width : "25px", isvert: true},
-            {name: "Примечание", width : "200px"},
-        ]
-        this.headStat = [
-            {name: "Предмет", width : "150px"} ,
-            {name: "Автор", width : "150px"},
-            {name: "Дата заполнения", width : "100px"},
-            {name: "Начало", width : "100px"},
-            {name: "Конец", width : "100px"},
-            {name: "Оценки с даты ", width : "100px"},
-            {name: "Оценки по дату", width : "100px"},
-            {name: "Оценок", width : "40px"},
-        ]
+        // this.headArray = [
+        //     {name: "№ п/п", width : "30px"} ,
+        //     {name: "Ник", width : "120px"},
+        //     {name: "Имя", width : "200px"},
+        //     {name: "Email", width : "250px"},
+        //     {name: "Скрыть", width : "25px", isvert: true},
+        //     {name: "Реал без email", width : "40px"},
+        //     {name: "Оценок", width : "40px", isvert: true},
+        //     {name: "Переброс оценок на другого", width : "80px"},
+        //     {name: "Замена", width : "25px", isvert: true},
+        //     {name: "Админ", width : "25px", isvert: true},
+        //     {name: "Учитель", width : "25px", isvert: true},
+        //     {name: "Ученик", width : "25px", isvert: true},
+        //     {name: "Родком", width : "25px", isvert: true},
+        //     {name: "Подп-ка", width : "25px", isvert: true},
+        //     {name: "Перевод", width : "25px", isvert: true},
+        //     {name: "Адм-ция", width : "25px", isvert: true},
+        //     {name: "Партнер", width : "25px", isvert: true},
+        //     {name: "Примечание", width : "200px"},
+        // ]
+        // this.headStat = [
+        //     {name: "Предмет", width : "150px"} ,
+        //     {name: "Автор", width : "150px"},
+        //     {name: "Дата заполнения", width : "100px"},
+        //     {name: "Начало", width : "100px"},
+        //     {name: "Конец", width : "100px"},
+        //     {name: "Оценки с даты ", width : "100px"},
+        //     {name: "Оценки по дату", width : "100px"},
+        //     {name: "Оценок", width : "40px"},
+        // ]
         // this.head = this.createTableHead([
         //     {name: "Предмет", width : "10%"} ,
         //     {name: "Автор", width : "10%"},
@@ -141,7 +143,7 @@ class AdminPageSchool extends Component {
                 end = toYYYYMMDD(new Date(dEnd))
         axios2('get',`${API_URL}school/stat/${school_id}/${base}/${start}/${end}`)
             .then(res => {
-                console.log("SCHOOL_STAT", res)
+                // console.log("SCHOOL_STAT", res)
                 let mpClasses = new Map();
                 res.data.forEach((item)=>mpClasses.set(item.id, item.class_number + item.class_letter))
                 let mpSubjects = new Map();
@@ -469,14 +471,14 @@ class AdminPageSchool extends Component {
         }
         return <tr>{cell}</tr>
     }
-    onClassClick=(curFigure, curLetter)=>{
+    onClassClick=(curFigure, curLetter, curClassID)=>{
         const {curLetter : L, curFigure : F} = this.state
         if (F===curFigure&&L===curLetter){
             curFigure=curLetter=null
         }
         this.getSubjectsList(curFigure===null?-1:curFigure)
         this.fillTimetable(curFigure, curLetter)
-        this.setState({curFigure, curLetter})
+        this.setState({curFigure, curLetter, curClassID})
         console.log("onClassClick", curFigure, curLetter)
     }
     getSubjectsList=async classNumber=>{
@@ -490,9 +492,8 @@ class AdminPageSchool extends Component {
     fillTimetable=(curFigure, curLetter)=>{
         const {langCode, school_id} = this.props.userSetup
         // const {curFigure, curLetter} = this.state
-        console.log("fillTimetable", this.state)
-
-        console.log("TIME", encodeURI(`${API_URL}timetable/getbyschool/${school_id}/${curFigure}/${curLetter}/${toYYYYMMDD(this.state.mainDate)}`))
+        // console.log("fillTimetable", this.state)
+        // console.log("TIME", encodeURI(`${API_URL}timetable/getbyschool/${school_id}/${curFigure}/${curLetter}/${toYYYYMMDD(this.state.mainDate)}`))
 
         //axios2('get', `${API_URL}timetable/getex/${classID}/${toYYYYMMDD(this.state.mainDate)}`)
         axios2('get', encodeURI(`${API_URL}timetable/getbyschool/${school_id}/${curFigure}/${curLetter}/${toYYYYMMDD(this.state.mainDate)}`))
@@ -507,7 +508,6 @@ class AdminPageSchool extends Component {
                 })
                 res.data = res.data.map(item=>{item.subj_name=item[getSubjFieldName(langCode)]; return item})
                 this.setState({timetable, timetableArr : res.data})
-                // console.log("INITTIMETABLE", timetable, res.data)
             })
             .catch(res=>{
                 console.log("fillTimetable:error")
@@ -516,7 +516,7 @@ class AdminPageSchool extends Component {
     getClassBlock=()=>{
         const {schoolclasses : schoolClasses} = this.props.userSetup
         const {curLetter, curFigure} = this.state
-        // console.log("curState", curLetter, curFigure)
+        // console.log("curState", curLetter, curFigure, schoolClasses)
         let rows = [], cell
            for (let i = 0; i < classLetters.length; i++){
                cell = []
@@ -526,11 +526,12 @@ class AdminPageSchool extends Component {
                            cell.push(<td key={"td"+i+'.'+j}><div  className={`pageschool-classbutton`}>{classLetters[i]}</div></td>)
                            break;
                        default :
+                           let curClass = schoolClasses.filter(item=>item.letter===classLetters[i]&&item.number===j).length?schoolClasses.filter(item=>item.letter===classLetters[i]&&item.number===j)[0]:{class_id : -1}
                            cell.push(<td key={"td"+i+'.'+j}>
-                               <div onClick={()=>this.onClassClick(j, classLetters[i])} className={`pageschool-classbutton ${curFigure===j&&curLetter===classLetters[i]?" selectedClass ": ""} ${schoolClasses.filter(item=>item.letter===classLetters[i]&&item.number===j).length?` enabled ${this.state.selectedColumn===0 ||this.state.selectedColumn===j?"activeCol":""}`:" disabled"}`}>
-                                   <div className={`pageschool-classbutton-leftcorner ${this.state.selectedColumn===0 ||this.state.selectedColumn===j?"activeCol":''}`}>{schoolClasses.filter(item=>item.letter===classLetters[i]&&item.number===j).length?(schoolClasses.filter(item=>item.letter===classLetters[i]&&item.number===j)[0].students?schoolClasses.filter(item=>item.letter===classLetters[i]&&item.number===j)[0].students:null):null}</div>
-                                   <div className={`pageschool-classbutton-rightcorner ${this.state.selectedColumn===0 ||this.state.selectedColumn===j?"activeCol":''}`}>{schoolClasses.filter(item=>item.letter===classLetters[i]&&item.number===j).length?(schoolClasses.filter(item=>item.letter===classLetters[i]&&item.number===j)[0].users?schoolClasses.filter(item=>item.letter===classLetters[i]&&item.number===j)[0].users:null):null}</div>
-                                   <div className={`pageschool-classbutton-letfcorner-bottom ${this.state.selectedColumn===0 ||this.state.selectedColumn===j?"activeCol":''}`}>{schoolClasses.filter(item=>item.letter===classLetters[i]&&item.number===j).length?(schoolClasses.filter(item=>item.letter===classLetters[i]&&item.number===j)[0].timetable?'расп':null):null}</div>
+                               <div onClick={()=>this.onClassClick(j, classLetters[i], curClass.class_id)} className={`pageschool-classbutton ${curFigure===j&&curLetter===classLetters[i]?" selectedClass ": ""} ${schoolClasses.filter(item=>item.letter===classLetters[i]&&item.number===j).length?` enabled ${this.state.selectedColumn===0 ||this.state.selectedColumn===j?"activeCol":""}`:" disabled"}`}>
+                                   <div className={`pageschool-classbutton-leftcorner ${this.state.selectedColumn===0 ||this.state.selectedColumn===j?"activeCol":''}`}>{curClass.class_id>=0?(curClass.students?curClass.students:null):null}</div>
+                                   <div className={`pageschool-classbutton-rightcorner ${this.state.selectedColumn===0 ||this.state.selectedColumn===j?"activeCol":''}`}>{curClass.class_id>=0?(curClass.users?curClass.users:null):null}</div>
+                                   <div className={`pageschool-classbutton-letfcorner-bottom ${this.state.selectedColumn===0 ||this.state.selectedColumn===j?"activeCol":''}`}>{curClass.class_id>=0?(curClass.timetable?'расп':null):null}</div>
                                    {`${j}${classLetters[i]}`}
                                </div>
                            </td>)
@@ -636,6 +637,17 @@ class AdminPageSchool extends Component {
                                        timetableArr={timetableArr}
                             />
                         </div>)
+                    case 2 :
+                                return (
+                                    <div className="mym-adminpageteacher-tableblock">
+                                        <NoticeTable
+                                            selectedColumn={this.state.selectedColumn}
+                                            curFigure={this.state.curFigure}
+                                            curLetter={this.state.curLetter}
+                                            curClass={this.state.curClassID}
+                                        />
+                                    </div>
+                        )
                      default :
                         break;
                 }
@@ -723,16 +735,7 @@ class AdminPageSchool extends Component {
         // ToDo : Сделаем таблицу для левой колонки и шапки. Первая ячейка будет зафиксирована как отдельная таблица?
         return <tr style={{ color : "#565656", backgroundColor: "#D3D3D3", height : "90px", minHeight : "90px", maxHeight : "90px", position : "sticky", top : "0px"}}>
             <th style={{color : "#fff", backgroundColor: "#565656", width : "120px", position : "sticky", minWidth: "120px", maxWidth: "120px", left: "0px", zIndex : "2"}}>Предмет</th>
-            {/*<th colSpan={5}>6"Б"</th><th colSpan={5}>7"Г"</th>*/}
-            {
-                // console.log("HEADER",
-                //     Array.from(mpClasses.values()).filter(itemLetter => this.state.selectedColumn === 0 ? true : Number(itemLetter.length === 2 ? itemLetter.slice(1)[0] : itemLetter.slice(2)[0]) === this.state.selectedColumn),
-                //     Array.from(mpClasses.values()),
-                //     Number("6Г".length === 2 ? "6Г"[0] : "6Г"[0]+"6Г"[1]),
-                //     "6Г".length === 2 ? "6Г"[0] : "6Г"[0]+"6Г"[1],
-                //     this.state.selectedColumn
-                // )
-            }
+
             {Array.from(mpClasses.values()).filter(itemLetter=>selectedColumn===null?true:selectedColumn===0?true:Number(itemLetter.length===2?itemLetter[0]:itemLetter[0]+itemLetter[1])===selectedColumn).map((item,key)=>{
 
                 return <th key={"th"+key} style={{width : "430px"}}>
@@ -777,8 +780,13 @@ class AdminPageSchool extends Component {
         //     "daydiff": -62
 
          const {mpClasses, mpSubjects, selectedColumn} = this.state
+         const subjects = Array.from(mpSubjects.keys())
+         const classes = Array.from(mpClasses.keys()).filter(itemLetter=>selectedColumn===null?true:selectedColumn===0?true:Number(mpClasses.get(itemLetter).length===2?mpClasses.get(itemLetter)[0]:mpClasses.get(itemLetter)[0]+mpClasses.get(itemLetter)[1])===selectedColumn)
+         const statDataFiltered = statData.filter(item=>classes.filter(itemClass=>itemClass===item.id).length)
+         const subjectsFiltered = subjects.filter(itemSubj=>statDataFiltered.filter(item=>item.subj_id===itemSubj).length)
 
-                return Array.from(mpSubjects.keys()).map((itemSubj,keySubj)=> {
+        // console.log("subjects2", subjects, statData)
+                return subjectsFiltered.map((itemSubj,keySubj)=> {
                     return <tr key={"trsubj"+keySubj} style={{position : "relative"}}>
                         <th className={"pageschool-stickycol"} style={{color : "#fff", backgroundColor: "#565656", zIndex : "2"}}>{mpSubjects.get(itemSubj)}</th>
                         {Array.from(mpClasses.keys()).filter(itemLetter=>selectedColumn===null?true:selectedColumn===0?true:Number(mpClasses.get(itemLetter).length===2?mpClasses.get(itemLetter)[0]:mpClasses.get(itemLetter)[0]+mpClasses.get(itemLetter)[1])===selectedColumn).map((itemClass, keyClass)=>{
@@ -844,31 +852,9 @@ class AdminPageSchool extends Component {
         // })
     }
     render() {
-        let {userID, userName, isadmin, langLibrary,
-            classID, classNumber, school_id, school_name, class_letter} = this.props.userSetup;
+        let {userID, userName, isadmin, langLibrary, school_id, school_name} = this.props.userSetup;
         let {isMobile} = this.state
-        console.log("RENDER_SCHOOL")
-        // const objBlank = {
-        //     class_id: classID,
-        //     class_number: classNumber,
-        //     datein: null,
-        //     email: null,
-        //     id: 0,
-        //     inList: 1,
-        //     isRealName: null,
-        //     isadmin: null,
-        //     isout: 0,
-        //     marks_count: null,
-        //     memo: null,
-        //     photo: null,
-        //     rowno: null,
-        //     school_id: null,
-        //     student_name: "<Заполните имя>",
-        //     student_nick: "<Заполните ник>",
-        //     subuser_id: null,
-        //     user_id: userID,
-        //     uniqid : localStorage.getItem("langCode") ? localStorage.getItem("langCode") : defLang,
-        // }
+        console.log("RENDER_SCHOOL", this.props.userSetup)
 
         return (
             <div className="AdminPage">

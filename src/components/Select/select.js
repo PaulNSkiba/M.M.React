@@ -39,12 +39,13 @@ class Select extends Component {
     }
     render() {
         // name={this.props.name}
-        let {key, value, selected, valuename} = this.props
-        // console.log("this.props.list", this.props.list)
+        let {key, value, selected, valuename, name} = this.props
+        // console.log("SELECT", name, value, selected)
+        // defaultValue={selected}
         return(
             <div className={this.props.hasOwnProperty("vertical")?"selSectionV":"selSection"}>
                 <pre>{this.props.caption}</pre>
-                <select onChange={this.onChangeSelect} defaultValue={selected} onClick={this.onSelectorClick}>
+                <select onChange={this.onChangeSelect} value={selected} onClick={this.onSelectorClick}>
                     {this.props.list.map((val,index)=><option key={index} id={val[key]} id2={val.id} value={val[value]}>{val[valuename]}</option>)})}
                 </select>
             </div>

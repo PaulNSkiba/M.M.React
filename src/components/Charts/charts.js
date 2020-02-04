@@ -4,7 +4,7 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux'
 import Select from '../Select/select'
-import {addDay, getSubjFieldName} from '../../js/helpers'
+import {addDay, getSubjFieldName, toYYYYMMDD} from '../../js/helpers'
 import Chart from "react-google-charts";
 
 import "./charts.css"
@@ -18,8 +18,10 @@ class Charts extends Component {
             marksmap : new Map(),
             periodStart : addDay((new Date()),-31),
             periodDays : 31,
-            place : ""
+            place : "",
+            selectedPeriod : "MONTH"
         };
+        this.changePeriod = this.changePeriod.bind(this)
     }
     componentWillMount(){
         this.setState({
@@ -104,6 +106,7 @@ class Charts extends Component {
 
     }
     changePeriod(name, value){
+        this.setState({selectedPeriod: value})
         switch(name) {
             case 'listperiods' :
             switch (value)
@@ -131,9 +134,11 @@ class Charts extends Component {
     }
     prepDataForChart(subj_key){
         let {mark_dates, marks, best_lines, avg_lines} = this.props.userSetup;
+        const {periodStart} = this.state
         let retArr = [], datestr = '', datemod = 1
 
         // retArr.push(["Дата", "Мои оценки", "Лучший ученик", "Средние оценки"])
+        console.log("prepDataForChart")
 
         let newDate = new Date(), arrMyMarks = [], arrBestMarks = [], arrAvgMarks = [], tempArr = []
             // , MyPlace = [], place = "";
@@ -142,7 +147,7 @@ class Charts extends Component {
 
         for (let i = 0; i < mark_dates.length; i++) {
             newDate = new Date(mark_dates[i].mark_date)
-            if (new Date(mark_dates[i].mark_date) > new Date(this.state.periodStart)) {
+            if (new Date(mark_dates[i].mark_date) > new Date(periodStart)) {
                 datestr = newDate.getDate() + '.' + (Number(newDate.getMonth()) + 1).toString()
                 datemod = datemod ===0?1:datemod;
                 if ((i % datemod === 0)) datestr = "";
@@ -153,6 +158,7 @@ class Charts extends Component {
                 tempArr = best_lines.filter((value)=> (
                     value.subj_key === subj_key && value.days === this.state.periodDays
                 ))
+
                 if (!(tempArr===undefined))
                     // console.log("tempArr0", tempArr[0], Object(tempArr[0]), Object(tempArr[0]).marks, typeof tempArr,  tempArr===undefined)
                     if (Object(tempArr[0]).marks) {
@@ -236,7 +242,7 @@ class Charts extends Component {
         return retArr
     }
     render() {
-        console.log("this.props.userSetup.studSubj")
+
         let data = []
         let data2 = []
         let place = ""
@@ -283,7 +289,7 @@ class Charts extends Component {
             chartArea:{left:30,top:30,width:"90%",height:"80%"},
         }
         place = this.getPlace(Array.from(studSubj.keys())[0])
-
+        console.log("select", this.state.selectedPeriod)
         return(
             <div className="mainChartSection">
                 <div className="selectGroup">
@@ -294,13 +300,13 @@ class Charts extends Component {
                                     {id:"YEAR", alias:"Год (365дней)"},
                                     {id:"ALL", alias:"Все данные (10лет)"}
                                     ]}
-                             selected={"MONTH"}
+                             selected={this.state.selectedPeriod}
                              key={"id"}
                              valuename={"alias"}
                              name={"listperiods"}
                              caption="Период:"
                              value={"id"}
-                             onchange={this.changePeriod.bind(this)}
+                             onchange={this.changePeriod}
                     />
                    <div id="rangeStatus"><b>{"УСПЕВАЕМОСТЬ: " + place}</b></div>
                 </div>
@@ -333,7 +339,6 @@ class Charts extends Component {
                     options={options}
                 />:""}
 
-
             {/*<LineChart*/}
                 {/*axes*/}
                 {/*grid*/}
@@ -351,6 +356,7 @@ class Charts extends Component {
                 {/*axisLabels={{x: 'Даты оценок', y: 'Оценки'}}*/}
                 {/*data={this.getMarksArray()}*/}
             {/*/>*/}
+
                 {this.props.userSetup.marks.length?
                     <Chart
                     chartType="ColumnChart"

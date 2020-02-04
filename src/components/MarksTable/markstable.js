@@ -5,10 +5,10 @@
 import React, { Component } from 'react'
 import MarkBlank from '../MarkBlank/markblank'
 import { addDay, getSpanCount, toYYYYMMDD, consoleLog, instanceAxios, mapStateToProps,
-         getSubjFieldName, weekDaysGlobal, axios2} from '../../js/helpers'
+         getSubjFieldName, weekDaysGlobal, axios2, getNearestSeptFirst, dateDiff} from '../../js/helpers'
 import Select from '../Select/select'
 import { connect } from 'react-redux'
-import { MARKS_URL, ISDEBUG, markType, UPDATESETUP_URL } from '../../config/config'
+import { API_URL, MARKS_URL, ISDEBUG, markType, UPDATESETUP_URL } from '../../config/config'
 import Checkbox from '../CheckBox/checkbox'
 import './markstable.css'
 import '../../css/colors.css'
@@ -37,11 +37,12 @@ class MarksTable extends Component {
             onlywithmailstudents : this.props.userSetup.onlywithmailstudents,
             withtimetable : this.props.userSetup.withtimetable,
             withoutholidays : this.props.userSetup.withoutholidays,
+            showStat : false,
+            subjStat : this.getSubjStat()
         }
         this.setMarkType = this.setMarkType.bind(this)
-        // this.setStudentFilter = this.setStudentFilter.bind(this)
-        // this.setTimetableFilter = this.setTimetableFilter.bind(this)
         this.handleInputChange = this.handleInputChange.bind(this);
+        this.showStat = this.showStat.bind(this)
     }
      initMap=()=>{
             let map = new Map()
@@ -73,8 +74,8 @@ class MarksTable extends Component {
         //     '/periodstart/'+toYYYYMMDD(dStart)+'/periodend/'+toYYYYMMDD(dEnd)+'/student/0')
         axios2('get', `${MARKS_URL}/${userID}/class/${classID}/subject/${subj_id}/subjkey/${subj_key.toString().replace('#','')}/periodstart/${toYYYYMMDD(dStart)}/periodend/${toYYYYMMDD(dEnd)}/student/0`)
             .then(response => {
-                console.log('GET_MARKS_REMOTE', MARKS_URL + '/'+userID+'/class/'+classID+'/subject/'+subj_id+'/subjkey/'+subj_key.toString().replace('#','')+
-                    '/periodstart/'+toYYYYMMDD(dStart)+'/periodend/'+toYYYYMMDD(dEnd)+'/student/0',  response.data)
+                // console.log('GET_MARKS_REMOTE', MARKS_URL + '/'+userID+'/class/'+classID+'/subject/'+subj_id+'/subjkey/'+subj_key.toString().replace('#','')+
+                //     '/periodstart/'+toYYYYMMDD(dStart)+'/periodend/'+toYYYYMMDD(dEnd)+'/student/0',  response.data)
                 marks.clear()
                 marksBefore.clear()
                 marksTypes.clear()
@@ -317,6 +318,70 @@ class MarksTable extends Component {
                 console.log('UPDATE_SETUP_FAILED', res);
             })
     }
+    getSubjStat=()=>{
+        const {classID, selectedSubjects, langCode} = this.props.userSetup
+        axios2('post',`${API_URL}class/getmarkstat/${classID}/${toYYYYMMDD(getNearestSeptFirst())}`)
+            .then(res=> {
+                    this.setState({subjStat : res.data})
+                    // rows = selectedSubjects.forEach((item, key)=> {
+                    //         let arr = res.data.filter(itemData=>itemData.subj_key===item.subj_key)
+                    //         let subjData = arr.length?arr[0]:null
+                    //         // let cell = []
+                    //         //console.log(item[getSubjFieldName(langCode)])
+                    //         //     cell.push(<td key={"td1"+key}>{item[getSubjFieldName(langCode)]}</td>)
+                    //         // cell.push(<td key={"td1"+key}>{"ttt"}</td>)
+                    //         rows.push(<tr key={key}><td key={"td1"+key}>{item[getSubjFieldName(langCode)]}</td></tr>)
+                    //         // return <tr key={key}><td key={"td1"+key}>{item[getSubjFieldName(langCode)]}</td></tr>
+                    //     }
+                    // )
+                    // console.log("showStat:data", res.data, rows)
+                }
+            )
+            .catch(err=>{
+                console.log(err)
+            })
+    }
+    selectSubject=(subj_key, subj_name)=>{
+        this.props.changestate("selectedSubj", [subj_key, subj_name])
+        this.reInitMarks(subj_key)
+        this.forceUpdate()
+    }
+    showStat = ()=>{
+        const {selectedSubjects, langCode} = this.props.userSetup
+        const rows = selectedSubjects.map((item, key)=> {
+           let arr = this.state.subjStat.filter(itemData=>itemData.subj_key===item.subj_key)
+           let subjData = arr.length?arr[0]:null
+                            let diff = subjData!==null?dateDiff(new Date(subjData.mark_date), new Date()):0
+
+                            return <tr key={key} style={{backgroundColor : diff > 21?"#ecabb9": diff >= 10?"#FFEB9C":"white"}}>
+                                <td key={"td1"+key} className="subjStatName"
+                                    onClick={()=>this.selectSubject(item.subj_key, item[getSubjFieldName(langCode)])}>{item[getSubjFieldName(langCode)]}</td>
+                                <td key={"td2"+key} style={{textAlign :"right"}}>{subjData!==null?subjData.cnt:null}</td>
+                                <td key={"td3"+key} style={{textAlign :"right"}}>{subjData!==null?new Date(subjData.created_at).toLocaleDateString():null}</td>
+                                <td key={"td4"+key} style={{textAlign :"right"}}>{subjData!==null?new Date(subjData.mark_date).toLocaleDateString():null}</td>
+                                <td key={"td5"+key} style={{textAlign :"right"}}>{subjData!==null?dateDiff(new Date(subjData.mark_date), new Date()):null}</td>
+                            </tr>
+                        }
+                    )
+                    // console.log("showStat:data", res.data, rows)
+        return <div className="markstable-showstat">
+            <div onClick={()=>this.setState({showStat : false})} className={"btn-close"}>X</div>
+            <table style={{backgroundColor : "white"}}>
+                <thead style={{backgroundColor : "lightgrey"}}>
+                <tr>
+                    <th style={{width :"150px"}}>Предмет</th>
+                    <th style={{width :"50px"}}>Оценок</th>
+                    <th style={{width :"80px"}}>Заполнялись</th>
+                    <th style={{width :"70px"}}>Дата оценок</th>
+                    <th style={{width :"50px"}}>Даты не актуальны (дней)</th>
+                    </tr>
+                </thead>
+                <tbody style={{fontSize : ".75em"}}>
+                    {rows}
+                </tbody>
+            </table>
+        </div>
+    }
     render(){
         const {students, selectedSubj, timetable, isadmin, markBlank} = this.props.userSetup
         let {withtimetable, dateStart, mapDays, withoutholidays} = this.state
@@ -533,9 +598,9 @@ class MarksTable extends Component {
                 rows.push(<tr key={i} id={rowID}>{cell}</tr>)
             }
         }
-        console.log("marksTable", this.props.userSetup)
-        const {userID, langCode} = this.props.userSetup;
 
+        const {userID, langCode, token, cnt_marks, subj_cnt, stud_cnt, selectedSubjects } = this.props.userSetup;
+        console.log("marksTable", this.props.userSetup.selectedSubj.subj_key)
         return(
 
             <div className="containertable">
@@ -544,8 +609,7 @@ class MarksTable extends Component {
                         <div className="periodName">
                             <div className="markTableStatCaption">
                             <label><b>За три дня: </b>
-                                Оценки/студенты/предметы: <b>{this.props.userSetup.cnt_marks}/
-                                    {this.props.userSetup.stud_cnt}/{this.props.userSetup.subj_cnt}</b></label>
+                                Оценки/студенты/предметы: <b>{cnt_marks}/{stud_cnt}/{subj_cnt}</b></label>
                             </div>
                             <div className="periodTitle">
                                 <a id="daysback" onClick={this.daysMove.bind(this)}>{"-" + this.props.dayscount + "дн"}</a>
@@ -554,7 +618,7 @@ class MarksTable extends Component {
                                 <a id="daysforwardone" onClick={this.daysMove.bind(this)}>{"+1дн"}</a>
                             </div>
                             <div className="selectGroup">
-                                {userID>0&&<Select  list={this.props.userSetup.selectedSubjects}
+                                {userID>0&&<Select  list={selectedSubjects}
                                                     selected={this.props.userSetup.selectedSubj.subj_key}
                                                     key={"subj_key"}
                                                     valuename={getSubjFieldName(langCode)}
@@ -587,19 +651,6 @@ class MarksTable extends Component {
 
                         {userID > 0 && <div className="selectGroup">
                             {userID > 0 &&<div className={"markstable-checkbox-group"}>
-                                {/*<Checkbox onclick={this.setTimetableFilter} bold={true}*/}
-                                          {/*defelem={this.state.withTimetable}*/}
-                                          {/*label=" Журнал с учётом расписания"*/}
-                                          {/*name = {"onlywithmailstudents"}/>*/}
-                                {/*<Checkbox onclick={()=>{this.setState({withoutholidays : !this.state.withoutholidays})}} bold={true}*/}
-                                          {/*defelem={this.state.withoutholidays}*/}
-                                          {/*label=" Убрать выходные дни"*/}
-                                          {/*name = {"onlywithmailstudents"}/>*/}
-                                {/*<Checkbox onclick={this.setStudentFilter} bold={true}*/}
-                                          {/*defelem={this.state.onlywithmailstudents}*/}
-                                          {/*label=" Только студенты с email"*/}
-                                          {/*name = {"onlywithmailstudents"}/>*/}
-                                {/*<form>*/}
                                 <div className="checkboxLabel">
                                     <input
                                            name="withtimetable"
@@ -626,7 +677,16 @@ class MarksTable extends Component {
                                     {" Только студенты с email"}
                                 </div>
                             </div>}
-                            <div className={"selectGroup-btn"} onClick={this.sendMail.bind(this)}>Разослать оценки за 3 недели [Предыдущая: {this.props.userSetup.lastmarkssent}]</div>
+                            <div style={{display: "flex", jusitifyContent : "space-between", width : "50%", justifyContent : "space-between"}}>
+                                <div style={{position : "relative"}}>
+                                    <div className={"btn-showStat"} onClick={()=>this.setState({showStat : !this.state.showStat})}>Статистика ввода</div>
+                                    {this.state.showStat?this.showStat():null}
+                                    </div>
+                                <div style={{display: "flex", flexDirection : "column", jusitifyContent : "flex-end", alignItems : "flex-end"}}>
+                                    <div className={"selectGroup-btn"} onClick={this.sendMail.bind(this)}>Разослать оценки за 3 недели</div>
+                                    <div style={{textAlign: "center", fontSize : "0.7em"}}>[Предыдущая рассылка: {this.props.userSetup.lastmarkssent}]</div>
+                                </div>
+                            </div>
                             {this.state.mailSent.length?
                             <div className={this.state.mailSent.length?"popup2 show":"popup2"} onClick={this.hidePopup.bind(this)}>
                                 {this.state.mailSent.length?<span className="popuptext2" id="myPopup">{this.state.mailSent}</span>:""}
