@@ -113,17 +113,18 @@ tr#row-1, tr#row-2{
     position: relative;
 }
 .selectGroup-btn {
-    border : 1px solid rgb(68,114,196);
-    color : rgb(68,114,196);
-    background-color: rgb(244,244,244);
+    /*border : #4472C4;*/
+    border : 1px solid grey;
+    color : #4472C4;
+    background-color: #F4F4F4;
     padding: 2px;
     border-radius: 5px;
     width : 140px;
     font-size: .8em;
     text-align: center;
 }
-.selectGroup-btn:hover {
-    color: #f2b436;
+.selectGroup-btn:hover, .btn-showStat:hover {
+    color: #d87b38;
     cursor: pointer;
 }
 .markstable-showstat {
@@ -139,7 +140,7 @@ tr#row-1, tr#row-2{
 }
 .btn-showStat {
     border : 1px solid grey;
-    color : grey;
+    color : #4472C4;
     background-color: lightgrey;
     padding: 2px;
     border-radius: 5px;
@@ -156,7 +157,7 @@ tr#row-1, tr#row-2{
     right : 2px;
     font-size: .8em;
     font-weight: 900;
-    color : grey;
+    color : white;
 }
 .btn-close:hover {
     cursor : pointer;

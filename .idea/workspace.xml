@@ -12,21 +12,89 @@
   <component name="ExecutionTargetManager" SELECTED_TARGET="default_target" />
   <component name="FileEditorManager">
     <leaf SIDE_TABS_SIZE_LIMIT_KEY="450">
-      <file leaf-file-name="App.js" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/containers/App.js">
+      <file leaf-file-name="studenttable.js" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/components/StudentTable/studenttable.js">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="239">
-              <caret line="1008" column="51" lean-forward="false" selection-start-line="1008" selection-start-column="50" selection-end-line="1008" selection-end-column="51" />
+            <state relative-caret-position="7650">
+              <caret line="316" column="13" lean-forward="false" selection-start-line="316" selection-start-column="13" selection-end-line="316" selection-end-column="13" />
+              <folding>
+                <element signature="e#63#103#0" expanded="true" />
+                <marker date="1581840472076" expanded="true" signature="16948:17012" ph="..." />
+                <marker date="1581840472076" expanded="true" signature="17183:17314" ph="..." />
+                <marker date="1581840472076" expanded="true" signature="18392:18921" ph="..." />
+                <marker date="1581840472076" expanded="true" signature="19102:19265" ph="..." />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="adminpageteacher.js" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/components/AdminPageTeacher/adminpageteacher.js">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="3850">
+              <caret line="178" column="50" lean-forward="false" selection-start-line="178" selection-start-column="50" selection-end-line="178" selection-end-column="50" />
               <folding />
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="charts.js" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/components/Charts/charts.js">
+      <file leaf-file-name="userSetup.js" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/reducers/userSetup.js">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="239">
-              <caret line="144" column="66" lean-forward="true" selection-start-line="144" selection-start-column="66" selection-end-line="144" selection-end-column="66" />
+            <state relative-caret-position="667">
+              <caret line="64" column="46" lean-forward="false" selection-start-line="64" selection-start-column="46" selection-end-line="64" selection-end-column="46" />
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="user.js" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/reducers/user.js">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="321">
+              <caret line="22" column="31" lean-forward="false" selection-start-line="22" selection-start-column="31" selection-end-line="22" selection-end-column="31" />
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="userAuthActions.js" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/actions/userAuthActions.js">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="275">
+              <caret line="17" column="74" lean-forward="false" selection-start-line="17" selection-start-column="74" selection-end-line="17" selection-end-column="74" />
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="helpers.js" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/js/helpers.js">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="21">
+              <caret line="3" column="0" lean-forward="false" selection-start-line="3" selection-start-column="0" selection-end-line="3" selection-end-column="26" />
+              <folding>
+                <element signature="e#42#68#0" expanded="true" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="universaltable.js" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/components/UniversalTable/universaltable.js">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="425">
+              <caret line="25" column="9" lean-forward="false" selection-start-line="12" selection-start-column="3" selection-end-line="25" selection-end-column="9" />
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="loginblocklight.js" pinned="false" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/src/components/LoginBlockLight/loginblocklight.js">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="575">
+              <caret line="25" column="5" lean-forward="true" selection-start-line="15" selection-start-column="4" selection-end-line="25" selection-end-column="5" />
               <folding>
                 <element signature="e#42#83#0" expanded="true" />
               </folding>
@@ -34,110 +102,22 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="noticetable.js" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/components/NoticeTable/noticetable.js">
+      <file leaf-file-name="App.js" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/containers/App.js">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="321">
-              <caret line="41" column="56" lean-forward="false" selection-start-line="41" selection-start-column="56" selection-end-line="41" selection-end-column="56" />
-              <folding>
-                <marker date="1580842787808" expanded="true" signature="5529:5552" ph="..." />
-                <marker date="1580842787808" expanded="true" signature="5676:5686" ph="..." />
-                <marker date="1580842787808" expanded="true" signature="5808:5845" ph="..." />
-                <marker date="1580842787808" expanded="true" signature="6113:6922" ph="..." />
-                <marker date="1580842787808" expanded="true" signature="6610:6648" ph="..." />
-                <marker date="1580842787808" expanded="true" signature="6974:6984" ph="..." />
-                <marker date="1580842787808" expanded="true" signature="7105:7144" ph="..." />
-                <marker date="1580842787808" expanded="true" signature="7136:7143" ph="..." />
-                <marker date="1580842787808" expanded="true" signature="7530:7602" ph="..." />
-                <marker date="1580842787808" expanded="true" signature="7799:7810" ph="..." />
-              </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="schoollistblock.js" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/components/SchoolListBlock/schoollistblock.js">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="9395">
-              <caret line="380" column="26" lean-forward="true" selection-start-line="380" selection-start-column="26" selection-end-line="380" selection-end-column="26" />
-              <folding>
-                <element signature="e#42#81#0" expanded="true" />
-              </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="App.css" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/containers/App.css">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="326">
-              <caret line="202" column="29" lean-forward="false" selection-start-line="202" selection-start-column="29" selection-end-line="202" selection-end-column="29" />
+            <state relative-caret-position="164">
+              <caret line="904" column="17" lean-forward="true" selection-start-line="904" selection-start-column="17" selection-end-line="904" selection-end-column="17" />
               <folding />
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="markstable.js" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/components/MarksTable/markstable.js">
+      <file leaf-file-name="loginblocklight.css" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/components/LoginBlockLight/loginblocklight.css">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="1798">
-              <caret line="688" column="34" lean-forward="false" selection-start-line="688" selection-start-column="34" selection-end-line="688" selection-end-column="34" />
-              <folding>
-                <element signature="e#63#103#0" expanded="true" />
-                <marker date="1580836245462" expanded="true" signature="20778:20842" ph="..." />
-                <marker date="1580836245462" expanded="true" signature="21005:21155" ph="..." />
-              </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="select.js" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/components/Select/select.js">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="244">
-              <caret line="47" column="72" lean-forward="false" selection-start-line="47" selection-start-column="72" selection-end-line="47" selection-end-column="72" />
-              <folding>
-                <element signature="n#!!doc" expanded="true" />
-              </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="adminpageschool.js" pinned="false" current-in-tab="true">
-        <entry file="file://$PROJECT_DIR$/src/components/AdminPageSchool/adminpageschool.js">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="364">
-              <caret line="788" column="16" lean-forward="true" selection-start-line="788" selection-start-column="16" selection-end-line="788" selection-end-column="16" />
-              <folding>
-                <element signature="e#42#83#0" expanded="false" />
-                <marker date="1580844219784" expanded="true" signature="40671:41112" ph="..." />
-                <marker date="1580844219784" expanded="true" signature="52656:53001" ph="..." />
-              </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="markstable.css" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/components/MarksTable/markstable.css">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="401">
-              <caret line="150" column="21" lean-forward="false" selection-start-line="150" selection-start-column="21" selection-end-line="150" selection-end-column="21" />
+            <state relative-caret-position="1675">
+              <caret line="67" column="1" lean-forward="false" selection-start-line="67" selection-start-column="1" selection-end-line="67" selection-end-column="13" />
               <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="studenttable.js" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/components/StudentTable/studenttable.js">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="920">
-              <caret line="493" column="63" lean-forward="false" selection-start-line="493" selection-start-column="63" selection-end-line="493" selection-end-column="63" />
-              <folding>
-                <marker date="1577026727319" expanded="true" signature="16936:17000" ph="..." />
-                <marker date="1577026727319" expanded="true" signature="17171:17302" ph="..." />
-                <marker date="1577026727319" expanded="true" signature="18380:18909" ph="..." />
-                <marker date="1577026727319" expanded="true" signature="19090:19253" ph="..." />
-              </folding>
             </state>
           </provider>
         </entry>
@@ -154,36 +134,36 @@
   </component>
   <component name="FindInProjectRecents">
     <findStrings>
-      <find>show</find>
-      <find>subjects_list</find>
-      <find>showStat</find>
-      <find>stat</find>
-      <find>getSubjFieldName</find>
-      <find>iPno</find>
-      <find>iPn</find>
-      <find>iP</find>
-      <find>iPh</find>
-      <find>iPho</find>
-      <find>iPhon</find>
-      <find>downloa</find>
-      <find>downloadIphone</find>
-      <find>iPhone</find>
-      <find>m</find>
-      <find>mai</find>
-      <find>main</find>
-      <find>mainCa</find>
-      <find>mainC</find>
-      <find>mainCha</find>
-      <find>mainChar</find>
-      <find>mainChart</find>
-      <find>reInitMarks</find>
-      <find>changePeriod</find>
-      <find>prepDataForChart</find>
-      <find>QUARTER</find>
-      <find>statData</find>
-      <find>getStatData</find>
-      <find>getStatTable</find>
-      <find>getStatBlock</find>
+      <find>sendMessage</find>
+      <find>JSON.stringify</find>
+      <find>i</find>
+      <find>isadmin</find>
+      <find>64</find>
+      <find>stringify</find>
+      <find>axios2</find>
+      <find>userName</find>
+      <find>checkedMap</find>
+      <find>changeState</find>
+      <find>updateSource</find>
+      <find>createTableRows</find>
+      <find>fillMap</find>
+      <find>userMap</find>
+      <find>По</find>
+      <find>П</find>
+      <find>Последни</find>
+      <find>stat3</find>
+      <find>stats3</find>
+      <find>onLogin</find>
+      <find>LoginBlockLight</find>
+      <find>showLoginLight</find>
+      <find>Последние</find>
+      <find>axios(</find>
+      <find>axios</find>
+      <find>axios(</find>
+      <find>userLogin</find>
+      <find>USER_PWD_MISSEDMATCH</find>
+      <find>this.inputSMS</find>
+      <find>onUserLogging</find>
     </findStrings>
     <replaceStrings>
       <replace>2019-04-15</replace>
@@ -205,9 +185,9 @@
     <dirStrings>
       <dir>C:\MyProjects\sch-journal\node_modules</dir>
       <dir>C:\MyProjects\sch-journal\node_modules\styled-components</dir>
-      <dir>C:\MyProjects\sch-journal</dir>
-      <dir>C:\MyProjects\sch-journal\src</dir>
       <dir>C:\MyProjects\sch-journal\src\components</dir>
+      <dir>C:\MyProjects\sch-journal\src</dir>
+      <dir>C:\MyProjects\sch-journal</dir>
     </dirStrings>
   </component>
   <component name="Git.Settings">
@@ -216,9 +196,6 @@
   <component name="IdeDocumentHistory">
     <option name="CHANGED_PATHS">
       <list>
-        <option value="$PROJECT_DIR$/src/components/UniversalTable/universaltable.css" />
-        <option value="$PROJECT_DIR$/src/components/ClassList/classlist.js" />
-        <option value="$PROJECT_DIR$/src/components/LoginBlock/loginblock.js" />
         <option value="$PROJECT_DIR$/src/components/Chat/chat.js" />
         <option value="$PROJECT_DIR$/src/components/MarkBlank/markblank.js" />
         <option value="$PROJECT_DIR$/src/components/MarkBlank/markblank.css" />
@@ -236,37 +213,40 @@
         <option value="$PROJECT_DIR$/src/components/AdminPage/adminpage.js" />
         <option value="$PROJECT_DIR$/src/components/CheckBox/checkbox.css" />
         <option value="$PROJECT_DIR$/src/components/CheckBox/checkbox.js" />
-        <option value="$PROJECT_DIR$/src/components/StudentTable/studenttable.js" />
         <option value="$PROJECT_DIR$/src/components/VideoSection/videosection.js" />
         <option value="$PROJECT_DIR$/src/components/AdminHomeWorkSection/homeworksection.js" />
         <option value="$PROJECT_DIR$/src/components/SubjectList/subjectlist.js" />
         <option value="$PROJECT_DIR$/src/components/SchoolListBlock/schoollistblock.css" />
-        <option value="$PROJECT_DIR$/src/actions/userAuthActions.js" />
         <option value="$PROJECT_DIR$/src/components/SchoolListBlock/schoollistblock.js" />
-        <option value="$PROJECT_DIR$/src/components/AdminPageAdmin/adminpageadmin.js" />
         <option value="$PROJECT_DIR$/src/components/AdminPageAdmin/adminpageadmin.css" />
         <option value="$PROJECT_DIR$/src/components/AdminPageTeacher/adminpageteacher.css" />
         <option value="$PROJECT_DIR$/src/components/AddSubject/addsubject.js" />
         <option value="$PROJECT_DIR$/src/components/AddSubject/addsubject.css" />
         <option value="$PROJECT_DIR$/src/config/config.js" />
         <option value="$PROJECT_DIR$/src/components/StudentTable/studenttable.css" />
-        <option value="$PROJECT_DIR$/src/js/helpers.js" />
         <option value="$PROJECT_DIR$/src/components/AdminBudgetPage/adminbudgetpage.js" />
         <option value="$PROJECT_DIR$/src/components/AdminBudgetPage/adminbudgetpage.css" />
-        <option value="$PROJECT_DIR$/src/components/AdminPageTeacher/adminpageteacher.js" />
         <option value="$PROJECT_DIR$/src/components/AdminPageSchool/adminpageschool.css" />
         <option value="$PROJECT_DIR$/src/components/Timetable/timetable.css" />
         <option value="$PROJECT_DIR$/src/components/Timetable/timetable.js" />
-        <option value="$PROJECT_DIR$/src/components/UniversalTable/universaltable.js" />
         <option value="$PROJECT_DIR$/src/reducers/userSetup.js" />
-        <option value="$PROJECT_DIR$/src/components/MarksTable/markstable.js" />
-        <option value="$PROJECT_DIR$/src/components/MarksTable/markstable.css" />
-        <option value="$PROJECT_DIR$/src/containers/App.js" />
         <option value="$PROJECT_DIR$/src/containers/App.css" />
         <option value="$PROJECT_DIR$/src/components/Select/select.js" />
         <option value="$PROJECT_DIR$/src/components/Charts/charts.js" />
-        <option value="$PROJECT_DIR$/src/components/NoticeTable/noticetable.js" />
         <option value="$PROJECT_DIR$/src/components/AdminPageSchool/adminpageschool.js" />
+        <option value="$PROJECT_DIR$/src/components/MarksTable/markstable.js" />
+        <option value="$PROJECT_DIR$/src/components/MarksTable/markstable.css" />
+        <option value="$PROJECT_DIR$/src/components/AdminPageAdmin/adminpageadmin.js" />
+        <option value="$PROJECT_DIR$/src/components/NoticeTable/noticetable.js" />
+        <option value="$PROJECT_DIR$/src/components/StudentTable/studenttable.js" />
+        <option value="$PROJECT_DIR$/src/components/AdminPageTeacher/adminpageteacher.js" />
+        <option value="$PROJECT_DIR$/src/components/UniversalTable/universaltable.js" />
+        <option value="$PROJECT_DIR$/src/components/LoginBlockLight/loginblocklight.css" />
+        <option value="$PROJECT_DIR$/src/js/helpers.js" />
+        <option value="$PROJECT_DIR$/src/actions/userAuthActions.js" />
+        <option value="$PROJECT_DIR$/src/components/LoginBlockLight/loginblocklight.js" />
+        <option value="$PROJECT_DIR$/src/reducers/user.js" />
+        <option value="$PROJECT_DIR$/src/containers/App.js" />
       </list>
     </option>
   </component>
@@ -1184,6 +1164,9 @@
   <component name="ShelveChangesManager" show_recycled="false">
     <option name="remove_strategy" value="false" />
   </component>
+  <component name="SvnConfiguration">
+    <configuration />
+  </component>
   <component name="TaskManager">
     <task active="true" id="Default" summary="Default task">
       <changelist id="cc16fcfd-a259-4d36-bc4b-b1b457401971" name="Default" comment="" />
@@ -1243,18 +1226,23 @@
       <workItem from="1578387629394" duration="5500000" />
       <workItem from="1578763132206" duration="14327000" />
       <workItem from="1579335072232" duration="9375000" />
-      <workItem from="1579549244664" duration="120307000" />
+      <workItem from="1579549244664" duration="140381000" />
+      <workItem from="1582289819173" duration="7746000" />
+      <workItem from="1583182080447" duration="1909000" />
+      <workItem from="1583440802843" duration="29000" />
+      <workItem from="1583787138147" duration="15914000" />
+      <workItem from="1583922841028" duration="17499000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="2969006000" />
+    <option name="totallyTimeSpent" value="3032177000" />
   </component>
   <component name="ToolWindowManager">
-    <frame x="-11" y="-11" width="1942" height="1042" extended-state="7" />
+    <frame x="-11" y="-11" width="1942" height="1042" extended-state="1" />
     <editor active="true" />
     <layout>
-      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.16054054" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
+      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.19945946" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
       <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
       <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.034559645" sideWeight="0.5043243" order="7" side_tool="true" content_ui="tabs" />
       <window_info id="Database" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
@@ -1274,27 +1262,6 @@
       <window_info id="Hierarchy" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="2" side_tool="false" content_ui="combo" />
       <window_info id="Ant Build" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
     </layout>
-    <layout-to-restore>
-      <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
-      <window_info id="Cvs" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
-      <window_info id="Message" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
-      <window_info id="Commander" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.4" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
-      <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.034559645" sideWeight="0.5043243" order="7" side_tool="true" content_ui="tabs" />
-      <window_info id="Inspection" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.4" sideWeight="0.5" order="5" side_tool="false" content_ui="tabs" />
-      <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="9" side_tool="false" content_ui="tabs" />
-      <window_info id="npm" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="2" side_tool="true" content_ui="tabs" />
-      <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
-      <window_info id="Terminal" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.0034129692" sideWeight="0.5" order="8" side_tool="false" content_ui="tabs" />
-      <window_info id="TypeScript" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="10" side_tool="false" content_ui="tabs" />
-      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.15884861" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
-      <window_info id="Hierarchy" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="2" side_tool="false" content_ui="combo" />
-      <window_info id="Database" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
-      <window_info id="Find" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.21793275" sideWeight="0.49567568" order="1" side_tool="false" content_ui="tabs" />
-      <window_info id="Structure" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
-      <window_info id="Ant Build" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
-      <window_info id="Favorites" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="3" side_tool="true" content_ui="tabs" />
-      <window_info id="Debug" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.4" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
-    </layout-to-restore>
   </component>
   <component name="TypeScriptGeneratedFilesManager">
     <option name="processedProjectFiles" value="true" />
@@ -1309,20 +1276,6 @@
     <watches-manager />
   </component>
   <component name="editorHistoryManager">
-    <entry file="file://$PROJECT_DIR$/src/components/LoginBlockLight/loginblocklight.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="435">
-          <caret line="87" column="17" lean-forward="false" selection-start-line="87" selection-start-column="17" selection-end-line="87" selection-end-column="17" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/components/LoginBlockLight/loginblocklight.css">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="750">
-          <caret line="30" column="37" lean-forward="false" selection-start-line="30" selection-start-column="37" selection-end-line="30" selection-end-column="37" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/src/components/AdminHomeWorkSection/homeworksection.css">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="300">
@@ -1383,7 +1336,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="50">
           <caret line="4" column="37" lean-forward="false" selection-start-line="4" selection-start-column="37" selection-end-line="4" selection-end-column="37" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -1426,10 +1378,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="300">
           <caret line="14" column="34" lean-forward="true" selection-start-line="14" selection-start-column="34" selection-end-line="14" selection-end-column="34" />
-          <folding>
-            <element signature="e#42#80#0" expanded="false" />
-            <element signature="e#295#332#0" expanded="false" />
-          </folding>
         </state>
       </provider>
     </entry>
@@ -1437,7 +1385,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="385">
           <caret line="112" column="60" lean-forward="false" selection-start-line="112" selection-start-column="60" selection-end-line="112" selection-end-column="60" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -1445,10 +1392,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="72">
           <caret line="35" column="0" lean-forward="false" selection-start-line="35" selection-start-column="0" selection-end-line="55" selection-end-column="5" />
-          <folding>
-            <element signature="e#42#80#0" expanded="false" />
-            <element signature="e#295#332#0" expanded="false" />
-          </folding>
         </state>
       </provider>
     </entry>
@@ -1484,15 +1427,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="1800">
           <caret line="78" column="140" lean-forward="false" selection-start-line="78" selection-start-column="140" selection-end-line="78" selection-end-column="140" />
-          <folding>
-            <marker date="1577730791270" expanded="true" signature="3130:3213" ph="..." />
-            <marker date="1577730791270" expanded="true" signature="3286:3321" ph="..." />
-            <marker date="1577730791270" expanded="true" signature="3583:4931" ph="..." />
-            <marker date="1577730791270" expanded="true" signature="3606:4912" ph="..." />
-            <marker date="1577730791270" expanded="true" signature="3698:4069" ph="..." />
-            <marker date="1577730791270" expanded="true" signature="3802:4038" ph="..." />
-            <marker date="1577730791270" expanded="true" signature="4705:4808" ph="..." />
-          </folding>
         </state>
       </provider>
     </entry>
@@ -1503,27 +1437,10 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/components/AdminPageAdmin/adminpageadmin.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="2050">
-          <caret line="454" column="28" lean-forward="false" selection-start-line="454" selection-start-column="28" selection-end-line="454" selection-end-column="51" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/reducers/user.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="350">
-          <caret line="14" column="1" lean-forward="false" selection-start-line="14" selection-start-column="1" selection-end-line="14" selection-end-column="1" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/src/components/StudentTable/studenttable.css">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="401">
           <caret line="41" column="27" lean-forward="false" selection-start-line="41" selection-start-column="27" selection-end-line="41" selection-end-column="27" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -1531,7 +1448,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="100">
           <caret line="13" column="4" lean-forward="false" selection-start-line="13" selection-start-column="4" selection-end-line="13" selection-end-column="4" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -1539,9 +1455,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="164">
           <caret line="756" column="76" lean-forward="false" selection-start-line="756" selection-start-column="68" selection-end-line="756" selection-end-column="76" />
-          <folding>
-            <element signature="e#43#81#0" expanded="false" />
-          </folding>
         </state>
       </provider>
     </entry>
@@ -1549,15 +1462,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="207">
           <caret line="15" column="1" lean-forward="false" selection-start-line="15" selection-start-column="1" selection-end-line="15" selection-end-column="1" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/config/config.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="30">
-          <caret line="12" column="13" lean-forward="false" selection-start-line="12" selection-start-column="13" selection-end-line="12" selection-end-column="13" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -1565,7 +1469,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="679">
           <caret line="30" column="18" lean-forward="false" selection-start-line="30" selection-start-column="18" selection-end-line="30" selection-end-column="18" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -1573,7 +1476,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="326">
           <caret line="29" column="21" lean-forward="false" selection-start-line="29" selection-start-column="21" selection-end-line="29" selection-end-column="21" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -1581,80 +1483,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="-1619">
           <caret line="380" column="24" lean-forward="false" selection-start-line="380" selection-start-column="0" selection-end-line="382" selection-end-column="30" />
-          <folding>
-            <element signature="e#42#81#0" expanded="false" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/actions/userAuthActions.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="316">
-          <caret line="49" column="45" lean-forward="false" selection-start-line="49" selection-start-column="45" selection-end-line="49" selection-end-column="45" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/components/UniversalTable/universaltable.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-679">
-          <caret line="816" column="42" lean-forward="false" selection-start-line="816" selection-start-column="42" selection-end-line="816" selection-end-column="42" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/components/AdminPageTeacher/adminpageteacher.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-5437">
-          <caret line="296" column="9" lean-forward="false" selection-start-line="296" selection-start-column="9" selection-end-line="296" selection-end-column="9" />
-          <folding>
-            <element signature="e#42#83#0" expanded="false" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/js/helpers.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="164">
-          <caret line="391" column="43" lean-forward="false" selection-start-line="391" selection-start-column="43" selection-end-line="392" selection-end-column="24" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/reducers/userSetup.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="100">
-          <caret line="102" column="79" lean-forward="false" selection-start-line="102" selection-start-column="76" selection-end-line="102" selection-end-column="88" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/css/colors.css">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="500">
-          <caret line="20" column="5" lean-forward="false" selection-start-line="20" selection-start-column="4" selection-end-line="20" selection-end-column="20" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/components/MarksTable/markstable.css">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="401">
-          <caret line="150" column="21" lean-forward="false" selection-start-line="150" selection-start-column="21" selection-end-line="150" selection-end-column="21" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/components/StudentTable/studenttable.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="920">
-          <caret line="493" column="63" lean-forward="false" selection-start-line="493" selection-start-column="63" selection-end-line="493" selection-end-column="63" />
-          <folding>
-            <marker date="1577026727319" expanded="true" signature="16936:17000" ph="..." />
-            <marker date="1577026727319" expanded="true" signature="17171:17302" ph="..." />
-            <marker date="1577026727319" expanded="true" signature="18380:18909" ph="..." />
-            <marker date="1577026727319" expanded="true" signature="19090:19253" ph="..." />
-          </folding>
         </state>
       </provider>
     </entry>
@@ -1662,27 +1490,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="326">
           <caret line="202" column="29" lean-forward="false" selection-start-line="202" selection-start-column="29" selection-end-line="202" selection-end-column="29" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/containers/App.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="239">
-          <caret line="1008" column="51" lean-forward="false" selection-start-line="1008" selection-start-column="50" selection-end-line="1008" selection-end-column="51" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/components/MarksTable/markstable.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="1798">
-          <caret line="688" column="34" lean-forward="false" selection-start-line="688" selection-start-column="34" selection-end-line="688" selection-end-column="34" />
-          <folding>
-            <element signature="e#63#103#0" expanded="true" />
-            <marker date="1580836245462" expanded="true" signature="20778:20842" ph="..." />
-            <marker date="1580836245462" expanded="true" signature="21005:21155" ph="..." />
-          </folding>
         </state>
       </provider>
     </entry>
@@ -1690,59 +1497,180 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="244">
           <caret line="47" column="72" lean-forward="false" selection-start-line="47" selection-start-column="72" selection-end-line="47" selection-end-column="72" />
-          <folding>
-            <element signature="n#!!doc" expanded="true" />
-          </folding>
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/src/components/Charts/charts.js">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="239">
-          <caret line="144" column="66" lean-forward="true" selection-start-line="144" selection-start-column="66" selection-end-line="144" selection-end-column="66" />
-          <folding>
-            <element signature="e#42#83#0" expanded="true" />
-          </folding>
+          <caret line="144" column="66" lean-forward="false" selection-start-line="144" selection-start-column="66" selection-end-line="144" selection-end-column="66" />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/components/NoticeTable/noticetable.js">
+    <entry file="file://$PROJECT_DIR$/src/css/colors.css">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="321">
-          <caret line="41" column="56" lean-forward="false" selection-start-line="41" selection-start-column="56" selection-end-line="41" selection-end-column="56" />
+        <state relative-caret-position="250">
+          <caret line="10" column="33" lean-forward="false" selection-start-line="10" selection-start-column="27" selection-end-line="10" selection-end-column="33" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/components/MarksTable/markstable.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="239">
+          <caret line="681" column="154" lean-forward="false" selection-start-line="681" selection-start-column="154" selection-end-line="681" selection-end-column="154" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/components/MarksTable/markstable.css">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="2950">
+          <caret line="118" column="30" lean-forward="false" selection-start-line="118" selection-start-column="30" selection-end-line="118" selection-end-column="30" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/components/AdminPageAdmin/adminpageadmin.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="6025">
+          <caret line="253" column="25" lean-forward="false" selection-start-line="253" selection-start-column="25" selection-end-line="253" selection-end-column="25" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/components/AdminPageSchool/adminpageschool.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="13250">
+          <caret line="560" column="11" lean-forward="false" selection-start-line="560" selection-start-column="4" selection-end-line="560" selection-end-column="11" />
           <folding>
-            <marker date="1580842787808" expanded="true" signature="5529:5552" ph="..." />
-            <marker date="1580842787808" expanded="true" signature="5676:5686" ph="..." />
-            <marker date="1580842787808" expanded="true" signature="5808:5845" ph="..." />
-            <marker date="1580842787808" expanded="true" signature="6113:6922" ph="..." />
-            <marker date="1580842787808" expanded="true" signature="6610:6648" ph="..." />
-            <marker date="1580842787808" expanded="true" signature="6974:6984" ph="..." />
-            <marker date="1580842787808" expanded="true" signature="7105:7144" ph="..." />
-            <marker date="1580842787808" expanded="true" signature="7136:7143" ph="..." />
-            <marker date="1580842787808" expanded="true" signature="7530:7602" ph="..." />
-            <marker date="1580842787808" expanded="true" signature="7799:7810" ph="..." />
+            <element signature="e#42#83#0" expanded="false" />
+            <marker date="1580844219784" expanded="true" signature="40671:41112" ph="..." />
+            <marker date="1580844219784" expanded="true" signature="52656:53001" ph="..." />
           </folding>
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/src/components/SchoolListBlock/schoollistblock.js">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="9395">
-          <caret line="380" column="26" lean-forward="true" selection-start-line="380" selection-start-column="26" selection-end-line="380" selection-end-column="26" />
+        <state relative-caret-position="100">
+          <caret line="19" column="10" lean-forward="false" selection-start-line="19" selection-start-column="10" selection-end-line="19" selection-end-column="10" />
           <folding>
-            <element signature="e#42#81#0" expanded="true" />
+            <element signature="e#42#81#0" expanded="false" />
           </folding>
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/components/AdminPageSchool/adminpageschool.js">
+    <entry file="file://$PROJECT_DIR$/src/components/NoticeTable/noticetable.js">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="364">
-          <caret line="788" column="16" lean-forward="true" selection-start-line="788" selection-start-column="16" selection-end-line="788" selection-end-column="16" />
+        <state relative-caret-position="200">
+          <caret line="19" column="25" lean-forward="false" selection-start-line="19" selection-start-column="25" selection-end-line="19" selection-end-column="25" />
           <folding>
-            <element signature="e#42#83#0" expanded="false" />
-            <marker date="1580844219784" expanded="true" signature="40671:41112" ph="..." />
-            <marker date="1580844219784" expanded="true" signature="52656:53001" ph="..." />
+            <marker date="1581087543147" expanded="true" signature="5624:5647" ph="..." />
+            <marker date="1581087543147" expanded="true" signature="5771:5781" ph="..." />
+            <marker date="1581087543147" expanded="true" signature="5903:5940" ph="..." />
+            <marker date="1581087543147" expanded="true" signature="6208:7017" ph="..." />
+            <marker date="1581087543147" expanded="true" signature="6705:6743" ph="..." />
+            <marker date="1581087543147" expanded="true" signature="7069:7079" ph="..." />
+            <marker date="1581087543147" expanded="true" signature="7200:7239" ph="..." />
+            <marker date="1581087543147" expanded="true" signature="7231:7238" ph="..." />
+            <marker date="1581087543147" expanded="true" signature="7625:7697" ph="..." />
+            <marker date="1581087543147" expanded="true" signature="7894:7905" ph="..." />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/config/config.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="1950">
+          <caret line="78" column="54" lean-forward="false" selection-start-line="78" selection-start-column="54" selection-end-line="78" selection-end-column="54" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/components/StudentTable/studenttable.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="7650">
+          <caret line="316" column="13" lean-forward="false" selection-start-line="316" selection-start-column="13" selection-end-line="316" selection-end-column="13" />
+          <folding>
+            <element signature="e#63#103#0" expanded="true" />
+            <marker date="1581840472076" expanded="true" signature="16948:17012" ph="..." />
+            <marker date="1581840472076" expanded="true" signature="17183:17314" ph="..." />
+            <marker date="1581840472076" expanded="true" signature="18392:18921" ph="..." />
+            <marker date="1581840472076" expanded="true" signature="19102:19265" ph="..." />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/components/AdminPageTeacher/adminpageteacher.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="3850">
+          <caret line="178" column="50" lean-forward="false" selection-start-line="178" selection-start-column="50" selection-end-line="178" selection-end-column="50" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/components/UniversalTable/universaltable.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="425">
+          <caret line="25" column="9" lean-forward="false" selection-start-line="12" selection-start-column="3" selection-end-line="25" selection-end-column="9" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/components/LoginBlockLight/loginblocklight.css">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="1675">
+          <caret line="67" column="1" lean-forward="false" selection-start-line="67" selection-start-column="1" selection-end-line="67" selection-end-column="13" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/js/helpers.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="21">
+          <caret line="3" column="0" lean-forward="false" selection-start-line="3" selection-start-column="0" selection-end-line="3" selection-end-column="26" />
+          <folding>
+            <element signature="e#42#68#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/actions/userAuthActions.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="275">
+          <caret line="17" column="74" lean-forward="false" selection-start-line="17" selection-start-column="74" selection-end-line="17" selection-end-column="74" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/reducers/userSetup.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="667">
+          <caret line="64" column="46" lean-forward="false" selection-start-line="64" selection-start-column="46" selection-end-line="64" selection-end-column="46" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/reducers/user.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="321">
+          <caret line="22" column="31" lean-forward="false" selection-start-line="22" selection-start-column="31" selection-end-line="22" selection-end-column="31" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/containers/App.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="164">
+          <caret line="904" column="17" lean-forward="true" selection-start-line="904" selection-start-column="17" selection-end-line="904" selection-end-column="17" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/components/LoginBlockLight/loginblocklight.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="575">
+          <caret line="25" column="5" lean-forward="true" selection-start-line="15" selection-start-column="4" selection-end-line="25" selection-end-column="5" />
+          <folding>
+            <element signature="e#42#83#0" expanded="true" />
           </folding>
         </state>
       </provider>

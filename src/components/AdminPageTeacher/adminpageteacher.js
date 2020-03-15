@@ -45,7 +45,7 @@ class AdminPageTeacher extends Component {
             {name: "Реал без email", width : "40px"},
             {name: "Оценок", width : "40px", isvert: true},
             {name: "Переброс оценок на другого", width : "80px"},
-            {name: "Замена", width : "25px", isvert: true},
+            {name: "Заменить", width : "25px", isvert: true},
             {name: "Админ", width : "25px", isvert: true},
             {name: "Учитель", width : "25px", isvert: true},
             {name: "Ученик", width : "25px", isvert: true},
@@ -172,10 +172,9 @@ class AdminPageTeacher extends Component {
     //
     // }
     createTableRows(rowsArr, onInputChange, withInput, row, column, classNameOfTD, checkedMap, updateIDfrom, updateIDto) {
-        // let {row, column} = this.state
-        // console.log("createStudentTableRows")
-        let cell = [],
-            rows = [];
+        const {isadmin} = this.props.userSetup
+        // console.log("createStudentTableRows", rowsArr)
+        let cell = [], rows = [], checked = false
         if (rowsArr) {
         for (let i = 0; i < rowsArr.length; i++) {
             cell = []
@@ -244,45 +243,55 @@ class AdminPageTeacher extends Component {
                 {Number(updateIDfrom)===Number(rowsArr[i].id)?<div className={"changeStudentButton"} key={"btn"+rowsArr[i].id} onClick={()=>this.onResetStudent(updateIDfrom, updateIDto)}>{">>"}</div>:null}
             </td>)
             // Админ
+            checked = checkedMap.has((i + 1) + "#11#" + rowsArr[i].id)&&((checkedMap.get((i + 1) + "#11#" + rowsArr[i].id)&1) === 1)
             cell.push(<td style={{paddingLeft: "2px", paddingRight: "2px", minWidth : "25px", maxWidth : "25px", width : "25px", fontSize: "0.8em", textAlign : "center"}}  id={(i + 1) + "#11#" + rowsArr[i].id} key={"r" + (i + 1) + "c10"}>
                 <input type="checkbox" onChange={this.changeState} id={(i + 1) + "#11#" + rowsArr[i].id}
-                       disabled="disabled" checked={checkedMap.has((i + 1) + "#11#" + rowsArr[i].id)}/>
+                       disabled="disabled"
+                       checked={checked}/>
                 {/*<button key={"btn"+rowsArr[i].id} onClick={this.onResetStudent}>Привязать</button>*/}
             </td>)
             // Учитель
+            checked = checkedMap.has((i + 1) + "#12#" + rowsArr[i].id)&&((checkedMap.get((i + 1) + "#12#" + rowsArr[i].id)&2) === 2)
             cell.push(<td style={{paddingLeft: "2px", paddingRight: "2px", minWidth : "25px", maxWidth : "25px", width : "25px", fontSize: "0.8em", textAlign : "center"}}  id={(i + 1) + "#12#" + rowsArr[i].id} key={"r" + (i + 1) + "c11"}>
                 <input type="checkbox" onChange={this.changeState} id={(i + 1) + "#12#" + rowsArr[i].id}
-                       disabled="disabled" checked={checkedMap.has((i + 1) + "#12#" + rowsArr[i].id)}/>
+                       disabled={isadmin!==1}
+                       checked={checked}/>
             </td>)
             // Ученик
+            checked = checkedMap.has((i + 1) + "#13#" + rowsArr[i].id)&&((checkedMap.get((i + 1) + "#13#" + rowsArr[i].id)&4) === 4)
             cell.push(<td style={{paddingLeft: "2px", paddingRight: "2px", minWidth : "25px", maxWidth : "25px", width : "25px", fontSize: "0.8em", textAlign : "center"}}  id={(i + 1) + "#13#" + rowsArr[i].id} key={"r" + (i + 1) + "c12"}>
                 <input type="checkbox" onChange={this.changeState} id={(i + 1) + "#13#" + rowsArr[i].id}
-                       disabled="disabled" checked={checkedMap.has((i + 1) + "#13#" + rowsArr[i].id)}/>
+                       checked={checked}/>
             </td>)
             // Родком
+            checked = checkedMap.has((i + 1) + "#14#" + rowsArr[i].id)&&((checkedMap.get((i + 1) + "#14#" + rowsArr[i].id)&8) === 8)
             cell.push(<td style={{paddingLeft: "2px", paddingRight: "2px", minWidth : "25px", maxWidth : "25px", width : "25px", fontSize: "0.8em", textAlign : "center"}}  id={(i + 1) + "#14#" + rowsArr[i].id} key={"r" + (i + 1) + "c13"}>
                 <input type="checkbox" onChange={this.changeState} id={(i + 1) + "#14#" + rowsArr[i].id}
-                       disabled="disabled" checked={checkedMap.has((i + 1) + "#14#" + rowsArr[i].id)}/>
+                       checked={checked}/>
             </td>)
             // Подписка
+            checked = checkedMap.has((i + 1) + "#15#" + rowsArr[i].id)&&((checkedMap.get((i + 1) + "#15#" + rowsArr[i].id)&16) === 16)
             cell.push(<td style={{paddingLeft: "2px", paddingRight: "2px", minWidth : "25px", maxWidth : "25px", width : "25px", fontSize: "0.8em", textAlign : "center"}}  id={(i + 1) + "#15#" + rowsArr[i].id} key={"r" + (i + 1) + "c14"}>
                 <input type="checkbox" onChange={this.changeState} id={(i + 1) + "#15#" + rowsArr[i].id}
-                       disabled="disabled" checked={checkedMap.has((i + 1) + "#15#" + rowsArr[i].id)}/>
+                       checked={checked}/>
             </td>)
             // Перевод
+            checked = checkedMap.has((i + 1) + "#16#" + rowsArr[i].id)&&((checkedMap.get((i + 1) + "#16#" + rowsArr[i].id)&32) === 32)
             cell.push(<td style={{paddingLeft: "2px", paddingRight: "2px", minWidth : "25px", maxWidth : "25px", width : "25px", fontSize: "0.8em", textAlign : "center"}}  id={(i + 1) + "#16#" + rowsArr[i].id} key={"r" + (i + 1) + "c15"}>
                 <input type="checkbox" onChange={this.changeState} id={(i + 1) + "#16#" + rowsArr[i].id}
-                       disabled="disabled" checked={checkedMap.has((i + 1) + "#16#" + rowsArr[i].id)}/>
+                       checked={checked}/>
             </td>)
             // Админ-ция
+            checked = checkedMap.has((i + 1) + "#17#" + rowsArr[i].id)&&((checkedMap.get((i + 1) + "#17#" + rowsArr[i].id)&64) === 64)
             cell.push(<td style={{paddingLeft: "2px", paddingRight: "2px", minWidth : "25px", maxWidth : "25px", width : "25px", fontSize: "0.8em", textAlign : "center"}}  id={(i + 1) + "#17#" + rowsArr[i].id} key={"r" + (i + 1) + "c16"}>
                 <input type="checkbox" onChange={this.changeState} id={(i + 1) + "#17#" + rowsArr[i].id}
-                       disabled="disabled" checked={checkedMap.has((i + 1) + "#17#" + rowsArr[i].id)}/>
+                       checked={checked}/>
             </td>)
             // Партнер
+            checked = checkedMap.has((i + 1) + "#18#" + rowsArr[i].id)&&((checkedMap.get((i + 1) + "#18#" + rowsArr[i].id)&128) === 128)
             cell.push(<td style={{paddingLeft: "2px", paddingRight: "2px", minWidth : "25px", maxWidth : "25px", width : "25px", fontSize: "0.8em", textAlign : "center"}}  id={(i + 1) + "#18#" + rowsArr[i].id} key={"r" + (i + 1) + "c17"}>
                 <input type="checkbox" onChange={this.changeState} id={(i + 1) + "#18#" + rowsArr[i].id}
-                       disabled="disabled" checked={checkedMap.has((i + 1) + "#18#" + rowsArr[i].id)}/>
+                       checked={checked}/>
             </td>)
             // Примечание
             cell.push(<td className="left-text"

@@ -80,12 +80,12 @@ class NoticeTable extends Component {
             "class_id" : ${this.props.curClass},
             "school_id" : ${this.props.curClass!==null?null:school_id},
             "msg_date" : "${toYYYYMMDD(msgDate)}",
-            "msg_header" : "${msgTitle}",
-            "question" : "${msgText}",
-            "answer" : "${msgText}",
+            "msg_header" : ${JSON.stringify(msgTitle)},
+            "question" : ${JSON.stringify(msgText)},
+            "answer" : ${JSON.stringify(msgText)},
             "is_news" : 2
         }`
-        console.log('JSON', json)
+        // console.log('JSON', json, JSON.stringify(json), this.props.userSetup.token)
         axios2('post', `${API_URL}chat/addserv`, json)
             .then(res=>{
                 res.data.msg_date = dateFromYYYYMMDD(res.data.msg_date)

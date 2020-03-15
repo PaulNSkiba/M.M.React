@@ -679,7 +679,7 @@ class MarksTable extends Component {
                             </div>}
                             <div style={{display: "flex", jusitifyContent : "space-between", width : "50%", justifyContent : "space-between"}}>
                                 <div style={{position : "relative"}}>
-                                    <div className={"btn-showStat"} onClick={()=>this.setState({showStat : !this.state.showStat})}>Статистика ввода</div>
+                                    <div className={"btn-showStat"} onClick={()=>this.setState({showStat : !this.state.showStat})}>Статистика ввода оценок</div>
                                     {this.state.showStat?this.showStat():null}
                                     </div>
                                 <div style={{display: "flex", flexDirection : "column", jusitifyContent : "flex-end", alignItems : "flex-end"}}>

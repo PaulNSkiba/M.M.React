@@ -903,9 +903,9 @@ class App extends Component {
                     <LoginBlockLight onLogin={this.props.onUserLogging} langLibrary={langLibrary}
                                      firehide={this.fireLoginLight.bind(this)}/> : null
                 }
-                {/*{console.log("loginBlock", this.props.user.loginmsg)}*/}
+                {/*{console.log("loginBlock", this.props.user, this.props.user.loginmsg)}*/}
                 {/*<div>{this.props.user.loginmsg}</div>*/}
-                <div className={this.props.user.loginmsg.length ? "popup show" : "popup"}
+                <div className={this.props.user.loginmsg!==undefined&&this.props.user.loginmsg.length?"popup show":"popup"}
                      onClick={this.props.onClearErrorMsg}>
                     {this.props.user.loginmsg.length ?
                         <span className="popuptext" id="myPopup">{this.props.user.loginmsg}</span> : ""}
@@ -947,7 +947,7 @@ class App extends Component {
         let {
             userID, userName, pupilCount, currentYear, subjCount, currentPeriodDateCount, markBlank,
             direction, titlekind, withoutholidays, classNumber, selectedSubjects, selectedSubj,
-            subjects_list, studentID, studentName, classID, isadmin, loading } = this.props.userSetup;
+            subjects_list, studentID, studentName, classID, isadmin, loading, stats3 } = this.props.userSetup;
 
 
         // console.log("LANGLIBRARY_AFTER", this.props.userSetup.langLibrary)
@@ -962,8 +962,6 @@ class App extends Component {
         }
         let {isMobile} = this.state;
         let {step1, step2, step3, step4, step5, step6, step7, step8, step9, step10, step11} = this.state.steps;
-
-        // console.log("clearError",this.props.user.loginmsg.length, this.props.user.loginmsg)
 
         const options = {
             title: "Общеклассная динамика успеваемости по предметам",
@@ -982,13 +980,13 @@ class App extends Component {
         // *************************
         console.log("RENDER:APP", loading, this.loading)
 
-        if (loading || loading === -1 || this.loading)
+        if (false&&(loading || loading === -1 || this.loading))
             return (
                 <div className="App">
                     {loading ? this.waitCursorBlock() : null}
                 </div>)
 
-        if (loading || loading === -1)
+        if (false&&(loading || loading === -1))
             return (
                 <div className="App">
                     {loading ? this.waitCursorBlock() : null}
@@ -1000,18 +998,15 @@ class App extends Component {
                             </div>
                         </div>
                         <div className="navBlockEx">
-                            {userID ? true?<MenuEx className="menuTop"
-                                                      userid={userID}
-                                                      isadmin={isadmin}
-                                                      langlibrary={langLibrary}/>:<Menu className="menuTop"
-                                            userid={userID}
-                                            isadmin={isadmin}
-                                            withtomain={true}
-                                            langlibrary={langLibrary}/> : null}
+                            {userID?<Menu className="menuTop"
+                                          userid={userID}
+                                          isadmin={isadmin}
+                                          withtomain={true}
+                                          langlibrary={langLibrary}/> : null}
                             {this.loginBlock(userID, userName, langLibrary)}
                         </div>
                     </div>
-                    <div className="navbar-shadow"></div>
+                    <div className="navbar-shadow"/>
                 </div>);
 
 
@@ -1172,9 +1167,9 @@ class App extends Component {
                                 <div className="studentName">
                                     <b>{studentName}</b>
                                 </div>
-                                {!(this.props.userSetup.stats3 === undefined) ?
+                                {stats3!==undefined?
                                     <div className="lastRecords">
-                                        {"Последние [" + (new Date(this.props.userSetup.stats3.max)).toLocaleDateString() + ' ' + (new Date(this.props.userSetup.stats3.max)).toLocaleTimeString() + ']: Оценок:' + this.props.userSetup.stats3.cnt}
+                                        {"Последние оценки [" + (new Date(stats3.max)).toLocaleDateString() + ' ' + (new Date(stats3.max)).toLocaleTimeString() + ']: Всего:' + stats3.cnt}
                                     </div> : null}
                             </div> : null}
                         {studentID ?
@@ -1256,9 +1251,9 @@ class App extends Component {
                                         <div className="studentName">
                                             <b>{studentName}</b>
                                         </div>
-                                        {!(this.props.userSetup.stats3 === undefined) ?
+                                        {stats3!==undefined?
                                             <div className="lastRecords">
-                                                {"Последние [" + (new Date(this.props.userSetup.stats3.max)).toLocaleDateString() + ' ' + (new Date(this.props.userSetup.stats3.max)).toLocaleTimeString() + ']: Оценок:' + this.props.userSetup.stats3.cnt}
+                                                {"Последние оценки [" + (new Date(stats3.max)).toLocaleDateString() + ' ' + (new Date(stats3.max)).toLocaleTimeString() + ']: Всего:' + stats3.cnt}
                                             </div> : ''}
                                     </div> : null}
                             {/*</div>*/}
@@ -1716,15 +1711,15 @@ const mapDispatchToProps = dispatch => {
 
             dispatch(asyncSetSetup(data, userSetup))
         },
-        onUserLogging: (name, pwd, provider, provider_id, langLibrary) => {
+        onUserLogging: (name, pwd, provider, provider_id, langLibrary, code) => {
             dispatch({type: 'APP_LOADING'})
             console.log("OnUserLogging")
-            const asyncLoggedIn = (name, pwd, provider, provider_id, langLibrary) => {
+            const asyncLoggedIn = (name, pwd, provider, provider_id, langLibrary, code) => {
                 return dispatch => {
-                    dispatch(userLoggedIn(name, pwd, provider, provider_id, langLibrary))
+                    dispatch(userLoggedIn(name, pwd, provider, provider_id, langLibrary, code))
                 }
             }
-            dispatch(asyncLoggedIn(name, pwd, provider, provider_id, langLibrary))
+            dispatch(asyncLoggedIn(name, pwd, provider, provider_id, langLibrary, code))
         },
         onUserLoggingByToken: async (email, token, kind, langLibrary) => {
             const asyncLoggedInByToken = (email, token, kind, langLibrary) => {

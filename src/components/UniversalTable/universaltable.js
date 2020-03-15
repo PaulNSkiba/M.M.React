@@ -17,7 +17,7 @@ class UniversalTable extends Component {
             column: -1,
             head : [],
             rows : [],
-            checkedMap : this.fillMap(),
+            checkedMap : this.fillMap(false),
             arrRows : [],
             addNew : false,
             curAlias : '',
@@ -38,6 +38,8 @@ class UniversalTable extends Component {
         this.onUserCreate = this.onUserCreate.bind(this)
         this.onResetStudent = this.props.onresetstudent
         this.onFactSumClick = this.props.onfactclick
+        this.userMap = new Map()
+        this.isadminMap = new Map()
     }
     componentDidMount() {
         // console.log("UniversalTable.DidMount")
@@ -47,6 +49,7 @@ class UniversalTable extends Component {
         // console.log("HEAD", this.props.head)
         switch (this.props.kind) {
             case 'students' :
+                this.fillMap(true)
                 reduxrows = this.props.userSetup.students;
                 break;
             case 'budget' :
@@ -131,7 +134,7 @@ class UniversalTable extends Component {
         }
 
     }
-    fillMap=()=>{
+    fillMap=(isUserMap)=>{
         // let {rows} = this.props
         let map = new Map()
         let rows
@@ -177,16 +180,22 @@ class UniversalTable extends Component {
             for (let i = 0; i < rows.length; i++) {
                 switch (this.props.kind) {
                     case 'students' :
-                        if (rows[i].isout === 1) map.set((i + 1) + "#6_1#" + rows[i].id, rows[i].isout === 1)
-                        if (rows[i].isRealName === 1) map.set((i + 1) + "#7_1#" + rows[i].id, rows[i].isRealName === 1)
-                        if ((rows[i].isadmin&1) === 1) map.set((i + 1) + "#11#" + rows[i].id, true)
-                        if ((rows[i].isadmin&2) === 2) map.set((i + 1) + "#12#" + rows[i].id, true)
-                        if ((rows[i].isadmin&4) === 4) map.set((i + 1) + "#13#" + rows[i].id, true)
-                        if ((rows[i].isadmin&8) === 8) map.set((i + 1) + "#14#" + rows[i].id, true)
-                        if ((rows[i].isadmin&16) === 16) map.set((i + 1) + "#15#" + rows[i].id, true)
-                        if ((rows[i].isadmin&32) === 32) map.set((i + 1) + "#16#" + rows[i].id, true)
-                        if ((rows[i].isadmin&64) === 64) map.set((i + 1) + "#17#" + rows[i].id, true)
-                        if ((rows[i].isadmin&128) === 128) map.set((i + 1) + "#18#" + rows[i].id, true)
+                        if (!isUserMap) {
+                            if (rows[i].isout === 1) map.set((i + 1) + "#6_1#" + rows[i].id, rows[i].isout === 1)
+                            if (rows[i].isRealName === 1) map.set((i + 1) + "#7_1#" + rows[i].id, rows[i].isRealName === 1)
+                            if ((rows[i].isadmin & 1) === 1) map.set((i + 1) + "#11#" + rows[i].id, rows[i].isadmin)
+                            if ((rows[i].isadmin & 2) === 2) map.set((i + 1) + "#12#" + rows[i].id, rows[i].isadmin)
+                            if ((rows[i].isadmin & 4) === 4) map.set((i + 1) + "#13#" + rows[i].id, rows[i].isadmin)
+                            if ((rows[i].isadmin & 8) === 8) map.set((i + 1) + "#14#" + rows[i].id, rows[i].isadmin)
+                            if ((rows[i].isadmin & 16) === 16) map.set((i + 1) + "#15#" + rows[i].id, rows[i].isadmin)
+                            if ((rows[i].isadmin & 32) === 32) map.set((i + 1) + "#16#" + rows[i].id, rows[i].isadmin)
+                            if ((rows[i].isadmin & 64) === 64) map.set((i + 1) + "#17#" + rows[i].id, rows[i].isadmin)
+                            if ((rows[i].isadmin & 128) === 128) map.set((i + 1) + "#18#" + rows[i].id, rows[i].isadmin)
+                        }
+                        else {
+                            this.userMap.set(Number((i + 1)), Number(rows[i].subuser_id))
+                            this.isadminMap.set(Number((i + 1)), Number(rows[i].isadmin))
+                        }
                         break;
                     case 'budgetpaysin' :
                         if (rows[i].isregular === 1) map.set((i + 1) + "#5#" + rows[i].id, rows[i].isregular === 1)
@@ -220,17 +229,24 @@ class UniversalTable extends Component {
         // console.log("onInputChange", e.target)
     }
     updateSource=(column, id, value, key)=>{
-        console.log("updateSource", column, id, value, key, this.props.kind)
+        // console.log("updateSource", column, id, value, key, this.props.kind)
         // return
         const {classNameOfTD} = this.props
         const {userID, classID, userName} = this.props.userSetup
         const {arrRows : rows, row : row_state, column : column_state, checkedMap} = this.state
         let url, uniqid, arr, newarr
         uniqid = new Date().getTime() + userName
-        let json = "", data = "", isCheckBox = false;
+        let json = "", data = "", isCheckBox = false, curBitMap, curBit;
+        const curRow = Number(key.split('#')[0])
         switch (this.props.kind) {
             case 'students' :
                 if (Number(id)) {
+                        curBitMap = this.isadminMap.has(curRow)?this.isadminMap.get(curRow):0 //checkedMap.has(value) ? checkedMap.get(value) : 0
+                        curBit = Math.pow(2, Number(column - 11))
+                        curBitMap = ((curBitMap&curBit) === curBit)?(curBitMap - curBit):(curBitMap + curBit)
+                        this.isadminMap.set(curRow, curBitMap)
+                        checkedMap.set(value, curBitMap)
+
                         switch (column) {
                             case 2:
                                 this.props.rows[this.state.row - 1].student_nick = value
@@ -262,21 +278,58 @@ class UniversalTable extends Component {
                                 isCheckBox = true;
                                 console.log("checkedMap", checkedMap, checkedMap.has(value), value)
                                 break;
+                            case 11:
+                                json = `{"isadmin":${curBitMap}}`;
+                                console.log("АПДЕЙТ ЧЕКБОКСА", curBitMap, checkedMap.get(value))
+                                break;
+                            case 12:
+                                json = `{"isadmin":${curBitMap}}`;
+                                console.log("АПДЕЙТ ЧЕКБОКСА", curBitMap, checkedMap.get(value))
+                                break;
+                            case 13:
+                                json = `{"isadmin":${curBitMap}}`;
+                                console.log("АПДЕЙТ ЧЕКБОКСА", curBitMap, checkedMap.get(value))
+                                break;
+                            case 14:
+                                json = `{"isadmin":${curBitMap}}`;
+                                console.log("АПДЕЙТ ЧЕКБОКСА", curBitMap, checkedMap.get(value))
+                                break;
+                            case 15:
+                                json = `{"isadmin":${curBitMap}}`;
+                                console.log("АПДЕЙТ ЧЕКБОКСА", curBitMap, checkedMap.get(value))
+                                break;
+                            case 16:
+                                json = `{"isadmin":${curBitMap}}`;
+                                console.log("АПДЕЙТ ЧЕКБОКСА", curBitMap, checkedMap.get(value))
+                                break;
+                            case 17:
+                                json = `{"isadmin":${curBitMap}}`;
+                                console.log("АПДЕЙТ ЧЕКБОКСА", curBitMap, checkedMap.get(value))
+                                break;
+                            case 18:
+                                json = `{"isadmin":${curBitMap}}`;
+                                console.log("АПДЕЙТ ЧЕКБОКСА", curBitMap, checkedMap.get(value))
+                                break;
                             default:
                                 break;
                         }
                         if (json) {
                             data = JSON.parse(json);
-                            // url = `${API_URL}student/addone`
-                            this.props.onStudentUpdate(this.props.rows)
-                            // instanceAxios().post(STUDENTS_UPDATE_URL + '/' + id, JSON.stringify(data))
+                            if ((10<column<19)&&this.userMap.has(curRow)){
+                                console.log("UPDATE_USER", curRow, this.userMap.get(curRow), this.userMap)
+                                axios2('post', `${API_URL}user/update/${this.userMap.get(curRow)}` , JSON.stringify(data))
+                            }
+                            else {
+                                this.props.onStudentUpdate(this.props.rows)
+                                // instanceAxios().post(STUDENTS_UPDATE_URL + '/' + id, JSON.stringify(data))
                                 axios2('post', `${STUDENTS_UPDATE_URL}/${id}`, JSON.stringify(data))
-                                .then(response => {
-                                    console.log('UPDATE_STUDENTS_REMOTE', response.data)
-                                })
-                                .catch(response => {
-                                    console.log(response);
-                                })
+                                    .then(response => {
+                                        console.log('UPDATE_STUDENTS_REMOTE', response.data)
+                                    })
+                                    .catch(response => {
+                                        console.log(response);
+                                    })
+                            }
                         }
                     }
                     else {
@@ -537,6 +590,18 @@ class UniversalTable extends Component {
                 break;
         }
      }
+     // Кликание на чекбоксе
+    changeState=(e)=>{
+        let {checkedMap} = this.state
+        const   column = String(e.target.id.split('#')[1]),
+            id = Number(e.target.id.split('#')[2]),
+            curBitMask = checkedMap.has(e.target.id)?checkedMap.get(e.target.id):0
+
+        console.log("changeState", e.target.id, column.split('_')[0], curBitMask, e.target.value, column.split('_')[0], Math.pow(2, Number(column.split('_')[0]) - 10))
+
+        this.updateSource(Number(column.split('_')[0]), id, e.target.id, e.target.id)
+
+    }
     onClick(e) {
         const {classNameOfTD} = this.props
         const {arrRows : rows, row : row_state, column : column_state, checkedMap} = this.state
@@ -591,19 +656,13 @@ class UniversalTable extends Component {
         }
     }
     onInputKeyPress=(e)=>{
-        console.log('onInputKeyPress', e.target, e.target.id, e.target.value);
+        // console.log('onInputKeyPress', e.target, e.target.id, e.target.value);
         if (e.key === 'Enter') {
             const   column = Number(e.target.id.split('#')[1]),
                     id = Number(e.target.id.split('#')[2]),
                     value = e.target.value;
             this.updateSource(column, id, value, e.target.id)
         }
-    }
-    changeState=(e)=>{
-        const   column = String(e.target.id.split('#')[1]),
-                id = Number(e.target.id.split('#')[2])
-        console.log("changeState", e.target.id, column.split('_')[0])
-        this.updateSource(Number(column.split('_')[0]), id, e.target.id, e.target.id)
     }
     onAddNewRow=(objblank)=>{
         const {classNameOfTD} = this.props

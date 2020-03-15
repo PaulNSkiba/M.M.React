@@ -30,7 +30,8 @@ export function userReducer(state = initialState, action) {
         case 'USER_LOGGEDIN_DONE' :
             return {...state, logging: false};
         case 'USER_PWD_MISSEDMATCH':
-            return {...state, loginmsg: 'Неправильный пароль'};
+            console.log('USER_PWD_MISSEDMATCH', action.payload)
+            return {...state, loginmsg: action.payload};
         case 'USER_MSG_CLEAR':
             return {...state, loginmsg: ''};
         default:

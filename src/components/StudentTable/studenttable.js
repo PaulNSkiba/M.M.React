@@ -5,7 +5,8 @@
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
 import MarkBlank from '../MarkBlank/markblank'
-import {numberToLang, addDay, getSpanCount, toYYYYMMDD, instanceAxios, mapStateToProps, getSubjFieldName, weekDaysGlobal} from '../../js/helpers'
+import {numberToLang, addDay, getSpanCount, toYYYYMMDD, instanceAxios, mapStateToProps,
+        getSubjFieldName, weekDaysGlobal, axios2} from '../../js/helpers'
 import Select from '../Select/select'
 import Checkbox from '../CheckBox/checkbox'
 import { MARKS_URL, TABLE_GET_URL } from '../../config/config'
@@ -326,7 +327,7 @@ class StudentTable extends Component {
         mapDays.clear()
         const subjDays = []//timetable.filter(item=>item!==null).filter(item=>item.subj_key===selectedSubj.subj_key)
         // console.log(this.props)
-        // console.log('tableMarks', this.state.tableMarks)
+        console.log('tableMarks', this.props.userSetup)
 
         if (this.state.isTable) {
             console.log('this.state.isTable', this.state)

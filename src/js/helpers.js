@@ -11,6 +11,9 @@ export const weekDaysGlobal = ["Вс","Пн","Вт","Ср","Чт","Пт","Сб"]
 export const weekDaysLocal = ["Пн","Вт","Ср","Чт","Пт","Сб","Вс"]
 export const classLetters = ["А", "Б", "В", "Г", "Д"]
 /* eslint-disable */
+
+// export const axios = axios
+
 export const mapStateToProps = store => {
     // console.log(store) // посмотрим, что же у нас в store?
     return {

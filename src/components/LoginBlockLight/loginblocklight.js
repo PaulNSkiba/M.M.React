@@ -2,27 +2,84 @@
  * Created by Paul on 22.01.2019.
  */
 import React, { Component } from 'react';
+import axios from 'axios';
 import '../../css/colors.css'
 import './loginblocklight.css'
 import FacebookLogin from 'react-facebook-login';
 import {GoogleLogin} from 'react-google-login';
-import {mapStateToProps, getLangLibrary, getDefLangLibrary} from '../../js/helpers'
-import {appIdFB} from '../../config/config'
+import {mapStateToProps, instanceAxios} from '../../js/helpers'
+import {appIdFB, API_URL} from '../../config/config'
 import { connect } from 'react-redux'
 
 class LoginBlockLight extends Component {
 
+    constructor(props) {
+        super(props);
+        this.state = {
+            _email: "",
+            withCode : false,
+            codeChecked : false,
+        }
+        this.userLogin = this.userLogin.bind(this)
+        this.userCancel = this.userCancel.bind(this)
+        this.onSubmit = this.onSubmit.bind(this)
+    }
+    onSubmit=e=>{
+        e.preventDefault()
+        // console.log("SUBMIT!!!")
+        // this.userLogin()
+    }
     userLogin = async (email, pwd, provider, provider_id)=> {
         // console.log("LoginBlockLight.userLogin", this.inputEmail.value, this.inputPwd.value)
+        let code = ''
         if (provider===undefined) {
             email = this.inputEmail.value
             pwd = this.inputPwd.value
+            code = this.inputSMS!==undefined?this.inputSMS.value:''
         }
-        await this.props.onLogin(email, pwd, provider, provider_id, this.props.langLibrary)
-        await this.props.firehide(true)
-        console.log("userLogin", email, pwd, provider, provider_id)
+        const json = `{
+            "email" : "${email}",
+            "password" : "${pwd}"
+        }`
+
+        let {token} = ''//store.getState().user
+        const headers = {
+            'Accept': 'application/json',
+            'Content-Type': 'application/json',
+            'Access-Control-Allow-Origin': '*',
+            'Access-Control-Allow-Methods': 'GET, POST, PUT, DELETE, OPTIONS',
+        }
+        console.log("userLogin", JSON.parse(JSON.stringify(json)))
+        if (code.length===4){
+            this.props.onLogin(email, pwd, provider, provider_id, this.props.langLibrary, code)
+            // ToDO: Для отправки SMS будем ждать ввода кода
+            this.props.firehide(true)
+
+        }
+        else {
+            await instanceAxios().post(`${API_URL}logincheck`, JSON.parse(JSON.stringify(json)))
+                .then(res => {
+                    console.log("CHECK_PHONE:res", res)
+                    if (res.data.phone) {
+                        this.setState({withCode: true})
+                        this.inputSMS.focus()
+                    }
+                    else {
+                        this.props.onLogin(email, pwd, provider, provider_id, this.props.langLibrary)
+                        // ToDO: Для отправки SMS будем ждать ввода кода
+                        this.props.firehide(true)
+                        // console.log("userLogin", email, pwd, provider, provider_id)
+                    }
+                })
+                .catch(err => {
+                    console.log("CHECK_PHONE:err", err)
+                })
+        }
         // this.props.hidesteps();
     }
+    // checkLogin=async()=>{
+    //     await axios('post', `${API_URL}`)
+    // }
     userCancel=()=> {
         // console.log(this.inputEmail.value, this.inputPwd.value)
         // this.props.onclick(this.inputEmail.value, this.inputPwd.value)
@@ -90,13 +147,27 @@ class LoginBlockLight extends Component {
     }
 
     render(){
+        const {isMobile, isadmin, phone} = this.props.userSetup
+        const {_email, codeChecked, withCode} = this.state
+        const withPhone = withCode//(_email==="test@gmail.com"?true:false)
+        // const withCode = withPhone
+        // console.log("RenderLogin", _email, withPhone)
+        // isadmin===1||phone!==null
             return (
-                <div className={this.props.userSetup.isMobile?"loginBlockLightMobile":"loginBlockLight"}>
-                    <form>
-                        <label>Email</label><input style={{width: "95%"}} type="email" ref={input=>{this.inputEmail=input}}></input>
-                        <label>Пароль</label><input style={{width: "95%"}} type="password" ref={input=>{this.inputPwd=input}}></input>
+                <div className={withPhone?(isMobile?"loginBlockLightMobileWithPhone":"loginBlockLightWithPhone"):(isMobile?"loginBlockLightMobile":"loginBlockLight")}>
+                    <form  onSubmit={this.onSubmit}>
+                        <label style={{fontSize : ".8em", fontWeight : 600}}>Email</label><input style={{width: "95%"}} type="email" ref={input=>{this.inputEmail=input}} onChange={(e)=>this.setState({_email : e.target.value})}/>
+                        <label style={{fontSize : ".8em", fontWeight : 600}}>Пароль</label><input style={{width: "95%"}} type="password" ref={input=>{this.inputPwd=input}}/>
+                        {withPhone?
+                            <div>
+                                <label style={{fontSize : ".8em", fontWeight : 600}}>SMS-код</label>
+                                <input style={{width: "95%"}} type="text" ref={input=>{this.inputSMS=input}}/>
+                            </div>
+                                :null}
+
                         <div className="loginButtons">
-                            <button type="submit" onClick={this.userLogin.bind(this)}>Войти</button><button onClick={this.userCancel.bind(this)}>Отмена</button>
+                            <button className="my-login-btn" type="submit" onClick={this.userLogin}>{withCode&&(!codeChecked)?"Войти":"Войти"}</button>
+                            <button  className="my-login-btn" onClick={this.userCancel}>Отмена</button>
                         </div>
                     </form>
                     <div className="socialBtns">

@@ -248,7 +248,7 @@ class AdminPageAdmin extends Component {
         let cell = [],
             rows = [];
         const rowsArr = rowsArrOrig //this.props.userSetup.aliasesList
-        console.log("createTableRows.3", rowsArr, row, column)
+        // console.log("createTableRows.3", rowsArr, row, column)
         if (rowsArr) {
             for (let i = 0; i < rowsArr.length; i++) {
                 cell = []

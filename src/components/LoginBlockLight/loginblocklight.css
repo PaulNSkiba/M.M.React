@@ -1,37 +1,32 @@
-.loginBlockLight{
+.loginBlockLight, .loginBlockLightMobile, .loginBlockLightWithPhone, .loginBlockLightMobileWithPhone{
     display: block;
     position: absolute;
-    z-index: 11;
-    /*border: 2px solid #70c2e6;*/
     background-color: var(--selected-item);
-    box-shadow: 0px 7px 7px 0px rgba(0, 0, 0, 0.4);
+    box-shadow: 0 7px 7px 0 rgba(0, 0, 0, 0.4);
     width: 150px;
-    height: 175px;
-    /*right: 12%;*/
-    /*top : 45px;*/
     padding : 5px;
     border-bottom-left-radius: 10px;
     border-bottom-right-radius: 10px;
     border-top-right-radius: 10px;
+}
+.loginBlockLight {
+    z-index: 11;
+    height: 175px;
+}
+.loginBlockLightWithPhone {
+    z-index: 11;
+    height: 225px;
 }
 .loginBlockLightMobile{
-    display: block;
-    position: absolute;
     z-index: 50;
-    /*border: 2px solid #70c2e6;*/
-    background-color: var(--selected-item);
-    box-shadow: 0px 7px 7px 0px rgba(0, 0, 0, 0.4);
-    width: 150px;
-    height: 175px;
     right: 100px;
-    /*right: 12%;*/
-    /*top : 45px;*/
-    padding : 5px;
-    border-bottom-left-radius: 10px;
-    border-bottom-right-radius: 10px;
-    border-top-right-radius: 10px;
+    height: 175px;
 }
-
+.loginBlockLightMobileWithPhone{
+    z-index: 50;
+    right: 100px;
+    height: 225px;
+}
 .loginBlockLight input {
     width: 95%;
 }
@@ -69,4 +64,7 @@
     width : 80%;
     margin : 2px;
     padding : -2px;
+}
+.my-login-btn:hover {
+    cursor:pointer;
 }

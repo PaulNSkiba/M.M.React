@@ -4,7 +4,7 @@
 import { LOGOUTUSER_URL, LOGINUSER_URL, API_URL } from '../config/config'
 import { instanceAxios, toYYYYMMDD, axios2 } from '../js/helpers'
 
-export const userLoggedIn = (email, pwd, provider, provider_id, langLibrary) => {
+export const userLoggedIn = (email, pwd, provider, provider_id, langLibrary, code) => {
     return dispatch => {
 
         const data = {
@@ -13,27 +13,33 @@ export const userLoggedIn = (email, pwd, provider, provider_id, langLibrary) => 
             "provider" : provider,
             "provider_id" : provider_id,
             "token" : null,
+            "code" : code
         };
-        console.log('USER_LOGGIN', LOGINUSER_URL, JSON.stringify(data))
+        // console.log('USER_LOGGIN', LOGINUSER_URL, JSON.stringify(data))
         document.body.style.cursor = 'progress';
 
         instanceAxios().post(LOGINUSER_URL, JSON.stringify(data), null)
             .then(response => {
-                console.log('USER_LOGGEDIN.1', response.data);
-                dispatch({type: 'USER_LOGGEDIN', payload: response.data, langLibrary : langLibrary});
-                dispatch({type: 'ADD_CHAT_MESSAGES', payload : response.data.chatrows});
-                // пробуем записать в LocalStorage имя пользователя, ID, имя и тип авторизации
-                saveToLocalStorage("myMarks.data", email, response.data)
-                window.localStorage.setItem("userSetupDate", toYYYYMMDD(new Date()))
-                window.localStorage.setItem("localChatMessages", response.data.chatrows)
+                // console.log('USER_LOGGEDIN.1', response.data);
+                if (response.data.loggedin) {
+                    dispatch({type: 'USER_LOGGEDIN', payload: response.data, langLibrary: langLibrary});
+                    dispatch({type: 'ADD_CHAT_MESSAGES', payload: response.data.chatrows});
+                    // пробуем записать в LocalStorage имя пользователя, ID, имя и тип авторизации
+                    saveToLocalStorage("myMarks.data", email, response.data)
+                    window.localStorage.setItem("userSetupDate", toYYYYMMDD(new Date()))
+                    window.localStorage.setItem("localChatMessages", response.data.chatrows)
+                }
+                else {
+                    dispatch({type : 'USER_PWD_MISSEDMATCH', payload : response.data.message})
+                }
                 document.body.style.cursor = 'default';
                 dispatch({type: 'APP_LOADED'})
             })
             .catch(error => {
                 // Список ошибок в отклике...
-                console.log("ERROR_LOGGEDIN", error)
+                // console.log("ERROR_LOGGEDIN", error)
                 document.body.style.cursor = 'default';
-                dispatch({type: 'USER_PWD_MISSEDMATCH'})
+                dispatch({type: 'USER_PWD_MISSEDMATCH', payload : "Ошибка ввода"})
                 dispatch({type: 'APP_LOADED'})
             })
    };
@@ -50,7 +56,7 @@ export const userLoggedInByToken = (email, token, kind, langLibrary) => {
         document.body.style.cursor = 'progress';
         // instanceAxios().get(`${API_URL}user`, data)
         axios2('get', `${API_URL}user`)
-        .then(response => {
+            .then(response => {
                 response.data.token = token
                 dispatch({type: 'USER_LOGGEDIN', payload: response.data, langLibrary : langLibrary});
                 // dispatch({type: "UPDATE_TOKEN", payload: token})
