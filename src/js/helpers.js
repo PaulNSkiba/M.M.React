@@ -1109,6 +1109,9 @@ export const pusherClient = (token, chatSSL) => {
 export const getSubjFieldName=lang=>{
     let field_name = "ua"
     switch (lang) {
+        case "UA" :
+            field_name = "ua"
+            break
         case "RU" :
             field_name = "ru"
             break
@@ -1119,6 +1122,7 @@ export const getSubjFieldName=lang=>{
             field_name = "gb"
             break
         default :
+            field_name = "en"
             break;
     }
     return "subj_name_"+field_name

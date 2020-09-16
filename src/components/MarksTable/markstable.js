@@ -8,7 +8,7 @@ import { addDay, getSpanCount, toYYYYMMDD, consoleLog, instanceAxios, mapStateTo
          getSubjFieldName, weekDaysGlobal, axios2, getNearestSeptFirst, dateDiff} from '../../js/helpers'
 import Select from '../Select/select'
 import { connect } from 'react-redux'
-import { API_URL, MARKS_URL, ISDEBUG, markType, UPDATESETUP_URL } from '../../config/config'
+import { API_URL, MARKS_URL, ISDEBUG, markType, UPDATESETUP_URL, ISCONSOLE } from '../../config/config'
 import Checkbox from '../CheckBox/checkbox'
 import './markstable.css'
 import '../../css/colors.css'
@@ -50,18 +50,50 @@ class MarksTable extends Component {
                 item.hasOwnProperty('subj_key')&&map.set(item.subj_key, item.id)
             });
             this.setState({subjMap: map})
-            // console.log('InitMap', map)
     }
     componentWillMount=()=>{
      }
     componentDidMount(){
         this.initMap()
+         const elem = document.getElementById('simple-board')
+         if (elem!==null) {
+             elem.height = elem.height + 200
+             // console.log("elem2", elem.height)
+         }
+    }
+    componentDidUpdate(){
+        // console.log("MarksTable : render")
+        const markblank = document.getElementById("markblank_twelve")
+
+        if (markblank!==null){
+            // console.log("MARKBLANK: Render", window.innerHeight, window.innerWidth, markblank.getBoundingClientRect())
+            const rect =  markblank.getBoundingClientRect()
+            // console.log(window.innerHeight - (rect.top + rect.height))
+            if ((window.innerHeight - (rect.top + rect.height + 20)) < 0) {
+                window.scrollBy(0, Math.abs(window.innerHeight - (rect.top + rect.height + 20)))
+
+                const elem = document.getElementById('simple-board')
+                if (elem!==null)
+                    elem.scrollTop = elem.scrollHeight //- elem.clientHeight + 50;
+
+            }
+            // console.log("RECT", window.innerWidth, rect)
+            if ((window.innerWidth - (rect.right + rect.width + 20)) < 0) {
+                window.scrollBy(Math.abs(window.innerWidth - (rect.right + rect.width + 20)), 0)
+
+                const elem = document.getElementById('simple-board')
+                if (elem!==null)
+                    elem.scrollLeft = elem.scrollWidth //- elem.clientHeight + 50;
+
+            }
+
+        }
     }
     async reInitMarks(subj_key){
-            console.log('start reInitMarks')
-            await this.fillMarks(this.state.dateStart, this.state.dateEnd, subj_key, this.state.subjMap.get(subj_key))
-            console.log('end reInitMarks')
-            this.forceUpdate();
+        console.log('start reInitMarks')
+        await this.fillMarks(this.state.dateStart, this.state.dateEnd, subj_key, this.state.subjMap.get(subj_key))
+        console.log('end reInitMarks')
+        this.forceUpdate();
     }
     fillMarks(dStart, dEnd, subj_key, subj_id){
         document.body.style.cursor = 'progress';
@@ -70,12 +102,9 @@ class MarksTable extends Component {
         let marksTypes = new Map()
         let {userID, curClass, classID, selectedSubj} = this.props.userSetup;
         // console.log("fillMarks", userID, curClass, selectedSubj, typeof selectedSubj)
-        //  instanceAxios().get(MARKS_URL + '/'+userID+'/class/'+classID+'/subject/'+subj_id+'/subjkey/'+subj_key.toString().replace('#','')+
-        //     '/periodstart/'+toYYYYMMDD(dStart)+'/periodend/'+toYYYYMMDD(dEnd)+'/student/0')
-        axios2('get', `${MARKS_URL}/${userID}/class/${classID}/subject/${subj_id}/subjkey/${subj_key.toString().replace('#','')}/periodstart/${toYYYYMMDD(dStart)}/periodend/${toYYYYMMDD(dEnd)}/student/0`)
+
+         axios2('get', `${MARKS_URL}/${userID}/class/${classID}/subject/${subj_id}/subjkey/${subj_key.toString().replace('#','')}/periodstart/${toYYYYMMDD(dStart)}/periodend/${toYYYYMMDD(dEnd)}/student/0`)
             .then(response => {
-                // console.log('GET_MARKS_REMOTE', MARKS_URL + '/'+userID+'/class/'+classID+'/subject/'+subj_id+'/subjkey/'+subj_key.toString().replace('#','')+
-                //     '/periodstart/'+toYYYYMMDD(dStart)+'/periodend/'+toYYYYMMDD(dEnd)+'/student/0',  response.data)
                 marks.clear()
                 marksBefore.clear()
                 marksTypes.clear()
@@ -104,28 +133,41 @@ class MarksTable extends Component {
         return marks
     }
     onClick(e){
-        // console.log("onClick", e.target, e.target.nodeName, e.target.innerHTML)
+        ISCONSOLE && console.log("onClick: showMark", e.target, e.target.nodeName)
         if (e.target.nodeName === "TD") {
 
             let row = Number(e.target.id.split('#')[0])//Number(e.target.id.split('c')[0].replace('r', ''));
             let column = Number(e.target.id.split('#')[1])//Number(e.target.id.split('c')[1]);
             let id = Number(e.target.id.split('#')[2])
             let subcolumn = Number(e.target.id.split('#')[4])
-            console.log("table_OnClick", e.target.id, row, column, subcolumn)
-            if (row===this.state.row&&column===this.state.column&&subcolumn===this.state.subcolumn) {row=-1; column=-1;}
+
+            ISCONSOLE && console.log("table_OnClick", e.target.classList, e.target.id, row, column, subcolumn)
+
+            const elems = document.querySelectorAll(".markstable__selected-cell")
+            if (elems!==null)
+                elems.forEach(item=>item.classList.remove("markstable__selected-cell"))
+
+            if (row===this.state.row&&column===this.state.column&&subcolumn===this.state.subcolumn)
+            {
+                row=-1; column=-1;
+            }
+            else {
+                e.target.classList.add("markstable__selected-cell")
+            }
             // console.log(row, column, e.target.id.split('c')[1])
             this.setState({ row, column, subcolumn})
         }
         // else if(e.target.nodeName === "A" && this.state.row < (this.state.size - 1) && this.props.direction==="UPDOWN") {
         else if(e.target.nodeName === "A" && this.state.row < (this.props.userSetup.students.length - 1) && this.props.direction==="UPDOWN") {
             let {row} = this.state
+
             this.setState({ row: row + 1})
         }
         else if(e.target.nodeName === "A" && this.state.column < (this.props.dayscount + 2) && this.props.direction==="LEFTRIGHT") {
             let {column} = this.state
-            // let add = 1;
-            console.log("SetColumnState", this.state.row, addDay(this.state.dateStart, column + 1 - 2).getDay(), addDay(this.state.dateStart, column + 1 - 2))
-            // addDay(this.state.dateStart, column + 1 - 2).getDay() > 0 && addDay(this.state.dateStart, column + 1 - 2).getDay() < 6 && this.props.withoutholidays?
+
+            //console.log("SetColumnState", this.state.row, addDay(this.state.dateStart, column + 1 - 2).getDay(), addDay(this.state.dateStart, column + 1 - 2))
+
             let add = !this.props.withoutholidays?1:addDay(this.state.dateStart, column + 1 - 2).getDay()===6?3:1;
             this.setState({ column: column + add})
         }
@@ -139,8 +181,9 @@ class MarksTable extends Component {
         const markKey = selectedSubj.subj_key.replace("#","")+"#"+student_id+"#"+ondate+"#"+position
         const {marks, marksTypes} = this.state
         marks.set(markKey, value.toString().length<4?value:"")
-        // marksTypes.set(markKey, this.state.markType>0?this.state.markType===1?'К':(this.state.markType===2?'С':'Т'):(marksTypes.get(markKey)===undefined?"":marksTypes.get(markKey)))
-        console.log("changeCell", id, id.split('#')[4])
+
+        ISCONSOLE && console.log("changeCell", id, id.split('#')[4])
+
         marksTypes.set(markKey, markType[this.state.markType].letter)
         this.setState({marks, marksTypes})
 
@@ -155,22 +198,25 @@ class MarksTable extends Component {
                         "mark":"${value.toString().length<4?value:""}"}`
         // "mark_type_name":"${this.state.markType>0?this.state.markType===1?'К':(this.state.markType===2?'С':'Т'):marksTypes.get(markKey)}",
         let data = JSON.parse(json);
-        console.log("Table_changeCell", cell, value, id, data, JSON.stringify(data))
+        // console.log("Table_changeCell", cell, value, id, data, JSON.stringify(data))
+
+        const elems = document.querySelectorAll(".markstable__selected-cell")
+        if (elems!==null)
+            elems.forEach(item=>item.classList.remove("markstable__selected-cell"))
+
         this.props.onclick(this.state.row, this.state.column, value)
+
         // '/marks/{user_id}/class/{class_id}/subject/{subj_id}/student/{student_id}/ondate/{ondate}'
         if (userID > 0) {
-            // console.log("MARKS_URL", JSON.stringify(data), MARKS_URL +'/'+ userID+'/class/'+classID+'/subject/'+selectedSubj.id+'/student/'+student_id+'/ondate/'+ondate+'/mark/'+value)
-             // return;
-//            instanceAxios().post(MARKS_URL + '/add', JSON.stringify(data))
-                axios2('post',`${MARKS_URL}/add`, JSON.stringify(data))
-                .then(response => {
-                    console.log('UPDATE_MARKS_REMOTE', response.data)
-                    // dispatch({type: 'UPDATE_STUDENTS_REMOTE', payload: response.data})
-                })
-                .catch(response => {
-                    console.log("AXIOUS_ERROR", response);
-                    // dispatch({type: 'UPDATE_STUDENTS_FAILED', payload: response.data})
-                })
+            axios2('post',`${MARKS_URL}/add`, JSON.stringify(data))
+            .then(response => {
+                ISCONSOLE && console.log('UPDATE_MARKS_REMOTE', response.data)
+                // dispatch({type: 'UPDATE_STUDENTS_REMOTE', payload: response.data})
+            })
+            .catch(response => {
+                ISCONSOLE && console.log("AXIOUS_ERROR", response);
+                // dispatch({type: 'UPDATE_STUDENTS_FAILED', payload: response.data})
+            })
         }
     }
     getMarkBlank =(cellID)=>{
@@ -265,11 +311,8 @@ class MarksTable extends Component {
     setStudentFilter(name, value){
         this.setState({onlywithmailstudents : !this.state.onlywithmailstudents})
     }
-    // setTimetableFilter(name, value){
-    //     this.setState({withtimetable : !this.state.withtimetable})
-    // }
+
     sendMail(){
-        // console.log("sendMail")
         document.body.style.cursor = 'progress';
         instanceAxios().get(MARKS_URL + '/sendall/' + this.props.userSetup.classID, "")
             .then(response => {
@@ -394,10 +437,9 @@ class MarksTable extends Component {
             // ,mapDays = mapDays
             ,doneFirst = false
         mapDays.clear()
-        // console.log("filter", selectedSubj.subj_key, withoutholidays)
+
         const subjDays = timetable.filter(item=>item!==null).filter(item=>item.subj_key===selectedSubj.subj_key)
-        // console.log('mark_date', this.props.userSetup.mark_date.date, this.state.dateStart, this.state.dateEnd, this.state.marks)
-        // console.log("MARKS", mapDays.keys(), mapDays.values())
+
             for (let idx = 0; idx < (this.props.dayscount + 2); idx++){
                 let cellID = `h0c${idx}`
                 switch (idx) {
@@ -409,6 +451,7 @@ class MarksTable extends Component {
                     case 1 :
                         cell.push(<th rowSpan={2} key={cellID} id={cellID} className="namescol head">
                             Ученики[{this.props.titlekind==="NICK"?"НИК":this.props.titlekind==="EMAIL"?"EMAIL":"ИМЯ"}]
+                            <div className={"markstable__selected-student " + ((this.state.row>=0&&this.state.column>=0)?"": " hidden ") }> {this.state.row>=0&&students.filter((item,key)=>key===this.state.row)[0].student_name} </div>
                         </th>)
                         break
                     default:
@@ -575,7 +618,7 @@ class MarksTable extends Component {
                                     mark = this.getMarkHash(key);
                                     let mark2 = this.getMarkHash(key2);
                                     cell.push(<td key={cellID+'#0'} id={cellID+'#0'} onClick={this.onClick.bind(this)}
-                                              className={badmark ? "tableBody badmark" : "tableBody"}>
+                                              className={"tableBody " + (badmark ? " badmark " : "") + (i===this.state.row&&idx===this.state.column&&this.state.subcolumn===0 ? " markstable__selected-cell " : "")}>
                                     {(mark!==null) && markTypes.length > 0 && mark.length ?
                                         <div className="topMarkLabel">{markTypes}</div> : ""}
                                     {(mark!==null) && markBefore.length > 0 && mark.length ?
@@ -600,7 +643,7 @@ class MarksTable extends Component {
         }
 
         const {userID, langCode, token, cnt_marks, subj_cnt, stud_cnt, selectedSubjects } = this.props.userSetup;
-        console.log("marksTable", this.props.userSetup.selectedSubj.subj_key)
+        //console.log("marksTable", this.props.userSetup.selectedSubj.subj_key)
         return(
 
             <div className="containertable">
@@ -697,7 +740,7 @@ class MarksTable extends Component {
                             <thead className="tablehead">
                             {head}
                             </thead>
-                            <tbody>
+                            <tbody id="simple-board-body">
                             {rows}
                             </tbody>
                         </table>

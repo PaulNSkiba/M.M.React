@@ -8,7 +8,7 @@ import './loginblocklight.css'
 import FacebookLogin from 'react-facebook-login';
 import {GoogleLogin} from 'react-google-login';
 import {mapStateToProps, instanceAxios} from '../../js/helpers'
-import {appIdFB, API_URL} from '../../config/config'
+import {appIdFB, API_URL, ISCONSOLE} from '../../config/config'
 import { connect } from 'react-redux'
 
 class LoginBlockLight extends Component {
@@ -49,17 +49,18 @@ class LoginBlockLight extends Component {
             'Access-Control-Allow-Origin': '*',
             'Access-Control-Allow-Methods': 'GET, POST, PUT, DELETE, OPTIONS',
         }
-        console.log("userLogin", JSON.parse(JSON.stringify(json)))
-        if (code.length===4){
+        //console.log("userLogin", JSON.parse(JSON.stringify(json)))
+        // Disable SMS-checking
+        if (true || code.length===4){
             this.props.onLogin(email, pwd, provider, provider_id, this.props.langLibrary, code)
             // ToDO: Для отправки SMS будем ждать ввода кода
             this.props.firehide(true)
-
         }
         else {
             await instanceAxios().post(`${API_URL}logincheck`, JSON.parse(JSON.stringify(json)))
                 .then(res => {
-                    console.log("CHECK_PHONE:res", res)
+                    // console.log("CHECK_PHONE:res", res)
+                    // Hide phone checking
                     if (res.data.phone) {
                         this.setState({withCode: true})
                         this.inputSMS.focus()

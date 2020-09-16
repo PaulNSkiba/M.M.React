@@ -6,15 +6,15 @@ import './subjectlist.css'
 import {getSubjFieldName, mapStateToProps} from '../../js/helpers'
 import { connect } from 'react-redux'
 import AddSubject from "../AddSubject/addsubject";
+import { ISDEBUG, ISCONSOLE } from '../../config/config'
 
 // import subjectsforclasses from './subjectsforclasses'
 
 class SubjectList extends Component {
     constructor(props) {
         super(props);
-        // Don't call this.setState() here!
         const {selectedSubjects, langCode} = this.props.userSetup;
-        console.log("SubjectList", langCode, getSubjFieldName(langCode))
+        ISCONSOLE && console.log("SubjectList", langCode, getSubjFieldName(langCode))
 
         this.state = {
 //            map : new Map(selectedSubjects.map(obj=>[obj.subj_key, obj[getSubjFieldName(langCode)]])), //new Map()//this.props.selectedsubjects.reduce((map, obj) => (map[obj.key] = obj.val, map), {}),
@@ -22,18 +22,10 @@ class SubjectList extends Component {
 
             showAddSubject: false
         };
-        // this.handleClick = this.handleClick.bind(this);
     }
 
-    // state = {
-    //     // map : new Map(this.props.selectedsubjects.map(obj=>[obj.subj_key, obj[getSubjFieldName(this.props.userSetup.langCode)]])), //new Map()//this.props.selectedsubjects.reduce((map, obj) => (map[obj.key] = obj.val, map), {}),
-    //     map : new Map(this.props.selectedsubjects.map(obj=>[obj.subj_key, obj[getSubjFieldName(this.props.userSetup.langCode)]])), //new Map()//this.props.selectedsubjects.reduce((map, obj) => (map[obj.key] = obj.val, map), {}),
-    //
-    //     showAddSubject: false
-    // }
-
     componentDidMount(){
-        console.log("subjectList: componentDidMount", this.state.map, this.props.selectedsubjects, this.props.userSetup.selectedsubjects, this.props.userSetup)
+        ISCONSOLE && console.log("subjectList: componentDidMount", this.state.map, this.props.selectedsubjects, this.props.userSetup.selectedsubjects, this.props.userSetup)
     }
     addClass(e) {
         // let isActive = false
@@ -70,7 +62,6 @@ class SubjectList extends Component {
         }
     }
     // Сохраним или выберем из LocalStorage'a
-
     classNames(curclass, subjkey) {
         return curclass ? (this.state.showAddSubject&&subjkey?"subjclass activeadd":"subjclass active"):("subjclass"+(subjkey?" addbutton":""))
     }
@@ -80,8 +71,7 @@ class SubjectList extends Component {
     })
     }
     render() {
-        // console.log("subjects",subjects, subjects())
-        // const {classnumber, step, selectedsubjects} = this.props;
+
         const {step} = this.props;
         const {langCode, classID, userID, subjects_list, selectedSubjects} = this.props.userSetup
 

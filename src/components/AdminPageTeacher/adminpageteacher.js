@@ -525,7 +525,7 @@ class AdminPageTeacher extends Component {
             user_id: userID,
             uniqid : localStorage.getItem("langCode") ? localStorage.getItem("langCode") : defLang,
         }
-        console.log("RENDER:adminteacher", this.props.userSetup)
+            // console.log("RENDER:adminteacher", this.props.userSetup)
         return (
             <div className="AdminPage">
                 <div className="navbar" style={userID===0?{"justifyContent":  "flex-end"}:{"justifyContent":  "space-between"}}>

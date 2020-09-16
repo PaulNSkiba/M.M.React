@@ -8,10 +8,8 @@ import emailPropType from 'email-prop-type';
 import {ChatManager, TokenProvider} from '@pusher/chatkit-client'
 import arrow_down from '../../img/ARROW_DOWN.png'
 import arrow_up from '../../img/ARROW_UP.png'
-import {
-    API_URL, HOMEWORK_ADD_URL,
-    instanceLocator, testToken, chatUserName
-} from '../../config/config'
+import {  API_URL, HOMEWORK_ADD_URL,
+          instanceLocator, testToken, chatUserName, ISCONSOLE } from '../../config/config'
 import {
     addDay,
     arrOfWeekDays,
@@ -149,7 +147,7 @@ class Chat extends Component {
             console.log(msg);
         };
         echo.connect()
-        console.log('echo.pusher', echo.connector.pusher)
+        ISCONSOLE && console.log('echo.pusher', echo.connector.pusher)
         // larasocket.connect()
 
         const channelName = 'class.' + this.props.userSetup.classID
@@ -160,7 +158,7 @@ class Chat extends Component {
         // this.setState({Echo: echo})
         this.Echo = echo
         // console.log("SOCKET", larasocket, larasocket.allChannels())
-        console.log('websocket', echo, channelName)
+        ISCONSOLE && console.log('websocket', echo, channelName)
         if (chatSSL) {
             echo.join(channelName)
                 .listen('ChatMessageSSLHomework', (e) => {

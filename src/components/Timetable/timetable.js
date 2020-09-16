@@ -2,7 +2,7 @@
  * Created by Paul on 30.11.2019.
  */
 import React, {Component} from 'react';
-import {UPDATESETUP_URL, SUBJECTS_GET_URL, MARKS_URL, markType, API_URL} from '../../config/config'
+import {UPDATESETUP_URL, SUBJECTS_GET_URL, MARKS_URL, markType, API_URL, ISCONSOLE} from '../../config/config'
 import {instanceAxios, mapStateToProps, arrOfWeekDaysLocal, getSubjFieldName, toYYYYMMDD, dateFromYYYYMMDD, axios2} from '../../js/helpers'
 import {connect} from 'react-redux'
 import '../MarksTable/markstable.css'
@@ -48,34 +48,68 @@ class Timetable extends Component {
         // console.log("Timetable: shoudUpdate", classNumber, nextProps.curNumber)
         return true
     }
+    componentDidUpdate(){
+
+        const markblank = document.getElementById("markblank_twelve")
+
+        if (markblank!==null){
+            console.log("MARKBLANK: Render", window.innerHeight, window.innerWidth, markblank.getBoundingClientRect())
+            const rect =  markblank.getBoundingClientRect()
+            // console.log(window.innerHeight - (rect.top + rect.height))
+            if ((window.innerHeight - (rect.top + rect.height + 20)) < 0) {
+                window.scrollBy(0, Math.abs(window.innerHeight - (rect.top + rect.height + 20)))
+
+                const elem = document.getElementById('simple-board')
+                if (elem!==null)
+                    elem.scrollTop = elem.scrollHeight //- elem.clientHeight + 50;
+
+            }
+            // console.log("RECT", window.innerWidth, rect)
+            if ((window.innerWidth / 2 - (rect.right + rect.width + 20)) < 0) {
+                window.scrollBy(Math.abs(window.innerWidth / 2 - (rect.right + rect.width + 20)), 0)
+
+                const elem = document.getElementById('simple-board')
+                if (elem!==null)
+                    elem.scrollLeft = elem.scrollWidth //- elem.clientHeight + 50;
+
+            }
+
+        }
+    }
     fillTimetable=()=>{
         const {langCode, school_id} = this.props.userSetup
         // console.log("fillTimetable",this.props.curClass, this.props.curLetter)
         const classNumber = this.props.curClass!==undefined&&this.props.curClass!==null?this.props.curClass:this.props.userSetup.curClass
         const classLetter = this.props.curLetter!==undefined&&this.props.curLetter!==null?this.props.curLetter:this.props.userSetup.class_letter
 
-        // console.log("TIME", encodeURI(`${API_URL}timetable/getbyschool/${school_id}/${classNumber}/${classLetter}/${toYYYYMMDD(this.state.mainDate)}`))
+        ISCONSOLE && console.log("TIME", encodeURI(`${API_URL}timetable/getbyschool/${school_id}/${classNumber}/${classLetter}/${toYYYYMMDD(this.state.mainDate)}`))
 
         //axios2('get', `${API_URL}timetable/getex/${classID}/${toYYYYMMDD(this.state.mainDate)}`)
         axios2('get', `${API_URL}timetable/getbyschool/${school_id}/${classNumber}/${classLetter}/${toYYYYMMDD(this.state.mainDate)}`)
             .then(res=>{
+
                 // let markKey = subj_key.replace("#","")+"#"+subj_key.replace("#","")+"#"+ondate
                 let {timetable} = this.state
-                let {timetable : timetable2} = this.props
+                // let {timetable : timetable2} = this.props.userSetup
+
+                //console.log("INITTIMETABLE", res.data, timetable)
+
+                ISCONSOLE && console.log("TimeTable", this.props.userSetup)
+
                 timetable.clear()
-                timetable2.clear()
+                //timetable2.clear()
                 res.data = res.data.filter(item=>item!==null)
                 res.data.forEach(item=>{
                     let key = `${item.subj_key.replace("#","")}#${item.subj_key.replace("#","")}#${item.weekday}`
                     timetable.set(key, item)
-                    timetable2.set(key, item)
+                    //timetable2.set(key, item)
                 })
                 res.data = res.data.map(item=>{item.subj_name=item[getSubjFieldName(langCode)]; return item})
                 this.setState({timetable, timetableArr : res.data})
-                // console.log("INITTIMETABLE", timetable, res.data)
+
              })
-            .catch(res=>{
-                console.log("fillTimetable:error")
+            .catch(err=>{
+                console.log("fillTimetable:error", err)
             })
     }
     renderClasses=(selected)=> {
@@ -96,16 +130,18 @@ class Timetable extends Component {
             let column = Number(e.target.id.split('#')[1])//Number(e.target.id.split('c')[1]);
             let id = Number(e.target.id.split('#')[2])
 
-            // console.log("table_OnClick", row, column)
+            const elems = document.querySelectorAll(".markstable__selected-cell")
+            if (elems!==null)
+                elems.forEach(item=>item.classList.remove("markstable__selected-cell"))
+
             if (row===this.state.row&&column===this.state.column) {
-                row=-1
-                column=-1}
-            this.setState(
-                {
-                    row: row,
-                    column: column
-                }
-            )
+                row=-1; column=-1}
+            else {
+                e.target.classList.add("markstable__selected-cell")
+            }
+
+            this.setState( {   row: row, column: column } )
+
         }
         else if(e.target.nodeName === "A" && this.state.row < (subjects_list.length - 1)) {
             let {row} = this.state
@@ -149,15 +185,15 @@ class Timetable extends Component {
             timetableArr = timetableArr.filter(item=>item.subj_key!==subj_key&&item.position!==value.toString().length<4?value:"")
         }
         this.setState({timetable, timetableArr})
-        console.log("changeCell", timetable, timetableArr)
+        ISCONSOLE && console.log("changeCell", timetable, timetableArr)
 
         // `id`, `class_id`, `class_number`, `school_id`, `user_id`, `subj_id`, `subj_key`, `subj_name_ua`, `subj_name_ru`, `subj_name_en`, `subj_name_gb`,
         // `weekday`, `position`, `room_id`, `room`, `teacher_id`, `teacher_name`, `dateFrom`, `dateTo`, `authorized_at`, `created_at`, `updated_at`
         // const defClass = this.props.curClass!==undefined&&this.props.curClass!==null?this.props.curClass+this.props.curLetter:curClass+classLetter
         const classNumber = this.props.curClass!==undefined&&this.props.curClass!==null?this.props.curClass:this.props.userSetup.curClass
-        const classLetter = this.props.curLetter!==undefined&&this.props.curLetter!==null?this.props.curLetter:this.props.userSetup.curLetter
+        const classLetter = this.props.curLetter!==undefined&&this.props.curLetter!==null?this.props.curLetter:class_letter
 
-        console.log("UPDATE", classNumber, classNumberUserSetup, class_letter, classLetter)
+        ISCONSOLE && console.log("UPDATE", classNumber, classNumberUserSetup, class_letter, classLetter)
         const json = `{ "user_id":${userID},
                         "class_id":${classNumber===classNumberUserSetup&&class_letter===classLetter?classID:null},
                         "class_number":${classNumber},
@@ -176,8 +212,12 @@ class Timetable extends Component {
 
         // "mark_type_name":"${this.state.markType>0?this.state.markType===1?'К':(this.state.markType===2?'С':'Т'):marksTypes.get(markKey)}",
         let data = JSON.parse(json);
-        console.log("Table_changeCell", cell, value, id, data, JSON.stringify(data))
+        ISCONSOLE && console.log("Table_changeCell", cell, value, id, data, JSON.stringify(data))
         // this.props.onclick(this.state.row, this.state.column, value)
+
+        const elems = document.querySelectorAll(".markstable__selected-cell")
+        if (elems!==null)
+            elems.forEach(item=>item.classList.remove("markstable__selected-cell"))
 
         if (userID > 0) {
             // instanceAxios().post(MARKS_URL + '/add', JSON.stringify(data))
@@ -353,7 +393,7 @@ class Timetable extends Component {
             // console.log("ROWS", this.state.timetable, rows)
         return (
                 <div>
-                    <div style={{display : "flex", justifyContent : "space-between", alignItems : "center", marginBottom : "5px"}}>
+                    <div style={{display : "flex", justifyContent : "flex-start", alignItems : "center", marginBottom : "5px"}}>
                         <div style={{display : "flex", alignItems : "center"}}>
                             <div className="h4" style={{marginRight : 5}}>Расписание для {
                                 <select name="classes" disabled={true} value={defClass} onClick={this.onClassClick}>
@@ -379,7 +419,7 @@ class Timetable extends Component {
                             />
                         </div>
                         <div onClick={()=>this.unDoneTimeTable(this.props.curClass!==undefined&&this.props.curClass!==null?this.props.curClass:curClass, this.props.curClass!==undefined&&this.props.curClass!==null?this.props.curLetter:classLetter)} className="lockTimetable-btn">
-                            {`Создать новое расписание для ${defClass} на ${(new Date(this.state.mainDate)).toLocaleDateString()} [Прежнее будет недоступно после ${(new Date(this.state.mainDate)).toLocaleDateString()}]`}
+                            {`Нажмите, чтобы сделать неактивным текущее расписание (все изменения будут создаваться в новом) для ${defClass} на ${(new Date(this.state.mainDate)).toLocaleDateString()} [Прежнее будет недоступно после ${(new Date(this.state.mainDate)).toLocaleDateString()}]`}
                         </div>
                     </div>
                     <div className={"timetableMain"}>

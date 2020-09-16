@@ -3,7 +3,9 @@
  */
 // Global consts
 export const ISDEBUG = false
+export const ISCONSOLE = false
 export const isSSLChat = true
+export const webVersion = '1.09.14.1'
 
 // URL's
 export const AUTH_URL  = ISDEBUG?'https://sch-journal.dev':'https://mymarks.info'

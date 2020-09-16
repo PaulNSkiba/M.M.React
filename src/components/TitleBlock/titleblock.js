@@ -57,9 +57,9 @@ class TitleBlock extends Component {
                                 <div style={divStyle}>
                                     <ReactCountryFlag
                                         styleProps={{
-                                            width: '22px',
-                                            height: '18px',
-                                            border: '.2px solid lightgray',
+                                            width: '20px',
+                                            height: '15px',
+                                            border: '.1px solid lightgray',
                                             padding : 0,
                                         }}
                                         code={this.props.myCountryCode?this.props.myCountryCode:"UA"}

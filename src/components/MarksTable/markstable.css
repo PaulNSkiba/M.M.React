@@ -65,13 +65,15 @@ tr#row-1, tr#row-2{
 }
 #simple-board {
     width : 100%;
+    /*overflow:scroll;*/
     /*margin: 10px 10%;*/
 }
 .namescol.nameselected{
-    box-shadow: 0px 0px 4px 6px #feff77;
+    box-shadow: 0px 0px 2px 2px #1c5096;
 }
 .tablehead.dateselected{
-    color : #feff77;
+    /*color : #1c5096;*/
+    border-bottom : 2px solid #1c5096;
 }
 #daysback, #daysforward, #daysforwardone {
     font-size: .9em;
@@ -358,4 +360,27 @@ tr#row-1, tr#row-2{
 }
 .subjStatName:hover{
     cursor : pointer
+}
+.markstable__selected-cell{
+    background-color : var(--selected-item-hover);
+}
+.markstable__selected-student {
+    border : 2px solid #7DA8E6;
+    position : fixed;
+    top : 50px;
+    height: 30px;
+    width : 200px;
+    margin-top : 10px;
+    background-color: #7DA8E6;
+    color : white;
+    box-shadow: 3px 3px 3px 0 #c4c4c4;
+    z-index: 3;
+    border-radius: 3px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    left : 2%;
+}
+.markstable__selected-student.hidden {
+    display: none;
 }

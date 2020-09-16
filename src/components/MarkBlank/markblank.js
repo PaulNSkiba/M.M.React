@@ -7,6 +7,7 @@ import { connect } from 'react-redux'
 import '../../css/colors.css';
 import './markblank.css'
 import {mapStateToProps, getLangLibrary, getDefLangLibrary} from '../../js/helpers'
+import { ISDEBUG, ISCONSOLE } from '../../config/config'
 
 const classNames = (selected, withborder) =>
     selected?"dropdown-main-0 selected " + (withborder?" withborder ":""):"dropdown-main-0 " + (withborder?" withborder ":"")
@@ -14,22 +15,19 @@ const classNames = (selected, withborder) =>
 class MarkBlank extends Component {
 
     onClick(e) {
-        // console.log("onClick", e.target)
-        // if (!(e.target.nodeName==="A"))
         if (this.props.onclick)
         this.props.onclick("markBlank", e.target.id) // , e.target.innerHTML, e.target.nodeName
     }
     onClickA(e) {
-        // console.log("A", e.target.innerHTML)
-        console.log("MarkBlank", e.target, e.target.id, e.target.innerHTML, this.props.parent)
+        ISCONSOLE && console.log("MarkBlank", e.target, e.target.id, e.target.innerHTML, this.props.parent)
         this.props.onclickA(e.target.id, e.target.innerHTML, this.props.parent)
         e.preventDefault()
     }
     render() {
-        // console.log("subjects",subjects, subjects())
+
         const {selected, nohover, kind, withborder} = this.props;
         const {langLibrary} = this.props.userSetup
-
+        //
             switch (kind) {
                 case 1 :
                 return (

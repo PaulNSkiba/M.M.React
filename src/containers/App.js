@@ -23,8 +23,7 @@ import 'react-chat-widget/lib/styles.css';
 import {Pusher} from 'pusher-js'
 import {
     AUTH_URL, API_URL, EXCEL_URL, UPDATESETUP_URL, SUBJECTS_GET_URL, STUDENTS_GET_URL, MARKS_STATS_URL,
-    arrLangs, defLang
-}        from '../config/config'
+    arrLangs, defLang, ISDEBUG, ISCONSOLE, webVersion }        from '../config/config'
 import {
     numberToLang, msgTimeOut, instanceAxios, mapStateToProps, getLangLibrary,
     getLangByCountry, getDefLangLibrary, getSubjFieldName
@@ -100,7 +99,7 @@ class App extends Component {
         // console.log("componentWillMount1", this.props.userSetup, window.localStorage.getItem("myMarks.data"), this.props.userSetup.langLibrary)
 
         (async () => {
-            // console.log("componentWillMount1", localStorage.getItem("langCode"), localStorage.getItem("langCode")?localStorage.getItem("langCode"):defLang)
+            console.log(webVersion)
             this.getSessionID();
             await this.getGeo2();
             await this.getClasses();
@@ -112,7 +111,7 @@ class App extends Component {
     componentWillUnmount() {
     }
     getClasses = async () => {
-        const lang = localStorage.getItem("myCountryCode") ? localStorage.getItem("myCountryCode") : defLang
+        let lang = localStorage.getItem("myCountryCode") ? localStorage.getItem("myCountryCode") : defLang
         let {token} = store.getState().user
         const headers = {
             Authorization: `Bearer ${token}`,
@@ -121,7 +120,26 @@ class App extends Component {
             'Access-Control-Allow-Origin': '*',
             'Access-Control-Allow-Methods': 'GET, POST, PUT, DELETE, OPTIONS',
         }
-        await axios.get(API_URL + ('subjects/bycountry' + (lang ? ('/' + lang) : '')), null, headers)
+
+        switch (lang.toString().toUpperCase()) {
+            case 'UA' :
+                lang = 'UA'
+                break
+            case 'EN' :
+                lang = 'EN'
+                break
+            case 'GB' :
+                lang = 'EN'
+                break
+            case 'DE' :
+                lang = 'DE'
+                break
+            default :
+                lang = 'EN'
+                break
+        }
+        console.log('LANG ',lang)
+        await axios.post(API_URL + ('subjects/bycountry3' + (lang ? ('/' + lang) : '')), null, headers)
             .then(res => {
                 this.classCount = res.data
                 // console.log('GET_CLASSES', res)
@@ -136,28 +154,25 @@ class App extends Component {
         this.props.onStartLoading()
         let {langLibrary} = this.props.userSetup
 
-        // console.log("componentDidMount1", Object.keys(langLibrary).length)
-        // console.log("componentDidMount2", Object.keys(langLibrary).length)
-
         if (!langLibrary&&(localStorage.getItem("langLibrary")))
             langLibrary = localStorage.getItem("langLibrary")
 
          if (!(window.localStorage.getItem("myMarks.data") === null) && !(window.localStorage.getItem("userSetup"))) { //  && window.localStorage.getItem("userSetupDate") === toYYYYMMDD(new Date())
-            console.log("PART1", langLibrary)
+             ISCONSOLE && console.log("PART1", langLibrary)
             let localstorage = JSON.parse(window.localStorage.getItem("myMarks.data"))
             let {token} = localstorage
             this.props.onReduxUpdate("UPDATE_TOKEN", token)
             this.props.onUserLoggingByToken(null, token, null, langLibrary);
         }
         else if (window.localStorage.getItem("userSetup")) { // && window.localStorage.getItem("userSetupDate") === toYYYYMMDD(new Date())
-             console.log("PART2", langLibrary)
+             ISCONSOLE && console.log("PART: LangLibrary", langLibrary)
              let localstorage = JSON.parse(window.localStorage.getItem("userSetup"))
              let {token} = localstorage
              this.props.onReduxUpdate("UPDATE_TOKEN", token)
              this.props.onUserLoggingByToken(null, token, null, langLibrary);
          }
         else {
-             console.log("PART3", langLibrary)
+            // console.log("PART3", langLibrary)
         }
         this.props.onReduxUpdate("IS_MOBILE", this.state.isMobile)
         this.props.onChangeStepsQty(this.isSaveEnabled())
@@ -213,6 +228,17 @@ class App extends Component {
             'Content-Type': 'application/json',
             'Access-Control-Allow-Origin': '*',
             'Access-Control-Allow-Methods': 'GET, POST, PUT, DELETE, OPTIONS',
+        }
+        switch (lang) {
+            case "UA" : break;
+            case "DE" : lang = "GB"; break;
+            case "FR" : lang = "GB"; break;
+            case "IT" : lang = "GB"; break;
+            case "PL" : lang = "PL"; break;
+            case "PT" : lang = "GB"; break;
+            case "RU" : lang = "RU"; break;
+            case "ES" : lang = "ES"; break;
+            default : lang = "GB"; break;
         }
         await axios.get(AUTH_URL + ('/api/langs/get' + (lang ? ('/' + lang) : '')), null, headers)
             .then(res => {
@@ -511,8 +537,9 @@ class App extends Component {
     clickClassButton(event) {
         const classNumber = Number(event.target.id.toString().replace("btn-class-", ""));
         let {classNumber: classNumberOriginal} = this.props.userSetup;
+        const lang = localStorage.getItem("myCountryCode") ? localStorage.getItem("myCountryCode") : defLang
         if (classNumber !== classNumberOriginal) {
-            let json = `{"class_number":${classNumber}}`;
+            let json = `{"class_number":${classNumber}, "country_name" : "${lang.toString().toLowerCase()}"}`;
             let data = JSON.parse(json);
             this.props.onSetSetup(data, this.props.userSetup);
         }
@@ -521,9 +548,11 @@ class App extends Component {
     changeState(name, value) {
         let json, data;
         let {pupilCount, students: studs, userID, subjects_list, selectedSubjects, classID, langLibrary} = this.props.userSetup;
+        const lang = localStorage.getItem("myCountryCode") ? localStorage.getItem("myCountryCode") : defLang
+
         switch (name) {
             case 'classNumber' :
-                json = `{"class_number":${value}}`;
+                json = `{"class_number":${value}, "country_name" : "${lang.toString().toLowerCase()}"}`;
                 break;
             case 'pupilCount' :
                 // console.log("pupilCount", value, pupilCount)
@@ -564,10 +593,8 @@ class App extends Component {
                 json = `{"year_name":"${value.toString().replace(/[/]/g, '\\/')}"}`;
                 break;
             case "selectedSubj" :
-                console.log("selectedSubj", value,
-                    subjects_list.filter(val => (val.subj_key === value[0])),
-                    subjects_list, value[0]
-                );
+                ISCONSOLE && console.log("selectedSubj", value, subjects_list.filter(val => (val.subj_key === value[0])), subjects_list, value[0]);
+
                 value.push(subjects_list.filter(val => (val.subj_key === value[0]))[0].id)
                 // console.log("SELECTED_SUBJ", this.props.userSetup.subjects_list.filter(val=>(val.subj_key===value[0])), value);
                 json = `{"selected_subject":"${value}"}`;
@@ -744,7 +771,7 @@ class App extends Component {
 
     fireLoginLight(hide) {
         this.setState({"showLoginLight": !hide})
-        console.log("fireLoginLight")
+        ISCONSOLE && console.log("fireLoginLight")
         // if (hide) this.props.onStopLoading()
         this.props.history.push('/');
         if (this.props.user.loginmsg.length > 0) {
@@ -863,7 +890,7 @@ class App extends Component {
     }
 
     userLogout() {
-        console.log('userLOGOUT', this.props.userSetup.langLibrary)
+        ISCONSOLE && console.log('userLOGOUT', this.props.userSetup.langLibrary)
         // const {myCountryCode} = this.state
         window.localStorage.removeItem("myMarks.data");
         window.localStorage.removeItem("userSetup")
@@ -873,7 +900,7 @@ class App extends Component {
     }
 
     langBlock = () => {
-        return <div style={{"width": "80px"}}>
+        return <div style={{"width": "80px", "top" : "25px"}}>
             <ReactFlagsSelect
                 defaultCountry={localStorage.getItem("langCode") ? localStorage.getItem("langCode") : defLang}
                 placeholder={getLangByCountry(this.state.myCountryCode)}
@@ -978,7 +1005,7 @@ class App extends Component {
         // *************************
         // Если идёт загрузка
         // *************************
-        console.log("RENDER:APP", loading, this.loading)
+//        console.log("RENDER:APP", loading, this.loading)
 
         if (false&&(loading || loading === -1 || this.loading))
             return (
@@ -1628,12 +1655,12 @@ const mapDispatchToProps = dispatch => {
                     if (Object.keys(data)[0] === "class_number") {
                         document.body.style.cursor = 'progress';
 
-                        console.log("CLASS_NUMBER", SUBJECTS_GET_URL + '/' + Object.values(data)[0])
+                        ISCONSOLE && console.log("CLASS_NUMBER2", SUBJECTS_GET_URL + '/' + Object.values(data)[0] + '/' + Object.values(data)[1])
 
-                        instanceAxios().get(SUBJECTS_GET_URL + '/' + Object.values(data)[0])
+                        instanceAxios().get(SUBJECTS_GET_URL + '/' + Object.values(data)[0] + '/' + Object.values(data)[1])
                             .then(response => {
                                 // let responsedata = response.data;
-                                console.log("CLASS_NUMBER", response.data)
+                                ISCONSOLE && console.log("CLASS_NUMBER", response.data)
                                 dispatch({type: 'UPDATE_SETUP_LOCALLY_SUBJLIST', payload: response.data})
                                 dispatch({type: 'UPDATE_SETUP_LOCALLY_SELECTEDSUBJECTS', payload: response.data})
                                 dispatch({type: 'UPDATE_SETUP_LOCALLY_SELECTEDSUBJECT', payload: response.data[0]})
@@ -1643,7 +1670,7 @@ const mapDispatchToProps = dispatch => {
                                 if (userSetup.userID) {
                                     instanceAxios().post(UPDATESETUP_URL + '/' + userSetup.userID, postdata)
                                         .then(response => {
-                                            console.log('UPDATE_SETUP_SUCCESSFULLY_subjects_list', response.data, userSetup.userID);
+                                            ISCONSOLE && console.log('UPDATE_SETUP_SUCCESSFULLY_subjects_list', response.data, userSetup.userID);
                                         })
                                         .catch(response => {
                                             console.log('UPDATE_SETUP_FAILED_subjects_list', response);
@@ -1663,7 +1690,7 @@ const mapDispatchToProps = dispatch => {
                                         .catch(response => {
                                             console.log("GROUP_UPDATE_ERROR", response.data)
                                         })
-                                console.log("subjects_count", response.data)
+                                ISCONSOLE && console.log("subjects_count", response.data)
                                 let json = `{"subjects_count":"${response.data.length + "/" + response.data.length}"}`;
                                 dispatch({type: 'UPDATE_SETUP_LOCALLY', payload: JSON.parse(json)});
                                 document.body.style.cursor = 'default';
@@ -1713,7 +1740,7 @@ const mapDispatchToProps = dispatch => {
         },
         onUserLogging: (name, pwd, provider, provider_id, langLibrary, code) => {
             dispatch({type: 'APP_LOADING'})
-            console.log("OnUserLogging")
+            ISCONSOLE && console.log("OnUserLogging")
             const asyncLoggedIn = (name, pwd, provider, provider_id, langLibrary, code) => {
                 return dispatch => {
                     dispatch(userLoggedIn(name, pwd, provider, provider_id, langLibrary, code))

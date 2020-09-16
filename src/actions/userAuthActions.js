@@ -1,7 +1,7 @@
 /**
  * Created by Paul on 22.01.2019.
  */
-import { LOGOUTUSER_URL, LOGINUSER_URL, API_URL } from '../config/config'
+import { LOGOUTUSER_URL, LOGINUSER_URL, API_URL, ISDEBUG, ISCONSOLE } from '../config/config'
 import { instanceAxios, toYYYYMMDD, axios2 } from '../js/helpers'
 
 export const userLoggedIn = (email, pwd, provider, provider_id, langLibrary, code) => {
@@ -52,7 +52,7 @@ export const userLoggedInByToken = (email, token, kind, langLibrary) => {
             "token": token,
             "kind": kind,
         };
-        console.log("userLoggedInByToken");
+        ISCONSOLE && console.log("userLoggedInByToken");
         document.body.style.cursor = 'progress';
         // instanceAxios().get(`${API_URL}user`, data)
         axios2('get', `${API_URL}user`)
@@ -70,7 +70,7 @@ export const userLoggedInByToken = (email, token, kind, langLibrary) => {
                 document.body.style.cursor = 'default';
             })
             .catch(response => {
-                console.log("userLoggedInByTokenError", response.data);
+                ISCONSOLE && console.log("userLoggedInByTokenError", response.data);
                 window.localStorage.removeItem("myMarks.data");
                 // dispatch({type: "LANG_LIBRARY", langLibrary: langLibrary})
                 dispatch({type: 'APP_LOADED'})
@@ -97,7 +97,7 @@ export const userLoggedOut = (token, langLibrary) => {
                     // console.log(response.data, response.data);
                     dispatch({type: 'USER_LOGGEDOUT', langLibrary : langLibrary});
                     dispatch({type: 'APP_LOADED'})
-                    console.log("logoutSuccess", response);
+                    ISCONSOLE && console.log("logoutSuccess", response);
                     document.body.style.cursor = 'default';
                 })
                 .catch(response => {

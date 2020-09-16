@@ -18,12 +18,14 @@
     background-color: var(--selected-item-background);
 }
 .lockTimetable-btn {
-    border: .5px solid #1890e6;
-    border-radius : 5px;
-    font-size : .8em;
-    padding : 5px;
-    text-align : center;
+    border: 2px solid #b52227;
+    border-radius: 5px;
+    font-size: .8em;
+    padding: 5px;
+    text-align: center;
     background-color: #bdd7ee;
+    width: 40%;
+    margin-left: 5%;
 }
 .lockTimetable-btn:hover{
     cursor: pointer;
