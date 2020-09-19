@@ -42,7 +42,10 @@ import 'react-flags-select/css/react-flags-select.css';
 import Logo from '../img/LogoMyMsmall.png'
 import GooglePlayLogo from '../img/GooglePlayLogo.png'
 import AppStoreLogo from '../img/AppStoreLogo.png'
-
+import FBLogo from '../img/facebook.png'
+import TwitterLogo from '../img/twitter.png'
+import InstaLogo from '../img/instagram.png'
+import GPlusLogo from '../img/google.png'
 // import ReactPlayer from 'react-player'
 // import GooglePlay from '../img/GooglePlay2.png'
 // import GoogleAppleLogo from '../img/GoogleAppleLogo.png'
@@ -1584,7 +1587,34 @@ class App extends Component {
                 {/*<Charts studSubj={this.state.studSubj}/>*/}
                 {/*</CSSTransitionGroup>*/}
                 {/*</TransitionGroup>>*/}
-
+                {!isMobile ? <div className="app__social-buttons">
+                    <div className="app__vertical-text" style={{position : "absolute", right : "-3px", top : "5px", height : "100%", fontSize : ".9em"}}>communication & feedback</div>
+                    <div className="app__social-button">
+                        <a href="https://fb.me/My.Marks.info"
+                           target="_blank" rel="noopener noreferrer"><img src={FBLogo}
+                                                                          style={{height: "30px"}}
+                                                                          title="Facebook"
+                                                                          alt="Facebook"/></a>
+                    </div>
+                    <div className="app__social-button">
+                        <img src={TwitterLogo}
+                             style={{height: "30px", opacity : .3}}
+                             title="Twitter"
+                             alt="Twitter"/>
+                    </div>
+                    <div className="app__social-button">
+                        <img src={GPlusLogo}
+                             style={{height: "30px", opacity : .3}}
+                             title="Twitter"
+                             alt="Twitter"/>
+                    </div>
+                    <div className="app__social-button">
+                        <img src={InstaLogo}
+                             style={{height: "30px", opacity : .3}}
+                             title="Twitter"
+                             alt="Twitter"/>
+                    </div>
+                </div>:""}
                 {/*{!this.state.displayChat?*/}
                 {userID&&isadmin?
                     <div className={"btn-chat"} onClick={() => {

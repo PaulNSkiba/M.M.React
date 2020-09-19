@@ -44,8 +44,7 @@ class Timetable extends Component {
         this.fillTimetable()
     }
     shouldComponentUpdate(nextProps, nextState){
-        // const classNumber = this.props.curClass!==undefined&&this.props.curClass!==null?this.props.curClass:this.props.userSetup.curClass
-        // console.log("Timetable: shoudUpdate", classNumber, nextProps.curNumber)
+
         return true
     }
     componentDidUpdate(){
@@ -53,7 +52,7 @@ class Timetable extends Component {
         const markblank = document.getElementById("markblank_twelve")
 
         if (markblank!==null){
-            console.log("MARKBLANK: Render", window.innerHeight, window.innerWidth, markblank.getBoundingClientRect())
+            ISCONSOLE && console.log("MARKBLANK: Render", window.innerHeight, window.innerWidth, markblank.getBoundingClientRect())
             const rect =  markblank.getBoundingClientRect()
             // console.log(window.innerHeight - (rect.top + rect.height))
             if ((window.innerHeight - (rect.top + rect.height + 20)) < 0) {
@@ -121,7 +120,7 @@ class Timetable extends Component {
     }
 
     onClick(e){
-        console.log("onClick", e.target, e.target.nodeName, e.target.innerHTML)
+        ISCONSOLE && console.log("onClick", e.target, e.target.nodeName, e.target.innerHTML)
         let {subjects_list} = this.props.userSetup
         subjects_list = subjects_list.filter(item=>item.subj_key!=="#xxxxxx")
 
@@ -159,7 +158,7 @@ class Timetable extends Component {
         this.setState({mainDate : date})
     }
     changeCell = (cell, value, id) =>{
-        console.log("Table_changeCell", value)
+        ISCONSOLE && console.log("Table_changeCell", value)
 
         let {userID, classID, classNumber : classNumberUserSetup, class_letter, langCode, school_id, subjects} = this.props.userSetup;
         let tid = Number(id.split('#')[4])
@@ -175,12 +174,12 @@ class Timetable extends Component {
         const subj = subjects.filter(item=>item.subj_key===subj_key)
         const obj = {id : tid, subj_key : subj_key, subj_name : subj.length?subj[0][getSubjFieldName(langCode)]:"", weekday : Number(ondate), position : value.toString().length<4?value:"", ondate : toYYYYMMDD(this.state.mainDate), class_id : classID, class_number : classNumber }
         if ((value.toString().length<4?value:null)!==null) {
-            console.log('Добавляем')
+            ISCONSOLE && console.log('Добавляем')
             timetable.set(key, value.toString().length < 4 ? obj : null)
             timetableArr = [...timetableArr, obj]
         }
         else {
-            console.log('Стираем')
+            ISCONSOLE && console.log('Стираем')
             timetable.delete(key)
             timetableArr = timetableArr.filter(item=>item.subj_key!==subj_key&&item.position!==value.toString().length<4?value:"")
         }
@@ -223,11 +222,11 @@ class Timetable extends Component {
             // instanceAxios().post(MARKS_URL + '/add', JSON.stringify(data))
             axios2('post', `${API_URL}timetable/add${tid?'/'+tid:''}`, JSON.stringify(data))
                 .then(response => {
-                    console.log('UPDATE_TIMETABLE', response.data)
+                    ISCONSOLE && console.log('UPDATE_TIMETABLE', response.data)
                     // dispatch({type: 'UPDATE_STUDENTS_REMOTE', payload: response.data})
                 })
                 .catch(response => {
-                    console.log("UPDATE_TIMETABLE_ERROR", response);
+                    ISCONSOLE && console.log("UPDATE_TIMETABLE_ERROR", response);
                     // dispatch({type: 'UPDATE_STUDENTS_FAILED', payload: response.data})
                 })
         }
@@ -270,7 +269,7 @@ class Timetable extends Component {
                 if (item.position.length === 1) {
                 retArr.push(<tr key={key}>
                     <td>{item.position}</td>
-                    <td>{item.subj_name}</td>
+                    <td className="timetable__subj_name-col">{item.subj_name}</td>
                     <td>{}</td>
                     <td>{}</td>
                     <td>{}</td>
@@ -278,14 +277,14 @@ class Timetable extends Component {
                     else {
                     retArr.push(<tr key={key+'.1'}>
                         <td>{item.position.split('-')[0]}</td>
-                        <td>{item.subj_name}</td>
+                        <td className="timetable__subj_name-col">{item.subj_name}</td>
                         <td>{}</td>
                         <td>{}</td>
                         <td>{}</td>
                     </tr>)
                     retArr.push(<tr key={key+'.2'}>
                     <td>{item.position.split('-')[1]}</td>
-                    <td>{item.subj_name}</td>
+                    <td className="timetable__subj_name-col">{item.subj_name}</td>
                     <td>{}</td>
                     <td>{}</td>
                     <td>{}</td>
@@ -301,13 +300,11 @@ class Timetable extends Component {
         if (school_id)
         axios2('get',`${API_URL}timetable/undone/${school_id}/${classNumber}/${classLetter}/${toYYYYMMDD(this.state.mainDate)}`)
             .then(res=>{
-                // console.log("UNDONE", res.data)
                 // ToDO : Очистить тайм-тэйбл локально
                 this.fillTimetable()
                 this.forceUpdate()
                     })
             .catch(err=>{})
-        // console.log('unDoneTimeTable', classNumber, classLetter)
     }
     render() {
         const {classList} = this.state
@@ -316,7 +313,6 @@ class Timetable extends Component {
             , cell = []
             , rows = [];
 
-        // console.log("timetable",this.props.userSetup)
         let {subjects_list, langCode, curClass, class_letter : classLetter, token} = this.props.userSetup
 
         if (this.props.subjectList!==undefined&&this.props.subjectList.length)
@@ -329,7 +325,6 @@ class Timetable extends Component {
             mapDays.set(i, arrOfWeekDaysLocal[i])
         }
         const defClass = this.props.curClass!==undefined&&this.props.curClass!==null?this.props.curClass+this.props.curLetter:curClass+classLetter
-        // console.log("Timetable")
 
         for (let idx = 0; idx < (7 + 2); idx++) {
             let cellID = `h0c${idx}`
@@ -359,7 +354,7 @@ class Timetable extends Component {
         let j = 0
         for (let i = 0; i < subjects_list.length; i++) {
             let rowID = `row${i}`
-            // console.log("subjects_list.length", subjects_list.length)
+
             let cell = []
                 for (let idx = 0; idx < (7 + 2); idx++) {
                     j++;
@@ -390,7 +385,7 @@ class Timetable extends Component {
                 }
                 rows.push(<tr key={i} id={rowID}>{cell}</tr>)
             }
-            // console.log("ROWS", this.state.timetable, rows)
+
         return (
                 <div>
                     <div style={{display : "flex", justifyContent : "flex-start", alignItems : "center", marginBottom : "5px"}}>

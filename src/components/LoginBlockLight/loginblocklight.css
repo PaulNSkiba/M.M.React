@@ -11,7 +11,7 @@
 }
 .loginBlockLight {
     z-index: 11;
-    height: 175px;
+    height: 190px;
 }
 .loginBlockLightWithPhone {
     z-index: 11;
@@ -67,4 +67,30 @@
 }
 .my-login-btn:hover {
     cursor:pointer;
+}
+.loginblocklight__notice-pwd {
+    font-size: .8em;
+    font-weight: bold;
+    color: #ddebf7;
+    margin: 0 2%;
+}
+.loginblocklight__notice-pwd.disabled {
+     color: #555a6e;
+ }
+.loginblocklight__notice-pwd.enabled:hover {
+    cursor : pointer;
+    color: #b52227;
+}
+.loginblocklight__mail-validated{
+    position: absolute;
+    top: 3px;
+    right: 1px;
+    font-size: .6em;
+    font-weight: bold;
+    color: white;
+    background-color: #555a6e;
+    border-radius: 13px;
+    width: 13px;
+    text-align: center;
+    height: 13px;
 }

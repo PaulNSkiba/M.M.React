@@ -568,3 +568,40 @@ button.mym-login-logged{
   top : 25px !important;
   margin-top : 0 !important;
 }
+.app__social-buttons{
+  position: fixed;
+  display : flex;
+  align-items: center;
+  justify-content: space-around;
+  flex-direction: column;
+  left: -2px;
+  width: 45px;
+  height: 200px;
+  padding-right: 10px;
+  border: 2px solid var(--selected-item);
+  background-color: white;
+  border-top-right-radius: 3px;
+  border-bottom-right-radius: 3px;
+  box-shadow: 0px 3px 5px 0px rgba(0, 0, 0, 0.4);
+  top: 20%;
+  z-index: 3;
+}
+.app__social-button{
+  width : 30px;
+  height : 30px;
+  margin-right: 10px;
+  border: .5px solid lightblue;
+}
+.app__vertical-text{
+  writing-mode:tb-rl;
+  -webkit-transform:rotate(360deg);
+  -moz-transform:rotate(360deg);
+  -o-transform: rotate(360deg);
+  -ms-transform:rotate(360deg);
+  transform: rotate(360deg);
+  white-space:nowrap;
+  display:block;
+  /*bottom:0;*/
+  /*width:20px;*/
+  /*height:20px;*/
+}

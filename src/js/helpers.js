@@ -406,6 +406,11 @@ export function dateDiffHour(date1, date2) {
     // console.log("dateDiffHour", dt1, dt2, (Date.UTC(dt2.getFullYear(), dt2.getMonth(), dt2.getDate(), dt2.getHours()) - Date.UTC(dt1.getFullYear(), dt1.getMonth(), dt1.getDate(), dt1.getHours())))
     return  Math.round(Number(Math.abs(dt1 - dt2) / 36e5), 0) //Math.floor((Date.UTC(dt2.getFullYear(), dt2.getMonth(), dt2.getDate(), dt2.getHours()) - Date.UTC(dt1.getFullYear(), dt1.getMonth(), dt1.getDate(), dt1.getHours()) ) /(1000 * 60 * 24));
 }
+export function dateDiffSec(date1, date2) {
+    let dt1 = new Date(date1);
+    let dt2 = new Date(date2);
+    return  Math.round(Number(Math.abs(dt1 - dt2) / 60000), 0) //Math.floor((Date.UTC(dt2.getFullYear(), dt2.getMonth(), dt2.getDate(), dt2.getHours()) - Date.UTC(dt1.getFullYear(), dt1.getMonth(), dt1.getDate(), dt1.getHours()) ) /(1000 * 60 * 24));
+}
 export let arrOfWeekDays = ['Вс','Пн','Вт','Ср','Чт','Пт','Сб']
 export let arrOfWeekDaysLocal = ['Пн','Вт','Ср','Чт','Пт','Сб','Вс']
 // addDay function (format MM-DD-YYY)
@@ -1146,5 +1151,10 @@ export const waitCursorBlock=()=>
 
 export function onlyUnique(value, index, self) {
     return self.indexOf(value) === index;
+}
+export function validateEmail(email) {
+    const re = /^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+   // console.log(email)
+    return re.test(email);
 }
 /* eslint-disable */

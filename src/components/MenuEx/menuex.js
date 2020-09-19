@@ -47,7 +47,9 @@ class MenuEx extends Component {
                                     <div className="menuItemHint">{curMenuItem&&curMenuItem.id===1?curMenuItem.label.replace(langLibrary.adminSite, ""):""}</div>
                                     {`${langLibrary.adminSite}`}
                                     <div className="mym-app-arrow-down-ex">{!showAdmin ? '\u25BC' : '\u25B2'}</div>
+                                    {showAdmin?<div className="menuex__emptysubitem"></div>:null}
                                 </div>
+
                                 {showAdmin?<div className="menuItemExDropDown">
                                     {(isadmin&1)===1?<div className={"menuSubItem"}><Link onClick={()=>{
                                         this.setState({showAdmin:!this.state.showAdmin});
@@ -73,6 +75,7 @@ class MenuEx extends Component {
                                 <div className="menuItemHint">{curMenuItem&&curMenuItem.id===2?curMenuItem.label.replace(langLibrary.adminSite, ""):""}</div>
                                 {`${langLibrary.studyingMenu}`}
                                 <div className="mym-app-arrow-down-ex">{!showStudying ? '\u25BC' : '\u25B2'}</div>
+                                {showStudying?<div className="menuex__emptysubitem"></div>:null}
                             </div>
                             {showStudying?<div className="menuItemExDropDown">
                                 <div className={"menuSubItem"}><Link onClick={()=>{
@@ -91,6 +94,7 @@ class MenuEx extends Component {
                                     <div className="menuItemHint">{curMenuItem&&curMenuItem.id===3?curMenuItem.label.replace(langLibrary.adminSite, ""):""}</div>
                                     {`${langLibrary.PTassociation}`}
                                     <div className="mym-app-arrow-down-ex">{!showPTs ? '\u25BC' : '\u25B2'}</div>
+                                    {showPTs?<div className="menuex__emptysubitem"></div>:null}
                                 </div>
                                 {showPTs?<div className="menuItemExDropDown">
                                     {((isadmin&1)===1)||((isadmin&8)===8)?<div className={"menuSubItem"}><Link onClick={()=>{

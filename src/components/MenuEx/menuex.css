@@ -8,7 +8,7 @@
     padding-left: 10px;
     font-weight: 600;
     border-radius: 10px;
-}
+ }
 .mym-app-arrow-down-ex{
      font-size: .8em;
     margin-left: 10px;
@@ -21,6 +21,9 @@
     color: #eee;
     border-bottom-left-radius: 0;
     border-bottom-right-radius: 0;
+    /*border: 2px solid rgb(47,117,181);*/
+    /*border-bottom: none;*/
+    /*height: 35px !important;*/
 }
 .activeItemEx2 {
     background-color: #7DA8E6;
@@ -40,6 +43,9 @@
     border-bottom-right-radius: 10px;
     background-color: #7DA8E6;
     color : white;
+    margin-top: 2px;
+    /*border: 2px solid rgb(47,117,181);*/
+    /*border-top: none;*/
 }
 .menuItemExDropDown a {
     color : #eee;
@@ -93,6 +99,19 @@
     min-width: 360px;
     max-width: 600px;
     font-size: .88em;
+}
+.menuex__emptysubitem {
+    position: absolute;
+    top: 0;
+    height: 40px;
+    background-color: #7DA8E6;
+    width: 100%;
+    border: 1px solid #7DA8E6;
+    border-radius: 10px;
+    margin-left: -11px;
+    border-bottom-left-radius: 0;
+    border-bottom-right-radius: 0;
+    z-index:-1;
 }
 .activeItem a {
     -webkit-box-shadow: 0 0 4px 7px #7DA8E6;

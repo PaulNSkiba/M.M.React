@@ -32,3 +32,8 @@
     background-color: #70baf7;
     color : white;
 }
+.timetable__subj_name-col{
+    font-size : .8em;
+    font-weight : bold;
+    color : #2f75b5;
+}

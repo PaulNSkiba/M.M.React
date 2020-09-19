@@ -7,7 +7,7 @@ import '../../css/colors.css'
 import './loginblocklight.css'
 import FacebookLogin from 'react-facebook-login';
 import {GoogleLogin} from 'react-google-login';
-import {mapStateToProps, instanceAxios} from '../../js/helpers'
+import {mapStateToProps, instanceAxios, validateEmail, dateDiffSec} from '../../js/helpers'
 import {appIdFB, API_URL, ISCONSOLE} from '../../config/config'
 import { connect } from 'react-redux'
 
@@ -19,10 +19,19 @@ class LoginBlockLight extends Component {
             _email: "",
             withCode : false,
             codeChecked : false,
+            isCorrectMail : false,
+            isValidatedMail : false,
+            isSent : false
         }
         this.userLogin = this.userLogin.bind(this)
         this.userCancel = this.userCancel.bind(this)
         this.onSubmit = this.onSubmit.bind(this)
+        this.checkMail = this.checkMail.bind(this)
+        this.sendPwd = this.sendPwd.bind(this)
+        this.checkedMails = []
+        this.lastMailCheck = null
+        this.timerId = null
+
     }
     onSubmit=e=>{
         e.preventDefault()
@@ -146,10 +155,62 @@ class LoginBlockLight extends Component {
             this.userLogin(res.w3.U3, '', 'google', res.w3.Eea)
         }
     }
+    // При открытии страницы, если уже заполнено поле электронки, то проверять
+    checkMail=(isValidatedMail, email)=>{
+        //console.log( )
+        if (this.lastMailCheck===null || (new Date().getTime() - (new Date(this.lastMailCheck)).getTime()) / 1000 > 2 ) {
+            this.lastMailCheck = new Date();
+            //console.log(isValidatedMail, email)
+            clearTimeout(this.timerId);
+            if (isValidatedMail) {
+                this.timerId = setTimeout(()=>{
+                        //console.log("timer2", isValidatedMail, email);
+                        instanceAxios().get(`${API_URL}mailcheck/${email}`)
+                            .then(res=>{
+                                //console.log(res.data)
+                                res.data&&this.setState({isValidatedMail : true})
+                            })
+                            .catch(err=>{
+                                console.log(err.data)
+                            })
 
+                    }, 1000
+                )
+            }
+        }
+        else {
+           // console.log("timer", this.timerId)
+           clearTimeout(this.timerId);
+           if (isValidatedMail) {
+               this.timerId = setTimeout(()=>{
+                   //console.log("timer2", isValidatedMail, email);
+                       instanceAxios().get(`${API_URL}mailcheck/${email}`)
+                           .then(res=>{
+                               //console.log(res.data)
+                               res.data&&this.setState({isValidatedMail : true})
+                           })
+                           .catch(err=>{
+                               console.log(err.data)
+                           })
+               }, 1000
+               )
+           }
+        }
+    }
+    sendPwd=()=>{
+
+        instanceAxios().get(`${API_URL}mail/${this.state._email}`)
+            .then(res=>{
+                //console.log(res.data)
+                this.setState({isSent : true})
+            })
+            .catch(err=>{
+                console.log(err.data)
+            })
+    }
     render(){
         const {isMobile, isadmin, phone} = this.props.userSetup
-        const {_email, codeChecked, withCode} = this.state
+        const {_email, codeChecked, withCode, isCorrectMail, isValidatedMail, isSent} = this.state
         const withPhone = withCode//(_email==="test@gmail.com"?true:false)
         // const withCode = withPhone
         // console.log("RenderLogin", _email, withPhone)
@@ -157,7 +218,18 @@ class LoginBlockLight extends Component {
             return (
                 <div className={withPhone?(isMobile?"loginBlockLightMobileWithPhone":"loginBlockLightWithPhone"):(isMobile?"loginBlockLightMobile":"loginBlockLight")}>
                     <form  onSubmit={this.onSubmit}>
-                        <label style={{fontSize : ".8em", fontWeight : 600}}>Email</label><input style={{width: "95%"}} type="email" ref={input=>{this.inputEmail=input}} onChange={(e)=>this.setState({_email : e.target.value})}/>
+                        <label style={{fontSize : ".8em", fontWeight : 600}}>Email</label>  <div style={{position : "relative"}}><input style={{width: "95%"}}
+                                                                                                 type="email"
+                                                                                                 ref={input=>{this.inputEmail=input}}
+                                                                                                 onChange={(e)=>{   this.setState({ _email : e.target.value,
+                                                                                                                                    isValidatedMail : false,
+                                                                                                                                    isSent : false,
+                                                                                                                                    isCorrectMail : validateEmail(e.target.value)});
+                                                                                                                                   this.checkMail(validateEmail(e.target.value), e.target.value)}}/>
+                                                                                                <div className={isValidatedMail?"loginblocklight__mail-validated":null}>
+                                                                                                    {isValidatedMail?"V":null}
+                                                                                                </div>
+                                                                                            </div>
                         <label style={{fontSize : ".8em", fontWeight : 600}}>Пароль</label><input style={{width: "95%"}} type="password" ref={input=>{this.inputPwd=input}}/>
                         {withPhone?
                             <div>
@@ -171,6 +243,9 @@ class LoginBlockLight extends Component {
                             <button  className="my-login-btn" onClick={this.userCancel}>Отмена</button>
                         </div>
                     </form>
+                    <div className={"loginblocklight__notice-pwd " + (isValidatedMail?" enabled ":" disabled ")} onClick={this.sendPwd}>
+                        {isValidatedMail?(isSent?"Пароль выслан...":"Напомнить пароль..."): "Введите email..."}
+                    </div>
                     <div className="socialBtns">
                         <FacebookLogin
                             appId={appIdFB}
