@@ -46,6 +46,8 @@ import FBLogo from '../img/facebook.png'
 import TwitterLogo from '../img/twitter.png'
 import InstaLogo from '../img/instagram.png'
 import GPlusLogo from '../img/google.png'
+import VideoIcon from '../img/videoicon.png'
+
 // import ReactPlayer from 'react-player'
 // import GooglePlay from '../img/GooglePlay2.png'
 // import GoogleAppleLogo from '../img/GoogleAppleLogo.png'
@@ -1069,14 +1071,10 @@ class App extends Component {
                             </div>
                         </div>
                         <div className="navBlockEx">
-                            {userID ? true?<MenuEx className="menuTop"
+                            {userID || true ? <MenuEx className="menuTop"
                                                       userid={userID}
                                                       isadmin={isadmin}
-                                                      langlibrary={langLibrary}/>:<Menu className="menuTop"
-                                            userid={userID}
-                                            isadmin={isadmin}
-                                            withtomain={true}
-                                            langlibrary={langLibrary}/> : null}
+                                                      langlibrary={langLibrary}/> : null}
                             {this.loginBlock(userID, userName, langLibrary)}
                         </div>
                     </div>
@@ -1124,13 +1122,10 @@ class App extends Component {
                                                 userLogin={this.userLogin.bind(this)}
                                                 userLogout={this.userLogout}
                                                 langlibrary={langLibrary}/> :
-                            userID ? true?<MenuEx className="menuTop"
+                            userID || true? <MenuEx className="menuTop"
                                                      userid={userID}
                                                      isadmin={isadmin}
-                                                     langlibrary={langLibrary}/>:<Menu className="menuTop"
-                                           userid={userID}
-                                           isadmin={isadmin}
-                                           langlibrary={langLibrary}/> : null}
+                                                     langlibrary={langLibrary}/> : null}
                         {(window.location.href.slice(-3) === "/r3" && userID === 0) ?
                             this.fireUserV3Login(window.location.href) : ""}
                         {isMobile ? <div>
@@ -1290,286 +1285,317 @@ class App extends Component {
                         </div>
 
                     </div>}
-                {   studentID === 0 ?
-                    <div>
-                        {/*<CSSTransition*/}
-                        {/*key={"title-a-1"}*/}
-                        {/*timeout={1000}*/}
-                        {/*classNames={*/}
-                        {/*{*/}
-                        {/*appear: 'title-appear',*/}
-                        {/*appearActive : 'title-appear-active',*/}
-                        {/*enter: 'title-enter',*/}
-                        {/*enterActive: 'title-enter-active',*/}
-                        {/*}*/}
-                        {/*}*/}
-                        {/*in={true}*/}
-                        {/*>*/}
-                        <TitleBlock
-                            title={!isMobile ? `${langLibrary.step} ${1}${langLibrary.step1Descr}` : `${1}${langLibrary.step1DescrMob}`}
-                            caption={classNumber === 0 ? "" : classNumber + "й"}
-                            done={!(Number(classNumber) === 0)}
-                            onclick={this.stepClick.bind(this)} step={1}
-                            hide={this.props.user.logging ? true : step1}
-                            myCity={this.state.myCity}
-                            myCountryCode={this.state.myCountryCode}
-                        />
-                        {/*</CSSTransition>*/}
-                    </div>
-                    : ""}
+                    <div style={{   overflow: "auto", marginBottom: "20px" }}>
+                        {   studentID === 0 ?
+                            <div>
+                                {/*<CSSTransition*/}
+                                {/*key={"title-a-1"}*/}
+                                {/*timeout={1000}*/}
+                                {/*classNames={*/}
+                                {/*{*/}
+                                {/*appear: 'title-appear',*/}
+                                {/*appearActive : 'title-appear-active',*/}
+                                {/*enter: 'title-enter',*/}
+                                {/*enterActive: 'title-enter-active',*/}
+                                {/*}*/}
+                                {/*}*/}
+                                {/*in={true}*/}
+                                {/*>*/}
+                                <TitleBlock
+                                    title={!isMobile ? `${langLibrary.step} ${1}${langLibrary.step1Descr}` : `${1}${langLibrary.step1DescrMob}`}
+                                    caption={classNumber === 0 ? "" : classNumber + "й"}
+                                    done={!(Number(classNumber) === 0)}
+                                    onclick={this.stepClick.bind(this)} step={1}
+                                    hide={this.props.user.logging ? true : step1}
+                                    myCity={this.state.myCity}
+                                    myCountryCode={this.state.myCountryCode}
+                                    ismobile={isMobile}
+                                    isH5={false}
+                                />
+                                {/*</CSSTransition>*/}
+                            </div>
+                            : ""}
 
-                {!step1 && !this.props.user.logging && studentID === 0 ?
-                    <div className="block-1">
-                        <ClassList classtype="primary-school school" classcount={this.classCount}
-                                   click={this.clickClassButton} classnumber={classNumber}
-                                   classlabel={`${langLibrary.schoolPrimary} `} buttons={[1, 2, 3, 4]}/>
-                        <ClassList classtype="secondary-school school" classcount={this.classCount}
-                                   click={this.clickClassButton} classnumber={classNumber}
-                                   classlabel={`${langLibrary.schoolMain} `} buttons={[5, 6, 7, 8, 9]}/>
-                        <ClassList classtype="high-school school" classcount={this.classCount}
-                                   click={this.clickClassButton} classnumber={classNumber}
-                                   classlabel={`${langLibrary.schoolHigh} `} buttons={[10, 11]}/>
-                    </div>
-                    : ""}
+                        {!step1 && !this.props.user.logging && studentID === 0 ?
+                            <div className="block-1">
+                                <ClassList classtype="primary-school school" classcount={this.classCount}
+                                           click={this.clickClassButton} classnumber={classNumber}
+                                           classlabel={`${langLibrary.schoolPrimary} `} buttons={[1, 2, 3, 4]}/>
+                                <ClassList classtype="secondary-school school" classcount={this.classCount}
+                                           click={this.clickClassButton} classnumber={classNumber}
+                                           classlabel={`${langLibrary.schoolMain} `} buttons={[5, 6, 7, 8, 9]}/>
+                                <ClassList classtype="high-school school" classcount={this.classCount}
+                                           click={this.clickClassButton} classnumber={classNumber}
+                                           classlabel={`${langLibrary.schoolHigh} `} buttons={[10, 11]}/>
+                            </div>
+                            : ""}
 
-                {   studentID === 0 ?
-                    <div>
-                        <TitleBlock
-                            title={!isMobile ? `${langLibrary.step} ${2}${langLibrary.step2Descr}` : `${2}${langLibrary.step2DescrMob}`}
-                            caption={pupilCount === 0 ? "" : pupilCount}
-                            done={!(Number(pupilCount) === 0)} onclick={this.stepClick.bind(this)} step={2}
-                            hide={step2}/>
-                    </div>
-                    : ""
-                }
+                        {   studentID === 0 ?
+                            <div>
+                                <TitleBlock
+                                    title={!isMobile ? `${langLibrary.step} ${2}${langLibrary.step2Descr}` : `${2}${langLibrary.step2DescrMob}`}
+                                    caption={pupilCount === 0 ? "" : pupilCount}
+                                    done={!(Number(pupilCount) === 0)} onclick={this.stepClick.bind(this)} step={2}
+                                    hide={step2}
+                                    ismobile={isMobile}
+                                    isH5={false}/>
+                            </div>
+                            : ""
+                        }
 
-                {!step2 && studentID === 0 ?
-                    <div className={!step2 ? ("block-2 fadeout") : "block-2"}>
-                        <RSlider id="rslider1" statename="pupilCount" onclick={this.changeState.bind(this)}
-                                 values={!isMobile ? [10, 15, 20, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 40] : [0, 10, 15, 20, 25, 30, 35, 40]}
-                                 set={[pupilCount]} range={false}/>
-                    </div>
-                    : ""}
+                        {!step2 && studentID === 0 ?
+                            <div className={!step2 ? ("block-2 fadeout") : "block-2"}>
+                                <RSlider id="rslider1" statename="pupilCount" onclick={this.changeState.bind(this)}
+                                         values={!isMobile ? [10, 15, 20, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 40] : [0, 10, 15, 20, 25, 30, 35, 40]}
+                                         set={[pupilCount]} range={false}/>
+                            </div>
+                            : ""}
 
 
-                { !this.isShortList() && studentID === 0 ?
-                    <div>
-                        <TitleBlock
-                            title={!isMobile ? `${langLibrary.step} ${3}${langLibrary.step3Descr}` : `${3}${langLibrary.step3DescrMob}`}
-                            caption={currentYear === 0 ? "" : currentYear}
-                            done={!(currentYear === "")} onclick={this.stepClick.bind(this)} step={3}
-                            hide={step3}/>
-                    </div>
-                    : ""
-                }
-                {!this.isShortList() && !step3 && studentID === 0 ?
-                    <RSlider id="rslider2" statename="currentYear" onclick={this.changeState.bind(this)}
-                             values={['', '2017/18', '2018/19', '2019/20']} set={[currentYear]} range={false}/>
-                    : ""}
+                        { !this.isShortList() && studentID === 0 ?
+                            <div>
+                                <TitleBlock
+                                    title={!isMobile ? `${langLibrary.step} ${3}${langLibrary.step3Descr}` : `${3}${langLibrary.step3DescrMob}`}
+                                    caption={currentYear === 0 ? "" : currentYear}
+                                    done={!(currentYear === "")} onclick={this.stepClick.bind(this)} step={3}
+                                    hide={step3}
+                                    ismobile={isMobile}
+                                    isH5={false}/>
+                            </div>
+                            : ""
+                        }
+                        {!this.isShortList() && !step3 && studentID === 0 ?
+                            <RSlider id="rslider2" statename="currentYear" onclick={this.changeState.bind(this)}
+                                     values={['', '2017/18', '2018/19', '2019/20']} set={[currentYear]} range={false}/>
+                            : ""}
 
-                <div>
-                    <TitleBlock
-                        title={!isMobile ? `${langLibrary.step} ${!this.isShortList() ? 4 : 3}${langLibrary.step3Descr}` : `${!this.isShortList() ? 4 : 3}${langLibrary.step3DescrMob}`}
-                        caption={subjCount === "0/0" ? "" : subjCount}
-                        done={!(subjCount === "0/0")} onclick={this.stepClick.bind(this)}
-                        step={!this.isShortList() ? 4 : 3} hide={!this.isShortList() ? step4 : step3}/>
+                        <div>
+                            <TitleBlock
+                                title={!isMobile ? `${langLibrary.step} ${!this.isShortList() ? 4 : 3}${langLibrary.step3Descr}` : `${!this.isShortList() ? 4 : 3}${langLibrary.step3DescrMob}`}
+                                caption={subjCount === "0/0" ? "" : subjCount}
+                                done={!(subjCount === "0/0")}
+                                onclick={this.stepClick.bind(this)}
+                                step={!this.isShortList() ? 4 : 3}
+                                hide={!this.isShortList() ? step4 : step3}
+                                ismobile={isMobile}
+                                isH5={false}/>
+                        </div>
+
+                        {!(!this.isShortList() ? step4 : step3) ?
+                            subjects_list.length > 0 ? <SubjectList classnumber={classNumber}
+                                                                    changestate={this.changeState.bind(this)}
+                                                                    step={4}
+                                                                    selectedsubjects={selectedSubjects}
+                                                                    selectedsubject={selectedSubj}
+                                                                    isnewmech={true}
+                                                                    subjects_list={subjects_list}
+                                                                    studentid={studentID}
+                            />
+                                : <div className="descrAndAnnounce"><span
+                                className="infoMsg">{`${langLibrary.toChoosClassHelp}`}</span></div>
+                            : ""}
+
+                        {studentID === 0 ?
+                            <div>
+                                <TitleBlock
+                                    title={!isMobile ? `${langLibrary.step} ${!this.isShortList() ? 5 : 4}${langLibrary.step4Descr}` : `${!this.isShortList() ? 5 : 4}${langLibrary.step4DescrMob}`}
+                                    caption={!isMobile ? selectedSubj["subj_name_ua"] : (selectedSubj.id > 0 ? selectedSubj["subj_name_ua"] : "")}
+                                    done={selectedSubj.id}
+                                    onclick={this.stepClick.bind(this)}
+                                    step={!this.isShortList() ? 5 : 4}
+                                    hide={!this.isShortList() ? step5 : step4}
+                                    ismobile={isMobile}
+                                    isH5={isMobile}/>
+                            </div>
+                            : ""}
+                        {!(!this.isShortList() ? step5 : step4) && studentID === 0 ?
+                            selectedSubjects.length > 0 ? <SubjectList classnumber={classNumber}
+                                                                       changestate={this.changeState.bind(this)}
+                                                                       step={5}
+                                                                       selectedsubjects={selectedSubjects}
+                                                                       selectedSubj={selectedSubj}
+                                                                       isnewmech={true}/>
+                                : <div className="descrAndAnnounce"><span
+                                className="infoMsg">{`${langLibrary.toChooseSubjectHelp}`}</span></div>
+                            : ""}
+                        {studentID === 0 ?
+                            <div>
+                                <TitleBlock
+                                    title={!isMobile ? `${langLibrary.step} ${!this.isShortList() ? 6 : 5}${langLibrary.step5Descr}` : `${!this.isShortList() ? 6 : 5}${langLibrary.step5DescrMob}`}
+                                    caption={!isMobile ? this.markBlankAlias(markBlank.pk, langLibrary) : (markBlank.alias.length ? langLibrary.yes : "")}
+                                    done={!(markBlank.alias === "")}
+                                    onclick={this.stepClick.bind(this)}
+                                    step={!this.isShortList() ? 6 : 5}
+                                    hide={!this.isShortList() ? step6 : step5}
+                                    ismobile={isMobile}
+                                    isH5={false}/>
+                            </div>
+                            : ""
+                        }
+                        {!(!this.isShortList() ? step6 : step5) && studentID === 0 ?
+                            <div className="markBlanks">
+                                <div id="markblank-1"><MarkBlank kind={1} withborder={true} nohover={true}
+                                                                 onclick={this.changeState.bind(this)}
+                                                                 selected={markBlank.id === "markblank_twelve"}/></div>
+                                <div id="markblank-2"><MarkBlank kind={2} withborder={true} nohover={true}
+                                                                 onclick={this.changeState.bind(this)}
+                                                                 selected={markBlank.id === "markblank_five"}/></div>
+                                <div id="markblank-3"><MarkBlank kind={3} withborder={true} nohover={true}
+                                                                 onclick={this.changeState.bind(this)}
+                                                                 selected={markBlank.id === "markblank_letters"}/></div>
+                            </div>
+                            : ""}
+
+                        <div>
+                            <TitleBlock
+                                title={!isMobile ? `${langLibrary.step} ${!this.isShortList() ? 7 : 6}${langLibrary.step6Descr}` : `${!this.isShortList() ? 7 : 6}${langLibrary.step6DescrMob}`}
+                                done={currentPeriodDateCount > 0}
+                                caption={!isMobile ? (currentPeriodDateCount.toString() + `${langLibrary.daysAcronim},`).concat(withoutholidays ? `${langLibrary.withOutHolidays},` : "", titlekind === "NICK" ? `+${langLibrary.wordNick}` : (titlekind === "EMAIL" ? "+EMAIL" : `+${langLibrary.wordName}`)) : langLibrary.yes}
+                                onclick={this.stepClick.bind(this)} step={!this.isShortList() ? 7 : 6}
+                                hide={!this.isShortList() ? step7 : step6}
+                                ismobile={isMobile}
+                                isH5={false}/>
+                        </div>
+                        {!(!this.isShortList() ? step7 : step6) ?
+                            <div className="additionalSection">
+                                <div><RadioGroup onclick={this.changeState.bind(this)} title={langLibrary.addSettings1}
+                                                 name={"rangedays"} defelem={currentPeriodDateCount}
+                                                 values={[{id: 5, alias: 5}, {id: 10, alias: 10}, {id: 14, alias: 14}, {
+                                                     id: 20,
+                                                     alias: 20
+                                                 }]} addinput={true}/></div>
+                                {studentID === 0 ?
+                                    <div><RadioGroup onclick={this.changeState.bind(this)} title={langLibrary.addSettings2}
+                                                     name={"listnames"} defelem={titlekind}
+                                                     values={[{id: "NAME", alias: `${langLibrary.wordName}`}, {
+                                                         id: "NICK",
+                                                         alias: `${langLibrary.wordNick}`
+                                                     }, {id: "EMAIL", alias: "EMAIL"}]}/></div> : ""}
+                                {studentID === 0 ?
+                                    <div><RadioGroup onclick={this.changeState.bind(this)} title={langLibrary.addSettins3}
+                                                     name={"rangedirection"} defelem={direction} values={[{
+                                        id: "UPDOWN",
+                                        alias: `${langLibrary.directionUpDown}`
+                                    }, {id: "LEFTRIGHT", alias: `${langLibrary.directionLeftRight}`}]}/></div> : ""}
+                                <div><Checkbox onclick={this.changeState.bind(this)} bold={true} name={"withoutholidays"}
+                                               defelem={withoutholidays} label={` ${langLibrary.addSettings4}`}/></div>
+                                {studentID > 0 && <EmailList studentId={studentID} studentName={studentName} userID={userID}/>}
+                            </div>
+                            : ""}
+                        {studentID === 0 ?
+                            <div>
+                                <TitleBlock
+                                    title={!isMobile ? `${langLibrary.step} ${!this.isShortList() ? 8 : 7}${langLibrary.step7Descr}` : `${!this.isShortList() ? 8 : 7}${langLibrary.step7DescrMob}`}
+                                    done={this.state.isJournalClicked}
+                                    caption={this.state.stats.hasOwnProperty('diff') && this.state.stats.tomark} //+ dateDiff((new Date(this.state.stats.dd)), (new Date()))+'дн. назад '
+                                    isMarkSpeed={true}
+                                    onclick={this.stepClick.bind(this)} step={!this.isShortList() ? 8 : 7}
+                                    hide={!this.isShortList() ? step8 : step7}
+                                    ismobile={isMobile}
+                                    isH5={false}/>
+                            </div>
+                            : ""}
+                        {!(!this.isShortList() ? step8 : step7) || studentID > 0 ?
+                            <div className="tableSection">
+                                {studentID === 0 ?
+                                    <MarksTable onclick={this.changeCell.bind(this)}
+                                                markblank={markBlank.pk}
+                                                dayscount={currentPeriodDateCount}
+                                                marks={this.state.marks}
+                                                size={pupilCount}
+                                                direction={direction}
+                                                withoutholidays={withoutholidays}
+                                                titlekind={titlekind}
+                                                changestate={this.changeState.bind(this)}
+                                    /> :
+                                    <StudentTable onclick={this.changeCell.bind(this)}
+                                                  markblank={markBlank.pk}
+                                                  dayscount={currentPeriodDateCount}
+                                                  marks={this.state.marks}
+                                                  size={pupilCount}
+                                                  direction={direction}
+                                                  withoutholidays={withoutholidays}
+                                                  titlekind={titlekind}
+                                                  changestate={this.changeState.bind(this)}
+                                                  onStudSubjChanged={this.onStudSubjChanged.bind(this)}
+                                    />}
+                            </div>
+                            : ""}
+                        {studentID === 0 && isadmin ?
+                            <div>
+                                <TitleBlock
+                                    title={!isMobile ? `${langLibrary.step} ${!this.isShortList() ? 9 : 8}${langLibrary.step8Descr}` : `${!this.isShortList() ? 9 : 8}${langLibrary.step8DescrMob}`}
+                                    done={false}
+                                    onclick={this.stepClick.bind(this)} step={!this.isShortList() ? 9 : 8}
+                                    hide={!this.isShortList() ? step9 : step8}
+                                    ismobile={isMobile}
+                                    isH5={false}/>
+                            </div>
+                            : ""}
+                        {!(!this.isShortList() ? step9 : step8) && studentID === 0 ?
+                            <div className="additionalSection">
+                                <button>
+                                    <a className="infoMsg" href={EXCEL_URL + "/" + this.props.userSetup.classID + '/20190401'}
+                                       target="_blank" rel="noopener noreferrer">
+                                        {"Получить файл для ввода оценок"}
+                                    </a>
+                                </button>
+                                {false?<div>
+                                            <button>Импорт оценок</button>
+                                            <button>Импорт справочника учеников</button>
+                                        </div>:null}
+
+                            </div>
+                            : ""}
+
+                        {studentID === 0 && isadmin ?
+                            <div>
+                                <TitleBlock
+                                    title={!isMobile ? `${langLibrary.step} ${!this.isShortList() ? 10 : 9}${langLibrary.step9Descr}` : `${!this.isShortList() ? 10 : 9}${langLibrary.step9DescrMob}`}
+                                    done={false} onclick={this.stepClick.bind(this)}
+                                    step={!this.isShortList() ? 10 : 9}
+                                    hide={!this.isShortList() ? step10 : step9}
+                                    ismobile={isMobile}
+                                    isH5={false}/>
+                            </div>
+                            : ""}
+                        {(!(!this.isShortList() ? step10 : step9) || studentID > 0) && this.props.userSetup.marks.length ?
+                            <div className="additionalSection">
+                                <Charts studSubj={this.state.studSubj}/>
+                            </div>
+                            : ""}
+                        {((!(!this.isShortList() ? step10 : step9) && classID > 0) || studentID > 0) ?
+                            <div className="additionalSection">
+                                {this.props.userSetup.avgclassmarks.length ?
+                                    <Chart
+                                        chartType="LineChart"
+                                        width="100%"
+                                        height="400px"
+                                        columns={data[1]}
+                                        rows={data[0]}
+                                        options={options}
+                                    /> : ""}
+                            </div>
+                            : ""}
+
+                        {userID === 0 ?
+                            <div>
+                                <TitleBlock title={!isMobile ? langLibrary.step10Descr : langLibrary.step10DescrMob}
+                                            isyellow={true} done={false} onclick={this.stepClick.bind(this)}
+                                            isgrey={this.props.userSetup.stepsLeft}
+                                            caption={this.props.userSetup.stepsLeft ? (`${langLibrary.leftStepBegin} ` + (this.props.userSetup.stepsLeft).toString() + (this.props.userSetup.stepsLeft === 1 ? ` ${langLibrary.leftStepsEnd}` : (this.props.userSetup.stepsLeft < 5) ? ` ${langLibrary.leftStepsEnd}` : ` ${langLibrary.leftStepsEnd}`)) : ""}
+                                            step={!this.isShortList() ? 11 : 10}
+                                            hide={!this.isShortList() ? step11 : step10}
+                                            ismobile={isMobile}
+                                            isH5={false}/>
+                            </div> : ""}
+                        {!(!this.isShortList() ? step11 : step10) && userID === 0 && !(this.props.userSetup.stepsLeft) ?
+                            <div>
+                                <LoginBlock pupilcount={pupilCount} usersetup={this.props.userSetup}
+                                            changestate={this.changeState} /*onsetup={this.props.onSetSetup}*//>
+                            </div> : ""}
+
                 </div>
-
-                {!(!this.isShortList() ? step4 : step3) ?
-                    subjects_list.length > 0 ? <SubjectList classnumber={classNumber}
-                                                            changestate={this.changeState.bind(this)}
-                                                            step={4}
-                                                            selectedsubjects={selectedSubjects}
-                                                            selectedsubject={selectedSubj}
-                                                            isnewmech={true}
-                                                            subjects_list={subjects_list}
-                                                            studentid={studentID}
-                    />
-                        : <div className="descrAndAnnounce"><span
-                        className="infoMsg">{`${langLibrary.toChoosClassHelp}`}</span></div>
-                    : ""}
-
-                {studentID === 0 ?
-                    <div>
-                        <TitleBlock
-                            title={!isMobile ? `${langLibrary.step} ${!this.isShortList() ? 5 : 4}${langLibrary.step4Descr}` : `${!this.isShortList() ? 5 : 4}${langLibrary.step4DescrMob}`}
-                            caption={!isMobile ? selectedSubj["subj_name_ua"] : (selectedSubj.id > 0 ? langLibrary.yes : "")}
-                            done={selectedSubj.id} onclick={this.stepClick.bind(this)}
-                            step={!this.isShortList() ? 5 : 4} hide={!this.isShortList() ? step5 : step4}/>
-                    </div>
-                    : ""}
-                {!(!this.isShortList() ? step5 : step4) && studentID === 0 ?
-                    selectedSubjects.length > 0 ? <SubjectList classnumber={classNumber}
-                                                               changestate={this.changeState.bind(this)}
-                                                               step={5}
-                                                               selectedsubjects={selectedSubjects}
-                                                               selectedSubj={selectedSubj}
-                                                               isnewmech={true}/>
-                        : <div className="descrAndAnnounce"><span
-                        className="infoMsg">{`${langLibrary.toChooseSubjectHelp}`}</span></div>
-                    : ""}
-                {studentID === 0 ?
-                    <div>
-                        <TitleBlock
-                            title={!isMobile ? `${langLibrary.step} ${!this.isShortList() ? 6 : 5}${langLibrary.step5Descr}` : `${!this.isShortList() ? 6 : 5}${langLibrary.step5DescrMob}`}
-                            caption={!isMobile ? this.markBlankAlias(markBlank.pk, langLibrary) : (markBlank.alias.length ? langLibrary.yes : "")}
-                            done={!(markBlank.alias === "")} onclick={this.stepClick.bind(this)}
-                            step={!this.isShortList() ? 6 : 5}
-                            hide={!this.isShortList() ? step6 : step5}/>
-                    </div>
-                    : ""
-                }
-                {!(!this.isShortList() ? step6 : step5) && studentID === 0 ?
-                    <div className="markBlanks">
-                        <div id="markblank-1"><MarkBlank kind={1} withborder={true} nohover={true}
-                                                         onclick={this.changeState.bind(this)}
-                                                         selected={markBlank.id === "markblank_twelve"}/></div>
-                        <div id="markblank-2"><MarkBlank kind={2} withborder={true} nohover={true}
-                                                         onclick={this.changeState.bind(this)}
-                                                         selected={markBlank.id === "markblank_five"}/></div>
-                        <div id="markblank-3"><MarkBlank kind={3} withborder={true} nohover={true}
-                                                         onclick={this.changeState.bind(this)}
-                                                         selected={markBlank.id === "markblank_letters"}/></div>
-                    </div>
-                    : ""}
-
-                <div>
-                    <TitleBlock
-                        title={!isMobile ? `${langLibrary.step} ${!this.isShortList() ? 7 : 6}${langLibrary.step6Descr}` : `${!this.isShortList() ? 7 : 6}${langLibrary.step6DescrMob}`}
-                        done={currentPeriodDateCount > 0}
-                        caption={!isMobile ? (currentPeriodDateCount.toString() + `${langLibrary.daysAcronim},`).concat(withoutholidays ? `${langLibrary.withOutHolidays},` : "", titlekind === "NICK" ? `+${langLibrary.wordNick}` : (titlekind === "EMAIL" ? "+EMAIL" : `+${langLibrary.wordName}`)) : langLibrary.yes}
-                        onclick={this.stepClick.bind(this)} step={!this.isShortList() ? 7 : 6}
-                        hide={!this.isShortList() ? step7 : step6}/>
-                </div>
-                {!(!this.isShortList() ? step7 : step6) ?
-                    <div className="additionalSection">
-                        <div><RadioGroup onclick={this.changeState.bind(this)} title={langLibrary.addSettings1}
-                                         name={"rangedays"} defelem={currentPeriodDateCount}
-                                         values={[{id: 5, alias: 5}, {id: 10, alias: 10}, {id: 14, alias: 14}, {
-                                             id: 20,
-                                             alias: 20
-                                         }]} addinput={true}/></div>
-                        {studentID === 0 ?
-                            <div><RadioGroup onclick={this.changeState.bind(this)} title={langLibrary.addSettings2}
-                                             name={"listnames"} defelem={titlekind}
-                                             values={[{id: "NAME", alias: `${langLibrary.wordName}`}, {
-                                                 id: "NICK",
-                                                 alias: `${langLibrary.wordNick}`
-                                             }, {id: "EMAIL", alias: "EMAIL"}]}/></div> : ""}
-                        {studentID === 0 ?
-                            <div><RadioGroup onclick={this.changeState.bind(this)} title={langLibrary.addSettins3}
-                                             name={"rangedirection"} defelem={direction} values={[{
-                                id: "UPDOWN",
-                                alias: `${langLibrary.directionUpDown}`
-                            }, {id: "LEFTRIGHT", alias: `${langLibrary.directionLeftRight}`}]}/></div> : ""}
-                        <div><Checkbox onclick={this.changeState.bind(this)} bold={true} name={"withoutholidays"}
-                                       defelem={withoutholidays} label={` ${langLibrary.addSettings4}`}/></div>
-                        {studentID > 0 && <EmailList studentId={studentID} studentName={studentName} userID={userID}/>}
-                    </div>
-                    : ""}
-                {studentID === 0 ?
-                    <div>
-                        <TitleBlock
-                            title={!isMobile ? `${langLibrary.step} ${!this.isShortList() ? 8 : 7}${langLibrary.step7Descr}` : `${!this.isShortList() ? 8 : 7}${langLibrary.step7DescrMob}`}
-                            done={this.state.isJournalClicked}
-                            caption={this.state.stats.hasOwnProperty('diff') && this.state.stats.tomark} //+ dateDiff((new Date(this.state.stats.dd)), (new Date()))+'дн. назад '
-                            isMarkSpeed={true}
-                            onclick={this.stepClick.bind(this)} step={!this.isShortList() ? 8 : 7}
-                            hide={!this.isShortList() ? step8 : step7}/>
-                    </div>
-                    : ""}
-                {!(!this.isShortList() ? step8 : step7) || studentID > 0 ?
-                    <div className="tableSection">
-                        {studentID === 0 ?
-                            <MarksTable onclick={this.changeCell.bind(this)}
-                                        markblank={markBlank.pk}
-                                        dayscount={currentPeriodDateCount}
-                                        marks={this.state.marks}
-                                        size={pupilCount}
-                                        direction={direction}
-                                        withoutholidays={withoutholidays}
-                                        titlekind={titlekind}
-                                        changestate={this.changeState.bind(this)}
-                            /> :
-                            <StudentTable onclick={this.changeCell.bind(this)}
-                                          markblank={markBlank.pk}
-                                          dayscount={currentPeriodDateCount}
-                                          marks={this.state.marks}
-                                          size={pupilCount}
-                                          direction={direction}
-                                          withoutholidays={withoutholidays}
-                                          titlekind={titlekind}
-                                          changestate={this.changeState.bind(this)}
-                                          onStudSubjChanged={this.onStudSubjChanged.bind(this)}
-                            />}
-                    </div>
-                    : ""}
-                {studentID === 0 && isadmin ?
-                    <div>
-                        <TitleBlock
-                            title={!isMobile ? `${langLibrary.step} ${!this.isShortList() ? 9 : 8}${langLibrary.step8Descr}` : `${!this.isShortList() ? 9 : 8}${langLibrary.step8DescrMob}`}
-                            done={false}
-                            onclick={this.stepClick.bind(this)} step={!this.isShortList() ? 9 : 8}
-                            hide={!this.isShortList() ? step9 : step8}/>
-                    </div>
-                    : ""}
-                {!(!this.isShortList() ? step9 : step8) && studentID === 0 ?
-                    <div className="additionalSection">
-                        <button>
-                            <a className="infoMsg" href={EXCEL_URL + "/" + this.props.userSetup.classID + '/20190401'}
-                               target="_blank" rel="noopener noreferrer">
-                                {"Получить файл для ввода оценок"}
-                            </a>
-                        </button>
-                        {/*onClick={this.getExcelFile.bind(this)}*/}
-                        <button>Импорт оценок</button>
-                        <button>Импорт справочника учеников</button>
-
-
-                    </div>
-                    : ""}
-
-                {studentID === 0 && isadmin ?
-                    <div>
-                        <TitleBlock
-                            title={!isMobile ? `${langLibrary.step} ${!this.isShortList() ? 10 : 9}${langLibrary.step9Descr}` : `${!this.isShortList() ? 10 : 9}${langLibrary.step9DescrMob}`}
-                            done={false} onclick={this.stepClick.bind(this)}
-                            step={!this.isShortList() ? 10 : 9} hide={!this.isShortList() ? step10 : step9}/>
-                    </div>
-                    : ""}
-                {(!(!this.isShortList() ? step10 : step9) || studentID > 0) && this.props.userSetup.marks.length ?
-                    <div className="additionalSection">
-                        <Charts studSubj={this.state.studSubj}/>
-                    </div>
-                    : ""}
-                {((!(!this.isShortList() ? step10 : step9) && classID > 0) || studentID > 0) ?
-                    <div className="additionalSection">
-                        {this.props.userSetup.avgclassmarks.length ?
-                            <Chart
-                                chartType="LineChart"
-                                width="100%"
-                                height="400px"
-                                columns={data[1]}
-                                rows={data[0]}
-                                options={options}
-                            /> : ""}
-                    </div>
-                    : ""}
-
-                {userID === 0 ?
-                    <div>
-                        <TitleBlock title={!isMobile ? langLibrary.step10Descr : langLibrary.step10DescrMob}
-                                    isyellow={true} done={false} onclick={this.stepClick.bind(this)}
-                                    isgrey={this.props.userSetup.stepsLeft}
-                                    caption={this.props.userSetup.stepsLeft ? (`${langLibrary.leftStepBegin} ` + (this.props.userSetup.stepsLeft).toString() + (this.props.userSetup.stepsLeft === 1 ? ` ${langLibrary.leftStepsEnd}` : (this.props.userSetup.stepsLeft < 5) ? ` ${langLibrary.leftStepsEnd}` : ` ${langLibrary.leftStepsEnd}`)) : ""}
-                                    step={!this.isShortList() ? 11 : 10} hide={!this.isShortList() ? step11 : step10}/>
-                    </div> : ""}
-                {!(!this.isShortList() ? step11 : step10) && userID === 0 && !(this.props.userSetup.stepsLeft) ?
-                    <div>
-                        <LoginBlock pupilcount={pupilCount} usersetup={this.props.userSetup}
-                                    changestate={this.changeState} /*onsetup={this.props.onSetSetup}*//>
-                    </div> : ""}
-
                 {/*{this.props.userSetup.isadmin?*/}
                 {/*<div>*/}
                 {/*<TitleBlock title={`Шаг ${!this.isShortList()?11:10}. Домашка:`} done={false}*/}
@@ -1614,7 +1640,34 @@ class App extends Component {
                              title="Twitter"
                              alt="Twitter"/>
                     </div>
-                </div>:""}
+                </div>:
+                    <div className="app__social-buttons-mobile">
+                        <div className="app__social-button">
+                            <a href="https://fb.me/My.Marks.info"
+                               target="_blank" rel="noopener noreferrer"><img src={FBLogo}
+                                                                              style={{height: "30px"}}
+                                                                              title="Facebook"
+                                                                              alt="Facebook"/></a>
+                        </div>
+                        <div className="app__social-button">
+                            <img src={TwitterLogo}
+                                 style={{height: "30px", opacity : .3}}
+                                 title="Twitter"
+                                 alt="Twitter"/>
+                        </div>
+                        <div className="app__social-button">
+                            <img src={GPlusLogo}
+                                 style={{height: "30px", opacity : .3}}
+                                 title="Twitter"
+                                 alt="Twitter"/>
+                        </div>
+                        <div className="app__social-button">
+                            <img src={InstaLogo}
+                                 style={{height: "30px", opacity : .3}}
+                                 title="Twitter"
+                                 alt="Twitter"/>
+                        </div>
+                    </div>}
                 {/*{!this.state.displayChat?*/}
                 {userID&&isadmin?
                     <div className={"btn-chat"} onClick={() => {
@@ -1626,16 +1679,18 @@ class App extends Component {
                         <div className="mym-new-chat-messages-hw-count">{this.state.newHomeworkMessages}</div> : null}
                     </div>:null}
                 {/*:""} */}
-                {/*{!this.state.displayNewChat?*/}
-                    <div className={"btn-chat-new"} onClick={() => {
-                    this.setState({displayNewChat: !this.state.displayNewChat})
-                }}><img height={"40px"} src={ChatBtn} alt=""/>
+
+                <div className={"btn-chat-new"} onClick={() => {this.setState({displayNewChat: !this.state.displayNewChat})}}>
+                    <img height={"40px"} src={ChatBtn} alt=""/>
                     {this.state.newChatMessages ?
                         <div className="mym-new-chat-messages-count">{this.state.newChatMessages}</div> : null}
                     {this.state.newHomeworkMessages ?
                         <div className="mym-new-chat-messages-hw-count">{this.state.newHomeworkMessages}</div> : null}
-                    </div>
-                {/*:""}*/}
+                </div>
+                {isMobile?<div className="btn-videocam">
+                              <Link to="/video"><img src={VideoIcon} alt={"VideoStuding"}/></Link>
+                            </div>
+                :null}
 
 
                 <Chat
@@ -1669,9 +1724,6 @@ class App extends Component {
         // console.log("step1", this.state.steps.step1)
     }
 
-    // displayChat=()=>{
-    //
-    // }
 }
 
 const mapDispatchToProps = dispatch => {

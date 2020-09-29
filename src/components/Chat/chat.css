@@ -2,8 +2,15 @@
     .chat-container {
         width : 90%;
     }
+    .msg-title-userdata-email {
+        width : 50%;
+    }
 }
-
+@media only screen and (min-width: 400px) {
+    .msg-title-userdata-email {
+        width : 180px;
+    }
+}
 .msg-list { margin-bottom : 0; margin-top : 5px }
 
 .chat-container, .chat-container-new {
@@ -153,7 +160,8 @@
     display:flex;
     justify-content: space-between;
     background-color: var(--msg-header-color);
-    padding : 0 10px 10px;
+    /*padding : 0 10px 10px;*/
+    padding : 10px;
     color: white;
     font-weight: 600;
     font-size: 1em;
@@ -161,9 +169,9 @@
 .msg-title-userdata-name {
     width : 80px;
 }
-.msg-title-userdata-email {
-    width : 180px;
-}
+/*.msg-title-userdata-email {*/
+    /*width : 180px;*/
+/*}*/
 .msg-title:hover {
     cursor : pointer
 }

@@ -9,6 +9,17 @@
     font-weight: 600;
     border-radius: 10px;
  }
+.menuex__menuItemEx-disabled {
+    display: flex;
+    position: relative;
+    color: darkgrey;
+    align-items: center;
+    border : 1px solid darkgrey;
+    height: 30px;
+    padding-left: 10px;
+    font-weight: 600;
+    border-radius: 10px;
+}
 .mym-app-arrow-down-ex{
      font-size: .8em;
     margin-left: 10px;

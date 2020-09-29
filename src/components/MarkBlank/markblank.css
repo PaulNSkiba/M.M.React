@@ -1,19 +1,47 @@
+.markBlanks {
+    display: flex;
+    justify-content: space-between;
+    height : 280px;
+}
+.withborder{
+    border : 1px solid lightgrey;
+    border-radius: 3px;
+    z-index: 2;
+}
+.dropdown-main-0 {
+    position: absolute;
+}
 @media only screen and (max-width: 400px) {
     .markBlanks {
-        height: 150px;
-        margin : 5px 10%;
+        margin : 5px 2%;
     }
     .ul12 {
         width : 50px;
     }
     .withborder{
-        padding : 10px;
+        padding : 10px 2px;
     }
     .dropdown-main-0{
-        margin : 5px 0 0 5px;
+        /*margin : 5px 0 0 5px;*/
+    }
+    .ul12,.ul5,.ulAF {
+        width : 94px;
     }
 }
-
+@media only screen and (min-width: 400px) {
+    .markBlanks {
+        margin : 15px 30%;
+    }
+    .withborder{
+        padding: 10px 20px;
+    }
+    .ul12,.ul5,.ulAF {
+        width : 104px;
+    }
+    .dropdown-main-0{
+        margin: -5px 0 0 15px;
+    }
+}
 ul {
 
     display: inline-block;
@@ -23,9 +51,7 @@ ul {
     overflow: hidden;
     box-shadow: 0px 8px 16px 0px var(--shadow);
 }
-.ul12,.ul5,.ulAF {
-    width : 104px;
-}
+
 .uTT {
     width : 154px;
 }
@@ -145,12 +171,7 @@ li a:hover {
 #markblank_five, #markblank_twelve, #markblank_letters {
     z-index: 3;
 }
-.withborder{
-    border : 1px solid lightgrey;
-    padding: 10px 20px;
-    border-radius: 3px;
-    z-index: 2;
-}
+
 #markblank_five.selected, #markblank_twelve.selected, #markblank_letters.selected {
     border : 1px solid var(--selected-item-hard);
     border-radius: 3px;
@@ -161,18 +182,7 @@ li a:hover {
     background-color: var(--selected-item-hover);
     cursor: pointer;
 }
-.dropdown-main-0 {
-    position: absolute;
-    margin: -5px 0 0 15px;
-    /*width : 100%;*/
-}
-/*li a {*/
-    /*display: block;*/
-    /*color: white;*/
-    /*text-align: center;*/
-    /*padding: 14px 18px;*/
-    /*text-decoration: none;*/
-/*}*/
+
 ul.marks12>li>a,ul.marks9>li>a,ul.marks6>li>a,ul.marks3>li>a,ul.marks0>li>a,ul.timetable0>li>a,ul.timetable1>li>a,ul.timetable2>li>a,ul.timetable3>li>a {
     display: block;
     text-align: center;
@@ -213,10 +223,5 @@ ul.marks12>li>a:hover,ul.marks9>li>a:hover,ul.marks6>li>a:hover,ul.marks3>li>a:h
 li>a:hover {
     cursor: pointer;
 }
-.markBlanks {
-    display: flex;
-    justify-content: space-between;
-    margin : 15px 30%;
-    height : 280px;
-}
+
 

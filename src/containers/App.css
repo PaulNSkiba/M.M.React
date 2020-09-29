@@ -2,6 +2,12 @@
   .app-homeWorkSection {
     margin-left: 5%;
   }
+  .btn-chat-new {
+    left: 3%;
+  }
+ .btn-videocam {
+    right : 3%;
+  }
 }
 @media only screen and (min-width: 400px) {
   .descrAndAnnounceMobile{
@@ -9,6 +15,9 @@
   }
   .description, .description-main {
     margin : 10px 0;
+  }
+  .btn-chat-new {
+    right: 10%;
   }
 }
 @media only screen and (max-width: 400px) {
@@ -21,7 +30,7 @@
     font-size: 0.8em;
   }
   #markblank-1,#markblank-2,#markblank-3{
-    width: 130px;
+    width: 30%;
   }
   .descrHeader > h4 {
     font-size: 0.8em;
@@ -105,10 +114,11 @@ h3 {
 .block-0-0 {
   /*border : solid 1px #c4c4c4;*/
   padding: 0 10px;
-  width : 60%;
+  width : 55%;
 }
 .block-0-1 {
-  width : 30%;
+  width : 35%;
+  margin-right : 5px;
   /*border : solid 1px #c4c4c4;*/
 }
 .block-0-2 {
@@ -451,8 +461,10 @@ button.loggedbtn:hover{
   padding : 0 10%;
   justify-content: space-between;
 }
-
-.btn-chat, .btn-chat-new{
+.btn-videocam{
+  background-color: #1a93c0;
+}
+.btn-chat, .btn-chat-new, .btn-videocam{
   position: fixed;
   display: flex;
   justify-content: center;
@@ -467,14 +479,14 @@ button.loggedbtn:hover{
 
 }
 .btn-chat-new{
-  right : 10%;
+  /*right : 10%;*/
   background-color: #f2b436;
 }
 .btn-chat{
   left : 10%;
   background-color: #33ccff;
 }
-.btn-chat:hover, .btn-chat-new:hover{
+.btn-chat:hover, .btn-chat-new:hover, btn-videocam:hover{
   cursor : pointer
 }
 
@@ -585,6 +597,15 @@ button.mym-login-logged{
   box-shadow: 0px 3px 5px 0px rgba(0, 0, 0, 0.4);
   top: 20%;
   z-index: 3;
+}
+.app__social-buttons-mobile{
+  bottom: 20px;
+  position: fixed;
+  display: flex;
+  padding: 5px;
+  width: 100%;
+  align-items: center;
+  justify-content: center;
 }
 .app__social-button{
   width : 30px;

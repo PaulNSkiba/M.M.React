@@ -13,12 +13,13 @@
     display: flex;
     position: relative;
     padding: 0 10px;
-    width : 70%;
+    width : 65%;
     z-index: 3;
 }
 .block-0-1 {
     position : relative;
-    width : 30%;
+    width : 35%;
+    margin-right : 5px;
 }
 .block-0-2 {
     display: flex;

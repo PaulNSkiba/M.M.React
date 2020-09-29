@@ -20,7 +20,7 @@ class TitleBlock extends Component {
     //     return langLibrary
     // }
     render() {
-        const {done, title, step, onclick, hide, caption} = this.props;
+        const {done, title, step, onclick, hide, caption, isH5} = this.props;
         const {langLibrary : langLib} = this.props.userSetup
         // const langLibrary = this.props.userSetup.langLibrary//this.initLangLibrary(this.props.userSetup.langLibrary)
         // let langLibrary = this.props.userSetup.langLibrary //getLangLibrary()
@@ -71,7 +71,8 @@ class TitleBlock extends Component {
                             </div>
                             :""}
                     </div>
-                   <div className="block-0-1" onClick={onclick} id={step}><h4 id={step}>{
+                   <div className="block-0-1" onClick={onclick} id={step}>{
+                       !isH5?<h4 id={step}>{
                         this.props.hasOwnProperty("isMarkSpeed")&&this.props.isMarkSpeed?
                                 <div className="markDiv">
                                     <div className="markTopLabel">{langLibrary.top}</div>
@@ -79,7 +80,15 @@ class TitleBlock extends Component {
                                     <div className="markBottomLabel">{langLibrary.speedByMark}</div>
                                 </div>
                             :caption
-                    }</h4></div>
+                    }</h4>:<h5 id={step}>{
+                           this.props.hasOwnProperty("isMarkSpeed")&&this.props.isMarkSpeed?
+                               <div className="markDiv">
+                                   <div className="markTopLabel">{langLibrary.top}</div>
+                                   {caption}
+                                   <div className="markBottomLabel">{langLibrary.speedByMark}</div>
+                               </div>
+                               :caption
+                       }</h5>}</div>
                    <div className="block-0-2" onClick={onclick}>
                         <img id={step} src={hide?arrow_down:arrow_up} alt={hide?"Раскрыть":"Свернуть"}/>
                         {/*<a href="#"><span></span></a>*/}

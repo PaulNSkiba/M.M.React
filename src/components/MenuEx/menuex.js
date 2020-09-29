@@ -69,7 +69,9 @@ class MenuEx extends Component {
                                         this.props.onReduxUpdate("MENU_CLICK", "adminschool")}} to="/adminschool">{`${langLibrary.adminSchool}`}</Link></div>:null}
                                 </div>:null}
                             </div>
-                            :null}
+                            :null
+
+                        }
                         <div style={{position : "relative"}}>
                             <div className={`menuItemEx ${curMenuItem&&curMenuItem.id===2?"activeItemEx2":""} ${this.state.showStudying?"activeItemEx":""}` } onClick={()=>{this.setState({showStudying:!this.state.showStudying, showAdmin : false, showPTs : false})}}>
                                 <div className="menuItemHint">{curMenuItem&&curMenuItem.id===2?curMenuItem.label.replace(langLibrary.adminSite, ""):""}</div>
@@ -82,10 +84,10 @@ class MenuEx extends Component {
                                     this.setState({showStudying:!this.state.showStudying});
                                     this.props.onReduxUpdate("MENU_ITEM", {id : 2, label : langLibrary.studying});
                                     this.props.onReduxUpdate("MENU_CLICK", "video")}} to="/video">{`${langLibrary.studying}`}</Link></div>
-                                <div className={"menuSubItem"}><Link onClick={()=>{
+                                {userID?<div className={"menuSubItem"}><Link onClick={()=>{
                                     this.setState({showStudying:!this.state.showStudying});
                                     this.props.onReduxUpdate("MENU_ITEM", {id : 2, label : langLibrary.homework});
-                                    this.props.onReduxUpdate("MENU_CLICK", "homework")}} to="/hw">{`${langLibrary.homework}`}</Link></div>
+                                    this.props.onReduxUpdate("MENU_CLICK", "homework")}} to="/hw">{`${langLibrary.homework}`}</Link></div>:null}
                             </div>:null}
                         </div>
                         {(((isadmin&1)===1||(isadmin&8)===8)&&userID>0)?
